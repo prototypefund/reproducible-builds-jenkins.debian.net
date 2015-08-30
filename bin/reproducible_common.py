@@ -673,7 +673,16 @@ class Build:
             except IndexError:  # there is no package with this name in this
                 return          # suite/arch, or none at all
         self.status = str(result[0])
-        self.version = str(result[1])
+        if self.status != 'blacklisted':
+            self.version = str(result[1])
+        else
+            query = 'SELECT version FROM sources WHERE name="{}" ' + \
+                    'AND suite="{}" AND architecture="{}"'
+            query = query.format(self.package, self.suite, self.arch)
+            try:
+                self.version = query_db(query)[0][0]
+            except IndexError:      # there is no package with this name in this
+                self.version = ''   # suite/arch, or none at all
         if result[2]:
             self.build_date = str(result[2]) + ' UTC'
 
