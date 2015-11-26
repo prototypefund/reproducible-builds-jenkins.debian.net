@@ -29,7 +29,8 @@ for i in reproducible unreproducible FTBFS other ; do
 done
 FIELDS[2]="datum, oldest"
 FIELDS[3]="datum "
-for TAG in $USERTAGS ; do
+# for $(sorted list of usertags)…
+for TAG in $(echo "$USERTAGS" | sed -s "s# #\n#g" | sort -u | xargs echo) ; do
 	# for this table (#3) bugs with ftbfs tags are ignored _now_…
 	if [ "$TAG" = "ftbfs" ] ; then
 		continue
@@ -44,6 +45,7 @@ FIELDS[5]="datum, known_issues"
 FIELDS[7]="datum, done_bugs, open_bugs"
 SUM_DONE="(0"
 SUM_OPEN="(0"
+# no need to sort the usertags, only their sum will be used
 for TAG in $USERTAGS ; do
 	SUM_DONE="$SUM_DONE+done_$TAG"
 	SUM_OPEN="$SUM_OPEN+open_$TAG"
@@ -51,7 +53,8 @@ done
 SUM_DONE="$SUM_DONE)"
 SUM_OPEN="$SUM_OPEN)"
 FIELDS[8]="datum "
-for TAG in $USERTAGS ; do
+# for $(sorted list of usertags)…
+for TAG in $(echo "$USERTAGS" | sed -s "s# #\n#g" | sort -u | xargs echo) ; do
 	# for this table (#8) bugs with ftbfs tags are ignored.
 	if [ "$TAG" = "ftbfs" ] ; then
 		continue
