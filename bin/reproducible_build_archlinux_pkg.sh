@@ -229,7 +229,7 @@ remote_build() {
 		sleep ${SLEEPTIME}m
 		exec /srv/jenkins/bin/abort.sh
 	fi
-	ssh -o "Batchmode = yes" -p $PORT $FQDN /srv/jenkins/bin/reproducible_build_archlinux_pkg.sh $BUILDNR $REPOSITORY ${SRCPACKAGE} ${TMPDIR}
+	ssh -o "Batchmode = yes" -p $PORT $FQDN /srv/jenkins/bin/reproducible_build_archlinux_pkg.sh $BUILDNR $BUILDER_JOB $REPOSITORY ${SRCPACKAGE} ${TMPDIR}
 	RESULT=$?
 	if [ $RESULT -ne 0 ] ; then
 		ssh -o "Batchmode = yes" -p $PORT $FQDN "rm -r $TMPDIR" || true
@@ -274,13 +274,15 @@ trap cleanup_all INT TERM EXIT
 #
 if [ "$1" = "" ] ; then
 	MODE="master"
-	TMPDIR=$(mktemp --tmpdir=/srv/reproducible-results -d -t rbuild-archlinux-XXXXXXXX)  # where everything actually happens
+	BUILDER_JOB="${JOB_NAME#reproducible_builder_archlinux}"
+	TMPDIR=$(mktemp --tmpdir=/srv/reproducible-results -d -t rbuild-archlinux$BUILDER_JOB-XXXXXXXX)  # where everything actually happens
 	cd $TMPDIR
 elif [ "$1" = "1" ] || [ "$1" = "2" ] ; then
 	MODE="$1"
-	REPOSITORY="$2"
-	SRCPACKAGE="$3"
-	TMPDIR="$4"
+	BUILDER_JOB="$2"
+	REPOSITORY="$3"
+	SRCPACKAGE="$4"
+	TMPDIR="$5"
 	[ -d $TMPDIR ] || mkdir -p $TMPDIR
 	cd $TMPDIR
 	mkdir -p b$MODE/$SRCPACKAGE
