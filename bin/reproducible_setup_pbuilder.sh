@@ -123,8 +123,8 @@ setup_pbuilder() {
 #
 # main
 #
-BASETGZ=/var/cache/pbuilder/$SUITE-reproducible-base.tgz
-STAMP=/var/log/jenkins/$SUITE-reproducible-base.tgz.stamp
+BASETGZ=/var/cache/pbuilder/$SUITE-$ARCH-reproducible-base.tgz
+STAMP=/var/log/jenkins/$SUITE-$ARCH-reproducible-base.tgz.stamp
 OLDSTAMP=$(find $STAMP -mtime +1 -exec ls -lad {} \; || echo "nostamp")
 if [ -n "$OLDSTAMP" ] || [ ! -f $BASETGZ ] || [ ! -f $STAMP ] ; then
 	if [ ! -f $BASETGZ ] ; then
@@ -132,7 +132,7 @@ if [ -n "$OLDSTAMP" ] || [ ! -f $BASETGZ ] || [ ! -f $STAMP ] ; then
 	else
 		echo "$BASETGZ outdated, creating a new one..."
 	fi
-	setup_pbuilder $SUITE $SUITE-reproducible-base dpkg dpkg-dev
+	setup_pbuilder $SUITE-$ARCH $SUITE-$ARCH-reproducible-base dpkg dpkg-dev
 else
 	echo "$BASETGZ not old enough, doing nothing..."
 fi
