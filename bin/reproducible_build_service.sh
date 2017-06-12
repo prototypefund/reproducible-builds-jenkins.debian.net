@@ -115,6 +115,14 @@ choose_nodes() {
                 arm64_30)       NODE1=codethink-sled15-arm64	NODE2=codethink-sled12-arm64 ;;
                 arm64_31)       NODE1=codethink-sled14-arm64	NODE2=codethink-sled11-arm64 ;;
                 arm64_32)       NODE1=codethink-sled13-arm64	NODE2=codethink-sled14-arm64 ;;
+# 9 10
+#11 12
+#13 14
+#15 16
+#16  9
+#14 11
+#12 13
+#10 15
 		# to choose new armhf jobs:
 	        #       for i in cb3a hb0 rpi2b rpi2c wbd0 bpi0        bbx15 cbxi4pro0 ff2a ff2b ff64a jtk1a odc2a odxu4 odxu4b odxu4c odu3a opi2a opi2b opi2c p64b p64c wbq0        cbxi4a cbxi4b ff4a jtx1a ; do echo "$i: " ; grep NODE1 bin/reproducible_build_service.sh|grep armhf|grep $i-armhf ; done
 	        #       8 jobs for quad-cores with 4 gb ram
