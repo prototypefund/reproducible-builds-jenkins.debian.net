@@ -655,7 +655,19 @@ schema_updates = {
     37: [  # change the data type in the stats_build.build_date column
         "ALTER TABLE stats_build ALTER COLUMN build_date SET DATA TYPE timestamp"
         " USING build_date::timestamp"
-    ]
+    ],
+    38: [  # add a distribution field to the sources tables
+        """CREATE TABLE distributions (
+                id SERIAL PRIMARY KEY,
+                name VARCHAR)""",
+        "INSERT INTO distributions (name) VALUES ('debian')",
+        """ALTER TABLE sources
+            ADD COLUMN distribution INTEGER DEFAULT 1
+            REFERENCES distributions(id)""",
+        """ALTER TABLE stats_build
+            ADD COLUMN distribution INTEGER DEFAULT 1
+            REFERENCES distributions(id)""",
+    ],
 }
 
 

@@ -21,7 +21,7 @@ from rblib.models import Status, Package
 from rblib.utils import print_critical_message
 from rblib.html import tab, create_main_navigation, write_html_page
 from rblib.const import (
-    DISTRO_BASE, DISTRO_URI, DISTRO_URL,
+    DISTRO, DISTRO_BASE, DISTRO_URI, DISTRO_URL,
     SUITES, ARCHS,
     defaultsuite, defaultarch,
     filtered_issues, filter_html,
@@ -71,6 +71,7 @@ timespan_date_map[24] = (datetime.now()-timedelta(hours=24)).strftime('%Y-%m-%d 
 timespan_date_map[48] = (datetime.now()-timedelta(hours=48)).strftime('%Y-%m-%d %H:%M')
 
 # sqlalchemy table definitions needed for queries
+distributions = db_table('distributions')
 results = db_table('results')
 sources = db_table('sources')
 notes = db_table('notes')
@@ -83,12 +84,15 @@ for issue in filtered_issues:
 if not filtered_issues:
     filter_issues_list = [None]
 
+distro_id = query_db(select([distributions.c.id]).where(distributions.c.name == DISTRO))[0][0]
+
 count_results = select(
     [func.count(results.c.id)]
 ).select_from(
     results.join(sources)
 ).where(
     and_(
+        sources.c.distribution == distro_id,
         sources.c.suite == bindparam('suite'),
         sources.c.architecture == bindparam('arch')
     )
@@ -100,6 +104,7 @@ select_sources = select(
     results.join(sources)
 ).where(
     and_(
+        sources.c.distribution == distro_id,
         sources.c.suite == bindparam('suite'),
         sources.c.architecture == bindparam('arch')
     )
@@ -307,6 +312,7 @@ queries = {
             sources.join(results).join(notes)
         ).where(
             and_(
+                sources.c.distribution == distro_id,
                 results.c.status == bindparam('status'),
                 sources.c.suite == bindparam('suite'),
                 sources.c.architecture == bindparam('arch')
@@ -560,7 +566,7 @@ pages = {
         'notes': True,
         'title': 'Packages with notes',
         'header': '<p>There are {tot} packages with notes in {suite}/{arch}.</p>',
-        'header_query': "SELECT count(*) FROM (SELECT s.name FROM sources AS s JOIN notes AS n ON n.package_id=s.id WHERE s.suite='{suite}' AND s.architecture='{arch}' GROUP BY s.name) AS tmp",
+        'header_query': "SELECT count(*) FROM (SELECT s.name FROM sources AS s JOIN notes AS n ON n.package_id=s.id WHERE s.distribution={distro} AND s.suite='{suite}' AND s.architecture='{arch}' GROUP BY s.name) AS tmp",
         'body': [
             {
                 'status': Status.FTBR,
@@ -617,7 +623,7 @@ pages = {
         'notes_hint': True,
         'title': 'Packages without notes',
         'header': '<p>There are {tot} faulty packages without notes in {suite}/{arch}.{hint}</p>',
-        'header_query': "SELECT COUNT(*) FROM (SELECT s.id FROM sources AS s JOIN results AS r ON r.package_id=s.id WHERE r.status IN ('FTBR', 'FTBFS', 'blacklisted') AND s.id NOT IN (SELECT package_id FROM notes) AND s.suite='{suite}' AND s.architecture='{arch}') AS tmp",
+        'header_query': "SELECT COUNT(*) FROM (SELECT s.id FROM sources AS s JOIN results AS r ON r.package_id=s.id WHERE s.distribution={distro} AND r.status IN ('FTBR', 'FTBFS', 'blacklisted') AND s.id NOT IN (SELECT package_id FROM notes) AND s.suite='{suite}' AND s.architecture='{arch}') AS tmp",
         'body': [
             {
                 'status': Status.FTBR,
@@ -645,7 +651,7 @@ pages = {
         'nosuite': True,
         'title': 'Packages with notification enabled',
         'header': '<p>The following {tot} packages have notifications enabled. (This page only shows packages in {suite}/{arch} though notifications are send for these packages in unstable and experimental in all tested architectures.) On status changes (e.g. reproducible → unreproducible) the system notifies the maintainer and relevant parties via an email to $srcpackage@packages.debian.org. Notifications are collected and send once a day to avoid flooding.<br />Please ask us to enable notifications for your package(s) in our IRC channel #debian-reproducible or via <a href="mailto:reproducible-builds@lists.alioth.debian.org">mail</a> - but ask your fellow team members first if they want to receive such notifications.</p>',
-        'header_query': "SELECT COUNT(*) FROM sources WHERE suite='{suite}' AND architecture='{arch}' AND notify_maintainer = 1",
+        'header_query': "SELECT COUNT(*) FROM sources WHERE distribution={distro} AND suite='{suite}' AND architecture='{arch}' AND notify_maintainer = 1",
         'body': [
             {
                 'status': Status.FTBR,
@@ -787,8 +793,8 @@ def build_page(page, suite=None, arch=None):
         else:
             hint = ''
         if pages[page].get('header_query'):
-            html += pages[page]['header'].format(
-                tot=query_db(pages[page]['header_query'].format(suite=suite, arch=arch))[0][0], suite=suite, arch=arch, hint=hint)
+            result = query_db(pages[page]['header_query'].format(distro=distro_id, suite=suite, arch=arch))
+            html += pages[page]['header'].format(tot=result[0][0], suite=suite, arch=arch, hint=hint)
         else:
             html += pages[page].get('header')
     for section in page_sections:

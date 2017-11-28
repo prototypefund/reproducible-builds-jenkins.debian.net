@@ -24,6 +24,7 @@ from rblib.models import Package, Status
 from rblib.utils import strip_epoch, convert_into_hms_string
 from rblib.html import gen_status_link_icon, write_html_page
 from rblib.const import (
+    DISTRO,
     TEMPLATE_PATH,
     REPRODUCIBLE_URL,
     DISTRO_URL,
@@ -449,8 +450,12 @@ def gen_packages_html(packages, no_clean=False):
 
 
 def gen_all_rb_pkg_pages(no_clean=False):
-    query = 'SELECT DISTINCT name FROM sources WHERE suite = ANY(:s)'
-    rows = query_db(sqlalchemy.text(query), s=SUITES)
+    query = (
+        'SELECT DISTINCT s.name '
+        'FROM sources s JOIN distributions d ON d.id=s.distribution '
+        'WHERE d.name=:d AND s.suite = ANY(:s)'
+    )
+    rows = query_db(sqlalchemy.text(query), d=DISTRO, s=SUITES)
     pkgs = [Package(str(i[0]), no_notes=True) for i in rows]
     log.info('Processing all %s package from all suites/architectures',
              len(pkgs))
@@ -472,9 +477,16 @@ def purge_old_pages():
             log.debug('page presents: ' + str(presents))
 
             # get the existing packages
-            query = "SELECT name, suite, architecture FROM sources " + \
-                    "WHERE suite='{}' AND architecture='{}'".format(suite, arch)
-            cur_pkgs = set([(p.name, p.suite, p.architecture) for p in query_db(query)])
+            query = (
+                "SELECT s.name, s.suite, s.architecture "
+                "FROM sources s JOIN distributions d on d.id=s.distribution "
+                "WHERE s.suite=:suite AND s.architecture=:arch "
+                "AND d.name=:dist"
+            )
+            cur_pkgs = set([
+                (p.name, p.suite, p.architecture) for p in query_db(
+                    sqlalchemy.text(query), suite=suite, arch=arch, dist=DISTRO)
+            ])
 
             for page in presents:
                 # When diffoscope results exist for a package, we create a page
