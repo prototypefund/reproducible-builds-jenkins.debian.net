@@ -502,7 +502,7 @@ write_variation_table() {
 		if [ "$1" != "FreeBSD" ] && [ "$1" != "Arch Linux" ] ; then
 			write_page "<tr><td>year, month, date</td><td>today ($DATE)</td><td>same for both builds (currently, work in progress)</td></tr>"
 		else
-			write_page "<tr><td>year, month, date</td><td>today ($DATE)</td><td>398 days in the future ($FUTURE)</td></tr>"
+			write_page "<tr><td>year, month, date</td><td>profitbricks-build3-amd64: today ($DATE) or profitbricks-build4-amd64: 398 days in the future ($FUTURE)</td><td>the other one</td></tr>"
 		fi
 	fi
 	if [ "$1" != "FreeBSD" ] ; then
@@ -818,4 +818,3 @@ create_png_from_table() {
 	fi
 	rm ${TABLE[$1]}.csv
 }
-
