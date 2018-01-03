@@ -156,6 +156,9 @@ $USERCMD bash <<-__END__
 set -e
 tar -xzvf "$PACMAN_GIT_SNAPSHOT" -C /
 cd /pacman-git
+if ! [[ $HOSTNAME = profitbricks-build4-amd64 ]]; then
+    GIT_SSL_NO_VERIFY=1
+fi
 MAKEFLAGS="-j$NUM_CPU" makepkg
 __END__
 $ROOTCMD sh -c 'yes | pacman -U /pacman-git/pacman-*-x86_64.pkg.tar.xz'
