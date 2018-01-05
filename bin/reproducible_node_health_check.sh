@@ -127,6 +127,14 @@ if [ "$(lsb_release -si)" = "Ubuntu" ] ; then
 fi
 
 #
+# check if we are running the latest kernel
+#
+echo "$(date -u) - testing whether we are running the latest kernel..."
+if ! dsa-check-running-kernel ; then
+	DIRTY=true
+fi
+
+#
 # check for haveged running
 #
 echo "$(date -u) - testing 'haveged' is running..."
