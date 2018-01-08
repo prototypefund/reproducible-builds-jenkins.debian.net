@@ -2,10 +2,10 @@
 
 # Copyright 2014-2017 Holger Levsen <holger@layer-acht.org>
 #         © 2015 Reiner Herrmann <reiner@reiner-h.de>
-#           2016-2017 Alexander Couzens <lynxis@fe80.eu>
+#           2016-2018 Alexander Couzens <lynxis@fe80.eu>
 # released under the GPLv=2
 
-OPENWRT_GIT_REPO=https://git.lede-project.org/lede/lynxis/staging.git
+OPENWRT_GIT_REPO=https://git.openwrt.org/openwrt/staging/lynxis.git
 OPENWRT_GIT_BRANCH=master
 DEBUG=false
 LEDE_CONFIG=
