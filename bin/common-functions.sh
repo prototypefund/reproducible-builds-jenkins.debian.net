@@ -61,7 +61,7 @@ if [ "${0:0:5}" != "/tmp/" ] ; then
 		#		abort_if_bug_is_still_open $BLOCKER
 		#	done ;;
 		chroot-installation_buster_install_parl-desktop*)
-			for BLOCKER in 871284 ; do
+			for BLOCKER in 886676 ; do
 				abort_if_bug_is_still_open $BLOCKER
 			done ;;
 		#dpkg_*_find_trigger_cycles)
