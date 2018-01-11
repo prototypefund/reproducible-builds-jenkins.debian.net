@@ -73,6 +73,7 @@ update_archlinux_repositories() {
 		updated=$(grep -c ^$REPO $UPDATED || true)
 		echo "$(date -u ) - scheduled $new/$updated packages in repository '$REPO'."
 	done
+	schroot --end-session -c $SESSION
 	echo "$(date -u) - the following packages are known to us with higher versions than the repo because we build trunk:"
 	cat $OLDER
 	# schedule up to $MAX packages we already know about
@@ -99,7 +100,6 @@ update_archlinux_repositories() {
 	rm $OLDER
 	total=$(find $BASE/archlinux/ -name pkg.needs_build | wc -l )
 	rm "$ARCHLINUX_PKGS"_full_pkgbase_list
-	schroot --end-session -c $SESSION
 	new=$(cat $NEW | wc -l 2>/dev/null|| true)
 	updated=$(cat $UPDATED 2>/dev/null| wc -l || true)
 	if [ $new -ne 0 ] || [ $updated -ne 0 ] || [ -n "$old" ] ; then
