@@ -55,7 +55,7 @@
           regular-expression: 'Caused by: hudson.plugins.git.GitException: Command "git fetch'
     scm:
       - git:
-          url: 'git://anonscm.debian.org/pkg-haskell/package-plan.git'
+          url: 'https://salsa.debian.org/haskell-team/package-plan.git'
           branches:
             - master
 
