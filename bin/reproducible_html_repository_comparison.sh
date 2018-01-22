@@ -229,14 +229,14 @@ for PKG in $SOURCEPKGS ; do
 	echo
 done
 if [ -s $TABLE_TODO ] ; then
-	write_page "<p><table><tr><th class=\"center\">package</th><th class=\"center\">git repo</th><th class=\"center\">PTS link</th><th class=\"center\">usertagged bug(s)</th><th class=\"center\">old versions in our repo<br />(needed for reproducing old builds)</th><th class=\"center\">version in our repo<br />(available binary packages per architecture)</th><th class=\"center\">version in 'buster'</th><th class=\"center\">version in 'unstable'</th><th class=\"center\">version in 'experimental'</th></tr>"
+	write_page "<p><table><tr><th class=\"center\">package</th><th class=\"center\">git repo</th><th class=\"center\">PTS link</th><th class=\"center\">usertagged bug(s)</th><th class=\"center\">old versions in our repo</th><th class=\"center\">version in our repo<br />(available binary packages per architecture)</th><th class=\"center\">version in 'buster'</th><th class=\"center\">version in 'unstable'</th><th class=\"center\">version in 'experimental'</th></tr>"
 	cat $TABLE_TODO >> $PAGE
 	write_page "</table></p>"
 else
 	write_page "<p>Congratulations! There are no modified packages in our repository compared to unstable. (Yes, that means our repository is obsolete now.)"
 fi
 if [ -s $TABLE_DONE ] ; then
-	write_page "<p><table><tr><th class=\"center\">obsoleted package,<br />version in sid higher than in our repo</th><th class=\"center\">git repo</th><th class=\"center\">PTS link</th><th class=\"center\">usertagged bug(s)</th><th class=\"center\">old version(s) in our repo<br />(needed for reproducing old builds)</th><th class=\"center\">version in our repo<br />(available binary packages per architecture)</th><th class=\"center\">version in 'buster'</th><th class=\"center\">version in 'unstable'</th><th class=\"center\">version in 'experimental'</th></tr>"
+	write_page "<p><table><tr><th class=\"center\">obsoleted package,<br />version in sid higher than in our repo</th><th class=\"center\">git repo</th><th class=\"center\">PTS link</th><th class=\"center\">usertagged bug(s)</th><th class=\"center\">old version(s) in our repo</th><th class=\"center\">version in our repo<br />(available binary packages per architecture)</th><th class=\"center\">version in 'buster'</th><th class=\"center\">version in 'unstable'</th><th class=\"center\">version in 'experimental'</th></tr>"
 	cat $TABLE_DONE >> $PAGE
 	write_page "</table></p>"
 fi
