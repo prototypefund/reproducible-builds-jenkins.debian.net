@@ -44,7 +44,7 @@
           progressive-delay-increment: 5
           progressive-delay-maximum: 15
           max-failed-builds: 5
-          regular-expression: 'Caused by: hudson.plugins.git.GitException: Command "git fetch'
+          regular-expression: '^ERROR: Error cloning remote repo'
     my_default_distro_matrix: &distros_defaults
       - sid: &distro_defaults_sid
           my_trigger: '{name}_buster'
