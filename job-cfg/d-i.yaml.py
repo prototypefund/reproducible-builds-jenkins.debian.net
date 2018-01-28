@@ -125,6 +125,7 @@ partman-nbd
 partman-newworld
 partman-partitioning
 partman-prep
+partman-swapfile
 partman-target
 partman-ufs
 partman-xfs
