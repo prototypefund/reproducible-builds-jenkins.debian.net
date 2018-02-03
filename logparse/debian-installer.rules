@@ -8,6 +8,9 @@ ok /^dpkg-gencontrol: warning/
 ok /^dpkg-genbuildinfo: warning/
 ok /^dpkg-buildpackage: warning/
 
+# autoconf doesn't support this, but it's passed by dh_auto_configure by default
+ok /^configure: WARNING: unrecognized options: --disable-maintainer-mode$/
+
 # make get https://jenkins.debian.net/job/d-i_build_console-setup/ build nicely
 ok /^WARNING: U.{5}: can not be positioned properly/
 ok /^WARNING: U.{5}: no glyph defined/
