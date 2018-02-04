@@ -46,7 +46,7 @@ cd $TMPBUILDDIR
 echo "============================================================================="
 echo "$(date -u) - Cloning the NetBSD git repository (which is synced with the NetBSD CVS repository)"
 echo "============================================================================="
-git clone --depth 1 https://github.com/jsonn/src
+git clone --depth 1 https://github.com/NetBSD/src.git
 mv src netbsd
 cd netbsd
 NETBSD="$(git log -1)"
