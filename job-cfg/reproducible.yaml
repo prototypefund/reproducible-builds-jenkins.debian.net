@@ -151,6 +151,9 @@
           use-build-blocker: true
           blocking-jobs:
             - '{my_blocker}'
+    wrappers:
+      - timeout:
+          timeout: 2160
 
 - defaults:
     <<: *DEFAULTS
