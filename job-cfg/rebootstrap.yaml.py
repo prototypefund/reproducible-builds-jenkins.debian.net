@@ -21,7 +21,7 @@ mono_architectures = """
     mips64 mips64r6el mipsr6el
     musl-linux-mips musl-linux-mipsel
     nios2
-    powerpcel powerpcspe ppc64el
+    powerpcspe ppc64el
     riscv64
     sh3 sh4
     tilegx
