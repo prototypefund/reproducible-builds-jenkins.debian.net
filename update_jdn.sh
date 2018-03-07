@@ -385,15 +385,17 @@ if [ -f /etc/debian_version ] ; then
 		# needed to run fdroid jobs
 		case $HOSTNAME in
 			profitbricks-build7-amd64) DEBS="$DEBS
+				androguard/stretch-backports
 				android-sdk
 				bzr
 				git-svn
-				fdroidserver
+				fdroidserver/stretch-backports
 				libvirt-clients
 				libvirt-daemon
 				libvirt-daemon-system
 				mercurial
 				python3-libvirt
+				python3-mwclient/stretch-backports
 				python3-qrcode
 				python3-ruamel.yaml
 				python3-vagrant
