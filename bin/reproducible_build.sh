@@ -37,9 +37,9 @@ _log () {
 
 exit_early_if_debian_is_broken() {
 	# debian is fine, thanks
-	if [ "$ARCH" = "arm64" ] ; then
-		echo "Temporarily stopping the builds on arm64 as the build nodes needs updating…"
-		for i in $(seq 1 4) ; do
+	if false && [ "$ARCH" = "armhf" ] ; then
+		echo "Temporarily stopping the builds on armhf due to #827724… sleeping 12h now…"
+		for i in $(seq 1 12) ; do
 			sleep 1h
 			echo "one hour passed…."
 		done
