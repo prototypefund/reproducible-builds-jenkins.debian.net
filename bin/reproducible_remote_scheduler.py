@@ -364,8 +364,9 @@ def rest(scheduling_args, requester, local, suite, arch):
             if notify_on_start or artifacts:
                 irc_msg(info_msg)
 
-    from reproducible_html_live_status import generate_schedule
-    generate_schedule(arch)  # update the HTML page
+    if not dry_run:
+        from reproducible_html_live_status import generate_schedule
+        generate_schedule(arch)  # update the HTML page
 
 def main():
     scheduling_args, requester, local, suites, archs = parse_args()
