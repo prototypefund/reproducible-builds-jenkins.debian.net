@@ -1,9 +1,10 @@
 #!/bin/bash
+# vim: set noexpandtab:
 
-# Copyright 2012-2017 Holger Levsen <holger@layer-acht.org>
-# Copyright      2013 Antonio Terceiro <terceiro@debian.org>
-# Copyright      2014 Joachim Breitner <nomeata@debian.org>
-# Copyright      2015 MAttia Rizzolo <mattia@mapreri.org>
+# Copyright © 2012-2017 Holger Levsen <holger@layer-acht.org>
+#           ©      2013 Antonio Terceiro <terceiro@debian.org>
+#           ©      2014 Joachim Breitner <nomeata@debian.org>
+#           © 2015-2018 MAttia Rizzolo <mattia@debian.org>
 # released under the GPLv=2
 
 DEBUG=false
@@ -215,10 +216,11 @@ bootstrap() {
 }
 
 cleanup() {
-	if [ -d $SCHROOT_TARGET ]; then
-		sudo rm -rf --one-file-system $SCHROOT_TARGET || ( echo "Warning: $SCHROOT_TARGET could not be fully removed on forced cleanup." ; ls $SCHROOT_TARGET -la )
+	cd
+	if [ -d "$SCHROOT_TARGET" ]; then
+		sudo rm -rf --one-file-system "$SCHROOT_TARGET" || ( echo "Warning: $SCHROOT_TARGET could not be fully removed during cleanup." ; ls "$SCHROOT_TARGET" -la )
 	fi
-	rm -f $TMPLOG
+	rm -f "$TMPLOG"
 }
 trap cleanup INT TERM EXIT
 bootstrap $@
@@ -226,56 +228,23 @@ bootstrap $@
 trap - INT TERM EXIT
 
 # pivot the new schroot in place
-rand=$RANDOM
-if [ -d $SCHROOT_BASE/"$TARGET" ]
-then
-	# no needed for torbrowser-launcher as race conditions are mostly avoided by timings
-	if [ "${TARGET:0:19}" != "torbrowser-launcher" ] ; then
-		cleanup_schroot_sessions
-	fi
-	echo "$(date -u ) - $SCHROOT_BASE/$TARGET exists, moving it away to $SCHROOT_BASE/$TARGET-$rand"
-	set +e
-	sudo mv $SCHROOT_BASE/"$TARGET" $SCHROOT_BASE/"$TARGET"-"$rand"
-	RESULT=$?
-	set -e
-	if [ $RESULT -ne 0 ] ; then
-		echo
-		ls -R $SCHROOT_BASE/"$TARGET"
-		echo
-		exit 1
-	fi
-fi
+cd "$SCHROOT_TARGET"
+rand="$RANDOM"
+echo "$(date -u) - tarballing the chroot…"
+sudo tar -c --exclude ./sys/* --exclude ./proc/* -f "$SCHROOT_BASE/$TARGET-$rand.tar" ./*
+echo "$(date -u) - moving the chroot in place…"
+sudo mv "$SCHROOT_BASE/$TARGET-$rand.tar" "$SCHROOT_BASE/$TARGET.tar"
 
-# no needed for torbrowser-launcher as race conditions are mostly avoided by timings
-if [ "${TARGET:0:19}" != "torbrowser-launcher" ] ; then
-	cleanup_schroot_sessions
-fi
-echo "$(date -u ) - renaming $SCHROOT_TARGET to $SCHROOT_BASE/$TARGET"
-set +e
-sudo mv $SCHROOT_TARGET $SCHROOT_BASE/"$TARGET"
-RESULT=$?
-set -e
-if [ $RESULT -ne 0 ] ; then
-	echo
-	ls -R $SCHROOT_TARGET
-	echo
-	exit 1
-fi
-
-if [ -d $SCHROOT_BASE/"$TARGET"-"$rand" ] ; then
-	sudo rm -rf --one-file-system $SCHROOT_BASE/"$TARGET"-"$rand" || ( echo "Warning: $SCHROOT_BASE/${TARGET}-$rand could not be fully removed." ; ls $SCHROOT_BASE/${TARGET}-$rand -la )
-fi
 
 # write the schroot config
-echo "Writing configuration"
+echo "$(date -u) - writing schroot configuration"
 sudo tee /etc/schroot/chroot.d/jenkins-"$TARGET" <<-__END__
 	[jenkins-$TARGET]
 	description=Jenkins schroot $TARGET
-	directory=$SCHROOT_BASE/$TARGET
-	type=directory
+	file=$SCHROOT_BASE/$TARGET.tar
+	type=file
 	root-users=jenkins
 	source-root-users=jenkins
-	union-type=overlay
 	__END__
 
-echo "schroot $TARGET set up successfully in $SCHROOT_BASE/$TARGET - exiting now."
+echo "schroot $TARGET set up successfully in $SCHROOT_BASE/$TARGET.tar - exiting now."
