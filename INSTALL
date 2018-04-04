@@ -102,10 +102,8 @@ Process to follow to add a new node to jenkins:
   * 'Remote root directory': `/srv/jenkins/pseudo-hosts/$hostname`
   * 'Labels': `$arch $short_name` (with '$short_name' like ff64a if the hostname is ff64a-armhf-rb)
   * 'Usage': select "Only build jobs with label expressions matching this node"
-  * 'Launch method': select "Launch slave agents via SSH"
-     * 'Host': `localhost`
-     * 'Credentials': select "jenkins" from the dropdown
-     * 'Prefix Start Slave Command': `/srv/jenkins/bin/start-slave.sh && exit && `
+  * 'Launch method': select "Launch agent via execution of command on the master"
+     * 'Launch command': `/srv/jenkins/bin/start-slave.sh`
   * 'Availability': select "Keep this agent online as much as possible"
 
 The slave setup is done so that the slave.jar program doesn't get run on the remote nodes,
