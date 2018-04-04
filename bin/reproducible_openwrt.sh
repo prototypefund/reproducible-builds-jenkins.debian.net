@@ -87,7 +87,7 @@ rm -rf $TMPBUILDDIR/openwrt
 # run diffoscope on the results
 # (this needs refactoring rather badly)
 TIMEOUT="30m"
-DIFFOSCOPE="$(schroot --directory /tmp -c source:jenkins-reproducible-${DBDSUITE}-diffoscope diffoscope -- --version 2>&1)"
+DIFFOSCOPE="$(schroot --directory /tmp -c chroot:jenkins-reproducible-${DBDSUITE}-diffoscope diffoscope -- --version 2>&1)"
 echo "============================================================================="
 echo "$(date -u) - Running $DIFFOSCOPE on OpenWrt images and packages."
 echo "============================================================================="

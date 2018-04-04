@@ -379,12 +379,12 @@ call_diffoscope_on_changes_files() {
 	set -x # to debug diffoscope/schroot problems
 	# TEMP is recognized by python's tempfile module to create temp stuff inside
 	local TEMP=$(mktemp --tmpdir=$TMPDIR -d dbd-tmp-XXXXXXX)
-	DIFFOSCOPE="$(schroot --directory $TMPDIR -c source:jenkins-reproducible-${DBDSUITE}-diffoscope diffoscope -- --version 2>&1 || true)"
+	DIFFOSCOPE="$(schroot --directory $TMPDIR -c chroot:jenkins-reproducible-${DBDSUITE}-diffoscope diffoscope -- --version 2>&1 || true)"
 	LOG_RESULT=$(echo $DIFFOSCOPE | grep '^E: 15binfmt: update-binfmts: unable to open' || true)
 	if [ ! -z "$LOG_RESULT" ] ; then
 		echo "$(date -u) - schroot jenkins-reproducible-${DBDSUITE}-diffoscope not available, will sleep 2min and retry."
 		sleep 2m
-		DIFFOSCOPE="$(schroot --directory $TMPDIR -c source:jenkins-reproducible-${DBDSUITE}-diffoscope diffoscope -- --version 2>&1 || echo 'diffoscope_version_not_available')"
+		DIFFOSCOPE="$(schroot --directory $TMPDIR -c chroot:jenkins-reproducible-${DBDSUITE}-diffoscope diffoscope -- --version 2>&1 || echo 'diffoscope_version_not_available')"
 	fi
 	log_info "$DIFFOSCOPE will be used to compare the two builds:"
 	set +e
@@ -392,7 +392,7 @@ call_diffoscope_on_changes_files() {
 	# remember to also modify the retry diffoscope call 15 lines below
 	( timeout $TIMEOUT nice schroot \
 		--directory $TMPDIR \
-		-c source:jenkins-reproducible-${DBDSUITE}-diffoscope \
+		-c chroot:jenkins-reproducible-${DBDSUITE}-diffoscope \
 		-- sh -c "export TMPDIR=$TEMP ; diffoscope \
 			--html $TMPDIR/${DBDREPORT} \
 			--text $TMPDIR/$DBDTXT \
@@ -409,7 +409,7 @@ call_diffoscope_on_changes_files() {
 		# remember to also modify the retry diffoscope call 15 lines above
 		( timeout $TIMEOUT nice schroot \
 			--directory $TMPDIR \
-			-c source:jenkins-reproducible-${DBDSUITE}-diffoscope \
+			-c chroot:jenkins-reproducible-${DBDSUITE}-diffoscope \
 			-- sh -c "export TMPDIR=$TEMP ; diffoscope \
 				--html $TMPDIR/${DBDREPORT} \
 				--text $TMPDIR/$DBDTXT \
@@ -532,10 +532,10 @@ download_source() {
 	set +e
 	local TMPLOG=$(mktemp --tmpdir=$TMPDIR)
 	if [ "$MODE" != "master" ] ; then
-		schroot --directory $TMPDIR -c source:jenkins-reproducible-$SUITE apt-get -- --download-only --only-source source ${SRCPACKAGE}=${VERSION} 2>&1 | tee ${TMPLOG}
+		schroot --directory $TMPDIR -c chroot:jenkins-reproducible-$SUITE apt-get -- --download-only --only-source source ${SRCPACKAGE}=${VERSION} 2>&1 | tee ${TMPLOG}
 	else
 		# the build master only needs to the the .dsc file
-		schroot --directory $TMPDIR -c source:jenkins-reproducible-$SUITE apt-get -- --download-only --only-source --print-uris source ${SRCPACKAGE}=${VERSION} | grep \.dsc|cut -d " " -f1|xargs -r wget --timeout=180 --tries=3 2>&1 | tee ${TMPLOG}
+		schroot --directory $TMPDIR -c chroot:jenkins-reproducible-$SUITE apt-get -- --download-only --only-source --print-uris source ${SRCPACKAGE}=${VERSION} | grep \.dsc|cut -d " " -f1|xargs -r wget --timeout=180 --tries=3 2>&1 | tee ${TMPLOG}
 	fi
 	local ENGLISH_RESULT=$(egrep 'E: (Unable to find a source package for|Failed to fetch.*(Unable to connect to|Connection failed|Size mismatch|Cannot initiate the connection to|Bad Gateway|Service Unavailable))' ${TMPLOG})
 	local FRENCH_RESULT=$(egrep 'E: (Unable to find a source package for|impossible de récupérer.*(Unable to connect to|Échec de la connexion|Size mismatch|Cannot initiate the connection to|Bad Gateway|Service Unavailable))' ${TMPLOG})

@@ -66,11 +66,11 @@ po2xml() {
 	# build-depends for the installation-guide package installed.
 	# The d-i_schroot-sid-create job creates it.
 	#
-	schroot --directory $BUILDDIR/manual -c source:jenkins-d-i-sid sh ./scripts/merge_xml en
-	schroot --directory $BUILDDIR/manual -c source:jenkins-d-i-sid sh ./scripts/update_pot
-	schroot --directory $BUILDDIR/manual -c source:jenkins-d-i-sid sh ./scripts/update_po $1
-	schroot --directory $BUILDDIR/manual -c source:jenkins-d-i-sid sh ./scripts/revert_pot
-	schroot --directory $BUILDDIR/manual -c source:jenkins-d-i-sid sh ./scripts/create_xml $1
+	schroot --directory $BUILDDIR/manual -c chroot:jenkins-d-i-sid sh ./scripts/merge_xml en
+	schroot --directory $BUILDDIR/manual -c chroot:jenkins-d-i-sid sh ./scripts/update_pot
+	schroot --directory $BUILDDIR/manual -c chroot:jenkins-d-i-sid sh ./scripts/update_po $1
+	schroot --directory $BUILDDIR/manual -c chroot:jenkins-d-i-sid sh ./scripts/revert_pot
+	schroot --directory $BUILDDIR/manual -c chroot:jenkins-d-i-sid sh ./scripts/create_xml $1
 }
 
 build_language() {
@@ -88,7 +88,7 @@ build_language() {
 			# The d-i_schroot-sid-create job creates it.
 			#
 			set -x
-			schroot --directory $BUILDDIR/manual/build -c source:jenkins-d-i-sid make languages=$1 architectures=$ARCH destination=$BUILDDIR/manual/build/$FORMAT/ formats=$FORMAT
+			schroot --directory $BUILDDIR/manual/build -c chroot:jenkins-d-i-sid make languages=$1 architectures=$ARCH destination=$BUILDDIR/manual/build/$FORMAT/ formats=$FORMAT
 			set +x
 			if ( [ "$FORMAT" = "pdf" ] && [ ! -f pdf/$1.$ARCH/install.$1.pdf ] ) || \
 				( [ "$FORMAT" = "html" ] && [ ! -f html/$1.$ARCH/index.html ] ) ; then

@@ -237,7 +237,7 @@ if [ ! -z "$(ls $TMPDIR/b1/$SRCPACKAGE/*.rpm 2>/dev/null|| true)" ] ; then
 	remote_build 2
 	# run diffoscope on the results
 	TIMEOUT="30m"
-	DIFFOSCOPE="$(schroot --directory /tmp -c source:jenkins-reproducible-${DBDSUITE}-diffoscope diffoscope -- --version 2>&1)"
+	DIFFOSCOPE="$(schroot --directory /tmp -c chroot:jenkins-reproducible-${DBDSUITE}-diffoscope diffoscope -- --version 2>&1)"
 	echo "$(date -u) - Running $DIFFOSCOPE now..."
 	cd $TMPDIR/b1/$SRCPACKAGE
 	for ARTIFACT in *.rpm ; do
