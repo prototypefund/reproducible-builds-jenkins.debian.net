@@ -111,9 +111,7 @@
             - pollscm:
                 cron: '* H/2 * * *'
       - buster: *distro_defaults_buster
-      - stretch:
-          <<: *distro_defaults_stretch
-          my_disabled: true
+      - stretch: *distro_defaults_stretch
     jobs:
       - simple
 
