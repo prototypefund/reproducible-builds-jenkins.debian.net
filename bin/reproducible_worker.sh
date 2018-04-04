@@ -1,6 +1,8 @@
 #!/bin/bash
+# vim: set noexpandtab:
 
 # Copyright © 2017 Holger Levsen (holger@layer-acht.org)
+#           © 2018 Mattia Rizolo <mattia@debian.org>
 # released under the GPLv=2
 
 set -e
@@ -40,6 +42,11 @@ while true ; do
 			echo "$(date --utc) - '$SERVICE' not running, thus stopping this."
 			break
 		fi
+	fi
+	LOCKFILE="/var/lib/jenkins/NO-RB-BUILDERS-PLEASE"
+	if [ -f "$LOCKFILE" ];
+		echo "The lockfile $LOCKFILE is present, thus stopping this"
+		break
 	fi
 
 	# sleep up to 2.3 seconds (additionally to the random sleep reproducible_build.sh does anyway)

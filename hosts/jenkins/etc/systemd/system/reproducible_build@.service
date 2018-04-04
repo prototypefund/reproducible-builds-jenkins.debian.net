@@ -1,5 +1,6 @@
 [Unit]
 Description=Build service for reproducible-builds jobs
+ConditionPathExists=!/var/lib/jenkins/NO-RB-BUILDERS-PLEASE
 
 [Service]
 # Restart whenever the script exits, without rate limiting:
