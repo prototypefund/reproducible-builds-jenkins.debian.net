@@ -1,7 +1,8 @@
 #!/bin/bash
+# vim: set noexpandtab:
 
 # Copyright 2014-2017 Holger Levsen <holger@layer-acht.org>
-#         © 2015-2017 Mattia Rizzolo <mattia@mapreri.org>
+#         © 2015-2018 Mattia Rizzolo <mattia@debian.org>
 # released under the GPLv=2
 
 DEBUG=false
@@ -376,23 +377,19 @@ call_diffoscope_on_changes_files() {
 		# there is no extra diffoscope-schroot for experimental ( because we specical case ghc enough already )
 		DBDSUITE="unstable"
 	fi
-	set -x # to debug diffoscope/schroot problems
-	# TEMP is recognized by python's tempfile module to create temp stuff inside
+	# to debug diffoscope/schroot problems
+	set -x
+	# diffoscope temporary files are going to end up in this
 	local TEMP=$(mktemp --tmpdir=$TMPDIR -d dbd-tmp-XXXXXXX)
-	DIFFOSCOPE="$(schroot --directory $TMPDIR -c chroot:jenkins-reproducible-${DBDSUITE}-diffoscope diffoscope -- --version 2>&1 || true)"
-	LOG_RESULT=$(echo $DIFFOSCOPE | grep '^E: 15binfmt: update-binfmts: unable to open' || true)
-	if [ ! -z "$LOG_RESULT" ] ; then
-		echo "$(date -u) - schroot jenkins-reproducible-${DBDSUITE}-diffoscope not available, will sleep 2min and retry."
-		sleep 2m
-		DIFFOSCOPE="$(schroot --directory $TMPDIR -c chroot:jenkins-reproducible-${DBDSUITE}-diffoscope diffoscope -- --version 2>&1 || echo 'diffoscope_version_not_available')"
-	fi
+	local session="$(schroot --begin-session -c "chroot:jenkins-reproducible-$DBDSUITE-diffoscope")"
+	DIFFOSCOPE="$(schroot --directory $TMPDIR --run-session -c "$session" diffoscope -- --version 2>&1 || true)"
 	log_info "$DIFFOSCOPE will be used to compare the two builds:"
 	set +e
 	set -x
-	# remember to also modify the retry diffoscope call 15 lines below
 	( timeout $TIMEOUT nice schroot \
 		--directory $TMPDIR \
-		-c chroot:jenkins-reproducible-${DBDSUITE}-diffoscope \
+		--run-session \
+		-c "$session" \
 		-- sh -c "export TMPDIR=$TEMP ; diffoscope \
 			--html $TMPDIR/${DBDREPORT} \
 			--text $TMPDIR/$DBDTXT \
@@ -401,27 +398,10 @@ call_diffoscope_on_changes_files() {
 			$TMPDIR/b2/${CHANGES}" \
 	2>&1 ) >> $TMPLOG
 	RESULT=$?
-	LOG_RESULT=$(grep '^E: 15binfmt: update-binfmts: unable to open' $TMPLOG || true)
-	if [ ! -z "$LOG_RESULT" ] ; then
-		rm -f $TMPLOG $TMPDIR/${DBDREPORT} $TMPDIR/$DBDTXT
-		echo "$(date -u) - schroot jenkins-reproducible-${DBDSUITE}-diffoscope not available, will sleep 2min and retry."
-		sleep 2m
-		# remember to also modify the retry diffoscope call 15 lines above
-		( timeout $TIMEOUT nice schroot \
-			--directory $TMPDIR \
-			-c chroot:jenkins-reproducible-${DBDSUITE}-diffoscope \
-			-- sh -c "export TMPDIR=$TEMP ; diffoscope \
-				--html $TMPDIR/${DBDREPORT} \
-				--text $TMPDIR/$DBDTXT \
-				--profile=- \
-				$TMPDIR/b1/${CHANGES} \
-				$TMPDIR/b2/${CHANGES}" \
-		2>&1 ) >> $TMPLOG
-		RESULT=$?
-	fi
 	if ! "$DEBUG" ; then set +x ; fi
 	set -e
 	log_file $TMPLOG  # print dbd output
+	schroot --end-session -c "$session"
 	rm $TMPLOG
 	case $RESULT in
 		0)
