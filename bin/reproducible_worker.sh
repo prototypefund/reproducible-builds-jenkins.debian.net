@@ -44,7 +44,7 @@ while true ; do
 		fi
 	fi
 	LOCKFILE="/var/lib/jenkins/NO-RB-BUILDERS-PLEASE"
-	if [ -f "$LOCKFILE" ];
+	if [ -f "$LOCKFILE" ]; then
 		echo "The lockfile $LOCKFILE is present, thus stopping this"
 		break
 	fi
