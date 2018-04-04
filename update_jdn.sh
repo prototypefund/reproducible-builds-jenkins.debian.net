@@ -528,9 +528,9 @@ if [ -f /etc/debian_version ] ; then
 		fi
 		# only needed on the main nodes # FIXME this is redundant
 		if [ "$HOSTNAME" = "jenkins-test-vm" ] ; then
-			$UP2DATE || sudo apt-get install jenkins-job-builder
+			$UP2DATE || sudo apt-get install jenkins-job-builder/stretch-backports
 		elif [ "$HOSTNAME" = "jenkins" ] ; then
-			$UP2DATE || sudo apt-get install ffmpeg libav-tools python3-popcon jenkins-job-builder dose-extra
+			$UP2DATE || sudo apt-get install ffmpeg libav-tools python3-popcon jenkins-job-builder/stretch-backports dose-extra
 		fi
 		sudo apt-get clean
 		explain "packages installed."
