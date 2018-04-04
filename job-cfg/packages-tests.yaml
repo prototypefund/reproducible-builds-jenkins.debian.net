@@ -54,9 +54,7 @@
                 cron: '* H/2 * * *'
       - buster: &distro_defaults_buster
           my_trigger: '{name}_stretch'
-      - stretch: &distro_defaults_stretch
-          my_trigger: '{name}_jessie'
-      - jessie: &distro_defaults_jessie {}
+      - stretch: &distro_defaults_stretch {}
 
 - defaults:
     <<: *DEFAULTS
