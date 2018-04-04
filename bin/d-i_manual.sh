@@ -1,6 +1,8 @@
 #!/bin/bash
+# vim: set noexpandtab:
 
 # Copyright 2012,2014 Holger Levsen <holger@layer-acht.org>
+#           © 2018 Mattia Rizzolo <mattia@debian.org>
 # released under the GPLv=2
 
 DEBUG=false
@@ -66,11 +68,14 @@ po2xml() {
 	# build-depends for the installation-guide package installed.
 	# The d-i_schroot-sid-create job creates it.
 	#
-	schroot --directory $BUILDDIR/manual -c chroot:jenkins-d-i-sid sh ./scripts/merge_xml en
-	schroot --directory $BUILDDIR/manual -c chroot:jenkins-d-i-sid sh ./scripts/update_pot
-	schroot --directory $BUILDDIR/manual -c chroot:jenkins-d-i-sid sh ./scripts/update_po $1
-	schroot --directory $BUILDDIR/manual -c chroot:jenkins-d-i-sid sh ./scripts/revert_pot
-	schroot --directory $BUILDDIR/manual -c chroot:jenkins-d-i-sid sh ./scripts/create_xml $1
+	local SESSION="d-i-manual-$RANDOM"
+	schroot --begin-session "--session-name=$SESSION" -c jenkins-d-i-sid
+	schroot --directory "$BUILDDIR/manual" --run-session -c "$SESSION" sh ./scripts/merge_xml en
+	schroot --directory "$BUILDDIR/manual" --run-session -c "$SESSION" sh ./scripts/update_pot
+	schroot --directory "$BUILDDIR/manual" --run-session -c "$SESSION" sh ./scripts/update_po $1
+	schroot --directory "$BUILDDIR/manual" --run-session -c "$SESSION" sh ./scripts/revert_pot
+	schroot --directory "$BUILDDIR/manual" --run-session -c "$SESSION" sh ./scripts/create_xml $1
+	schroot --end-session -c "$SESSION"
 }
 
 build_language() {
