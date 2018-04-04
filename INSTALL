@@ -52,6 +52,7 @@ We would prefer to run a jenkins package from jessie-backports.
 * Build Authorization Token Root Plugin
 * Embeddable Build Status Plugin
 * Plot Plugin
+* GitLab Plugin
 
 * Sidebar Link
 * Green Balls
