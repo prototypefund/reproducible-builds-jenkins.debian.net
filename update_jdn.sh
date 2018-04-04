@@ -543,6 +543,11 @@ fi
 # deploy package configuration in /etc and /usr
 #
 cd $BASEDIR
+if [ -d "hosts/$HOSTNAME/etc/sudoers.d/" ]; then
+    for f in "hosts/$HOSTNAME/etc/sudoers.d/"* ; do
+        /usr/sbin/visudo -c -f "$f"
+    done
+fi
 sudo cp --preserve=mode,timestamps -r hosts/$HOSTNAME/etc/* /etc
 sudo cp --preserve=mode,timestamps -r hosts/$HOSTNAME/usr/* /usr
 # we ship one or two service files…
