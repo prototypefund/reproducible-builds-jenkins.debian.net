@@ -96,8 +96,6 @@
           my_disabled: true
       - stretch-backports:
           <<: *distro_defaults_stretch
-      - jessie:
-          my_disabled: true
     jobs:
       - simple
 
@@ -117,8 +115,6 @@
       - buster: *distro_defaults_buster
       - stretch:
           <<: *distro_defaults_stretch
-          my_disabled: true
-      - jessie:
           my_disabled: true
     jobs:
       - simple
