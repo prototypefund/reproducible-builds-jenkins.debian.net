@@ -123,15 +123,12 @@
     my_shell: 'timeout 1h dpkg-buildpackage -us -uc -tc'
     my_description: 'DAK testsuite'
     my_distro:
-    # DAK tests cannot be run in sid/buster atm, but still create the jobs
       - sid: {}
       - buster:
           my_trigger: '{name}_sid'
       - stretch:
-          my_trigger: '{name}_buster'
-      - jessie:
           my_origin_triggers: *default_git_triggers
-          my_trigger: '{name}_stretch'
+          my_trigger: '{name}_buster'
     jobs:
       - junit
 
