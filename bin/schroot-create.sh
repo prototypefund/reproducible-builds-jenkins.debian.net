@@ -112,8 +112,6 @@ apt-key list
 echo
 echo "Configuring APT to ignore the Release file expiration"
 echo 'Acquire::Check-Valid-Until "false";' > /etc/apt/apt.conf.d/398future
-echo "Configuring APT to not download package descriptions"
-echo 'Acquire::Languages "none";' > /etc/apt/apt.conf.d/10no-package-descriptions
 echo
 EOF
 }
@@ -163,6 +161,15 @@ bootstrap() {
 	for i in $(seq 0 7) ; do
 		[ -z "${EXTRA_SOURCES[$i]}" ] || echo "${EXTRA_SOURCES[$i]}"                     | sudo tee -a $SCHROOT_TARGET/etc/apt/sources.list >/dev/null
 	done
+
+	# Misc configuration for a building-aimed chroot
+	sudo tee "$SCHROOT_TARGET/etc/apt/apt.conf.d/15jenkins" > /dev/null <<-__END__
+	APT::Install-Recommends "false";
+	APT::AutoRemove::SuggestsImportant false;
+	APT::AutoRemove::RecommendsImportant false;
+	# don't download package descriptions
+	Acquire::Languages none;
+	__END__
 
 	if $REPRODUCIBLE ; then
 		TMPFILE=$(mktemp -u)
