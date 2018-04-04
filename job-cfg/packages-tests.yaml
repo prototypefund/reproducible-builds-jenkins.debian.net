@@ -40,6 +40,7 @@
           send-to-individuals: true
       - trigger: &trigger
           project: '{my_trigger}'
+      - gitlab-notifier: &gitlab_notifier
       - naginator: &naginator
           progressive-delay-increment: 5
           progressive-delay-maximum: 15
@@ -64,6 +65,7 @@
     publishers:
       - email: *email
       - trigger: *trigger
+      - gitlab-notifier: *gitlab_notifier
       - naginator: *naginator
       - junit:
           results: 'job-exports/test-results/*.xml'
