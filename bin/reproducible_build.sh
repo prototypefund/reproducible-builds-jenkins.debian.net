@@ -816,12 +816,13 @@ share_buildinfo() {
 	# Submit the -buildinfo files to third-party archives:
 	log_info "Submitting .buildinfo files to external archives:"
 
-	# buildinfo.kfreebsd.eu administered by Steven Chamberlain <steven@pyro.eu.org>
-	for X in b1 b2
-	do
-		mail -s "${X}/$BUILDINFO_SIGNED" submit@buildinfo.kfreebsd.eu < ./${X}/$BUILDINFO_SIGNED || log_error "Could not submit ${X}/$BUILDINFO_SIGNED to submit@buildinfo.kfreebsd.eu."
-	done
-	log_info "Done submitting .buildinfo files to submit@buildinfo.kfreebsd.eu."
+	# Disabled as that mail address bounces.
+	## buildinfo.kfreebsd.eu administered by Steven Chamberlain <steven@pyro.eu.org>
+	#for X in b1 b2
+	#do
+	#	mail -s "${X}/$BUILDINFO_SIGNED" submit@buildinfo.kfreebsd.eu < ./${X}/$BUILDINFO_SIGNED || log_error "Could not submit ${X}/$BUILDINFO_SIGNED to submit@buildinfo.kfreebsd.eu."
+	#done
+	#log_info "Done submitting .buildinfo files to submit@buildinfo.kfreebsd.eu."
 
 	# buildinfo.debian.net administred by Chris Lamb <lamby@debian.org>
 	local TMPFILE=$(mktemp --tmpdir=$TMPDIR)
