@@ -205,7 +205,7 @@ fi
 # remove too old schroot sessions
 echo "$(date -u) - Removing schroot sessions older than 2 days."
 dir=/var/lib/schroot/unpack/
-OLDSTUFF=$(find "$dir" -maxdepth 1 -type d -mtime +2 -exec ls -lad {} \;)
+OLDSTUFF=$(find "$dir" -mindepth 1 -maxdepth 1 -type d -mtime +2 -exec ls -lad {} \;)
 if [ ! -z "$OLDSTUFF" ]; then
 	echo
 	echo "schroot sessions older than 2 days found, which will be deleted:"
@@ -215,7 +215,7 @@ if [ ! -z "$OLDSTUFF" ]; then
 		echo "$(date -u) - removing schroot session $s..."
 		schroot -c "$s" --end-session
 	done
-	OLDSTUFF=$(find "$dir" -maxdepth 1 -type d -mtime +2 -exec ls -lad {} \;)
+	OLDSTUFF=$(find "$dir" -mindepth 1 -maxdepth 1 -type d -mtime +2 -exec ls -lad {} \;)
 	if [ ! -z "$OLDSTUFF" ]; then
 		echo
 		echo "Warning: Tried, but failed to remove these:"
