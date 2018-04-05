@@ -1,4 +1,5 @@
 #!/bin/bash
+# vim: set noexpandtab:
 
 # Copyright 2014-2017 Holger Levsen <holger@layer-acht.org>
 #         © 2015-2018 Mattia Rizzolo <mattia@debian.org>
@@ -185,33 +186,30 @@ if [ "$HOSTNAME" = "$MAINNODE" ] ; then
 	fi
 fi
 
-# remove old and unused schroot sessions
-echo "$(date -u) - Removing unused schroot sessions."
-cleanup_schroot_sessions() {
-       echo
-       local RESULT=""
-       for loop in $(seq 0 40) ; do
-               # first, check if no process using "schroot" is running, if thats the case, loop through all schroot sessions:
-               # arch sessions are ignored, because they are handled properly
-               pgrep -f "schroot --directory" || for i in $(schroot --all-sessions -l |grep -v "session:archlinux"||true) ; do
-                       # then, check that schroot is still not run, and then delete the session
-                       if [ -z $i ] ; then
-                               continue
-                       fi
-                       pgrep -f "schroot --directory" || schroot -e -c $i
-               done
-               RESULT=$(schroot --all-sessions -l|grep -v "session:archlinux"||true)
-               if [ -z "$RESULT" ] ; then
-                       echo "No schroot sessions in use atm..."
-                       echo
-                       break
-               fi
-               echo "$(date -u) - schroot session cleanup loop $loop"
-               sleep 15
-       done
-       echo
-}
-cleanup_schroot_sessions
+# remove too old schroot sessions
+echo "$(date -u) - Removing schroot sessions older than 2 days."
+dir=/var/lib/schroot/unpack/
+OLDSTUFF=$(find "$dir" -maxdepth 1 -type d -mtime +2 -exec ls -lad {} \;)
+if [ ! -z "$OLDSTUFF" ]; then
+	echo
+	echo "schroot sessions older than 2 days found, which will be deleted:"
+	echo "$OLDSTUFF"
+	echo
+	set -x
+	for s in $(find "$dir" -mindepth 1 -maxdepth 1 -type d -mtime +2 -print0 | xargs -0 -r basename -a); do
+		echo "$(date -u) - removing schroot session $s..."
+		schroot -c "$s" --end-session
+	done
+	OLDSTUFF=$(find "$dir" -maxdepth 1 -type d -mtime +2 -exec ls -lad {} \;)
+	if [ ! -z "$OLDSTUFF" ]; then
+		echo
+		echo "Warning: Tried, but failed to remove these:"
+		echo "$OLDSTUFF"
+		echo "Manual cleanup needed"
+	fi
+	echo
+	DIRTY=true
+fi
 
 # find old schroots
 echo "$(date -u) - Removing schroots older than 3 days."
