@@ -5,6 +5,8 @@
 #           ©      2018 Mattia Rizzolo <mattia@debian.org>
 # released under the GPLv=2
 
+set -e
+
 DEBUG=false
 . /srv/jenkins/bin/common-functions.sh
 common_init "$@"
