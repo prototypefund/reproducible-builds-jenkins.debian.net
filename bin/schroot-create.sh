@@ -220,7 +220,7 @@ sudo tee /etc/schroot/chroot.d/jenkins-"$TARGET" <<-__END__
 __END__
 if $REPRODUCIBLE ; then
 	sudo tee -a /etc/schroot/chroot.d/jenkins-"$TARGET" <<-__END__
-		file=$SCHROOT_BASE/$TARGET-$rand
+		directory=$SCHROOT_BASE/$TARGET-$rand
 		type=directory
 		union-type=overlay
 	__END__
