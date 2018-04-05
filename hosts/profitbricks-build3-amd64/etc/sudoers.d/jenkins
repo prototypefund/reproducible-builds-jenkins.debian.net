@@ -3,8 +3,10 @@ jenkins ALL=  \
 	/usr/bin/tee /schroots/*, \
 	/usr/bin/tee -a /schroots/*, \
 	/usr/bin/tee /etc/schroot/chroot.d/jenkins*, \
+	/usr/bin/tee -a /etc/schroot/chroot.d/jenkins*, \
 	/bin/chmod +x /schroots/*, \
 	/bin/chmod +x /chroots/*, \
+	/bin/tar -c --exclude ./sys/\* --exclude ./proc/\* -f /schroots/*, \
 	/usr/sbin/chroot /schroots/*, \
 	/bin/rm -rf --one-file-system /schroots/*, \
 	/bin/rm -rf --one-file-system /srv/live-build/*, \
