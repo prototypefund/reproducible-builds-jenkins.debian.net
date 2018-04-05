@@ -234,7 +234,7 @@ fi
 
 # find old schroots
 echo "$(date -u) - Removing schroots older than 3 days."
-regex="/schroots/reproducible-.*-[0-9]{1,5}"
+regex="/schroots/(reproducible-.+-[0-9]{1,5}|schroot-install-.+)"
 OLDSTUFF=$(find /schroots/ -maxdepth 1 -type d -regextype posix-extended -regex "$regex" -mtime +2 -exec ls -lad {} \; || true)
 if [ ! -z "$OLDSTUFF" ] ; then
 	echo
