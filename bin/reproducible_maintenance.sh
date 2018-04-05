@@ -211,7 +211,6 @@ if [ ! -z "$OLDSTUFF" ]; then
 	echo "schroot sessions older than 2 days found, which will be deleted:"
 	echo "$OLDSTUFF"
 	echo
-	set -x
 	for s in $(find "$dir" -mindepth 1 -maxdepth 1 -type d -mtime +2 -print0 | xargs -0 -r basename -a); do
 		echo "$(date -u) - removing schroot session $s..."
 		schroot -c "$s" --end-session
