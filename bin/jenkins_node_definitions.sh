@@ -58,6 +58,7 @@ wbd0-armhf-rb.debian.net
 wbq0-armhf-rb.debian.net"
 
 # return the ports sshd is listening on
+NODE_RUN_IN_THE_FUTURE=false
 get_node_ssh_port() {
 	local NODE_NAME=$1
 	case "$NODE_NAME" in
@@ -148,28 +149,36 @@ get_node_ssh_port() {
 	  p64c-armhf-rb.debian.net)
 	    PORT=2248
 	    ;;
+	  profitbricks-build[456]*|profitbricks-build1[56]*)
+	    NODE_RUN_IN_THE_FUTURE=true
+	    PORT=22
+	    ;;
 	  profitbricks-build*)
 	    PORT=22
 	    ;;
 	  codethink-sled9*)
+	    NODE_RUN_IN_THE_FUTURE=true
 	    PORT=10109
 	    ;;
 	  codethink-sled10*)
 	    PORT=10110
 	    ;;
 	  codethink-sled11*)
+	    NODE_RUN_IN_THE_FUTURE=true
 	    PORT=10111
 	    ;;
 	  codethink-sled12*)
 	    PORT=10112
 	    ;;
 	  codethink-sled13*)
+	    NODE_RUN_IN_THE_FUTURE=true
 	    PORT=10113
 	    ;;
 	  codethink-sled14*)
 	    PORT=10114
 	    ;;
 	  codethink-sled15*)
+	    NODE_RUN_IN_THE_FUTURE=true
 	    PORT=10115
 	    ;;
 	  codethink-sled16*)
