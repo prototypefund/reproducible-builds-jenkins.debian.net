@@ -14,9 +14,9 @@ warning /Warning: cannot update HTML pages for.+/
 warning /Warning: too much difference for .+, aborting. Please investigate and update manually./
 warning /Warning: something went wrong while parsing the build manifest as YAML file.+/
 warning /Warning: dose-deb-coinstall cannot calculate the installable set for.+/
-warning /Warning: could not download .+, skipping.+/warning /Warning: couldn't delete old files from.+/
-warning /Warning: failed to update the .+ schroot./
-warning /Warning: failed to update Arch Linux schroot./
+warning /Warning: could not download .+, skipping.+/
+warning /Warning: couldn't delete old files from.+/
+warning /Warning: failed to update/
 warning /Warning: The following builds have failed due to diffoscope schroot problems and will be rescheduled.+/
 warning /W: The repository .+ is not signed./
 warning /W: There is no public key available for the following key IDs:.+/
@@ -27,3 +27,5 @@ warning /Warning, more than one kernel in.+/
 warning /Warning, rise of the jenkins job zombies.+/
 warning /Warning, jenkins.log is larger than.+/
 warning /^WARNING: Kernel needs upgrade/
+warning /Warning: schroots older than/
+warning /Warning: SQL query .+ failed.$/
