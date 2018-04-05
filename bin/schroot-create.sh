@@ -72,50 +72,6 @@ if [ -z "$SCHROOT_TARGET" ]; then
 fi
 sudo chmod +x $SCHROOT_TARGET	# workaround #844220 / #872812
 
-#
-# create script to add key for reproducible repo
-# and configuring APT to ignore Release file expiration (since the host may
-# have the date set far in the future)
-#
-reproducible_setup() {
-	cat > $1 <<- EOF
-echo "-----BEGIN PGP PUBLIC KEY BLOCK-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-mQINBFQsy/gBEADKGF55qQpXxpTn7E0Vvqho82/HFB/yT9N2wD8TkrejhJ1I6hfJ
-zFXD9fSi8WnNpLc6IjcaepuvvO4cpIQ8620lIuONQZU84sof8nAO0LDoMp/QdN3j
-VViXRXQtoUmTAzlOBNpyb8UctAoSzPVgO3jU1Ngr1LWi36hQPvQWSYPNmbsDkGVE
-unB0p8DCN88Yq4z2lDdlHgFIy0IDNixuRp/vBouuvKnpe9zyOkijV83Een0XSUsZ
-jmoksFzLzjChlS5fAL3FjtLO5XJGng46dibySWwYx2ragsrNUUSkqTTmU7bOVu9a
-zlnQNGR09kJRM77UoET5iSXXroK7xQ26UJkhorW2lXE5nQ97QqX7igWp2u0G74RB
-e6y3JqH9W8nV+BHuaCVmW0/j+V/l7T3XGAcbjZw1A4w5kj8YGzv3BpztXxqyHQsy
-piewXLTBn8dvgDqd1DLXI5gGxC3KGGZbC7v0rQlu2N6OWg2QRbcVKqlE5HeZxmGV
-vwGQs/vcChc3BuxJegw/bnP+y0Ys5tsVLw+kkxM5wbpqhWw+hgOlGHKpJLNpmBxn
-T+o84iUWTzpvHgHiw6ShJK50AxSbNzDWdbo7p6e0EPHG4Gj41bwO4zVzmQrFz//D
-txVBvoATTZYMLF5owdCO+rO6s/xuC3s04pk7GpmDmi/G51oiz7hIhxJyhQARAQAB
-tC5EZWJpYW4gUmVwcm9kdWNpYmxlIEJ1aWxkcyBBcmNoaXZlIFNpZ25pbmcgS2V5
-iQI9BBMBCAAnAhsDBQsJCAcDBRUKCQgLBRYDAgEAAh4BAheABQJakW5lBQkKJwlk
-AAoJEF23ymfqWaMfAh0P/RJqbeTtlWYXKWIWU9y+DtJYKLECGhUxRymeIE4NQvkD
-ffHgGKc6CiN7s3gVnWb/hJE9U7UjpQ0E2ufpneGT1JNNK2yCGWsC1ArFRD2ZCdKF
-xDzY9zkh6I9t87Qznb1zfbEkbru89Z+V0Pg6ROMHqQR2fX+FwivblsevGJ27AtZ1
-+hv1CzKdGooDSMJlhYxwR8I0jjoaVV8SI7Kbz+73vvXfrQGHu4gVR1Qlby+pD9NS
-NydzmWdgWxBrSQdWg/K+U3AmLWnLTDcqa54G5S8jyyxMYLRWzVrkz3/CkH3E4qru
-44sVit8GppLUiESR2O7gqDeVnALYNN0m0fiy3vige4AXl/T4R8GFoueCFu7aHN3V
-kNjg2uIXUisyi123r5sb8AtsWYSYO9tocMDIzUxM2lyJAIhJNg+XJifGKxq3LSms
-N13hh6PJsBYJN5H8ykYyHlteIKoYGkSPM8qxqm5nLc3skAuZsQloZhnDHSZmPAZO
-zaIcpUkirRMKTCN4S9CBT6q1dHZwANgx9sn2Z7bWs6F5D//54BmYoHdVCWtptwUg
-0hI7x8jS5PsAI5qQtdA48SBmknDuuLizD6HkJ3XX6PLQ/naaMCpillm0uTEUc0Rw
-3t6mjgG4PvM7bVUNXK3mIjgY/IU5z/tDemzZywiI5sigUz0aBkKI4C4ugoWQdC4c
-=LHVA
------END PGP PUBLIC KEY BLOCK-----" > /etc/apt/trusted.gpg.d/reproducible.asc
-apt-key list
-echo
-echo "Configuring APT to ignore the Release file expiration"
-echo 'Acquire::Check-Valid-Until "false";' > /etc/apt/apt.conf.d/398future
-echo
-EOF
-}
-
 robust_chroot_apt() {
 	set +e
 	sudo chroot $SCHROOT_TARGET apt-get $@ | tee $TMPLOG
@@ -172,10 +128,8 @@ bootstrap() {
 	__END__
 
 	if $REPRODUCIBLE ; then
-		TMPFILE=$(mktemp -u)
-		reproducible_setup $SCHROOT_TARGET/$TMPFILE
-		sudo chroot $SCHROOT_TARGET bash $TMPFILE
-		rm $SCHROOT_TARGET/$TMPFILE
+		echo "Configuring APT to ignore the Release file expiration..."
+		echo 'Acquire::Check-Valid-Until "false";' | sudo tee -a $SCHROOT_TARGET/etc/apt/apt.conf.d/398future >/dev/null
 	fi
 
 
