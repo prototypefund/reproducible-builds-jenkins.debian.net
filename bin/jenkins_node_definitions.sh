@@ -184,6 +184,9 @@ get_node_ssh_port() {
 	  codethink-sled16*)
 	    PORT=10116
 	    ;;
+	  jenkins|jenkins.debian.net)
+	    PORT=22
+	    ;;
 	  *)
 	    echo >&2 "Unknown node $NODE_NAME."
 	    exit 1
