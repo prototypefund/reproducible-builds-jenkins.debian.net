@@ -1,6 +1,8 @@
 #!/bin/bash
+# vim: set noexpandtab:
 
 # Copyright © 2015-2016 Holger Levsen <holger@layer-acht.org>
+#           ©      2018 Mattia Rizzolo <mattia@debian.org>
 # released under the GPLv=2
 
 DEBUG=false
@@ -65,12 +67,15 @@ for ARCH in ${ARCHS} ; do
 			esac
 		fi
 		write_page "<tr><td>$JENKINS_NODENAME</td>"
+		# health check
 		URL="https://jenkins.debian.net/view/reproducible/view/Node_maintenance/job/reproducible_node_health_check_${ARCH}_${JENKINS_NODENAME}"
 		BADGE="$URL/badge/icon"
 		write_page "<td><a href='$URL'><img src='$BADGE' /></a></td>"
+		# maintenance
 		URL="https://jenkins.debian.net/view/reproducible/view/Node_maintenance/job/reproducible_maintenance_${ARCH}_${JENKINS_NODENAME}"
 		BADGE="$URL/badge/icon"
 		write_page "<td><a href='$URL'><img src='$BADGE' /></a></td>"
+		# worker.log links
 		case $JENKINS_NODENAME in
 			jenkins)	write_page "<td></td>" ;;
 			profitbricks3)	write_page "<td></td>" ;;
@@ -85,17 +90,33 @@ for ARCH in ${ARCHS} ; do
 					write_page "</td>"
 					;;
 		esac
+		# schroot setup
 		for SUITE in ${SUITES} ; do
 			case $JENKINS_NODENAME in
-				profitbricks3)	write_page "<td></td>" ;;
+				profitbricks3)
+					if [ "$SUITE" = "unstable" ]; then
+						URL="https://jenkins.debian.net/view/reproducible/view/Debian_setup_${ARCH}/job/reproducible_setup_schroot_${SUITE}_diffoscope_${ARCH}_${JENKINS_NODENAME}"
+						BADGE="$URL/badge/icon"
+						write_page "<td><a href='$URL'><img src='$BADGE' /></a></td>"
+					else
+						write_page "<td></td>"
+					fi
+					;;
 				profitbricks4)	write_page "<td></td>" ;;
 				profitbricks7)	write_page "<td></td>" ;;
 				*)		URL="https://jenkins.debian.net/view/reproducible/view/Debian_setup_${ARCH}/job/reproducible_setup_schroot_${SUITE}_${ARCH}_${JENKINS_NODENAME}"
 						BADGE="$URL/badge/icon"
-						write_page "<td><a href='$URL'><img src='$BADGE' /></a></td>"
+						write_page "<td><a href='$URL'><img src='$BADGE' /></a>"
+						if [ "$JENKINS_NODENAME" = "jenkins" ]; then
+							URL="https://jenkins.debian.net/view/reproducible/view/Debian_setup_${ARCH}/job/reproducible_setup_schroot_${SUITE}_diffoscope_${ARCH}_${JENKINS_NODENAME}"
+							BADGE="$URL/badge/icon"
+							write_page "<a href='$URL'><img src='$BADGE' /></a>"
+						fi
+						write_page "</td>"
 						;;
 			esac
 		done
+		# pbuilder setup
 		for SUITE in ${SUITES} ; do
 			case $JENKINS_NODENAME in
 				jenkins)	write_page "<td></td>" ;;
