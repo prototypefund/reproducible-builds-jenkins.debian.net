@@ -34,6 +34,9 @@ echo
 echo "Preseeding man-db/auto-update to false"
 echo "man-db man-db/auto-update boolean false" | debconf-set-selections
 echo
+echo "Configuring dpkg to not fsync()"
+echo "force-unsafe-io" > /etc/dpkg/dpkg.cfg.d/02speedup
+echo
 EOF
 }
 
