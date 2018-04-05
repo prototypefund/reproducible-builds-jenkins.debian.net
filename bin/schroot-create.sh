@@ -135,6 +135,13 @@ bootstrap() {
 	Acquire::Languages none;
 	__END__
 
+	sudo tee -a "$SCHROOT_TARGET/var/cache/debconf/config.dat" > /dev/null <<-__END__
+	Name: man-db/auto-update
+	Template: man-db/auto-update
+	Value: false
+	Owners: man-db
+	__END__
+
 	. /srv/jenkins/bin/jenkins_node_definitions.sh
 	get_node_ssh_port "$HOSTNAME"
 	if "$NODE_RUN_IN_THE_FUTURE" ; then

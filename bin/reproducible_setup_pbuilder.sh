@@ -31,6 +31,8 @@ echo
 echo "Configuring APT to ignore the Release file expiration"
 echo 'Acquire::Check-Valid-Until "false";' > /etc/apt/apt.conf.d/398future
 echo
+echo "Preseeding man-db/auto-update to false"
+echo "man-db man-db/auto-update boolean false" | debconf-set-selections
 echo
 EOF
 }
