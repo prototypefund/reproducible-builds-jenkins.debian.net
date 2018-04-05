@@ -193,12 +193,21 @@ bootstrap $@
 trap - INT TERM EXIT
 
 # pivot the new schroot in place
-cd "$SCHROOT_TARGET"
-rand="$RANDOM"
-echo "$(date -u) - tarballing the chroot…"
-sudo tar -c --exclude ./sys/* --exclude ./proc/* -f "$SCHROOT_BASE/$TARGET-$rand.tar" ./*
-echo "$(date -u) - moving the chroot in place…"
-sudo mv "$SCHROOT_BASE/$TARGET-$rand.tar" "$SCHROOT_BASE/$TARGET.tar"
+rand="$(date -u +%Y%m%d)-$RANDOM"
+if $REPRODUCIBLE ; then
+	# for diffoscope we really need a directory schroot, as otherwise we end up
+	# with too many unpacked chroots
+	# Let's just keep changing the trailing number and trust the maintenance job
+	# to clean up old chroots.
+	echo "$(date -u) This chroot will be placed in $SCHROOT_BASE/$TARGET-$rand"
+	sudo mv "$SCHROOT_TARGET" "$SCHROOT_BASE/$TARGET-$rand"
+else
+	cd "$SCHROOT_TARGET"
+	echo "$(date -u) - tarballing the chroot…"
+	sudo tar -c --exclude ./sys/* --exclude ./proc/* -f "$SCHROOT_BASE/$TARGET-$rand.tar" ./*
+	echo "$(date -u) - moving the chroot in place…"
+	sudo mv "$SCHROOT_BASE/$TARGET-$rand.tar" "$SCHROOT_BASE/$TARGET.tar"
+fi
 
 
 # write the schroot config
@@ -206,10 +215,20 @@ echo "$(date -u) - writing schroot configuration"
 sudo tee /etc/schroot/chroot.d/jenkins-"$TARGET" <<-__END__
 	[jenkins-$TARGET]
 	description=Jenkins schroot $TARGET
-	file=$SCHROOT_BASE/$TARGET.tar
-	type=file
 	root-users=jenkins
 	source-root-users=jenkins
+__END__
+if $REPRODUCIBLE ; then
+	sudo tee -a /etc/schroot/chroot.d/jenkins-"$TARGET" <<-__END__
+		file=$SCHROOT_BASE/$TARGET-$rand
+		type=directory
+		union-type=overlay
 	__END__
+else
+	sudo tee -a /etc/schroot/chroot.d/jenkins-"$TARGET" <<-__END__
+		file=$SCHROOT_BASE/$TARGET.tar
+		type=file
+	__END__
+fi
 
 echo "schroot $TARGET set up successfully in $SCHROOT_BASE/$TARGET.tar - exiting now."
