@@ -196,25 +196,25 @@ set -e
 # delete build services logfiles
 if [ "$HOSTNAME" = "$MAINNODE" ] ; then
 	if [ -d /var/lib/jenkins/userContent/reproducible/debian/build_service/ ] ; then
-		echo "$(date -u) - Deleting logfiles from build services directories, older than a day."
-		OLDSTUFF=$(find /var/lib/jenkins/userContent/reproducible/debian/build_service/ -maxdepth 2 -regex '.*/[0-9]+' -type d -mtime +0 -exec ls -lad {} \; || true)
+		echo "$(date -u) - Deleting logfiles from build services directories, older than 2 days."
+		OLDSTUFF=$(find /var/lib/jenkins/userContent/reproducible/debian/build_service/ -maxdepth 2 -regex '.*/[0-9]+' -type d -mtime +1 -exec ls -lad {} \; || true)
 		if [ ! -z "$OLDSTUFF" ] ; then
 			echo
 			echo "Old logfiles cleaned in /var/lib/jenkins/userContent/reproducible/debian/build_service/"
 			echo -n "$OLDSTUFF"
-			find /var/lib/jenkins/userContent/reproducible/debian/build_service/ -maxdepth 2 -regex '.*/[0-9]+' -type d -mtime +0 -exec rm -rf --one-file-system {} \; || true
+			find /var/lib/jenkins/userContent/reproducible/debian/build_service/ -maxdepth 2 -regex '.*/[0-9]+' -type d -mtime +1 -exec rm -rf --one-file-system {} \; || true
 			echo
 		fi
 	fi
 fi
 
 # remove too old schroot sessions
-echo "$(date -u) - Removing schroot sessions older than 2 days."
+echo "$(date -u) - Removing schroot sessions older than 3 days."
 dir=/var/lib/schroot/unpack/
 OLDSTUFF=$(find "$dir" -mindepth 1 -maxdepth 1 -type d -mtime +2 -exec ls -lad {} \;)
 if [ ! -z "$OLDSTUFF" ]; then
 	echo
-	echo "schroot sessions older than 2 days found, which will be deleted:"
+	echo "schroot sessions older than 3 days found, which will be deleted:"
 	echo "$OLDSTUFF"
 	echo
 	for s in $(find "$dir" -mindepth 1 -maxdepth 1 -type d -mtime +2 -print0 | xargs -0 -r basename -a); do
