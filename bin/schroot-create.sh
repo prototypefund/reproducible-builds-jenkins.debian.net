@@ -54,7 +54,22 @@ shift
 SUITE="$1"
 shift
 
+SCHROOT_TARGET=$(mktemp -d -p $SCHROOT_BASE/ schroot-install-$TARGET-XXXX)
+if [ -z "$SCHROOT_TARGET" ]; then
+	echo "Could not create a directory to create the chroot in, aborting."
+	exit 1
+fi
 TMPLOG=$(mktemp --tmpdir=$TMPDIR schroot-create-XXXXXXXX)
+cleanup() {
+	cd
+	if [ -d "$SCHROOT_TARGET" ]; then
+		sudo rm -rf --one-file-system "$SCHROOT_TARGET" || ( echo "Warning: $SCHROOT_TARGET could not be fully removed during cleanup." ; ls "$SCHROOT_TARGET" -la )
+	fi
+	rm -f "$TMPLOG"
+}
+trap cleanup INT TERM EXIT
+
+sudo chmod +x $SCHROOT_TARGET	# workaround #844220 / #872812
 
 if [ "$SUITE" = "experimental" ] ; then
 	# experimental cannot be bootstrapped
@@ -66,12 +81,6 @@ elif [ "$SUITE" != "unstable" ] && [ "$SUITE" != "sid" ] ; then
 	EXTRA_SOURCES[7]="deb-src http://security.debian.org $SUITE/updates main $CONTRIB"
 fi
 
-export SCHROOT_TARGET=$(mktemp -d -p $SCHROOT_BASE/ schroot-install-$TARGET-XXXX)
-if [ -z "$SCHROOT_TARGET" ]; then
-	echo "Could not create a directory to create the chroot in, aborting."
-	exit 1
-fi
-sudo chmod +x $SCHROOT_TARGET	# workaround #844220 / #872812
 
 robust_chroot_apt() {
 	set +e
@@ -181,14 +190,6 @@ bootstrap() {
 	fi
 }
 
-cleanup() {
-	cd
-	if [ -d "$SCHROOT_TARGET" ]; then
-		sudo rm -rf --one-file-system "$SCHROOT_TARGET" || ( echo "Warning: $SCHROOT_TARGET could not be fully removed during cleanup." ; ls "$SCHROOT_TARGET" -la )
-	fi
-	rm -f "$TMPLOG"
-}
-trap cleanup INT TERM EXIT
 bootstrap $@
 
 trap - INT TERM EXIT
