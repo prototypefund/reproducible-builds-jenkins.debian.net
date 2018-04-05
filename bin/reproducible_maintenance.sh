@@ -116,6 +116,12 @@ for s in $SUITES ; do
 			echo "Error: failed to create the $s/$ARCH chdist."
 			exit 1
 		fi
+		. /srv/jenkins/bin/jenkins_node_definitions.sh
+		get_node_ssh_port "$HOSTNAME"
+		if "$NODE_RUN_IN_THE_FUTURE" ; then
+			echo "This node is reported to run in the future, configuring APT to ignore the Release file expiration..."
+			echo 'Acquire::Check-Valid-Until "false";' > "$CHPATH/$distname/etc/apt/apt.conf.d/398future"
+		fi
 	fi
 	if ! chdist --data-dir="$CHPATH" apt-get "$distname" update ; then
 		echo "Warning: failed to update the $s/$ARCH chdist."
