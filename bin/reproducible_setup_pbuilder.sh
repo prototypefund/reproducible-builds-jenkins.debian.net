@@ -1,6 +1,8 @@
 #!/bin/bash
+# vim: set noexpandtab:
 
 # Copyright 2014-2017 Holger Levsen <holger@layer-acht.org>
+#           ©    2018 Mattia Rizzolo <mattia@debian.org>
 # released under the GPLv=2
 
 DEBUG=false
@@ -28,9 +30,6 @@ create_customized_tmpfile() {
 # this script is run within the pbuilder environment to further customize initially
 #
 echo
-echo "Configuring APT to ignore the Release file expiration"
-echo 'Acquire::Check-Valid-Until "false";' > /etc/apt/apt.conf.d/398future
-echo
 echo "Preseeding man-db/auto-update to false"
 echo "man-db man-db/auto-update boolean false" | debconf-set-selections
 echo
@@ -38,6 +37,16 @@ echo "Configuring dpkg to not fsync()"
 echo "force-unsafe-io" > /etc/dpkg/dpkg.cfg.d/02speedup
 echo
 EOF
+	. /srv/jenkins/bin/jenkins_node_definitions.sh
+	get_node_ssh_port "$HOSTNAME"
+	if "$NODE_RUN_IN_THE_FUTURE" ; then
+		cat >> $TMPFILE <<- EOF
+			echo "Configuring APT to ignore the Release file expiration"
+			echo 'Acquire::Check-Valid-Until "false";' > /etc/apt/apt.conf.d/398future
+			echo
+		EOF
+	fi
+
 }
 
 create_setup_our_repo_tmpfile() {
