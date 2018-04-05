@@ -224,29 +224,3 @@ publish_changes_to_userContent() {
 		kgb-client --conf /srv/jenkins/kgb/$CHANNEL.conf --relay-msg "$MESSAGE"
 	fi
 }
-
-cleanup_schroot_sessions() {
-	echo
-	local RESULT=""
-	for loop in $(seq 0 40) ; do
-		# first, check if no process using "schroot" is running, if thats the case, loop through all schroot sessions:
-		# arch sessions are ignored, because they are handled properly
-		pgrep -f "schroot --directory" || for i in $(schroot --all-sessions -l |grep -v "session:archlinux"||true) ; do
-			# then, check that schroot is still not run, and then delete the session
-			if [ -z $i ] ; then
-				continue
-			fi
-			pgrep -f "schroot --directory" || schroot -e -c $i
-		done
-		RESULT=$(schroot --all-sessions -l|grep -v "session:archlinux"||true)
-		if [ -z "$RESULT" ] ; then
-			echo "No schroot sessions in use atm..."
-			echo
-			break
-		fi
-		echo "$(date -u) - schroot session cleanup loop $loop"
-		sleep 15
-	done
-	echo
-}
-
