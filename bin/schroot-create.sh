@@ -40,6 +40,7 @@ if [ "$1" = "backports" ] ; then
 	shift
 fi
 
+REPRODUCIBLE=false
 if [ "$1" = "reproducible" ] ; then
 	EXTRA_SOURCES[4]="deb http://reproducible.alioth.debian.org/debian/ ./"
 	EXTRA_SOURCES[5]="deb-src http://reproducible.alioth.debian.org/debian/ ./"
