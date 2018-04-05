@@ -106,6 +106,22 @@ if [ ! -z "$http_proxy" ] ; then
 fi
 for s in $SUITES ; do
 	#
+	# chdist update
+	#
+	distname="$s-$ARCH"
+	echo "$(date -u) - updating the $s/$ARCH chdist now."
+	if [ ! -d "$CHPATH/$distname" ]; then
+		echo "$(date -u) - chdist not existing, creating one now..."
+		if ! chdist --data-dir="$CHPATH" --arch="$ARCH" create "$distname" "$MIRROR" "$s" main ; then
+			echo "Error: failed to create the $s/$ARCH chdist."
+			exit 1
+		fi
+	fi
+	if ! chdist --data-dir="$CHPATH" apt-get "$distname" update ; then
+		echo "Warning: failed to update the $s/$ARCH chdist."
+		DIRTY=true
+	fi
+	#
 	# schroot update
 	#
 	echo "$(date -u) - updating the $s/$ARCH schroot now."

@@ -493,17 +493,7 @@ for SUITE in $SUITES ; do
 
 	DISTNAME="$SUITE-$ARCH"
 	TPATH=/srv/reproducible-results/meta_pkgsets-$SUITE
-	CHPATH=/srv/reproducible-results/chdist-$SUITE
-	mkdir -p $TPATH $CHPATH
-
-	# delete possibly existing dist
-	cd $CHPATH
-	rm -rf $DISTNAME
-	cd -
-
-	# the "[arch=$ARCH]" is a workaround until #774685 is fixed
-	chdist --data-dir=$CHPATH --arch=$ARCH create $DISTNAME "[arch=$ARCH]" $MIRROR $SUITE main
-	chdist --data-dir=$CHPATH --arch=$ARCH apt-get $DISTNAME update
+	mkdir -p $TPATH
 
 	PACKAGES=$(ls $CHPATH/$DISTNAME/var/lib/apt/lists/*_dists_${SUITE}_main_binary-${ARCH}_Packages)
 	SOURCES=$(ls $CHPATH/$DISTNAME/var/lib/apt/lists/*_dists_${SUITE}_main_source_Sources)

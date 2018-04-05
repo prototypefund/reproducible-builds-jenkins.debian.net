@@ -29,6 +29,8 @@ JENKINS_URL=${JENKINS_URL:0:-1}
 DBDSUITE="unstable"
 BIN_PATH=/srv/jenkins/bin
 TEMPLATE_PATH=/srv/jenkins/mustache-templates/reproducible
+CHPATH=/srv/reproducible-results/chdist
+mkdir -p "$CHPATH"
 
 # Debian suites being tested
 SUITES="stretch buster unstable experimental"
