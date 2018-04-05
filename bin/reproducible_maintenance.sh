@@ -213,13 +213,14 @@ fi
 
 # find old schroots
 echo "$(date -u) - Removing schroots older than 3 days."
-OLDSTUFF=$(find /schroots/ -maxdepth 1 -type d -regextype posix-extended -regex "/schroots/reproducible-.*-[0-9]{1,5}" -mtime +2 -exec ls -lad {} \; || true)
+regex="/schroots/reproducible-.*-[0-9]{1,5}"
+OLDSTUFF=$(find /schroots/ -maxdepth 1 -type d -regextype posix-extended -regex "$regex" -mtime +2 -exec ls -lad {} \; || true)
 if [ ! -z "$OLDSTUFF" ] ; then
 	echo
 	echo "schroots older than 3 days found in /schroots, which will be deleted:"
-	find /schroots/ -maxdepth 1 -type d -regextype posix-extended -regex "/schroots/reproducible-.*-[0-9]{1,5}" -mtime +2 -exec sudo rm -rf --one-file-system {} \; || true
+	find /schroots/ -maxdepth 1 -type d -regextype posix-extended -regex "$regex" -mtime +2 -exec sudo rm -rf --one-file-system {} \; || true
 	echo "$OLDSTUFF"
-	OLDSTUFF=$(find /schroots/ -maxdepth 1 -type d -regextype posix-extended -regex "/schroots/reproducible-.*-[0-9]{1,5}" -mtime +2 -exec ls -lad {} \; || true)
+	OLDSTUFF=$(find /schroots/ -maxdepth 1 -type d -regextype posix-extended -regex "$regex" -mtime +2 -exec ls -lad {} \; || true)
 	if [ ! -z "$OLDSTUFF" ] ; then
 		echo
 		echo "Warning: Tried, but failed to delete these:"
