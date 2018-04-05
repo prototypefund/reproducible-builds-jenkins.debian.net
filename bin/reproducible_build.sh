@@ -515,7 +515,7 @@ download_source() {
 		schroot --directory $TMPDIR -c chroot:jenkins-reproducible-$SUITE apt-get -- --download-only --only-source source ${SRCPACKAGE}=${VERSION} 2>&1 | tee ${TMPLOG}
 	else
 		# the build master only needs to the the .dsc file
-		chdist --data-dir="$CHPATH" apt-get "$SUITE-$ARCH" --download-only --only-source --print-uris source ${SRCPACKAGE}=${VERSION} | grep \.dsc|cut -d " " -f1|xargs -r wget --timeout=180 --tries=3 2>&1 | tee ${TMPLOG}
+		chdist --data-dir="$CHPATH" apt-get "$SUITE-$(dpkg --print-architecture)" --download-only --only-source --print-uris source ${SRCPACKAGE}=${VERSION} | grep \.dsc|cut -d " " -f1|xargs -r wget --timeout=180 --tries=3 2>&1 | tee ${TMPLOG}
 	fi
 	local ENGLISH_RESULT=$(egrep 'E: (Unable to find a source package for|Failed to fetch.*(Unable to connect to|Connection failed|Size mismatch|Cannot initiate the connection to|Bad Gateway|Service Unavailable))' ${TMPLOG})
 	local FRENCH_RESULT=$(egrep 'E: (Unable to find a source package for|impossible de récupérer.*(Unable to connect to|Échec de la connexion|Size mismatch|Cannot initiate the connection to|Bad Gateway|Service Unavailable))' ${TMPLOG})
