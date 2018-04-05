@@ -224,7 +224,7 @@ if [ ! -z "$OLDSTUFF" ]; then
 	OLDSTUFF=$(find "$dir" -mindepth 1 -maxdepth 1 -type d -mtime +2 -exec ls -lad {} \;)
 	if [ ! -z "$OLDSTUFF" ]; then
 		echo
-		echo "Warning: Tried, but failed to remove these:"
+		echo "Warning: Tried, but failed to delete these:"
 		echo "$OLDSTUFF"
 		echo "Manual cleanup needed"
 	fi
@@ -254,7 +254,7 @@ fi
 
 # find very old schroots
 echo "$(date -u) - Detecting schroots older than 1 month"
-OLDSTUFF=$(find /schroots/ -maxdepth 1 -mtime +30 -exec ls -lad {} \;)
+OLDSTUFF=$(find /schroots/ -mindepth 1 -maxdepth 1 -mtime +30 -exec ls -lad {} \;)
 if [ ! -z "$OLDSTUFF" ]; then
 	echo
 	echo "Warning: schroots older than 1 month found in /schroot:"
