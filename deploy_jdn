@@ -29,7 +29,8 @@
 
 START=$(date +'%s')
 GIT_REPO="git://anonscm.debian.org/qa/jenkins.debian.net.git"
-export HOSTS="codethink-sled9-arm64.debian.net
+export HOSTS="
+codethink-sled9-arm64.debian.net
 codethink-sled10-arm64.debian.net
 codethink-sled11-arm64.debian.net
 codethink-sled12-arm64.debian.net
@@ -79,7 +80,8 @@ rpi2b-armhf-rb.debian.net
 rpi2c-armhf-rb.debian.net
 wbd0-armhf-rb.debian.net
 wbq0-armhf-rb.debian.net
-root@jenkins.debian.net"
+root@jenkins.debian.net
+"
 
 ALL_HOSTS=$HOSTS
 
