@@ -107,7 +107,7 @@ for ARCH in ${ARCHS} ; do
 				*)		URL="https://jenkins.debian.net/view/reproducible/view/Debian_setup_${ARCH}/job/reproducible_setup_schroot_${SUITE}_${ARCH}_${JENKINS_NODENAME}"
 						BADGE="$URL/badge/icon"
 						write_page "<td><a href='$URL'><img src='$BADGE' /></a>"
-						if [ "$JENKINS_NODENAME" = "jenkins" -a "$SUITE" != "experimental"]; then
+						if [ "$JENKINS_NODENAME" = "jenkins" -a "$SUITE" != "experimental" ]; then
 							URL="https://jenkins.debian.net/view/reproducible/view/Debian_setup_${ARCH}/job/reproducible_setup_schroot_${SUITE}_diffoscope_${ARCH}_${JENKINS_NODENAME}"
 							BADGE="$URL/badge/icon"
 							write_page "<a href='$URL'><img src='$BADGE' /></a>"
