@@ -21,6 +21,15 @@ common_init "$@"
 # common code defining db access
 . /srv/jenkins/bin/reproducible_common.sh
 
+notify_log_of_failure() {
+	tee -a /var/log/jenkins/reproducible-builder-errors.log <<-END
+
+		$WORKER_NAME/$BUILD_ID exited with an error.  Return code: $RETCODE
+		Check out the log at $BUILD_URL
+
+		END
+}
+
 # endless loop
 while true ; do
 	#
@@ -79,6 +88,10 @@ while true ; do
 	echo "                               see https://tests.reproducible-builds.org/cgi-bin/nph-logwatch?$WORKER_NAME/$BUILD_ID"
 	echo "================================================================================================"
 	echo
-	/srv/jenkins/bin/reproducible_build.sh $NODE1 $NODE2 >$BUILD_BASE/$BUILD_ID/console.log 2>&1
+	RETCODE=0
+	/srv/jenkins/bin/reproducible_build.sh $NODE1 $NODE2 >$BUILD_BASE/$BUILD_ID/console.log 2>&1 || RETCODE=$?
 	echo
+
+	[ "$RETCODE" -eq 0 ] |! notify_log_of_failure
+
 done

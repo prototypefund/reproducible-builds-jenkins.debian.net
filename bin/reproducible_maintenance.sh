@@ -496,6 +496,7 @@ fi
 if [ "$HOSTNAME" = "$MAINNODE" ] && [ $(date -u +%H) -eq 0 ]  ; then
 	# once a day, send mail about builder problems
 	files_to_mail=(
+	/var/log/jenkins/reproducible-builder-errors.log
 	/var/log/jenkins/reproducible-stale-builds.log
 	/var/log/jenkins/reproducible-race-conditions.log
 	/var/log/jenkins/reproducible-diskspace-issues.log
@@ -510,7 +511,7 @@ if [ "$HOSTNAME" = "$MAINNODE" ] && [ $(date -u +%H) -eq 0 ]  ; then
 			if [ "$(dirname $PROBLEM)" = "/var/log/jenkins" ] ; then
 				if [ "$(basename $PROBLEM)" = "reproducible-diskspace-issues.log" ]; then
 					echo "diskspace issues should always be investigated." > $TMPFILE
-				elif [ "$(basename $PROBLEM)" != "postgresql-9.4-main.log " ]; then
+				elif [ "$(basename $PROBLEM)" != "postgresql-9.6-main.log " ]; then
 					echo "A few entries per day are normal, a few dozens or hundreds probably not." > $TMPFILE
 				fi
 				if grep -q https $PROBLEM ; then
