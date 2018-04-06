@@ -112,7 +112,7 @@ Channels:   {channels}
 Subject:    {subject}
 First line: {fline}
 IRC msg:    {ircmsg}
-'''.format(date=date, jenkins_job=jenkins_job, channels=channels,
+.'''.format(date=date, jenkins_job=jenkins_job, channels=channels,
     subject=subject, fline=fline, ircmsg=ircmsg)
 )
 
