@@ -56,6 +56,7 @@ create_setup_our_repo_tmpfile() {
 #
 # this script is run within the pbuilder environment to further customize once more
 #
+echo "Configure the chroot to use the reproducible team experimental archive..."
 echo "-----BEGIN PGP PUBLIC KEY BLOCK-----
 Version: GnuPG v1.4.12 (GNU/Linux)
 
@@ -86,6 +87,9 @@ zaIcpUkirRMKTCN4S9CBT6q1dHZwANgx9sn2Z7bWs6F5D//54BmYoHdVCWtptwUg
 =LHVA
 -----END PGP PUBLIC KEY BLOCK-----" > /etc/apt/trusted.gpg.d/reproducible.asc
 echo 'deb http://reproducible.alioth.debian.org/debian/ ./' > /etc/apt/sources.list.d/reproducible.list
+echo "Package: *
+Pin: release o=reproducible
+Pin-Priority: 1001" > /etc/apt/preferences.d/reproducible
 echo
 apt-get update
 apt-get -y upgrade
