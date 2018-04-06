@@ -8,7 +8,7 @@
 # to turn jenkins email notifications into irc announcements with kgb
 # see https://salsa.debian.org/kgb-team/kgb/wikis/home
 #
-LOGFILE=/var/log/jenkins/mail.log
+LOGFILE=/var/log/jenkins/email.log
 
 rmtmp() {
     rm -f "$TMPFILE"
