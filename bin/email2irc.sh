@@ -24,6 +24,13 @@ debug123() {
 	fi
 }
 
+rmtmp() {
+    rm -f "$TMPFILE"
+}
+TMPFILE=$(mktemp email2irc-XXXXXXX)
+trap rmtmp INT TERM EXIT
+cat > "$TMPFILE"
+
 #
 # parse email headers to check if they come from jenkins
 #
@@ -94,7 +101,7 @@ while read -r line ; do
 			debug123 "#6" MY_2ND_LINE $MY_2ND_LINE
 		fi
 	fi
-done
+done < "$TMPFILE"
 # check that it's a valid job
 if [ -z $JENKINS_JOB ] ; then
 	VALID_MAIL=false
@@ -141,3 +148,6 @@ else
 	echo -e "----------\nbad luck\n-----------" >> $LOGFILE
 fi
 
+
+# try to run the new script to see how it goes
+/srv/jenkins/bin/email2irc.py -n "$TMPFILE" 2>&1 >> /var/log/jenkins/email-new.log
