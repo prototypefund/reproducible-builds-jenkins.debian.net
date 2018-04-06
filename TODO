@@ -127,7 +127,6 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 *** new table in pkg/test history page: schedule - if that package is currently scheduled
 *** add link to pkg set(s) if pkg is member of some
 ** link pkg sets and issues, that is: at least show packages without issues on pkg set pages, maybe also some issues which need actions (like uninvestigated test failures)
-** use schroot tarballs (gzipped), moves are atomic then
 ** notes related:
 *** #786396: classify issue by "toolchain" or "package" fix needed: show bugs which block a bug
 *** new page with annoted packages without categorized issues (and probably without bugs as only note content too, else there are too many)
@@ -152,8 +151,6 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 *** add new pkg set: torbrowser-build-depends
 *** fix essential set: currently it only has the ones explicitly marked Essential:yes; they and their dependencies make up the full "essential closure set" (sometimes also called pseudo-essential)
 *** replace bin/reproducible_installed_on_debian.org with a proper data provider from DSA, eg https://anonscm.debian.org/git/mirror/debian.org.git/plain/debian/control
-*** reproducible_create_meta_pkg_sets uses schroot created by dpkg_setup_schroot_jessie job (outside of reproducible job space...)
-** "fork" etc/schroot/default into etc/schroot/reproducible
 ** a reproducible_log_grep_by_sql.(py|sh) would be nice, to only grep in packages with a certain status (build in the last X days)
 ** database issues
 *** remove the rescheduling reason from the DB, that's really not needed
@@ -321,6 +318,7 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 
 * setup_archlinux_schroot job:
 ** needs to be made idempotent (currently it removes the schroot at the beginning of the job, instead of creating it elsewhere and replacing it on success at the job end…)
+** use schroot tarballs (gzipped), moves are atomic then
 * things to be done before enabling more builders:
 ** build in /srv/workspace instead of /tmp
 * only disable cert checking on the node running in the future
