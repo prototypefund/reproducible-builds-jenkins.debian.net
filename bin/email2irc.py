@@ -77,6 +77,7 @@ for part in message.walk():
         # Get only the first line
         fline = part.get_payload(decode=True).splitlines()[0]
         fline = fline.decode('utf-8', errors='replace')
+        fline = ' '.join(fline.split()[:2])
         break
 else:
     error('E: This email does not contain any text/plain part')
@@ -85,7 +86,8 @@ else:
 # If we got this far, the message is good to go and we got everything we
 # needed.
 
-ircmsg = '{} {}'.format(subject, fline)
+ircmsg = '{} {}'.format(subject.split(':', 1)[0], fline)
+ircmsg = re.sub(r'[<>]', r'', ircmsg)
 ircmsg = re.sub(r'^Failure', r'Failed ', ircmsg)
 ircmsg = re.sub(r'^Build failed in Jenkins', r'Failed ', ircmsg)
 ircmsg = re.sub(r'^Jenkins build is back to (normal|stable)', r'Fixed ', ircmsg)
@@ -98,6 +100,7 @@ ircmsg = re.sub(r'Changes:', r'', ircmsg)
 ircmsg = re.sub(r'\?page=changes$', r'', ircmsg)
 ircmsg = re.sub(r'/(console|changes)$', r'', ircmsg)
 ircmsg = re.sub(r'display/redirec.*\>$', r'', ircmsg)
+ircmsg = re.sub(r'/$', r'', ircmsg)
 
 print('''
 -----------
