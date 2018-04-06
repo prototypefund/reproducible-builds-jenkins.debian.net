@@ -62,91 +62,91 @@ NODE_RUN_IN_THE_FUTURE=false
 get_node_ssh_port() {
 	local NODE_NAME=$1
 	case "$NODE_NAME" in
-	  bbx15-armhf-rb.debian.net)
+	  bbx15*)
 	    PORT=2242
 	    ;;
-	  bpi0-armhf-rb.debian.net)
+	  bpi0*)
 	    PORT=2222
 	    ;;
-	  hb0-armhf-rb.debian.net)
+	  hb0*)
 	    PORT=2224
 	    ;;
-	  wbq0-armhf-rb.debian.net)
+	  wbq0*)
 	    PORT=2225
 	    ;;
-	  cbxi4a-armhf-rb.debian.net)
+	  cbxi4a*)
 	    PORT=2239
 	    ;;
-	  cbxi4b-armhf-rb.debian.net)
+	  cbxi4b*)
 	    PORT=2240
 	    ;;
-	  cbxi4pro0-armhf-rb.debian.net)
+	  cbxi4pro0*)
 	    PORT=2226
 	    ;;
-	  odxu4a-armhf-rb.debian.net)
+	  odxu4a*)
 	    PORT=2229
 	    ;;
-	  wbd0-armhf-rb.debian.net)
+	  wbd0*)
 	    PORT=2223
 	    ;;
-	  rpi2b-armhf-rb.debian.net)
+	  rpi2b*)
 	    PORT=2230
 	    ;;
-	  rpi2c-armhf-rb.debian.net)
+	  rpi2c*)
 	    PORT=2235
 	    ;;
-	  odxu4b-armhf-rb.debian.net)
+	  odxu4b*)
 	    PORT=2232
 	    ;;
-	  odxu4c-armhf-rb.debian.net)
+	  odxu4c*)
 	    PORT=2233
 	    ;;
-	  ff2a-armhf-rb.debian.net)
+	  ff2a*)
 	    PORT=2234
 	    ;;
-	  ff2b-armhf-rb.debian.net)
+	  ff2b*)
 	    PORT=2237
 	    ;;
-	  ff4a-armhf-rb.debian.net)
+	  ff4a*)
 	    PORT=2241
 	    ;;
-	  ff64a-armhf-rb.debian.net)
+	  ff64a*)
 	    PORT=2250
 	    ;;
-	  opi2a-armhf-rb.debian.net)
+	  opi2a*)
 	    PORT=2236
 	    ;;
-	  opi2b-armhf-rb.debian.net)
+	  opi2b*)
 	    PORT=2238
 	    ;;
-	  odu3a-armhf-rb.debian.net)
+	  odu3a*)
 	    PORT=2243
 	    ;;
-	  cb3a-armhf-rb.debian.net)
+	  cb3a*)
 	    PORT=2244
 	    ;;
-	  opi2c-armhf-rb.debian.net)
+	  opi2c*)
 	    PORT=2245
 	    ;;
-	  jtk1a-armhf-rb.debian.net)
+	  jtk1a*)
 	    PORT=2246
 	    ;;
-	  jtk1b-armhf-rb.debian.net)
+	  jtk1b*)
 	     PORT=2252
 	     ;;
-	  jtx1a-armhf-rb.debian.net)
+	  jtx1a*)
 	    PORT=2249
 	    ;;
-	  jtx1b-armhf-rb.debian.net)
+	  jtx1b*)
 	    PORT=2253
 	    ;;
-	  jtx1c-armhf-rb.debian.net)
+	  jtx1c*)
 	    PORT=2254
 	    ;;
-	  p64b-armhf-rb.debian.net)
+	  p64b*)
 	    PORT=2247
 	    ;;
-	  p64c-armhf-rb.debian.net)
+	  p64c*)
 	    PORT=2248
 	    ;;
 	  profitbricks-build[456]*|profitbricks-build1[56]*)
