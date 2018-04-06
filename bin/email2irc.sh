@@ -73,16 +73,16 @@ while read -r line ; do
 	# catch first line of email body (to send to IRC later)
 	if [ "$HEADER" = "false" ] && [ -z "$MY_LINE" ] ; then
 		MY_LINE=$line
-		debug123 "#1" MY_LINE $MY_LINE
+		debug123 "#1" MY_LINE "$MY_LINE"
 		if [ -z "$MY_2ND_LINE" ] ; then
 			# if this is a multipart email it comes from the email extension plugin
 			if [ "${line:0:7}" = "------=" ] || [ "${line:0:9}" = "Content-T" ] ; then
-				debug123 "#2" line $line
+				debug123 "#2" line "$line"
 				MY_LINE=""
 			else
-				debug123 "#3" line $line
-				MY_LINE=$(echo $line | tr -d \< | tr -d \> | cut -d " " -f1-2)
-				debug123 "#4" MY_LINE $MY_LINE
+				debug123 "#3" line "$line"
+				MY_LINE=$(echo "$line" | tr -d \< | tr -d \> | cut -d " " -f1-2)
+				debug123 "#4" MY_LINE "$MY_LINE"
 			fi
 			# deal with quoted-printable continuation lines: 1st line/time
 			# if $MY_LINE ends with '=', then append the next line to $MY_LINE,
@@ -97,8 +97,8 @@ while read -r line ; do
 			# changing the '=' to a single space.
 			MY_2ND_LINE=$(echo $MY_2ND_LINE | sed -s 's#=$##')
 			MY_LINE="${MY_2ND_LINE}$MY_LINE"
-			debug123 "#5" MY_LINE $MY_LINE
-			debug123 "#6" MY_2ND_LINE $MY_2ND_LINE
+			debug123 "#5" MY_LINE "$MY_LINE"
+			debug123 "#6" MY_2ND_LINE "$MY_2ND_LINE"
 		fi
 	fi
 done < "$TMPFILE"
@@ -106,10 +106,10 @@ done < "$TMPFILE"
 if [ -z $JENKINS_JOB ] ; then
 	VALID_MAIL=false
 fi	
-debug123 "#7" MY_LINE $MY_LINE
+debug123 "#7" MY_LINE "$MY_LINE"
 # remove bogus noise
 MY_LINE=$(echo $MY_LINE | sed -s "s#------------------------------------------##g")
-debug123 "#8" MY_LINE $MY_LINE
+debug123 "#8" MY_LINE "$MY_LINE"
 
 # only send notifications for valid emails
 if [ "$VALID_MAIL" = "true" ] ; then
