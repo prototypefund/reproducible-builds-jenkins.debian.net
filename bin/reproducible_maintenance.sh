@@ -130,23 +130,23 @@ for s in $SUITES ; do
 	#
 	# schroot update
 	#
-	echo "$(date -u) - updating the $s/$ARCH schroot now."
-	for i in 1 2 3 4 ; do
-		[ ! -d $SCHROOT_BASE/reproducible-$s ] || schroot --directory /root -u root -c source:jenkins-reproducible-$s -- apt-get update
-		RESULT=$?
-		if [ $RESULT -eq 1 ] ; then
-			# sleep 61-120 secs
-			echo "Sleeping some time... (to workaround network problems like 'Hash Sum mismatch'...)"
-			/bin/sleep $(echo "scale=1 ; ($(shuf -i 1-600 -n 1)/10)+60" | bc )
-			echo "$(date -u) - Retrying to update the $s/$ARCH schroot."
-		elif [ $RESULT -eq 0 ] ; then
-			break
-		fi
-	done
-	if [ $RESULT -eq 1 ] ; then
-		echo "Warning: failed to update the $s/$ARCH schroot."
-		DIRTY=true
-	fi
+	#echo "$(date -u) - updating the $s/$ARCH schroot now."
+	#for i in 1 2 3 4 ; do
+	#	[ ! -d $SCHROOT_BASE/reproducible-$s ] || schroot --directory /root -u root -c source:jenkins-reproducible-$s -- apt-get update
+	#	RESULT=$?
+	#	if [ $RESULT -eq 1 ] ; then
+	#		# sleep 61-120 secs
+	#		echo "Sleeping some time... (to workaround network problems like 'Hash Sum mismatch'...)"
+	#		/bin/sleep $(echo "scale=1 ; ($(shuf -i 1-600 -n 1)/10)+60" | bc )
+	#		echo "$(date -u) - Retrying to update the $s/$ARCH schroot."
+	#	elif [ $RESULT -eq 0 ] ; then
+	#		break
+	#	fi
+	#done
+	#if [ $RESULT -eq 1 ] ; then
+	#	echo "Warning: failed to update the $s/$ARCH schroot."
+	#	DIRTY=true
+	#fi
 	#
 	# pbuilder update
 	#

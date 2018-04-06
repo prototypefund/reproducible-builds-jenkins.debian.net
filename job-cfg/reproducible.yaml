@@ -215,6 +215,7 @@
 - job-template:
     defaults: reproducible
     name: '{name}_setup_schroot_{my_distro}_{my_arch}_{my_hname}'
+    my_disabled: true
 
 - job-template:
     defaults: reproducible_git
@@ -407,15 +408,19 @@
                 - 'setup_schroot_unstable':
                     my_description: 'Setup unstable schroot for fetching source packages for the builder jobs.'
                     my_timed: '20 1 * * *'
+                    my_disabled: true
                 - 'setup_schroot_stretch':
                     my_description: 'Setup stretch schroot for fetching source packages for the builder jobs.'
                     my_timed: '0 1 * * *'
+                    my_disabled: true
                 - 'setup_schroot_buster':
                     my_description: 'Setup buster schroot for fetching source packages for the builder jobs.'
                     my_timed: '0 2 * * *'
+                    my_disabled: true
                 - 'setup_schroot_experimental':
                     my_description: 'Setup experimental schroot for fetching source packages for the builder jobs.'
                     my_timed: '40 1 * * *'
+                    my_disabled: true
             my_hname:
                 - 'bbx15':          { my_arch: 'armhf' }
                 - 'bpi0':           { my_arch: 'armhf' }
@@ -482,12 +487,16 @@
                 - 'unstable':
                     my_timed: '42 1 * * *'
                     my_shell: '/srv/jenkins/bin/schroot-create.sh reproducible reproducible-{my_distro} {my_distro}'
+                    my_disabled: true
                 - 'stretch':
                     my_timed: '42 1 * * *'
+                    my_disabled: true
                 - 'buster':
                     my_timed: '42 2 * * *'
+                    my_disabled: true
                 - 'experimental':
                     my_timed: '33 1 * * *'
+                    my_disabled: true
             my_description: 'Setup {my_distro} schroot for fetching source packages for the builder jobs.'
             my_shell: '/srv/jenkins/bin/schroot-create.sh reproducible reproducible-{my_distro} {my_distro}'
             my_hname:
