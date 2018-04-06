@@ -116,7 +116,7 @@ for data, target in (
         json.dump(data, fd, indent=4, sort_keys=True)
     os.rename(tmpfile, target)
     os.chmod(target, 0o644)
-    log.info("%s/%s has been updated.", DEBIAN_URL, os.path.dirname(target))
+    log.info("%s/%s has been updated.", DEBIAN_URL, os.path.basename(target))
 
     # Write compressed version
     compressed = '{}.bz2'.format(target)
@@ -125,4 +125,4 @@ for data, target in (
         subprocess.check_call(('bzip2', '-9c', target), stdout=fd)
     os.rename(tmpfile, compressed)
     os.chmod(compressed, 0o644)
-    log.info("%s/%s has been updated.", DEBIAN_URL, os.path.dirname(compressed))
+    log.info("%s/%s has been updated.", DEBIAN_URL, os.path.basename(compressed))
