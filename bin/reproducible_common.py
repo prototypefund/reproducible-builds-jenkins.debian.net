@@ -826,10 +826,16 @@ class Package:
         except IndexError:
             result = 0
         self.notify_maint = '⚑' if result == 1 else ''
-        self.history = []
-        self._load_history()
+        self._history = None
+
+    @property
+    def history(self):
+        if self._history is None:
+            self._load_history()
+        return self._history
 
     def _load_history(self):
+        self._history = []
         keys = ['build ID', 'version', 'suite', 'architecture', 'result',
             'build date', 'build duration', 'node1', 'node2', 'job',
             'schedule message']
@@ -840,7 +846,7 @@ class Package:
             """.format(self.name)
         results = query_db(query)
         for record in results:
-            self.history.append(dict(zip(keys, record)))
+            self._history.append(dict(zip(keys, record)))
 
     def get_status(self, suite, arch):
         """ This returns False if the package does not exists in this suite """
