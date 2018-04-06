@@ -97,12 +97,11 @@ TEMPLATE_PATH = conf_distro['templates']
 PKGSET_DEF_PATH = '/srv/reproducible-results'
 TEMP_PATH = conf_distro['tempdir']
 
-REPRODUCIBLE_JSON = os.path.join(BASE, conf_distro['json_out'])
-REPRODUCIBLE_TRACKER_JSON = os.path.join(BASE, conf_distro['tracker.json_out'])
 REPRODUCIBLE_STYLES = os.path.join(BASE, conf_distro['css'])
 
 DEBIAN_URI = '/' + conf_distro['distro_root']
 DEBIAN_BASE = os.path.join(BASE, conf_distro['distro_root'])
+
 DBD_URI = os.path.join(DEBIAN_URI, conf_distro['diffoscope_html'])
 DBDTXT_URI = os.path.join(DEBIAN_URI, conf_distro['diffoscope_txt'])
 LOGS_URI = os.path.join(DEBIAN_URI, conf_distro['buildlogs'])
@@ -123,6 +122,9 @@ RB_PKG_PATH = BASE + RB_PKG_URI
 RBUILD_PATH = BASE + RBUILD_URI
 HISTORY_PATH = BASE + HISTORY_URI
 BUILDINFO_PATH = BASE + BUILDINFO_URI
+
+REPRODUCIBLE_JSON = os.path.join(DEBIAN_BASE, conf_distro['json_out'])
+REPRODUCIBLE_TRACKER_JSON = os.path.join(DEBIAN_BASE, conf_distro['tracker.json_out'])
 
 REPRODUCIBLE_URL = conf_distro['base_url']
 DEBIAN_URL = urljoin(REPRODUCIBLE_URL, conf_distro['distro_root'])
