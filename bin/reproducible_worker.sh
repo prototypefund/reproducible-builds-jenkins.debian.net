@@ -92,6 +92,6 @@ while true ; do
 	/srv/jenkins/bin/reproducible_build.sh $NODE1 $NODE2 >$BUILD_BASE/$BUILD_ID/console.log 2>&1 || RETCODE=$?
 	echo
 
-	[ "$RETCODE" -eq 0 ] |! notify_log_of_failure
+	[ "$RETCODE" -eq 0 ] || notify_log_of_failure
 
 done
