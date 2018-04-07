@@ -1,5 +1,7 @@
 #!/bin/bash
+# vim: set noexpandtab:
 # Copyright 2012-2017 Holger Levsen <holger@layer-acht.org>
+#         ©      2018 Mattia Rizzolo <mattia@debian.org>
 # released under the GPLv=2
 
 # puppet / salt / ansible / fai / chef / deployme.app - disclaimer
@@ -541,13 +543,18 @@ fi
 # deploy package configuration in /etc and /usr
 #
 cd $BASEDIR
-if [ -d "hosts/$HOSTNAME/etc/sudoers.d/" ]; then
-    for f in "hosts/$HOSTNAME/etc/sudoers.d/"* ; do
-        /usr/sbin/visudo -c -f "$f"
-    done
-fi
-sudo cp --preserve=mode,timestamps -r hosts/$HOSTNAME/etc/* /etc
-sudo cp --preserve=mode,timestamps -r hosts/$HOSTNAME/usr/* /usr
+for h in common "$SHOSTNAME" ; do
+	if [ -d "hosts/$h/etc/sudoers.d/" ]; then
+		for f in "hosts/$h/etc/sudoers.d/"* ; do
+			/usr/sbin/visudo -c -f "$f"
+		done
+	fi
+	for d in etc usr ; do
+		if [ -d "hosts/$i/$d" ]; then
+			sudo cp --preserve=mode,timestamps -r "hosts/$i/$d/"* "/$d"
+		fi
+	done
+done
 # we ship one or two service files…
 sudo systemctl daemon-reload &
 
