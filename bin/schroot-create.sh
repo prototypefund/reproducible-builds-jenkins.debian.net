@@ -199,8 +199,6 @@ bootstrap() {
 
 bootstrap $@
 
-trap - INT TERM EXIT
-
 # pivot the new schroot in place
 rand="$(date -u +%Y%m%d)-$RANDOM"
 if $REPRODUCIBLE ; then
