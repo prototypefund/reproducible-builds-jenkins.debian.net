@@ -29,3 +29,4 @@ warning /Warning, jenkins.log is larger than.+/
 warning /^WARNING: Kernel needs upgrade/
 warning /Warning: schroots older than/
 warning /Warning: SQL query .+ failed.$/
+warning /Warning: systemd is reporting errors/

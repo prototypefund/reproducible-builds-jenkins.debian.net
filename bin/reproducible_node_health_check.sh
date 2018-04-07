@@ -135,14 +135,13 @@ if ! dsa-check-running-kernel ; then
 fi
 
 #
-# check for haveged running
+# check whether all services are running fine
 #
-echo "$(date -u) - testing 'haveged' is running..."
-HAVEGED="$(ps fax | grep '/usr/sbin/haveged' | grep -v grep || true)"
-if [ -z "$HAVEGED" ] ; then
-	echo "$(date -u) - haveged ain't running, giving up."
-	systemctl status haveged
-	exit 1
+echo "$(date -u) - checking whether all services are running fine..."
+if ! systemctl is-system-running > /dev/null; then
+    echo "Warning: systemd is reporting errors:"
+    systemctl list-units --state=error,failed
+    DIRTY=true
 fi
 
 #

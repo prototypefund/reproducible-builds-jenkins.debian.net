@@ -7,8 +7,6 @@ open problems
 -------------
 - dsa-check-packages points to /bin/true on hosts running in the future
 - compare sshd_config from stretch with the one we're using (from jessie)
-- check "systemctl -a" for "not found" and failed services, there are more than just haveged
-	haveged not running on most i386 and amd64 nodes… (#866513)
 
 no i386 kernels on i386
 -----------------------
