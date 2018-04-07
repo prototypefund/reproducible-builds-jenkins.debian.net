@@ -238,4 +238,4 @@ else
 	__END__
 fi
 
-echo "schroot $TARGET set up successfully in $SCHROOT_BASE/$TARGET.tar - exiting now."
+echo "schroot $TARGET set up successfully - cleaning up and exiting now."
