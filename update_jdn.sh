@@ -613,7 +613,7 @@ explain "packages configured."
 cd $BASEDIR
 [ -d /srv/jenkins/features ] && sudo rm -rf /srv/jenkins/features
 # check for bash syntax *before* actually deploying anything
-for f in bin/**/*.sh ; do bash -n "$f" ; done
+for f in bin/*.sh bin/**/*.sh ; do bash -n "$f" ; done
 for dir in bin logparse live mustache-templates ; do
 	sudo mkdir -p /srv/jenkins/$dir
 	sudo rsync -rpt --delete $dir/ /srv/jenkins/$dir/
