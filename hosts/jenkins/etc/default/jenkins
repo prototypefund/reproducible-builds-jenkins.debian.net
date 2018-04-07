@@ -1,4 +1,4 @@
-# defaults for jenkins continuous integration server
+# defaults for Jenkins automation server
 
 # pulled in from the init script; makes things easier.
 NAME=jenkins
