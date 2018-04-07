@@ -35,12 +35,6 @@ amd64 kernel was manually installed with multiarch, should go into update_jdn
 also on pb3+4+9 I had to do: sudo apt install linux-image-amd64
 
 
-to be done once all hosts run stretch: squid
---------------------------------------------
-2) delete /etc/squid3 and /var/log/squid3 from the hosts
-4) apt purge squid3 (this will probably take care of ↑)
-
 to be done once all hosts run stretch: sshd_config
 --------------------------------------------------
 /etc/ssh/sshd_config - the currently running one is the one from jessie, we should update_jdn to the one from stretch
-
