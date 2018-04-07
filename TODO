@@ -115,8 +115,6 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 === Debian reproducible builds
 
 * make reproducible_build.sh rock solid again and get rid off "set -x # # to debug diffoscoppe/schroot problems"
-** pass scheduled version to remote build nodes and abort the build there if the to be build version is different
-*** the current implementation does this backwards: it first builds and *then* checks on the main node if the build version was right… to make things worse, this check is also broken… 
 ** add check if package to be build has been blacklisted since scheduling and abort
 ** on SIGTERM, also cleanup on remote build nodes there! (via ssh &)
 ** check rbuild logs for "DIFFOSCOPE='E: Failed to change to directory /tmp: Permission denied' and deal with those
@@ -145,8 +143,6 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 
 * lesser prio
 ** scheduler: check if there have been more than X failures or depwait in the last Y hours and if so unschedule all packages, disable scheduling and send a mail informing us.
-** check that /srv/workspace/pbuilder/ is cleaned up properly
-** rewrite bin/schroot-create.sh from scratch, with little sudo.
 ** pkg sets related:
 *** add new pkg set: torbrowser-build-depends
 *** fix essential set: currently it only has the ones explicitly marked Essential:yes; they and their dependencies make up the full "essential closure set" (sometimes also called pseudo-essential)
