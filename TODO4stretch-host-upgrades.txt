@@ -1,8 +1,3 @@
-update_jdn.sh
--------------
-refactor some apt-get install calls away (which used to be needed because of jessie-backports…)
-
-
 open problems
 -------------
 - dsa-check-packages points to /bin/true on hosts running in the future
