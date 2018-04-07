@@ -126,12 +126,7 @@ pdebuild_package() {
 	# build (binary packages only, as sometimes we cannot get the upstream tarball...)
 	#
 	SOURCE=$(dpkg-parsechangelog |grep ^Source: | cut -d " " -f2)
-	# workaround #767260 (console-setup doesn't support parallel build)
-	if [ "$SOURCE" != "console-setup" ] ; then
-		NUM_CPU=$(grep -c '^processor' /proc/cpuinfo)
-	else
-		NUM_CPU=1
-	fi
+	NUM_CPU=$(grep -c '^processor' /proc/cpuinfo)
 	#
 	# if we got a valid TRIGGERING_BRANCH passed in as a parameter from the triggering job
 	# then grab the generated udebs.  FIXME -- we need to work out a way of cleaning up old branches
