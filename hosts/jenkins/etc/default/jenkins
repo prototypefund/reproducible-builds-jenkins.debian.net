@@ -27,7 +27,7 @@ JAVA_ARGS="$JAVA_ARGS -XX:+UseGCLogFileRotation -XX:GCLogFileSize=20m -XX:+Print
 JAVA_ARGS="$JAVA_ARGS -XX:+PrintGCDateStamps -XX:+PrintGCDetails -XX:+PrintHeapAtGC"
 JAVA_ARGS="$JAVA_ARGS -XX:+PrintGCCause -XX:+PrintTenuringDistribution -XX:+PrintReferenceGC -XX:+PrintAdaptiveSizePolicy"
 # G1 GC settings
-JAVA_ARGS="$JAVA_ARGS -XX:+UseG1GC -XX:+ExplicitGCInvokesConcurrent -XX:+ParallelRefProcEnabled"
+JAVA_ARGS="$JAVA_ARGS -XX:+UseG1GC -XX:+ExplicitGCInvokesConcurrent -XX:+ParallelRefProcEnabled -XX:+UseStringDeduplication"
 JAVA_ARGS="$JAVA_ARGS -XX:+UnlockExperimentalVMOptions -XX:G1NewSizePercent=20 -XX:+UnlockDiagnosticVMOptions -XX:G1SummarizeRSetStatsPeriod=1"
 
 # make jenkins listen on IPv4 address
