@@ -122,15 +122,6 @@ report_filetype_usage() {
 	rm $OUTPUT
 }
 
-report_squid_usage() {
-	REPORT=/var/www/calamaris/calamaris.txt
-	if [ -z $1 ] ; then
-		cat $REPORT
-	else
-		head -31 $REPORT
-	fi
-}
-
 wait4idle() {
 	echo "Waiting until no $1.sh process runs.... $(date)"
 	while [ $(ps fax | grep -c $1.sh) -gt 1 ] ; do
@@ -167,7 +158,6 @@ general_maintenance() {
 if [ -z $1 ] ; then
 	general_maintenance
 	compress_old_jenkins_logs
-	report_squid_usage brief
 else
 	case $1 in
 		chroot-installation*)		wait4idle $1
@@ -197,8 +187,6 @@ else
 						rm $ACTIVE_JOBS $WATCHED_JOBS $RUNNING
 						;;
 		d-i)				report_old_directories /srv/d-i 7 /srv/d-i/workspace /srv/d-i/isos
-						;;
-		squid)				report_squid_usage
 						;;
 		rebootstrap)			remove_old_rebootstrap_logs
 						;;

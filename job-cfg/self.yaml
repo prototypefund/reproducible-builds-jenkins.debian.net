@@ -44,10 +44,6 @@
 
 - job-template:
     defaults: self-maintenance
-    name: '{name}_sub-maintenance-squid'
-
-- job-template:
-    defaults: self-maintenance
     name: 'rebootstrap_maintenance'
 
 - project:
@@ -56,8 +52,6 @@
     jobs:
       - '{name}_maintenance':
          my_shell: '/srv/jenkins/bin/maintenance.sh'
-      - '{name}_sub-maintenance-squid':
-         my_shell: '/srv/jenkins/bin/maintenance.sh squid'
       - 'rebootstrap_maintenance':
          my_shell: '/srv/jenkins/bin/maintenance.sh rebootstrap'
 

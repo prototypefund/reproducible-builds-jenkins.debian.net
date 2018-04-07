@@ -4,7 +4,6 @@ kept the jessie versions:
 	Configuration file '/etc/default/shorewall'
 	Configuration file '/etc/shorewall/shorewall.conf'
 	Configuration file '/etc/shorewall6/shorewall6.conf'
-	Configuration file '/etc/calamaris/calamaris.conf'
 	Configuration file '/etc/apache2/conf-available/security.conf'
 
 
