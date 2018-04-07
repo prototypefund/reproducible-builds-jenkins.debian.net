@@ -2,7 +2,6 @@ things to look at on jenkins.d.n. after the upgrade
 ---------------------------------------------------
 kept the jessie versions:
 	Configuration file '/etc/default/shorewall'
-	Configuration file '/etc/shorewall6/shorewall6.conf'
 	Configuration file '/etc/apache2/conf-available/security.conf'
 
 
