@@ -1,3 +1,4 @@
 # See man 5 aliases for format
 postmaster: root
+jenkins:    root
 root:       holger@layer-acht.org, mattia@debian.org
