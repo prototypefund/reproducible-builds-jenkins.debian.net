@@ -36,10 +36,10 @@ for ARCH in ${ARCHS} ; do
 	write_page "<table>"
 	write_page "<tr><th>Name</th><th>health check</th><th>maintenance</th><th>Debian worker.log links</th>"
 		for SUITE in ${SUITES} ; do
-			write_page "<th>schroot setup $SUITE</th>"
+			write_page "<th>pbuilder setup $SUITE</th>"
 		done
 		for SUITE in ${SUITES} ; do
-			write_page "<th>pbuilder setup $SUITE</th>"
+			write_page "<th>schroot setup $SUITE</th>"
 		done
 	write_page "</tr>"
 	# the following for-loop is a hack to insert nodes which are not part of the
