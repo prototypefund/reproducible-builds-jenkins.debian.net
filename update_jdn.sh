@@ -421,7 +421,6 @@ if [ -f /etc/debian_version ] ; then
 				bison
 				botch
 				build-essential 
-				calamaris 
 				cmake 
 				cron-apt 
 				csvtool 
