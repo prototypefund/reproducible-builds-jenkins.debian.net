@@ -16,7 +16,7 @@ startup=1
 #    wait_interface=
 
 #
-# Global start/restart/stop options
+# Global start/restart options
 #
 OPTIONS=""
 
@@ -24,6 +24,11 @@ OPTIONS=""
 # Start options
 #
 STARTOPTIONS=""
+
+#
+# Restart options
+#
+RELOADOPTIONS=""
 
 #
 # Restart options
