@@ -10,13 +10,25 @@ JAVA=/usr/bin/java
 JENKINS_HOME=/var/lib/$NAME
 
 # arguments to pass to java
-#
+
 # Allow graphs etc. to work even when an X server is present
 JAVA_ARGS="-Djava.awt.headless=true"
 
 #JAVA_ARGS="-Xmx256m"
 #JAVA_ARGS="-Djava.net.preferIPv4Stack=true" # make jenkins listen on IPv4 address
-JAVA_ARGS="-Djava.awt.headless=true -Xms4G -Xmx8G -server -XX:+AlwaysPreTouch -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=$JENKINS_HOME/heapDumps/ -Xloggc:$JENKINS_HOME/javaGC/gc-%t.log -XX:NumberOfGCLogFiles=5 -XX:+UseGCLogFileRotation -XX:GCLogFileSize=20m -XX:+PrintGC -XX:+PrintGCDateStamps -XX:+PrintGCDetails -XX:+PrintHeapAtGC -XX:+PrintGCCause -XX:+PrintTenuringDistribution -XX:+PrintReferenceGC -XX:+PrintAdaptiveSizePolicy -XX:+UseG1GC -XX:+ExplicitGCInvokesConcurrent -XX:+ParallelRefProcEnabled -XX:+UnlockExperimentalVMOptions -XX:G1NewSizePercent=20 -XX:+UnlockDiagnosticVMOptions -XX:G1SummarizeRSetStatsPeriod=1"
+# See some recommendation from https://jenkins.io/blog/2016/11/21/gc-tuning/
+JAVA_ARGS="$JAVA_ARGS -Xms4G -Xmx8G"  # heap settings
+JAVA_ARGS="$JAVA_ARGS -server -XX:+AlwaysPreTouch"
+# store heap dumps in case of OOM, to investigate it later
+JAVA_ARGS="$JAVA_ARGS -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=$JENKINS_HOME/heapDumps/"
+# GC logging, in case somebody ever wants to actually finely tune the GC for us...
+JAVA_ARGS="$JAVA_ARGS -Xloggc:$JENKINS_HOME/javaGC/gc-%t.log -XX:NumberOfGCLogFiles=5"
+JAVA_ARGS="$JAVA_ARGS -XX:+UseGCLogFileRotation -XX:GCLogFileSize=20m -XX:+PrintGC"
+JAVA_ARGS="$JAVA_ARGS -XX:+PrintGCDateStamps -XX:+PrintGCDetails -XX:+PrintHeapAtGC"
+JAVA_ARGS="$JAVA_ARGS -XX:+PrintGCCause -XX:+PrintTenuringDistribution -XX:+PrintReferenceGC -XX:+PrintAdaptiveSizePolicy"
+# G1 GC settings
+JAVA_ARGS="$JAVA_ARGS -XX:+UseG1GC -XX:+ExplicitGCInvokesConcurrent -XX:+ParallelRefProcEnabled"
+JAVA_ARGS="$JAVA_ARGS -XX:+UnlockExperimentalVMOptions -XX:G1NewSizePercent=20 -XX:+UnlockDiagnosticVMOptions -XX:G1SummarizeRSetStatsPeriod=1"
 
 # make jenkins listen on IPv4 address
 #JAVA_ARGS="-Djava.net.preferIPv4Stack=true"
