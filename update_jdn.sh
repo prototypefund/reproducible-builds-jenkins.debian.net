@@ -444,7 +444,6 @@ if [ -f /etc/debian_version ] ; then
 				libjson-rpc-perl 
 				libsoap-lite-perl 
 				libxslt1-dev 
-				linux-image-amd64
 				moreutils 
 				mr 
 				mtr-tiny 
