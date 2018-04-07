@@ -112,6 +112,10 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 
 * See https://wiki.debian.org/ReproducibleBuilds/TestsToDo for the tests.reproducible-builds.org related ToDo list.
 
+=== General system maintenance
+
+* dsa-check-packages points to /bin/true on hosts running in the future, as they otherwise keep spitting errors
+
 === Debian reproducible builds
 
 * make reproducible_build.sh rock solid again and get rid off "set -x # # to debug diffoscoppe/schroot problems"
