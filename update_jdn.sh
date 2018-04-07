@@ -543,15 +543,15 @@ fi
 # deploy package configuration in /etc and /usr
 #
 cd $BASEDIR
-for h in common "$SHOSTNAME" ; do
+for h in common "$HOSTNAME" ; do
 	if [ -d "hosts/$h/etc/sudoers.d/" ]; then
 		for f in "hosts/$h/etc/sudoers.d/"* ; do
 			/usr/sbin/visudo -c -f "$f"
 		done
 	fi
 	for d in etc usr ; do
-		if [ -d "hosts/$i/$d" ]; then
-			sudo cp --preserve=mode,timestamps -r "hosts/$i/$d/"* "/$d"
+		if [ -d "hosts/$h/$d" ]; then
+			sudo cp --preserve=mode,timestamps -r "hosts/$h/$d/"* "/$d"
 		fi
 	done
 done
