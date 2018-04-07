@@ -82,7 +82,6 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 
 * link:https://bugs.debian.org/767100[#767100] work in progress in etc/munin/plugins/cpu
 * link:https://bugs.debian.org/767018[#767018] work in progress in etc/munin/plugins/iostat_ios
-* link:https://bugs.debian.org/774685[#774685] workaround in bin/reproducible_create_meta_pkg_sets.sh
 
 === jenkins-job-builder related
 
