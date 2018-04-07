@@ -92,6 +92,19 @@ for ARCH in ${ARCHS} ; do
 					write_page "</td>"
 					;;
 		esac
+		# pbuilder setup
+		for SUITE in ${SUITES} ; do
+			case $JENKINS_NODENAME in
+				jenkins)	write_page "<td></td>" ;;
+				profitbricks3)	write_page "<td></td>" ;;
+				profitbricks4)	write_page "<td></td>" ;;
+				profitbricks7)	write_page "<td></td>" ;;
+				*)		URL="https://jenkins.debian.net/view/reproducible/view/Debian_setup_${ARCH}/job/reproducible_setup_pbuilder_${SUITE}_${ARCH}_${JENKINS_NODENAME}"
+						BADGE="$URL/badge/icon"
+						write_page "<td><a href='$URL'><img src='$BADGE' /></a></td>"
+						;;
+			esac
+		done
 		# schroot setup
 		for SUITE in ${SUITES} ; do
 			case $JENKINS_NODENAME in
@@ -115,19 +128,6 @@ for ARCH in ${ARCHS} ; do
 							write_page "<a href='$URL'><img src='$BADGE' /></a>"
 						fi
 						write_page "</td>"
-						;;
-			esac
-		done
-		# pbuilder setup
-		for SUITE in ${SUITES} ; do
-			case $JENKINS_NODENAME in
-				jenkins)	write_page "<td></td>" ;;
-				profitbricks3)	write_page "<td></td>" ;;
-				profitbricks4)	write_page "<td></td>" ;;
-				profitbricks7)	write_page "<td></td>" ;;
-				*)		URL="https://jenkins.debian.net/view/reproducible/view/Debian_setup_${ARCH}/job/reproducible_setup_pbuilder_${SUITE}_${ARCH}_${JENKINS_NODENAME}"
-						BADGE="$URL/badge/icon"
-						write_page "<td><a href='$URL'><img src='$BADGE' /></a></td>"
 						;;
 			esac
 		done
