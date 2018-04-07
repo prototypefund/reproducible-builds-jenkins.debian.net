@@ -1,18 +1,3 @@
-things to look at on jenkins.d.n. after the upgrade
----------------------------------------------------
-kept the jessie versions:
-	Configuration file '/etc/apache2/conf-available/security.conf'
-
-
-pb10
-----
-update_jdn on pb10:
-Problems on profitbricks-build10-amd64.debian.net: adduser: The group `libvirt' does not exist.
-
-update_jdn on pb16:
-Problems on profitbricks-build16-i386.debian.net: 30 Jun 11:34:16 ntpdate[5788]: the NTP socket is in use, exiting
-
-
 update_jdn.sh
 -------------
 refactor some apt-get install calls away (which used to be needed because of jessie-backports…)
