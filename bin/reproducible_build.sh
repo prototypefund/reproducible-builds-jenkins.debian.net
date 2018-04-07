@@ -157,8 +157,8 @@ update_db_and_html() {
 		query_db "INSERT INTO results (package_id, version, status, build_date, build_duration, node1, node2, job) VALUES ('$SRCPKGID', '$VERSION', '$STATUS', '$DATE', '$DURATION', '$NODE1', '$NODE2', '$JOB')"
 	fi
 	if [ ! -z "$DURATION" ] ; then  # this happens when not 404 and not_for_us
-		query_db "INSERT INTO stats_build (name, version, suite, architecture, status, build_date, build_duration, node1, node2, job, schedule_message) VALUES ('$SRCPACKAGE', '$VERSION', '$SUITE', '$ARCH', '$STATUS', '$DATE', '$DURATION', '$NODE1', '$NODE2', '$JOB', '$SCHEDULE_MESSAGE')" || \
-		query_db "INSERT INTO stats_build (name, version, suite, architecture, status, build_date, build_duration, node1, node2, job, schedule_message) VALUES ('$SRCPACKAGE', '$VERSION', '$SUITE', '$ARCH', '$STATUS', '$DATE', '$DURATION', '$NODE1', '$NODE2', '$JOB', '$SCHEDULE_MESSAGE')"
+		query_db "INSERT INTO stats_build (name, version, suite, architecture, status, build_date, build_duration, node1, node2, job) VALUES ('$SRCPACKAGE', '$VERSION', '$SUITE', '$ARCH', '$STATUS', '$DATE', '$DURATION', '$NODE1', '$NODE2', '$JOB')" || \
+		query_db "INSERT INTO stats_build (name, version, suite, architecture, status, build_date, build_duration, node1, node2, job) VALUES ('$SRCPACKAGE', '$VERSION', '$SUITE', '$ARCH', '$STATUS', '$DATE', '$DURATION', '$NODE1', '$NODE2', '$JOB')"
 	fi
 	# unmark build since it's properly finished
 	query_db "DELETE FROM schedule WHERE package_id='$SRCPKGID';" || \
@@ -450,7 +450,6 @@ choose_package() {
 	SAVE_ARTIFACTS=$(echo $RESULT|cut -d "|" -f5)
 	NOTIFY=$(echo $RESULT|cut -d "|" -f6)
 	NOTIFY_MAINTAINER=$(echo $RESULT|cut -d "|" -f7)
-	SCHEDULE_MESSAGE=$(echo $RESULT|cut -d "|" -f8)
 	# remove previous build attempts which didnt finish correctly:
 	JOB_PREFIX="${JOB_NAME#reproducible_builder_}/"
 	BAD_BUILDS=$(mktemp --tmpdir=$TMPDIR)

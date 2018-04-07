@@ -627,6 +627,10 @@ schema_updates = {
                     AND b.architecture=sr.architecture""",
         "INSERT INTO rb_schema (version, date) VALUES (32, '" + now + "')"
     ],
+    33: [ # the message columns.  They are not actually needed.
+        "ALTER TABLE schedule DROP COLUMN message",
+        "ALTER TABLE stats_build DROP COLUMN schedule_message",
+        "INSERT INTO rb_schema (version, date) VALUES (33, '" + now + "')"],
 }
 
 
