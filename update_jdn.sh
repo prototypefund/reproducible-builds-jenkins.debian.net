@@ -165,17 +165,6 @@ users=$(for i in ${!user_host_groups[@]}; do echo ${i%,*} ; done | sort -u)
 	fi
 done
 
-# change defaults
-$UP2DATE || grep -q '^AuthorizedKeysFile' /etc/ssh/sshd_config || {
-	sudo sh -c "echo 'AuthorizedKeysFile /var/lib/misc/userkeys/%u %h/.ssh/authorized_keys' >> /etc/ssh/sshd_config"
-	sudo service ssh reload
-}
-# change vagrants manual configuration on some armhf hosts
-$UP2DATE || grep -q '/var/lib/misc/userkeys' /etc/ssh/sshd_config || {
-	sudo sed -i "s#/var/lib/monkeysphere/authorized_keys/#/var/lib/misc/userkeys/#g" /etc/ssh/sshd_config
-	sudo service ssh reload
-}
-
 sudo mkdir -p /srv/workspace
 [ -d /srv/schroots ] || sudo mkdir -p /srv/schroots
 [ -h /chroots ] || sudo ln -s /srv/workspace/chroots /chroots

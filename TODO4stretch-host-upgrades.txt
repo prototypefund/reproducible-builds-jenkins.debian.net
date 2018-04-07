@@ -14,8 +14,3 @@ because of:
 #866314: linux-image-4.9.0-3-686-pae: 100+ times slower disk writes on 4.x+/i386/16+RAM, compared to 3.x
 amd64 kernel was manually installed with multiarch, should go into update_jdn
 also on pb3+4+9 I had to do: sudo apt install linux-image-amd64
-
-
-to be done once all hosts run stretch: sshd_config
---------------------------------------------------
-/etc/ssh/sshd_config - the currently running one is the one from jessie, we should update_jdn to the one from stretch
