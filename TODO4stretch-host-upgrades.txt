@@ -6,4 +6,3 @@ refactor some apt-get install calls away (which used to be needed because of jes
 open problems
 -------------
 - dsa-check-packages points to /bin/true on hosts running in the future
-- compare sshd_config from stretch with the one we're using (from jessie)
