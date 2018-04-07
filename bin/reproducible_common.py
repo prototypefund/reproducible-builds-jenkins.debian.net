@@ -841,7 +841,7 @@ class Package:
             'schedule message']
         query = """
                 SELECT id, version, suite, architecture, status, build_date,
-                    build_duration, node1, node2, job, schedule_message
+                    build_duration, node1, node2, job
                 FROM stats_build WHERE name='{}' ORDER BY build_date DESC
             """.format(self.name)
         results = query_db(query)
