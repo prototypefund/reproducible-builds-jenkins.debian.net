@@ -80,12 +80,17 @@
 
 - project:
     name: lintian-tests
-    my_git_url: 'git://anonscm.debian.org/lintian/lintian.git'
+    my_git_url: 'https://salsa.debian.org/lintian/lintian'
     my_recipients: 'jenkins+debian-qa lintian-maint@debian.org'
     my_shell: 'timeout 6h debian/rules runtests'
     my_description: 'Debian/Lintian testsuite'
     my_distro:
-      - sid: *distro_defaults_sid
+      - sid:
+          <<: *distro_defaults_sid
+          my_origin_triggers:
+            - gitlab
+            - pollscm:
+                cron: '* H/2 * * *'
       - buster:
           <<: *distro_defaults_buster
           my_trigger: '{name}_stretch-backports'
