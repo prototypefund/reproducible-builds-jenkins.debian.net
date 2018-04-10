@@ -24,7 +24,6 @@ mono_architectures = """
     powerpcspe ppc64el
     riscv64
     sh3 sh4
-    tilegx
     """.split()
 
 release_architectures = """
