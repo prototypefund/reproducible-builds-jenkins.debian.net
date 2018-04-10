@@ -303,7 +303,7 @@
                 - 'jtx1c':          { my_arch: 'armhf' }
                 - 'odxu4a':          { my_arch: 'armhf' }
                 - 'odxu4b':         { my_arch: 'armhf' }
-                - 'odxu4c':         { my_arch: 'armhf' }
+                - 'odxu4c':         { my_arch: 'armhf', my_disabled: true }
                 - 'odu3a':          { my_arch: 'armhf' }
                 - 'opi2a':          { my_arch: 'armhf' }
                 - 'opi2b':          { my_arch: 'armhf' }
@@ -359,7 +359,7 @@
                 - 'jtx1c':          { my_arch: 'armhf' }
                 - 'odxu4a':          { my_arch: 'armhf' }
                 - 'odxu4b':         { my_arch: 'armhf' }
-                - 'odxu4c':         { my_arch: 'armhf' }
+                - 'odxu4c':         { my_arch: 'armhf', my_disabled: true }
                 - 'odu3a':          { my_arch: 'armhf' }
                 - 'opi2a':          { my_arch: 'armhf' }
                 - 'opi2b':          { my_arch: 'armhf' }
@@ -440,7 +440,7 @@
                 - 'jtx1c':          { my_arch: 'armhf' }
                 - 'odxu4a':          { my_arch: 'armhf' }
                 - 'odxu4b':         { my_arch: 'armhf' }
-                - 'odxu4c':         { my_arch: 'armhf' }
+                - 'odxu4c':         { my_arch: 'armhf', my_disabled: true }
                 - 'odu3a':          { my_arch: 'armhf' }
                 - 'opi2a':          { my_arch: 'armhf' }
                 - 'opi2b':          { my_arch: 'armhf' }
