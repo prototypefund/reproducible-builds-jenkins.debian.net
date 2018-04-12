@@ -17,7 +17,7 @@ all:  $(OUTPUTS)
 
 
 %.xml %.jjb-out: %.yaml
-	jenkins-job-builder test $< > $*.xml 2> $*.jjb-out
+	jenkins-jobs test $< > $*.xml 2> $*.jjb-out
 
 jobs-names.txt: $(OUTS)
 	sed -n 's/^INFO:jenkins_jobs.builder:Job name:  //p' $(OUTS) > $@
