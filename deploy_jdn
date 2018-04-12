@@ -31,7 +31,7 @@
 
 START=$(date +'%s')
 GIT_REPO="https://salsa.debian.org/qa/jenkins.debian.net.git"
-export HOSTS="
+HOSTS="
 codethink-sled9-arm64.debian.net
 codethink-sled10-arm64.debian.net
 codethink-sled11-arm64.debian.net
@@ -123,10 +123,10 @@ elif [ "$1" = "check" ] ; then
 	reset_clock=false
 	shift
 elif [ "$1" = "" ] ; then
-	export HOSTS="root@jenkins.debian.net"
+	HOSTS="root@jenkins.debian.net"
 	echo -n "Running j.d.n.git updates on $HOSTS now"
 elif [ "$1" = "jenkins" ] ; then
-	export HOSTS="root@jenkins.debian.net"
+	HOSTS="root@jenkins.debian.net"
 	shift
 	for i in $@ ; do
 		case $i in
