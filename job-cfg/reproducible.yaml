@@ -269,6 +269,7 @@
             my_hname:
                 - 'jenkins':        { my_arch: 'amd64' }
             my_node: ''
+        - '{name}_{my_task}_{my_arch}_{my_hname}':
             my_task:
                 - 'node_health_check':
                     my_description: 'Do some health checks.'
