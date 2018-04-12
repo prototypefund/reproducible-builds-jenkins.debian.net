@@ -154,7 +154,7 @@ def gen_suitearch_details(package, version, suite, arch, status, spokenstatus,
         context['buildinfo_uri'] = url
         default_view = default_view if default_view else url
     elif not args.ignore_missing_files and status not in \
-        ('untested', 'blacklisted', 'FTBFS', 'not for us', 'depwait', '404'):
+        ('untested', 'blacklisted', 'FTBFS', 'not_for_us', 'depwait', '404'):
             log.critical('buildinfo not detected at ' + buildinfo_file)
 
     # Get rbuild, build2 and build diffs context
