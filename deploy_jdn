@@ -204,6 +204,7 @@ for i in $HOSTS ; do
 	fi
 	get_arch_color $i
 	xterm -class deploy-jenkins -bg $BG -fa 'DejaVuSansMono' -fs 10 -e "ssh -o 'BatchMode = yes' -t $i '$remote_command' | tee $LOG.$i ; sleep 2 ; touch $LOG.$i.done" &
+	unset GITOPTS
 done
 sleep 3
 COUNTER=0
