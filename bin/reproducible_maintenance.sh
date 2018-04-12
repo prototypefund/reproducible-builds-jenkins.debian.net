@@ -496,14 +496,14 @@ fi
 if [ "$HOSTNAME" = "$MAINNODE" ] && [ $(date -u +%H) -eq 0 ]  ; then
 	# once a day, send mail about builder problems
 	files_to_mail=(
-	/var/log/jenkins/reproducible-builder-errors.log
-	/var/log/jenkins/reproducible-stale-builds.log
-	/var/log/jenkins/reproducible-race-conditions.log
-	/var/log/jenkins/reproducible-diskspace-issues.log
-	/var/log/jenkins/reproducible-remote-error.log
-	/var/log/jenkins/reproducible-env-changes.log
-	/var/log/jenkins/reproducible-submit2buildinfo.debian.net.log
-	/var/log/postgresql/postgresql-9.6-main.log
+		/var/log/jenkins/reproducible-builder-errors.log
+		/var/log/jenkins/reproducible-stale-builds.log
+		/var/log/jenkins/reproducible-race-conditions.log
+		/var/log/jenkins/reproducible-diskspace-issues.log
+		/var/log/jenkins/reproducible-remote-error.log
+		/var/log/jenkins/reproducible-env-changes.log
+		/var/log/jenkins/reproducible-submit2buildinfo.debian.net.log
+		/var/log/postgresql/postgresql-9.6-main.log
 	)
 	for PROBLEM in "${files_to_mail[@]}" ; do
 		if [ -s $PROBLEM ] ; then
