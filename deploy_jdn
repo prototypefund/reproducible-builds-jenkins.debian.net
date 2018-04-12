@@ -89,7 +89,7 @@ ALL_HOSTS=$HOSTS
 
 node_in_the_future () {
 	case "$1" in
-		profitbricks-build4-amd64|profitbricks-build5-amd64|profitbricks-build6-i386|profitbricks-build15-amd64|profitbricks-build16-i386) true ;;
+		profitbricks-build4-amd64*|profitbricks-build5-amd64*|profitbricks-build6-i386*|profitbricks-build15-amd64*|profitbricks-build16-i386*) true ;;
 		codethink-sled9*|codethink-sled11*|codethink-sled13*|codethink-sled15*) true ;;
 		*) false ;;
 	esac
@@ -179,7 +179,7 @@ for i in $HOSTS ; do
 	if [ -z "$real_command" ]; then
 		if node_in_the_future "$i"; then GITOPTS="-c http.sslVerify=false" ; fi
 		# real command, for running manually: cd ~jenkins-adm/jenkins.debian.net/ ; sudo -u jenkins-adm git pull ; ./update_jdn.sh
-		read -r -d '' real_command <<-EOF
+		read -r -d '' remote_command <<-EOF
 			set -e
 			export LANG=C
 			cd ~jenkins-adm
@@ -196,15 +196,14 @@ for i in $HOSTS ; do
 	fi
 
 	echo -n "."
-	command="$real_command"
 	if $reset_clock ; then
 		if node_in_the_future "$i" ; then
 			#  set correct future date
-			command="sudo ntpdate -b de.pool.ntp.org && $real_command && sudo date --set=\"+398 days +6 hours + 23 minutes\" && echo '__$(echo $i|cut -d '.' -f1)=ok__'"
+			remote_command="sudo ntpdate -b de.pool.ntp.org && $remote_command && sudo date --set=\"+398 days +6 hours + 23 minutes\" && echo '__$(echo $i|cut -d '.' -f1)=ok__'"
 		fi
 	fi
 	get_arch_color $i
-	xterm -class deploy-jenkins -bg $BG -fa 'DejaVuSansMono' -fs 10 -e "ssh -o 'BatchMode = yes' -t $i '$command' | tee $LOG.$i ; sleep 2 ; touch $LOG.$i.done" &
+	xterm -class deploy-jenkins -bg $BG -fa 'DejaVuSansMono' -fs 10 -e "ssh -o 'BatchMode = yes' -t $i '$remote_command' | tee $LOG.$i ; sleep 2 ; touch $LOG.$i.done" &
 done
 sleep 3
 COUNTER=0
