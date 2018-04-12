@@ -28,7 +28,7 @@
 
 
 START=$(date +'%s')
-GIT_REPO="git://anonscm.debian.org/qa/jenkins.debian.net.git"
+GIT_REPO="https://salsa.debian.org/qa/jenkins.debian.net.git"
 export HOSTS="
 codethink-sled9-arm64.debian.net
 codethink-sled10-arm64.debian.net
