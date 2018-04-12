@@ -87,6 +87,14 @@ root@jenkins.debian.net
 
 ALL_HOSTS=$HOSTS
 
+node_in_the_future () {
+	case "$1" in
+		profitbricks-build4-amd64|profitbricks-build5-amd64|profitbricks-build6-i386|profitbricks-build15-amd64|profitbricks-build16-i386) true ;;
+		codethink-sled9*|codethink-sled11*|codethink-sled13*|codethink-sled15*) true ;;
+		*) false ;;
+	esac
+}
+
 echo
 echo -n "$(date) - "
 reset_clock=true
@@ -115,7 +123,7 @@ elif [ "$1" = "check" ] ; then
 	reset_clock=false
 	shift
 elif [ "$1" = "" ] ; then
-        export HOSTS="root@jenkins.debian.net"
+	export HOSTS="root@jenkins.debian.net"
 	echo -n "Running j.d.n.git updates on $HOSTS now"
 elif [ "$1" = "jenkins" ] ; then
 	export HOSTS="root@jenkins.debian.net"
@@ -157,7 +165,7 @@ get_arch_color() {
 		*arm64*)		BG=orange ;;
 		*armhf*)		BG=lightyellow ;;
 		*jenkins.debian.*)	BG=yellow ;;
-		*)			BG=white ;;
+		*)				BG=white ;;
 	esac
 }
 
@@ -187,20 +195,12 @@ for i in $HOSTS ; do
 	fi
 
 	echo -n "."
-       	command="$real_command"
+	command="$real_command"
 	if $reset_clock ; then
- 		case $i in
-			profitbricks-build4-amd64*|profitbricks-build5-amd64*|profitbricks-build6-i386*|profitbricks-build15-amd64*|profitbricks-build16-i386*)
-				#  set correct future date
-				command="sudo ntpdate -b de.pool.ntp.org && $real_command && sudo date --set=\"+398 days +6 hours + 23 minutes\" && echo '__$(echo $i|cut -d '.' -f1)=ok__'"
-				;;
-			codethink-sled9*|codethink-sled11*|codethink-sled13*|codethink-sled15*)
-				#  set correct future date
-				command="sudo ntpdate -b de.pool.ntp.org && $real_command && sudo date --set=\"+398 days +6 hours + 23 minutes\" && echo '__$(echo $i|cut -d '.' -f1)=ok__'"
-				;;
-			*)
-				;;
-		esac
+		if node_in_the_future "$i" ; then
+			#  set correct future date
+			command="sudo ntpdate -b de.pool.ntp.org && $real_command && sudo date --set=\"+398 days +6 hours + 23 minutes\" && echo '__$(echo $i|cut -d '.' -f1)=ok__'"
+		fi
 	fi
 	get_arch_color $i
 	xterm -class deploy-jenkins -bg $BG -fa 'DejaVuSansMono' -fs 10 -e "ssh -o 'BatchMode = yes' -t $i '$command' | tee $LOG.$i ; sleep 2 ; touch $LOG.$i.done" &
