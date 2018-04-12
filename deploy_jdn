@@ -177,18 +177,19 @@ done
 HOSTS=$STSOH
 for i in $HOSTS ; do
 	if [ -z "$real_command" ]; then
-	# real command, for running manually: cd ~jenkins-adm/jenkins.debian.net/ ; sudo -u jenkins-adm git pull ; ./update_jdn.sh
+		if node_in_the_future "$i"; then GITOPTS="-c http.sslVerify=false" ; fi
+		# real command, for running manually: cd ~jenkins-adm/jenkins.debian.net/ ; sudo -u jenkins-adm git pull ; ./update_jdn.sh
 		read -r -d '' real_command <<-EOF
 			set -e
 			export LANG=C
 			cd ~jenkins-adm
 			if [ ! -d jenkins.debian.net ]; then
 				[ -x /usr/bin/git ] || sudo apt-get install -y git
-				sudo -u jenkins-adm git clone $GIT_REPO
+				sudo -u jenkins-adm git ${GITOPTS:-} clone $GIT_REPO
 				cd jenkins.debian.net
 			else
 				cd jenkins.debian.net
-				sudo -u jenkins-adm git pull $GIT_REPO
+				sudo -u jenkins-adm git ${GITOPTS:-} pull $GIT_REPO
 			fi
 			./update_jdn.sh 2>&1 | sudo tee -a /var/log/jenkins/update_jdn.log
 		EOF
