@@ -19,7 +19,7 @@ elif [ $(id -u) -eq 0 ] ; then
 fi
 
 START=$(date +'%s')
-GIT_REPO="git://anonscm.debian.org/qa/jenkins.debian.net.git"
+GIT_REPO="https://salsa.debian.org/qa/jenkins.debian.net.git"
 
 echo
 echo "$(date -u)"
