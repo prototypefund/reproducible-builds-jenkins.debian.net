@@ -193,6 +193,8 @@ for i in $HOSTS ; do
 			fi
 			./update_jdn.sh 2>&1 | sudo tee -a /var/log/jenkins/update_jdn.log
 		EOF
+	else
+		remote_command="$real_command"
 	fi
 
 	echo -n "."
