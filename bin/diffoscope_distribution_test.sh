@@ -19,8 +19,8 @@ send_irc_warning() {
 check_pypi() {
 	TMPPYPI=$(mktemp -t diffoscope-distribution-XXXXXXXX)
 	# the following two lines are a bit fragile…
-	curl https://pypi.python.org/pypi/diffoscope/ -o $TMPPYPI
-	DIFFOSCOPE_IN_PYPI=$(grep "<title>" $TMPPYPI | cut -d ">" -f2- | cut -d ":" -f1 |cut -d " " -f2)
+	curl https://pypi.org/project/diffoscope/ -o $TMPPYPI
+	DIFFOSCOPE_IN_PYPI=$(sed -ne 's@.*diffoscope \([0-9][0-9]*\).*@\1@gp' $TMPPYPI)
 	rm -f $TMPPYPI > /dev/null
 	echo
 	echo
