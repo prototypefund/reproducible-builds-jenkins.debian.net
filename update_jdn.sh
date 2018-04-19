@@ -1,6 +1,6 @@
 #!/bin/bash
 # vim: set noexpandtab:
-# Copyright 2012-2017 Holger Levsen <holger@layer-acht.org>
+# Copyright 2012-2018 Holger Levsen <holger@layer-acht.org>
 #         ©      2018 Mattia Rizzolo <mattia@debian.org>
 # released under the GPLv=2
 
@@ -301,8 +301,8 @@ if [ -f /etc/debian_version ] ; then
 			lsof
 			molly-guard
 			moreutils
-			munin-node
-			munin-plugins-extra
+			munin-node/stretch-backports
+			munin-plugins-extra/stretch-backports
 			netcat-traditional
 			ntp
 			ntpdate
@@ -438,7 +438,7 @@ if [ -f /etc/debian_version ] ; then
 				moreutils 
 				mr 
 				mtr-tiny 
-				munin 
+				munin/stretch-backports
 				ntp 
 				obfs4proxy
 				openbios-ppc 
