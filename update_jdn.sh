@@ -510,7 +510,7 @@ if [ -f /etc/debian_version ] ; then
 		elif [ "$HOSTNAME" = "profitbricks-build6-i386" ] || [ "$HOSTNAME" = "profitbricks-build16-i386" ] ; then
 			$UP2DATE || sudo apt-get install linux-image-amd64
 		fi
-		# only needed on the main nodes # FIXME this is redundant
+		# only needed on the main nodes
 		if [ "$HOSTNAME" = "jenkins-test-vm" ] ; then
 			$UP2DATE || sudo apt-get install jenkins-job-builder/stretch-backports
 		elif [ "$HOSTNAME" = "jenkins" ] ; then
