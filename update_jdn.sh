@@ -495,7 +495,7 @@ if [ -f /etc/debian_version ] ; then
 		else
 			MASTERDEBS=""
 		fi
-		$UP2DATE || ( sudo cp --preserve=mode,timestamps -r hosts/$HOSTNAME/etc/apt/sources.list /etc/apt ; sudo apt-get update )
+		$UP2DATE || sudo apt-get update
 		$UP2DATE || sudo apt-get install $DEBS $MASTERDEBS
 		# dont (re-)install pbuilder if it's on hold
 		if [ "$(dpkg-query -W -f='${db:Status-Abbrev}\n' pbuilder)" != "hi " ] ; then
