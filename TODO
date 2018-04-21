@@ -178,6 +178,9 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 
 ==== reproducible Debian armhf
 
+* rename all the nodes from $HOSTNAME to $HOSTNAME-armhf-rb ?
+** we could get rid of the links in jenkins.d.n.git/hosts/
+** we could simplefy .../hosts/*/etc/munin/munin-node.conf
 * make systems send mail, use port 465
 
 ==== reproducible Debian arm64
