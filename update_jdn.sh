@@ -555,11 +555,7 @@ for h in common common-amd64 common-i386 common-arm64 common-armhf "$HOSTNAME" ;
 	fi
 	for d in etc usr ; do
 		if [ -d "hosts/$h/$d" ]; then
-			for sd in * ; do
-				if [ -d "hosts/$h/$d/$sd" ]; then
-					sudo cp --preserve=mode,timestamps -r "hosts/$h/$d/$sd" "/$d"
-				fi
-			done
+			sudo cp --preserve=mode,timestamps -r "hosts/$h/$d/"* "/$d"
 		fi
 	done
 done
