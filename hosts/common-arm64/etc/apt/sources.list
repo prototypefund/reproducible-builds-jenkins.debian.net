@@ -1,5 +1,3 @@
-# common-arm64
-
 # deb http://gb.ports.ubuntu.com/ubuntu-ports/ xenial main restricted
 
 # deb http://gb.ports.ubuntu.com/ubuntu-ports/ xenial-updates main restricted
