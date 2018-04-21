@@ -539,7 +539,15 @@ fi
 # deploy package configuration in /etc and /usr
 #
 cd $BASEDIR
-for h in common "$HOSTNAME" ; do
+for h in common common-amd64 common-i386 common-arm64 common-armhf "$HOSTNAME" ; do
+	# $HOSTNAME has precedence over common-$DPKG_ARCH over common
+	case $h in
+		common-amd64) [ $DPKG_ARCH = "amd64" ] || continue ;;
+		common-i386)  [ $DPKG_ARCH = "i386" ] || continue ;;
+		common-arm64) [ $DPKG_ARCH = "arm64" ] || continue ;;
+		common-armhf) [ $DPKG_ARCH = "armhf" ] || continue ;;
+		*) ;;
+	esac
 	if [ -d "hosts/$h/etc/sudoers.d/" ]; then
 		for f in "hosts/$h/etc/sudoers.d/"* ; do
 			/usr/sbin/visudo -c -f "$f"
