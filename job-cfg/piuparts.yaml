@@ -22,7 +22,7 @@
       artifactNumToKeep: -1
     scm:
       - git:
-          url: 'git://anonscm.debian.org/piuparts/piuparts.git'
+          url: 'https://salsa.debian.org/debian/piuparts.git'
           branches:
             - develop
     publishers:
@@ -62,7 +62,7 @@
       artifactNumToKeep: -1
     scm:
       - git:
-          url: 'git://anonscm.debian.org/piuparts/piuparts.git'
+          url: 'https://salsa.debian.org/debian/piuparts.git'
           branches:
             - develop
     publishers:
