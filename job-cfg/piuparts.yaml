@@ -25,6 +25,9 @@
           url: 'https://salsa.debian.org/debian/piuparts.git'
           branches:
             - develop
+    my_origin_triggers:
+    triggers: '{obj:my_origin_triggers}'
+    my_trigger:
     publishers:
       - email:
           recipients: 'jenkins+debian-qa qa-jenkins-scm@lists.alioth.debian.org piuparts-devel@lists.alioth.debian.org'
@@ -65,12 +68,15 @@
           url: 'https://salsa.debian.org/debian/piuparts.git'
           branches:
             - develop
+    my_trigger:
     publishers:
       - email:
           recipients: 'jenkins+debian-qa qa-jenkins-scm@lists.alioth.debian.org piuparts-devel@lists.alioth.debian.org'
       - archive:
           artifacts: '*_*.dsc, *_*.tar.*, *_*_*.deb, *_*_*.changes'
           latest-only: true
+      - trigger:
+          project: '{my_trigger}'
       - naginator:
           progressive-delay-increment: 5
           progressive-delay-maximum: 15
@@ -118,6 +124,9 @@
             my_distro: 'sid'
             my_shell: 'make check'
             my_description: 'run testsuite from piuparts develop branch on sid.'
+            my_origin_triggers:
+              - pollscm:
+                  cron: ''
             my_trigger: 'piuparts_testsuite_buster, piuparts_build_sid'
         - '{name}_testsuite_buster':
             my_distro: 'buster'
@@ -133,7 +142,6 @@
             my_distro: 'jessie backports'
             my_shell: 'make check'
             my_description: 'run testsuite from piuparts develop branch on jessie with backports enabled.'
-            my_trigger: ''
         - '{name}_build_sid':
             my_distro: 'sid'
             my_shell: 'debuild -uc -us'
