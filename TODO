@@ -57,7 +57,9 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 * use static IP for the nodes (h01ger)
 * use vmdebootstrap where applicable
 * Tango Icons are gone: #824477 - update footer once this bug is fixed
-* add to all git post-receive hooks: `curl -s "https://jenkins.debian.net/git/notifyCommit?url=git://git.debian.org/git/d-i/$(basename $PWD .git)"` which will trigger jenkins to pull (check) that git repo…
+* this is outdated with salsa: add to all git post-receive hooks: `curl -s "https://jenkins.debian.net/git/notifyCommit?url=https://https://salsa.debian.org/installer-team/$(basename $PWD .git)"` which will trigger jenkins to pull (check) that git repo…
+* salsa stuff:
+** triggers for d-i repos are missing
 
 === ToDo for improving disk space
 

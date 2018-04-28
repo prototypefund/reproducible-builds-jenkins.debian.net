@@ -169,7 +169,7 @@ if "jenkins-test-vm" == os.uname()[1]:
 
 # add a special job for triggering from the pu/ branches
 jobs.append( {'{name}_pu-triggered_{pkg}': {
-                'gitrepo': 'git://git.debian.org/git/d-i/{pkg}',
+                'gitrepo': 'https://https://salsa.debian.org/installer-team/{pkg}',
                 'branchdesc': 'master branch',
                 'branch': 'origin/pu/**',
                 'pkg': 'debian-installer',
@@ -460,7 +460,7 @@ data.append(
     {'job-group': {
         'name': '{name}_build-group',
         'jobs': ['{name}_{act}_{pkg}'],
-        'gitrepo': 'git://git.debian.org/git/d-i/{pkg}',
+        'gitrepo': 'https://https://salsa.debian.org/installer-team/{pkg}',
         'act': 'build',
         'branchdesc': 'master branch',
         'branch': 'origin/master',
@@ -471,7 +471,7 @@ data.append(
     {'job-group': {
         'name': '{name}_pu-build-group',
         'jobs': ['{name}_pu-{act}_{pkg}'],
-        'gitrepo': 'git://git.debian.org/git/d-i/{pkg}',
+        'gitrepo': 'https://https://salsa.debian.org/installer-team/{pkg}',
         'act': 'build',
         'branchdesc': 'pu/ branches',
         'branch': 'origin/pu/**',
