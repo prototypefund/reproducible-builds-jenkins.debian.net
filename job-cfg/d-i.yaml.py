@@ -173,7 +173,7 @@ jobs.append( {'{name}_pu-triggered_{pkg}': {
                 'branchdesc': 'master branch',
                 'branch': 'origin/pu/**',
                 'pkg': 'debian-installer',
-                'trg': None,
+                'trg': '',
              }} )
 
 def scm_svn(po, inc_regs=None):
