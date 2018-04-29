@@ -73,7 +73,7 @@ print("""
       artifactNumToKeep: -1
     scm:
       - git:
-          url: 'git://anonscm.debian.org/users/helmutg/rebootstrap.git'
+          url: 'https://salsa.debian.org/helmutg/rebootstrap.git'
           branches:
             - '{my_branchname}'
     builders:
