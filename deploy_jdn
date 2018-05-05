@@ -31,7 +31,7 @@
 
 START=$(date +'%s')
 GIT_REPO="https://salsa.debian.org/qa/jenkins.debian.net.git"
-HOSTS="
+HOSTS=(
 codethink-sled9-arm64.debian.net
 codethink-sled10-arm64.debian.net
 codethink-sled11-arm64.debian.net
@@ -83,9 +83,9 @@ rpi2c-armhf-rb.debian.net
 wbd0-armhf-rb.debian.net
 wbq0-armhf-rb.debian.net
 root@jenkins.debian.net
-"
+)
 
-ALL_HOSTS=$HOSTS
+ALL_HOSTS=("${HOSTS[@]}")
 
 node_in_the_future () {
 	case "$1" in
@@ -99,13 +99,13 @@ echo
 echo -n "$(date) - "
 reset_clock=true
 if [ "$1" = "all" ] ; then
-	echo -n "Running j.d.n.git updates on $HOSTS now"
+	echo -n "Running j.d.n.git updates on ${HOSTS[@]} now"
 	# reset_clock can be false as update_jdn.sh sets the time
 	reset_clock=false
 	shift
 	if [ ! -z "$1" ] ; then
 		real_command="$@"
-		echo -n "Running '$real_command' on $HOSTS now."
+		echo -n "Running '$real_command' on ${HOSTS[@]} now."
 		real_command="$@ && echo '__reallyreally=ok__'"
 	fi
 elif [ "$1" = "upgrade" ] ; then
@@ -123,43 +123,43 @@ elif [ "$1" = "check" ] ; then
 	reset_clock=false
 	shift
 elif [ "$1" = "" ] ; then
-	HOSTS="root@jenkins.debian.net"
-	echo -n "Running j.d.n.git updates on $HOSTS now"
+	HOSTS=(root@jenkins.debian.net)
+	echo -n "Running j.d.n.git updates on ${HOSTS[@]} now"
 elif [ "$1" = "jenkins" ] ; then
-	HOSTS="root@jenkins.debian.net"
+	HOSTS=(root@jenkins.debian.net)
 	shift
-	for i in $@ ; do
-		case $i in
-			1|pb1)	 HOSTS="$HOSTS profitbricks-build1-amd64.debian.net" ;;
-			2|pb2)	 HOSTS="$HOSTS profitbricks-build2-i386.debian.net" ;;
-			3|pb3)	 HOSTS="$HOSTS profitbricks-build3-amd64.debian.net" ;;
-			3+4|pb3+pb4|pb3+4) HOSTS="$HOSTS profitbricks-build3-amd64.debian.net profitbricks-build4-amd64.debian.net" ;;
-			4|pb4)	 HOSTS="$HOSTS profitbricks-build4-amd64.debian.net" ;;
-			5|pb5)	 HOSTS="$HOSTS profitbricks-build5-amd64.debian.net" ;;
-			6|pb6)	 HOSTS="$HOSTS profitbricks-build6-i386.debian.net" ;;
-			7|pb7)	 HOSTS="$HOSTS profitbricks-build7-amd64.debian.net" ;;
-			9|pb9)	 HOSTS="$HOSTS profitbricks-build9-amd64.debian.net" ;;
-			10|pb10) HOSTS="$HOSTS profitbricks-build10-amd64.debian.net" ;;
-			11|pb11) HOSTS="$HOSTS profitbricks-build11-amd64.debian.net" ;;
-			15|pb15) HOSTS="$HOSTS profitbricks-build15-amd64.debian.net" ;;
-			c9|cs9)		HOSTS="$HOSTS codethink-sled9-arm64.debian.net" ;;
-			c10|cs10)	HOSTS="$HOSTS codethink-sled10-arm64.debian.net" ;;
-			c11|cs11)	HOSTS="$HOSTS codethink-sled11-arm64.debian.net" ;;
-			c12|cs12)	HOSTS="$HOSTS codethink-sled12-arm64.debian.net" ;;
-			c13|cs13)	HOSTS="$HOSTS codethink-sled13-arm64.debian.net" ;;
-			c14|cs14)	HOSTS="$HOSTS codethink-sled14-arm64.debian.net" ;;
-			c15|cs15)	HOSTS="$HOSTS codethink-sled15-arm64.debian.net" ;;
-			c16|cs16)	HOSTS="$HOSTS codethink-sled16-arm64.debian.net" ;;
-			armhf|amd64|i386|arm64)	 HOSTS="$HOSTS $(echo $ALL_HOSTS | sed 's# #\n#g' | grep $i)" ;;
-			*) 	if ping -c 1 $i ; then HOSTS="$HOSTS $i" ; fi ;;
+	for i in "$@" ; do
+		case "$i" in
+			1|pb1)	 HOSTS+=(profitbricks-build1-amd64.debian.net) ;;
+			2|pb2)	 HOSTS+=(profitbricks-build2-i386.debian.net) ;;
+			3|pb3)	 HOSTS+=(profitbricks-build3-amd64.debian.net) ;;
+			3+4|pb3+pb4|pb3+4) HOSTS+=(profitbricks-build3-amd64.debian.net profitbricks-build4-amd64.debian.net) ;;
+			4|pb4)	 HOSTS+=(profitbricks-build4-amd64.debian.net) ;;
+			5|pb5)	 HOSTS+=(profitbricks-build5-amd64.debian.net) ;;
+			6|pb6)	 HOSTS+=(profitbricks-build6-i386.debian.net) ;;
+			7|pb7)	 HOSTS+=(profitbricks-build7-amd64.debian.net) ;;
+			9|pb9)	 HOSTS+=(profitbricks-build9-amd64.debian.net) ;;
+			10|pb10) HOSTS+=(profitbricks-build10-amd64.debian.net) ;;
+			11|pb11) HOSTS+=(profitbricks-build11-amd64.debian.net) ;;
+			15|pb15) HOSTS+=(profitbricks-build15-amd64.debian.net) ;;
+			c9|cs9)		HOSTS+=(codethink-sled9-arm64.debian.net) ;;
+			c10|cs10)	HOSTS+=(codethink-sled10-arm64.debian.net) ;;
+			c11|cs11)	HOSTS+=(codethink-sled11-arm64.debian.net) ;;
+			c12|cs12)	HOSTS+=(codethink-sled12-arm64.debian.net) ;;
+			c13|cs13)	HOSTS+=(codethink-sled13-arm64.debian.net) ;;
+			c14|cs14)	HOSTS+=(codethink-sled14-arm64.debian.net) ;;
+			c15|cs15)	HOSTS+=(codethink-sled15-arm64.debian.net) ;;
+			c16|cs16)	HOSTS+=(codethink-sled16-arm64.debian.net) ;;
+			armhf|amd64|i386|arm64)	 HOSTS+=($(echo "${ALL_HOSTS[@]}" | sed -e 's# #\n#g' | grep "$i")) ;;
+			*) 	if ping -c 1 "$i" ; then HOSTS+=("$i") ; fi ;;
 		esac
 	done
-	echo -n "Running j.d.n.git updates on $HOSTS now"
+	echo -n "Running j.d.n.git updates on ${HOSTS[@]} now"
 fi
 BG=""
 
 get_arch_color() {
-	case $1 in
+	case "$1" in
 		*amd64*)		BG=lightgreen ;;
 		*i386*)			BG=lightblue ;;
 		*arm64*)		BG=orange ;;
@@ -169,13 +169,15 @@ get_arch_color() {
 	esac
 }
 
-LOG=$(mktemp -u)
-STSOH=""
-for i in $HOSTS ; do
-	STSOH="$i $STSOH"
+LOG="$(mktemp -u)"
+# reverse the array
+STSOH=()
+for i in "${HOSTS[@]}" ; do
+	STSOH=("$i" "${STSOH[@]}")
 done
-HOSTS=$STSOH
-for i in $HOSTS ; do
+HOSTS=("${STSOH[@]}")
+
+for i in "${HOSTS[@]}" ; do
 	if [ -z "$real_command" ]; then
 		if node_in_the_future "$i"; then GITOPTS="-c http.sslVerify=false" ; fi
 		# real command, for running manually: cd ~jenkins-adm/jenkins.debian.net/ ; sudo -u jenkins-adm git pull ; ./update_jdn.sh
@@ -210,7 +212,7 @@ for i in $HOSTS ; do
 done
 sleep 3
 COUNTER=0
-for i in $HOSTS ; do
+for i in "${HOSTS[@]}" ; do
 	while ! test -f $LOG.$i.done ; do
 		let COUNTER+=1
 		sleep 1
@@ -226,7 +228,7 @@ done
 echo
 
 PROBLEMS=""
-for i in $HOSTS ; do
+for i in "${HOSTS[@]}" ; do
 	HNAME1=$(echo $i | cut -d "@" -f2 | cut -d "." -f1|cut -d "-" -f1)	# pb nodes (h01ger)
 	HNAME2=$(echo $i | cut -d "@" -f2 | cut -d "." -f1)			# non -armhf ones (vagrant)
 	TAIL=$(tail -1 $LOG.$i 2>/dev/null)
@@ -251,7 +253,7 @@ for i in $HOSTS ; do
 done
 echo
 
-echo "$(echo $HOSTS | sed -s "s# #\n#g" | wc -l) hosts updated."
+echo "$(echo "${HOSTS[@]}" | sed -s "s# #\n#g" | wc -l) hosts updated."
 if [ ! -z "$PROBLEMS" ] ; then
 	echo "Problems on:"
 	echo -e "$PROBLEMS"
