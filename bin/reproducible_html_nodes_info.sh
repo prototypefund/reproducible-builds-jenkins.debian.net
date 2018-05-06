@@ -105,30 +105,24 @@ for ARCH in ${ARCHS} ; do
 						;;
 			esac
 		done
-		# schroot setup
+		# diffoscope schroot setup
 		for SUITE in ${SUITES} ; do
+			URL="https://jenkins.debian.net/view/reproducible/view/Debian_setup_${ARCH}/job/reproducible_setup_schroot_${SUITE}_diffoscope_${ARCH}_${JENKINS_NODENAME}"
+			BADGE="$URL/badge/icon"
 			case $JENKINS_NODENAME in
 				profitbricks3)
 					if [ "$SUITE" = "unstable" ]; then
-						URL="https://jenkins.debian.net/view/reproducible/view/Debian_setup_${ARCH}/job/reproducible_setup_schroot_${SUITE}_diffoscope_${ARCH}_${JENKINS_NODENAME}"
-						BADGE="$URL/badge/icon"
 						write_page "<td><a href='$URL'><img src='$BADGE' /></a></td>"
 					else
 						write_page "<td></td>"
 					fi
 					;;
-				profitbricks4)	write_page "<td></td>" ;;
-				profitbricks7)	write_page "<td></td>" ;;
-				*)		URL="https://jenkins.debian.net/view/reproducible/view/Debian_setup_${ARCH}/job/reproducible_setup_schroot_${SUITE}_${ARCH}_${JENKINS_NODENAME}"
-						BADGE="$URL/badge/icon"
-						write_page "<td><a href='$URL'><img src='$BADGE' /></a>"
-						if [ "$JENKINS_NODENAME" = "jenkins" -a "$SUITE" != "experimental" ]; then
-							URL="https://jenkins.debian.net/view/reproducible/view/Debian_setup_${ARCH}/job/reproducible_setup_schroot_${SUITE}_diffoscope_${ARCH}_${JENKINS_NODENAME}"
-							BADGE="$URL/badge/icon"
-							write_page "<a href='$URL'><img src='$BADGE' /></a>"
-						fi
-						write_page "</td>"
-						;;
+				jenkins)
+					if [ "$SUITE" != "experimental" ]; then
+						write_page "<td><a href='$URL'><img src='$BADGE' /></a></td>"
+					fi
+					;;
+				*) write_page "<td></td>" ;;
 			esac
 		done
 		write_page "</tr>"
