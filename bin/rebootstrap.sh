@@ -13,7 +13,8 @@ cleanup_all() {
 
 CODE=$(mktemp --tmpdir=/tmp gitclone-XXXXXXXXX -u)
 trap cleanup_all INT TERM EXIT
-git clone git://anonscm.debian.org/users/helmutg/rebootstrap.git $CODE
+# repository url doubly maintained in job-cfg/rebootstrap.yaml.py
+git clone https://salsa.debian.org/helmutg/rebootstrap.git $CODE
 cd $CODE
 git checkout $1
 shift

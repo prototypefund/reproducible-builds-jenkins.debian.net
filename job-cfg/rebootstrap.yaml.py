@@ -39,6 +39,7 @@ architectures += mono_architectures
 gcc_versions = ("7","8")
 diffoscope_gcc_versions = ("7",)
 
+# repository url doubly maintained in bin/rebootstrap.sh
 print("""
 - defaults:
     name: rebootstrap
