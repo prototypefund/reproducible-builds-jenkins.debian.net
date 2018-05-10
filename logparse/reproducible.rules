@@ -21,7 +21,8 @@ warning /Warning: The following builds have failed due to diffoscope schroot pro
 warning /W: The repository .+ is not signed./
 warning /W: There is no public key available for the following key IDs:.+/
 warning /Warning: /.../shm.+please tell the jenkins admins to fix this./
-warning /Warning, today is the wrong future:.+/
+warning /^Warning, today we came back to the present:/
+warning /^Warning, today is the wrong (present|future):/
 warning /Warning: curl http:..www.debian.org failed, probably the proxy is down for.+/
 warning /Warning, more than one kernel in.+/
 warning /Warning, rise of the jenkins job zombies.+/

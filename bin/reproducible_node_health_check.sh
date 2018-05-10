@@ -1,7 +1,8 @@
 #!/bin/bash
+# vim: set noexpandtab:
 
 # Copyright 2014-2017 Holger Levsen <holger@layer-acht.org>
-#         © 2015 Mattia Rizzolo <mattia@mapreri.org>
+#         © 2015-2018 Mattia Rizzolo <mattia@mapreri.org>
 # released under the GPLv=2
 
 DEBUG=false
@@ -10,6 +11,9 @@ common_init "$@"
 
 # common code defining db access
 . /srv/jenkins/bin/reproducible_common.sh
+
+# to have a list of the nodes running in the future
+. /srv/jenkins/bin/jenkins_node_definitions.sh
 
 # some defaults
 DIRTY=false
@@ -100,15 +104,28 @@ fi
 #
 # check for correct future
 #
-# (yes this is hardcoded but meh…)
+# (XXX: yes this is hardcoded but meh…)
 echo "$(date -u) - testing whether the time is right..."
-if [ "$(date +%Y)" = "2020" ] ; then
-	echo "Warning, today is the wrong future: $(date -u)."
-	DIRTY=true
-elif [ "$(date +%Y)" = "2019" ] ; then
-	echo "Good, today is the right future: $(date -u)."
+get_node_ssh_port "$HOSTNAME"
+real_year=2018
+year=$(date +%Y)
+if "$NODE_RUN_IN_THE_FUTURE"; then
+	if [ "$year" -eq "$real_year" ]; then
+		echo "Warning, today we came back to the present: $(date -u)."
+		DIRTY=true
+	elif [ "$year" -eq $(( $real_year + 1 )) ] ; then
+		echo "Good, today is the right future: $(date -u)."
+	else
+		echo "Warning, today is the wrong future: $(date -u)."
+		DIRTY=true
+	fi
 else
-	echo "Cherrish today, $(date -u)."
+	if [ "$year" -eq "$real_year" ]; then
+		echo "This host run in the present as it should: $(date -u)."
+	else
+		echo "Warning, today is the wrong present: $(date -u)."
+		DIRTY=true
+	fi
 fi
 
 #
