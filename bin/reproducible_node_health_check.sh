@@ -121,7 +121,7 @@ if "$NODE_RUN_IN_THE_FUTURE"; then
 	fi
 else
 	if [ "$year" -eq "$real_year" ]; then
-		echo "This host run in the present as it should: $(date -u)."
+		echo "This host is running in the present as it should: $(date -u)."
 	else
 		echo "Warning, today is the wrong present: $(date -u)."
 		DIRTY=true
