@@ -204,19 +204,14 @@ create_pkg_state_and_html() {
 	chmod 644 $ARCHLINUX_PKG_PATH/pkg.html
 
 	# clear files from previous builds
-	for file in build1.log build2.log build1.version build2.version ; do
-		if [ -f $BASE/archlinux/$REPO/$SRCPACKAGE/$file ] && [ $BASE/archlinux/$REPO/$SRCPACKAGE/pkg.build_duration -nt $BASE/archlinux/$REPO/$SRCPACKAGE/$file ] ; then
-			rm $BASE/archlinux/$REPO/$SRCPACKAGE/$file
-			echo "$BASE/archlinux/$REPO/$SRCPACKAGE/$file older than $BASE/archlinux/$REPO/$SRCPACKAGE/pkg.build_duration, thus deleting it."
-		fi
-	done
-	for file in $BASE/archlinux/$REPO/$SRCPACKAGE/*BUILDINFO.txt $BASE/archlinux/$REPO/$SRCPACKAGE/*html ; do
-		if [ -f $file ] && [ $BASE/archlinux/$REPO/$SRCPACKAGE/pkg.build_duration -nt $file ] ; then
-			echo "$file older than $BASE/archlinux/$REPO/$SRCPACKAGE/pkg.build_duration, thus deleting it."
+	pushd "$ARCHLINUX_PKG_PATH"
+	for file in build1.log build2.log build1.version build2.version *BUILDINFO.txt *.html; do
+		if [ -f $file ] && [ pkg.build_duration -nt $file ] ; then
 			rm $file
+			echo "$ARCHLINUX_PKG_PATH/$file older than $ARCHLINUX_PKG_PATH/pkg.build_duration, thus deleting it."
 		fi
 	done
-
+	popd
 }
 
 #
