@@ -183,20 +183,14 @@ for PKG in $SOURCEPKGS ; do
 		fi
 	else
 		write_row "<a href=\"$URL\">$GIT</a>"
-		if [ "$PKG" != "strip-nondeterminism" ] && [ "$PKG" != "diffoscope" ] && [ "$PKG" != "debbindiff" ] && [ "$PKG" != "disorderfs" ] ; then
-			if $OBSOLETE_IN_BUSTER && $OBSOLETE_IN_SID && $OBSOLETE_IN_EXP ; then
-				write_row "<br />(unused?"
-				write_row "<br /><span class=\"purple\">Then the branch should probably renamed.</span>)"
-			elif $OBSOLETE_IN_SID && $OBSOLETE_IN_EXP ; then
-				write_row "<br />(only used in buster, fixed in sid,"
-				write_row "<br /><span class=\"purple\">branch probably either should be renamed to <em>merged/reproducible_builds</em> or a new upload to our repo is needed?</span>)"
-			elif $OBSOLETE_IN_EXP ; then
-				write_row "<br />(only used in buster and unstable, fixed in experimental)"
-			fi
-		elif [ "$PKG" = "disorderfs" ] ; then
-			write_row "<br />(only used to modify the build environment in the 2nd build)"
-		elif [ "$PKG" = "debbindiff" ] && $OBSOLETE_IN_SID ; then
-			write_row "<br />(debbindiff has been renamed to diffoscope)"
+		if $OBSOLETE_IN_BUSTER && $OBSOLETE_IN_SID && $OBSOLETE_IN_EXP ; then
+			write_row "<br />(unused?"
+			write_row "<br /><span class=\"purple\">Then the branch should probably renamed.</span>)"
+		elif $OBSOLETE_IN_SID && $OBSOLETE_IN_EXP ; then
+			write_row "<br />(only used in buster, fixed in sid,"
+			write_row "<br /><span class=\"purple\">branch probably either should be renamed to <em>merged/reproducible_builds</em> or a new upload to our repo is needed?</span>)"
+		elif $OBSOLETE_IN_EXP ; then
+			write_row "<br />(only used in buster and unstable, fixed in experimental)"
 		fi
 	fi
 	if ! $OBSOLETE_IN_SID ; then
