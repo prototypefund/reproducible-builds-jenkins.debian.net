@@ -1,4 +1,5 @@
 #!/bin/bash
+# vim: set noexpandtab:
 
 # Copyright 2015-2017 Holger Levsen <holger@layer-acht.org>
 # released under the GPLv=2
@@ -155,15 +156,7 @@ for PKG in $SOURCEPKGS ; do
 	write_row "<tr><td><pre>src:$PKG</pre></td>"
 	write_row " <td>"
 	GIT="$PKG.git"
-	case $PKG in
-		debbindiff)
-			URL="https://anonscm.debian.org/git/reproducible/diffoscope.git"
-			GIT="diffoscope.git" ;;
-		strip-nondeterminism|diffoscope|disorderfs)
-			URL="https://anonscm.debian.org/git/reproducible/$GIT" ;;
-		*)
-			URL="https://anonscm.debian.org/git/reproducible/$GIT/?h=pu/reproducible_builds" ;;
-	esac
+	URL="https://anonscm.debian.org/git/reproducible/$GIT/?h=pu/reproducible_builds" ;;
 	custom_curl $URL $TMPFILE
 	if [ "$(grep "'error'>No repositories found" $TMPFILE 2>/dev/null)" ] ; then
 		write_row "<span class=\"red\">no git repository found:</span><br />$URL"
