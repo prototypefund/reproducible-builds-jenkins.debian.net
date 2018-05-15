@@ -77,7 +77,7 @@ for PKG in $(find $RPMBASE/$RELEASE/$ARCH/* -maxdepth 1 -type d -exec basename {
 		done
 	fi
 	echo "      </td>" >> $HTML_BUFFER
-	echo "      <td>$(LANG=C TZ=UTC ls --full-time $RPM_PKG_PATH/build1.log | cut -d ' ' -f6 )</td>" >> $HTML_BUFFER
+	echo "      <td>$(date -u --date=@$(stat -c %Y $RPM_PKG_PATH/build1.log) +%F)</td>" >> $HTML_BUFFER
 	for LOG in build1.log build2.log ; do
 		if [ -f $RPM_PKG_PATH/$LOG ] ; then
 			get_filesize $RPM_PKG_PATH/$LOG

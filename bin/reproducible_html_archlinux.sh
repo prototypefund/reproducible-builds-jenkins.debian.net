@@ -20,7 +20,7 @@ create_pkg_state_and_html() {
 
 	if [ -z "$(cd $ARCHLINUX_PKG_PATH ; ls)" ] ; then
 		# directory exists but is empty: package is building…
-		echo "$(date -u )   - ignoring $PKG from '$REPOSITORY' which is building in $ARCHLINUX_PKG_PATH since $(LANG=C TZ=UTC ls --full-time -d $ARCHLINUX_PKG_PATH | cut -d ':' -f1-2 | cut -d " " -f6-) UTC"
+		echo "$(date -u )   - ignoring $PKG from '$REPOSITORY' which is building in $ARCHLINUX_PKG_PATH since $(date -u --date=@$(stat -c %Y $ARCHLINUX_PKG_PATH) +'%F %R') UTC"
 		return
 	fi
 
@@ -172,7 +172,7 @@ create_pkg_state_and_html() {
 		esac
 	fi
 	echo "      </td>" >> $HTML_BUFFER
-	local BUILD_DATE="$(LANG=C TZ=UTC ls --full-time $ARCHLINUX_PKG_PATH/build1.log | cut -d ':' -f1-2 | cut -d " " -f6- )"
+	local BUILD_DATE="$(date -u --date=@$(stat -c %Y $ARCHLINUX_PKG_PATH/build1.log) +'%F %R')"
 	if [ ! -z "$BUILD_DATE" ] ; then
 		BUILD_DATE="$BUILD_DATE UTC"
 	fi

@@ -47,7 +47,7 @@ update_mock() {
 		echo "$(date -u ) - yum updated."
 		touch $STAMP
 	else
-		echo "$(date -u ) - mock and yum not updated, last update was at $(TZ=UTC ls --full-time $STAMP | cut -d ' ' -f6-7 | cut -d '.' -f1) UTC."
+		echo "$(date -u ) - mock and yum not updated, last update was at $(date -u --date=@$(stat -c %Y $STAMP) +'%F %T') UTC."
 	fi
 	rm $DUMMY > /dev/null
 }
@@ -258,4 +258,3 @@ echo "$(date -u) - $REPRODUCIBLE_URL/rpms/$RELEASE/$ARCH/$SRCPACKAGE/ updated."
 cd
 cleanup_all
 trap - INT TERM EXIT
-
