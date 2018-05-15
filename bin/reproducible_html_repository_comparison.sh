@@ -156,7 +156,7 @@ for PKG in $SOURCEPKGS ; do
 	write_row "<tr><td><pre>src:$PKG</pre></td>"
 	write_row " <td>"
 	GIT="$PKG.git"
-	URL="https://anonscm.debian.org/git/reproducible/$GIT/?h=pu/reproducible_builds" ;;
+	URL="https://anonscm.debian.org/git/reproducible/$GIT/?h=pu/reproducible_builds"
 	custom_curl $URL $TMPFILE
 	if [ "$(grep "'error'>No repositories found" $TMPFILE 2>/dev/null)" ] ; then
 		write_row "<span class=\"red\">no git repository found:</span><br />$URL"
