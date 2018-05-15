@@ -266,16 +266,13 @@ def create_temp_file(mode='w+b'):
 
 
 class bcolors:
-    @staticmethod
-    def __if_a_tty(colorcode):
-        return colorcode if sys.stdout.isatty() else ''
-    BOLD = __if_a_tty('\033[1m')
-    UNDERLINE = __if_a_tty('\033[4m')
-    RED = __if_a_tty('\033[91m')
-    GOOD = __if_a_tty('\033[92m')
-    WARN = __if_a_tty('\033[93m' + UNDERLINE)
-    FAIL = __if_a_tty(RED + BOLD + UNDERLINE)
-    ENDC = __if_a_tty('\033[0m')
+    BOLD = '\033[1m' if sys.stdout.isatty() else ''
+    UNDERLINE = '\033[4m' if sys.stdout.isatty() else ''
+    RED = '\033[91m' if sys.stdout.isatty() else ''
+    GOOD = '\033[92m' if sys.stdout.isatty() else ''
+    WARN = '\033[93m' + UNDERLINE if sys.stdout.isatty() else ''
+    FAIL = RED + BOLD + UNDERLINE
+    ENDC = '\033[0m' if sys.stdout.isatty() else ''
 
 
 def convert_into_hms_string(duration):
