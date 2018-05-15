@@ -24,6 +24,16 @@ create_pkg_state_and_html() {
 		return
 	fi
 
+	# clear files from previous builds
+	pushd "$ARCHLINUX_PKG_PATH"
+	for file in build1.log build2.log build1.version build2.version *BUILDINFO.txt *.html; do
+		if [ -f $file ] && [ pkg.build_duration -nt $file ] ; then
+			rm $file
+			echo "$ARCHLINUX_PKG_PATH/$file older than $ARCHLINUX_PKG_PATH/pkg.build_duration, thus deleting it."
+		fi
+	done
+	popd
+
 	if [ -f $ARCHLINUX_PKG_PATH/pkg.version ] ; then
 		VERSION=$(cat $ARCHLINUX_PKG_PATH/pkg.version)
 	elif [ -f $ARCHLINUX_PKG_PATH/build1.version ] ; then
@@ -200,16 +210,6 @@ create_pkg_state_and_html() {
 	echo "     </tr>" >> $HTML_BUFFER
 	mv $HTML_BUFFER $ARCHLINUX_PKG_PATH/pkg.html
 	chmod 644 $ARCHLINUX_PKG_PATH/pkg.html
-
-	# clear files from previous builds
-	pushd "$ARCHLINUX_PKG_PATH"
-	for file in build1.log build2.log build1.version build2.version *BUILDINFO.txt *.html; do
-		if [ -f $file ] && [ pkg.build_duration -nt $file ] ; then
-			rm $file
-			echo "$ARCHLINUX_PKG_PATH/$file older than $ARCHLINUX_PKG_PATH/pkg.build_duration, thus deleting it."
-		fi
-	done
-	popd
 }
 
 #
