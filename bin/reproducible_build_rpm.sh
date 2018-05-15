@@ -47,7 +47,7 @@ update_mock() {
 		echo "$(date -u ) - yum updated."
 		touch $STAMP
 	else
-		echo "$(date -u ) - mock and yum not updated, last update was at $(date -u --date=@$(stat -c %Y $STAMP) +'%F %T') UTC."
+		echo "$(date -u ) - mock and yum not updated, last update was at $(date -u --date=@$(stat -c %Y $STAMP) +'%F %T %Z')"
 	fi
 	rm $DUMMY > /dev/null
 }

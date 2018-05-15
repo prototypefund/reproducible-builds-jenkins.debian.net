@@ -20,7 +20,7 @@ create_pkg_state_and_html() {
 
 	if [ -z "$(cd $ARCHLINUX_PKG_PATH ; ls)" ] ; then
 		# directory exists but is empty: package is building…
-		echo "$(date -u )   - ignoring $PKG from '$REPOSITORY' which is building in $ARCHLINUX_PKG_PATH since $(date -u --date=@$(stat -c %Y $ARCHLINUX_PKG_PATH) +'%F %R') UTC"
+		echo "$(date -u )   - ignoring $PKG from '$REPOSITORY' which is building in $ARCHLINUX_PKG_PATH since $(date -u --date=@$(stat -c %Y $ARCHLINUX_PKG_PATH) +'%F %R %Z')"
 		return
 	fi
 
@@ -73,6 +73,7 @@ create_pkg_state_and_html() {
 		# this horrible if elif elif elif elif...  monster is needed because
 		# https://lists.archlinux.org/pipermail/pacman-dev/2017-September/022156.html
 	        # has not yet been merged yet...
+
 		if $blacklisted ; then
 				echo BLACKLISTED > $ARCHLINUX_PKG_PATH/pkg.state
 				echo "       <img src=\"/userContent/static/error.png\" alt=\"blacklisted icon\" /> blacklisted" >> $HTML_BUFFER
@@ -172,10 +173,7 @@ create_pkg_state_and_html() {
 		esac
 	fi
 	echo "      </td>" >> $HTML_BUFFER
-	local BUILD_DATE="$(date -u --date=@$(stat -c %Y $ARCHLINUX_PKG_PATH/build1.log) +'%F %R')"
-	if [ ! -z "$BUILD_DATE" ] ; then
-		BUILD_DATE="$BUILD_DATE UTC"
-	fi
+	local BUILD_DATE="$(date -u --date=@$(stat -c %Y $ARCHLINUX_PKG_PATH/build1.log) +'%F %R %Z')"
 	echo "      <td>$BUILD_DATE" >> $HTML_BUFFER
 	local DURATION=$(cat $ARCHLINUX_PKG_PATH/pkg.build_duration 2>/dev/null || true)
 	if [ -n "$DURATION" ]; then
