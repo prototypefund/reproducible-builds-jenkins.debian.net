@@ -12,13 +12,22 @@ import subprocess
 cgitb.enable()
 
 
+def debug_info():
+    # Debug info, to be removed once ready to go.
+    print()
+    print('WARNING: This endpoint is still a WORK IN PROGRESS. This means that the option details can change, and it will not commit any change.')
+    print('You are aunthenticated as: {}'.format(user))
+    print(cgi.FieldStorage())
+
+
 class ValidationError(Exception):
     def __init__(self, message):
         super().__init__(message)
         print('Status: 400 Bad Request')
-        print('Content-Type: text/html; charset="utf-8"')
+        print('Content-Type: text/plain; charset="utf-8"')
         print()
         print(message)
+        debug_info()
         sys.exit()
 
 
@@ -131,8 +140,4 @@ else:
         print()
         cgitb.handler()
 
-# Debug info, to be removed once ready to go.
-print()
-print('WARNING: This endpoint is still a WORK IN PROGRESS. This means that the option details can change, and it will not commit any change.')
-print('You are aunthenticated as: {}'.format(user))
-print(cgi.FieldStorage())
+debug_info()
