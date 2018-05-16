@@ -129,8 +129,8 @@ else:
         print()
         cgitb.handler()
 
+# Debug info, to be removed once ready to go.
 print()
-
 print('WARNING: This endpoint is still a WORK IN PROGRESS. This means that the option details can change, and it will not commit any change.')
-print('User: {}'.format(user))
-print(form)
+print('You are aunthenticated as: {}'.format(user))
+print(cgi.FieldStorage())
