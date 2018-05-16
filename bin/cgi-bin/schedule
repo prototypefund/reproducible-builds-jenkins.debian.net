@@ -6,6 +6,7 @@
 import os
 import re
 import cgi
+import sys
 import cgitb
 import subprocess
 cgitb.enable()
@@ -18,6 +19,7 @@ class ValidationError(Exception):
         print('Content-Type: text/html; charset="utf-8"')
         print()
         print(message)
+        sys.exit()
 
 
 def sanify_field(field_name, field_text):
