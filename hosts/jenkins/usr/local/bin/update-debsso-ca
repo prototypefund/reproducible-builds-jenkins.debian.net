@@ -1,0 +1,113 @@
+#!/usr/bin/python3
+
+# Originally downloaded from https://anonscm.debian.org/cgit/debian-sso/debian-sso.git/tree/update-debsso-ca
+
+# Download new versions of the CA certificate and Certificate Revocation List
+# from sso.debian.org and write them out atomically.
+
+import requests
+import tempfile
+import argparse
+import os
+import subprocess
+import ssl
+
+class atomic_writer(object):
+    """
+    Atomically write to a file
+    """
+    def __init__(self, fname, mode, osmode=0o644, sync=True, **kw):
+        self.fname = fname
+        self.osmode = osmode
+        self.sync = sync
+        dirname = os.path.dirname(self.fname)
+        self.fd, self.abspath = tempfile.mkstemp(dir=dirname, text="b" not in mode)
+        self.outfd = open(self.fd, mode, closefd=True, **kw)
+
+    def __enter__(self):
+        return self.outfd
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        if exc_type is None:
+            self.outfd.flush()
+            if self.sync: os.fdatasync(self.fd)
+            os.fchmod(self.fd, self.osmode)
+            os.rename(self.abspath, self.fname)
+        else:
+            os.unlink(self.abspath)
+        self.outfd.close()
+        return False
+
+
+def get_url(url):
+    """
+    Fetch a URL and return the raw result as bytes
+    """
+    bundle='/etc/ssl/ca-debian/ca-certificates.crt'
+    if os.path.exists(bundle):
+        res = requests.get(url, verify=bundle)
+    else:
+        res = requests.get(url)
+    res.raise_for_status()
+    return res.content
+
+
+def update_file(pathname, content, validate=None):
+    """
+    Write content on pathname atomically, and do nothing if pathname exists and
+    has the same content as `content`.
+
+    Returns True if the file has been updated, else False.
+    """
+    try:
+        with open(pathname, "rb") as fd:
+            existing = fd.read()
+    except OSError:
+        existing = None
+
+    if existing == content: return False
+
+    # Validate the contents
+    if validate:
+        validate(content)
+
+    with atomic_writer(pathname, "wb", osmode=0o644) as out:
+        out.write(content)
+    return True
+
+def validate_crt(data):
+    ssl.PEM_cert_to_DER_cert(data.decode("utf-8"))
+
+def validate_crl(data):
+    if not data.startswith(b"-----BEGIN X509 CRL-----"):
+        raise RuntimeError("Data does not begin with a CRL signature")
+    if not data.endswith(b"-----END X509 CRL-----\n"):
+        raise RuntimeError("Data does not end with a CRL footer")
+
+def update(destdir):
+    # Fetch the certificate and the CRL
+    cert = get_url("https://sso.debian.org/ca/ca.pem")
+    crl = get_url("https://sso.debian.org/ca/ca.crl")
+
+    # Write them out atomically
+
+    updated = False
+    updated = update_file(os.path.join(destdir, "debsso.crt"), cert, validate=validate_crt) or updated
+    updated = update_file(os.path.join(destdir, "debsso.crl"), crl, validate=validate_crl) or updated
+    return updated
+
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--destdir", default=".", help="destination directory. Default: .")
+    parser.add_argument("--onupdate", help="command to run if the file has been updated. Default: do not run anything.")
+    args = parser.parse_args()
+
+    if update(args.destdir):
+        if args.onupdate:
+            subprocess.check_call(["sh", "-c", args.onupdate])
+
+
+
+if __name__ == "__main__":
+    main()

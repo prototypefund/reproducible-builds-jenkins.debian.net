@@ -447,6 +447,7 @@ if [ -f /etc/debian_version ] ; then
 				procmail 
 				python3-debian 
 				python3-pystache
+				python3-requests
 				python3-sqlalchemy
 				python3-xdg
 				python3-yaml

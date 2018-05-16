@@ -9,3 +9,4 @@ MAILTO=root
 0 1,13 * * * nobody /usr/bin/chronic /usr/local/bin/dsa-check-running-kernel
 2 1,13 * * * nobody /usr/bin/chronic /usr/local/bin/dsa-check-packages
 30 * * * * root ( /usr/sbin/service ntp stop ; sleep 2 ; /usr/sbin/ntpdate de.pool.ntp.org ; /usr/sbin/service ntp start ) > /dev/null
+0 0 * * * root mkdir -p /etc/apache2/ssl/debsso && /usr/local/bin/update-debsso-ca --destdir /etc/apache2/ssl/debsso
