@@ -25,6 +25,7 @@ class ValidationError(Exception):
         super().__init__(message)
         print('Status: 400 Bad Request')
         print('Content-Type: text/plain; charset="utf-8"')
+        print('X-Error-Message: {}'.format(message))
         print()
         print(message)
         debug_info()
