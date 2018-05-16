@@ -1,0 +1,136 @@
+#!/usr/bin/python3
+
+# Copyright © 2018 Mattia Rizzolo <mattia@debian.org>
+# Licensed under GPL-2
+
+import os
+import re
+import cgi
+import cgitb
+import subprocess
+cgitb.enable()
+
+
+class ValidationError(Exception):
+    def __init__(self, message):
+        super().__init__(message)
+        print('Status: 400 Bad Request')
+        print('Content-Type: text/html; charset="utf-8"')
+        print()
+        print(message)
+
+
+def sanify_field(field_name, field_text):
+    sane_re = re.compile(r'^[a-zA-Z0-9_.+-]+$')
+    if not sane_re.match(field_text):
+        err = '"{}" is not sane (does not match {})'.format(field_name, sane_re)
+        raise ValidationError(err)
+
+def validate(form):
+    if 'pkg' not in form:
+        raise ValidationError('no packages specified')
+    for pkg in form.getlist('pkg'):
+        sanify_field('pkg', pkg)
+
+    known_opts = (
+        'dry-run',
+        'keep-artifacts',
+        'notify',
+        'notify-on-start',
+    )
+    known_opts2 = (
+        'message',
+        'status',
+        'issue',
+        'after',
+        'before',
+    )
+    args = []
+    for opt in known_opts:
+        value = form.getvalue(opt)
+        if value:
+            if value in ('yes', 'true'):
+                args.append('--{}'.format(opt))
+    for opt in known_opts2:
+        value = form.getvalue(opt)
+        if value:
+            sanify_field(opt, value)
+            args.append('--{} {}'.format(opt, value))
+    for f in ('suite', 'architecture'):
+        for i in form.getlist(f):
+            sanify_field(f, i)
+    return args
+
+
+def main(args):
+    processes = []
+    failure = False
+    for s in form.getlist('suite'):
+        for a in form.getlist('architecture'):
+            cmd = (
+                '/srv/jenkins/bin/reproducible_remote_scheduler.py',
+                *args,
+                '--dry-run',
+                '--architecture', a,
+                '--suite', s,
+                *form.getlist('pkg'),
+            )
+            print('Executing: ', cmd)
+            try:
+                p = subprocess.run(
+                    cmd,
+                    check=True,
+                    stdout=subprocess.PIPE,
+                    stderr=subprocess.STDOUT,
+                    env={'LC_USER': user},
+                )
+                processes.append(p)
+            except subprocess.CalledProcessError as e:
+                processes.append(e)
+                failure = True
+
+    if failure:
+        print('Status: 520 Unknown Error')
+        print('Content-Type: text/plain; charset="utf-8"')
+        print()
+        print('Failed to schedule packages.  Please try again later or contact us for support.')
+        print()
+        print('Error log:')
+    else:
+        print('Status: 200 OK')
+        print('Content-Type: text/plain; charset="utf-8"')
+        print()
+        print('Successfully scheduled the requested packages.')
+        print()
+        print('Scheduling log:')
+    for p in processes:
+        print()
+        print('Command ran: ', p.args)
+        print(p.stdout.decode('utf-8', errors='ignore').strip())
+        print('Return code: ', p.returncode)
+
+
+# Check whether the user has successfully authenticated
+try:
+    user = os.environ['SSL_CLIENT_S_DN_CN']
+except KeyError:
+    user = None
+    print('Status: 496 SSL Certificate Required')
+    print('Content-Type: text/plain; charset="utf-8"')
+    print()
+    print('You need to authenticate with a Debian SSO certificate to use this service')
+else:
+    try:
+        form = cgi.FieldStorage()
+        main(validate(form))
+    except Exception:
+        print('Status: 500 Internal Server Error')
+        print('Content-Type: text/html; charset="utf-8"')
+        print()
+        cgitb.handler()
+
+print()
+
+print('WARNING: This endpoint is still a WORK IN PROGRESS. This means that the option details can change, and it will not commit any change.')
+print('User: {}'.format(user))
+print(form)
