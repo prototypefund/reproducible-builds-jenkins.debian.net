@@ -38,13 +38,13 @@ ARCH="amd64"
 SUITE="unstable"
 echo "$(date -u) - starting to write $PAGE page. Downloading Sources and Packages files from our repository."
 write_page_header $VIEW "Comparison between the reproducible builds apt repository and regular Debian suites"
-write_page "<p>These source packages (and their binaries packages) are different from unstable in our apt repository on alioth. They are available for <a href=\"https://wiki.debian.org/ReproducibleBuilds/ExperimentalToolchain#Usage_example\">testing using these sources.lists</a> entries:<pre>"
-write_page "deb http://reproducible.alioth.debian.org/debian/ ./"
-write_page "deb-src http://reproducible.alioth.debian.org/debian/ ./"
+write_page "<p>These source packages (and their binaries packages) are different from unstable in our experimental apt repository. They are available for <a href=\"https://wiki.debian.org/ReproducibleBuilds/ExperimentalToolchain#Usage_example\">testing using these sources.lists</a> entries:<pre>"
+write_page "deb https://tests.reproducible-builds.org/debian/repository/debian/ ./"
+write_page "deb-src https://tests.reproducible-builds.org/debian/repository/debian/ ./"
 write_page "</pre></p>"
 
-custom_curl http://reproducible.alioth.debian.org/debian/Sources $SOURCES
-custom_curl http://reproducible.alioth.debian.org/debian/Packages $PACKAGES
+custom_curl https://tests.reproducible-builds.org/debian/repository/debian/Sources $SOURCES
+custom_curl https://tests.reproducible-builds.org/debian/repository/debian/Packages $PACKAGES
 SOURCEPKGS=$(grep-dctrl -n -s Package -r -FPackage . $SOURCES | sort -u)
 echo
 
