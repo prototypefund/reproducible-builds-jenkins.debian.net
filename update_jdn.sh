@@ -539,7 +539,7 @@ for h in common common-amd64 common-i386 common-arm64 common-armhf "$HOSTNAME" ;
 	esac
 	if [ -d "hosts/$h/etc/sudoers.d/" ]; then
 		for f in "hosts/$h/etc/sudoers.d/"* ; do
-			/usr/sbin/visudo -c -f "$f"
+			/usr/sbin/visudo -c -f "$f" > /dev/null
 		done
 	fi
 	for d in etc usr ; do
