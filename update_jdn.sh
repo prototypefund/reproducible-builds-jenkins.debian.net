@@ -687,8 +687,6 @@ if [ "$HOSTNAME" = "jenkins" ] || [ "$HOSTNAME" = "jenkins-test-vm" ] ; then
 		if [ ! -f $STAMP ] || [ $config -nt $STAMP ] ; then
 			echo "$config has changed, executing updates."
 			$JJB update $config
-		else
-			echo "$config has not changed, nothing to do."
 		fi
 	done
 	explain "jenkins jobs updated."
