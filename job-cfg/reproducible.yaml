@@ -747,7 +747,7 @@
                     my_gitbranches: 'origin/master'
                     my_shell: 'mkdir -pv /srv/diffoscope.org/www && jekyll build -s . -d /srv/diffoscope.org/www'
             my_gitbranches: 'master'
-            my_recipients: 'jenkins+debian-reproducible qa-jenkins-scm@lists.alioth.debian.org'
+            my_recipients: 'jenkins+debian-reproducible jenkins+reproducible-builds qa-jenkins-scm@lists.alioth.debian.org'
             my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
             my_parse_rules: '/srv/jenkins/logparse/reproducible-extra.rules'
             my_hname: ''
