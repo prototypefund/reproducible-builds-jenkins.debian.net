@@ -29,7 +29,6 @@ BASEDIR="$(dirname "$(readlink -e $0)")"
 PVNAME=/dev/vdb      # LVM physical volume for jobs
 VGNAME=jenkins01     # LVM volume group
 STAMP=/var/log/jenkins/update-jenkins.stamp
-TMPFILE=$(mktemp)
 # The $@ below means that command line args get passed on to j-j-b
 # which allows one to specify --flush-cache or --ignore-cache
 JJB="jenkins-jobs $@"
@@ -644,6 +643,7 @@ explain "scripts and configurations for jenkins updated."
 
 if [ "$HOSTNAME" = "jenkins" ] ; then
 	sudo cp -pr README INSTALL TODO CONTRIBUTING d-i-preseed-cfgs /var/lib/jenkins/userContent/
+	TMPFILE=$(mktemp)
 	git log | grep ^Author| cut -d " " -f2-|sort -u -f > $TMPFILE
 	echo "----" >> $TMPFILE
 	sudo tee /var/lib/jenkins/userContent/THANKS > /dev/null < THANKS.head
@@ -677,11 +677,11 @@ if [ "$HOSTNAME" = "jenkins" ] || [ "$HOSTNAME" = "jenkins-test-vm" ] ; then
 	for metaconfig in *.yaml.py ; do
 		# regen the file only if the .py is newer than the generated file
 		if [ ! -f "${metaconfig%.py}" ] && [ "$metaconfig" -nt "${metaconfig%.py}" ]; then
+			TMPFILE=$(sudo -u jenkins-adm mktemp)
 			sudo -u jenkins-adm "./$metaconfig" > "$TMPFILE"
 			sudo -u jenkins-adm mv "$TMPFILE" "${metaconfig%.py}"
 		fi
 	done
-	rm -f $TMPFILE
 	for config in *.yaml ; do
 		# do update, if no stamp file exist or config is newer than stamp
 		if [ ! -f $STAMP ] || [ $config -nt $STAMP ] ; then
@@ -776,12 +776,14 @@ fi
 #	echo FIXME is ignored so check-jobs scripts can output templates requiring manual work
 #
 if [ "$HOSTNAME" = "jenkins" ] || [ "$HOSTNAME" = "jenkins-test-vm" ] ; then
+	TMPFILE=$(mktemp)
 	rgrep FI[X]ME $BASEDIR/* | grep -v echo > $TMPFILE || true
 	if [ -s $TMPFILE ] ; then
 		echo
 		cat $TMPFILE
 		echo
 	fi
+	rm -f $TMPFILE
 fi
 
 #
@@ -789,7 +791,6 @@ fi
 #
 sudo touch $STAMP	# so on the next run, only configs newer than this file will be updated
 explain "$(date) - finished deployment."
-rm -f $TMPFILE
 
 # finally!
 case $HOSTNAME in
