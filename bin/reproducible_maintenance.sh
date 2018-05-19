@@ -511,8 +511,6 @@ if [ "$HOSTNAME" = "$MAINNODE" ] && [ $(date -u +%H) -eq 0 ]  ; then
 			if [ "$(dirname $PROBLEM)" = "/var/log/jenkins" ] ; then
 				if [ "$(basename $PROBLEM)" = "reproducible-diskspace-issues.log" ]; then
 					echo "diskspace issues should always be investigated." > $TMPFILE
-				elif [ "$(basename $PROBLEM)" != "postgresql-9.6-main.log " ]; then
-					echo "A few entries per day are normal, a few dozens or hundreds probably not." > $TMPFILE
 				fi
 				if grep -q https $PROBLEM ; then
 					echo "$(grep -c https $PROBLEM) entries found:"
