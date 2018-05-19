@@ -43,6 +43,7 @@ EOF
 		cat >> $TMPFILE <<- EOF
 			echo "Configuring APT to ignore the Release file expiration"
 			echo 'Acquire::Check-Valid-Until "false";' > /etc/apt/apt.conf.d/398future
+			echo 'Acquire::https::Verify-Peer "false";' >> /etc/apt/apt.conf.d/398future
 			echo
 		EOF
 	fi
