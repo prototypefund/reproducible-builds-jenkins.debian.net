@@ -2,6 +2,7 @@
     name: reproducible
     project-type: freestyle
     my_disabled:
+    my_gitbranches: '*/master'  # j-j-b default
     disabled: '{obj:my_disabled}'
     properties: &sidebar
       - sidebar: &sb1
@@ -711,7 +712,6 @@
                 - 'reprotest_from_git_master':
                     my_description: 'Build reprotest Debian package from git branch master.'
                     my_timed: '42 23 1 1 *'
-                    my_hname: ''
                     my_gitrepo: 'https://salsa.debian.org/reproducible-builds/reprotest.git'
                     my_gitbranches: 'origin/master'
                     my_shell: '/srv/jenkins/bin/chroot-run.sh sid debuild -uc -us'
@@ -719,7 +719,6 @@
                 - 'strip-nondeterminism_from_git_master':
                     my_description: 'Build strip-nondeterminism Debian package from git branch master.'
                     my_timed: '42 23 1 1 *'
-                    my_hname: ''
                     my_gitrepo: 'https://salsa.debian.org/reproducible/strip-nondeterminism.git'
                     my_gitbranches: 'origin/master'
                     my_shell: '/srv/jenkins/bin/chroot-run.sh sid gbp buildpackage -uc -us --git-upstream-branch=master'
@@ -727,7 +726,6 @@
                 - 'disorderfs_from_git_master':
                     my_description: 'Build disorderfs Debian package from git branch master.'
                     my_timed: '42 23 1 1 *'
-                    my_hname: ''
                     my_gitrepo: 'https://salsa.debian.org/reproducible-builds/disorderfs.git'
                     my_gitbranches: 'origin/master'
                     my_shell: '/srv/jenkins/bin/chroot-run.sh sid gbp buildpackage -uc -us --git-upstream-branch=master'
@@ -735,20 +733,16 @@
                 - 'builds_website':
                     my_description: 'Build https://reproducible-builds.org on every git commit to https://salsa.debian.org/reproducible-builds/reproducible-website.git with jekyll.'
                     my_timed: ''
-                    my_hname: ''
                     my_gitrepo: 'https://salsa.debian.org/reproducible-builds/reproducible-website.git'
                     my_gitbranches: 'origin/master'
                     my_shell: 'jekyll build -s . -d /srv/reproducible-builds.org/www'
                 - 'builds_diffoscope_website':
                     my_description: 'Build https://diffoscope.org/ on every git commit to https://salsa.debian.org/reproducible-builds/diffoscope-website.git'
                     my_timed: ''
-                    my_hname: ''
                     my_gitrepo: 'https://salsa.debian.org/reproducible-builds/diffoscope-website.git'
                     my_gitbranches: 'origin/master'
                     my_shell: 'mkdir -pv /srv/diffoscope.org/www && jekyll build -s . -d /srv/diffoscope.org/www'
-            my_gitbranches: 'master'
             my_recipients: 'jenkins+debian-reproducible jenkins+reproducible-builds qa-jenkins-scm@lists.alioth.debian.org'
-            my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
             my_parse_rules: '/srv/jenkins/logparse/reproducible-extra.rules'
             my_hname: ''
             my_naginator_regex: 'Caused by: hudson.plugins.git.GitException: Command "git fetch'
