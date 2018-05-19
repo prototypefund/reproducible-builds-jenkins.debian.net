@@ -674,16 +674,20 @@ if [ "$HOSTNAME" = "jenkins" ] || [ "$HOSTNAME" = "jenkins-test-vm" ] ; then
 	#
 	cd /srv/jenkins/job-cfg
 	for metaconfig in *.yaml.py ; do
-		# regen the file only if the .py is newer than the generated file
-		if [ ! -f "${metaconfig%.py}" ] || [ "$metaconfig" -nt "${metaconfig%.py}" ]; then
-			TMPFILE=$(sudo -u jenkins-adm mktemp)
-			sudo -u jenkins-adm "./$metaconfig" > "$TMPFILE"
+		TMPFILE=$(sudo -u jenkins-adm mktemp)
+		sudo -u jenkins-adm tee "$TMPFILE" >/dev/null < ./$metaconfig
+		if ! sudo -u jenkins-adm cmp -s ${metaconfig%.py} "$TMPFILE" ; then
 			sudo -u jenkins-adm mv "$TMPFILE" "${metaconfig%.py}"
 		fi
 	done
 	for config in *.yaml ; do
-		# do update, if no stamp file exist or config is newer than stamp
-		if [ ! -f $STAMP ] || [ $config -nt $STAMP ] ; then
+		# do update, if
+		# no stamp file exist or
+		# no .py file exists and config is newer than stamp or
+		# a .py file exists and .py file is newer than stamp
+		if [ ! -f $STAMP ] || \
+		 ( [ ! -f $config.py ] && [ $config -nt $STAMP ] ) || \
+		 ( [ -f $config.py ] && [ $config.py -nt $STAMP ] ) ; then
 			echo "$config has changed, executing updates."
 			$JJB update $config
 		fi
