@@ -248,6 +248,7 @@ def gen_suitearch_section(package, current_suite, current_arch):
             dbd_links = get_dbd_links(package.name, strip_epoch(version), s, a)
             dbd_page_uri = dbd_links.get('dbd_page_uri', '')
             suites.append({
+                'package': package.name,
                 'status': status,
                 'version': version,
                 'build_date': build_date,
