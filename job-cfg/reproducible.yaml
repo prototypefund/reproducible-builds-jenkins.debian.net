@@ -3,6 +3,7 @@
     project-type: freestyle
     my_disabled:
     my_gitbranches: '*/master'  # j-j-b default
+    my_scmpoll: 'H H/12 * * *' # fallback when the trigger doesn't work somehow
     disabled: '{obj:my_disabled}'
     properties: &sidebar
       - sidebar: &sb1
@@ -113,7 +114,7 @@
     triggers:
       - timed: '{my_timed}'
       - pollscm:
-          cron: '*/6 * * * *'
+          cron: '{my_scmpoll}'
     publishers:
       - logparser:
           <<: *logparser
@@ -132,7 +133,7 @@
     triggers:
       - timed: '{my_timed}'
       - pollscm:
-          cron: '*/6 * * * *'
+          cron: '{my_scmpoll}'
     publishers:
       - logparser:
           <<: *logparser
@@ -162,7 +163,7 @@
     triggers:
       - timed: '{my_timed}'
       - pollscm:
-          cron: '*/6 * * * *'
+          cron: '{my_scmpoll}'
     publishers:
       - logparser:
           <<: *logparser
@@ -258,7 +259,6 @@
     name: reproducible
     my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
     my_node: '{my_hname}'
-    my_scmpoll: '*/6 * * * *'
     my_naginator_regex: 'dummyshouldneverhappen'
     jobs:
         - '{name}_{my_task}_{my_arch}_{my_hname}':
@@ -576,7 +576,6 @@
                 - 'notes':
                     my_description: 'Generate HTML results ({my_reponame}) for reproducible builds, triggered by changes to the <a href="{my_gitrepo}" target="_blank">{my_reponame}.git</a> repository.'
                     my_timed: '57 0 * * *'
-                    my_scmpoll: 'H/1 H/1 * * *'
                     my_shell: '/srv/jenkins/bin/reproducible_{my_reponame}.py && /srv/jenkins/bin/reproducible_html_{my_reponame}.py'
                     my_gitrepo: 'https://salsa.debian.org/reproducible-builds/reproducible-notes.git'
                 - 'source-date-epoch-spec':
@@ -684,24 +683,14 @@
                 - 'fdroid_build_apps':
                     my_description: 'Build all the latest apps for F-Droid.'
                     my_timed: '42 7 * * 1'
-                    my_hname: 'profitbricks7'
-                    my_gitrepo: 'https://gitlab.com/fdroid/fdroidserver.git'
-                    my_recipients: 'jenkins+reproducible-builds qa-jenkins-scm@lists.alioth.debian.org hans@guardianproject.info michael.poehn@fsfe.org'
-                    my_blocker: '^reproducible.*fdroid.*'
-            my_gitbranches: 'master'
-            my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
-            my_parse_rules: '/srv/jenkins/logparse/reproducible-extra.rules'
-            my_naginator_regex: 'Caused by: hudson.plugins.git.GitException: Command "git fetch'
-
-        - '{name}_{otherproject_git_blocked}':
-            otherproject_git_blocked:
                 - 'fdroid_test':
                     my_description: 'Run tests on all the built APKs for F-Droid.'
                     my_timed: '42 23 1 1 *'
-                    my_hname: 'profitbricks7'
-                    my_gitrepo: 'https://gitlab.com/fdroid/fdroidserver.git'
-                    my_recipients: 'jenkins+reproducible-builds qa-jenkins-scm@lists.alioth.debian.org hans@guardianproject.info michael.poehn@fsfe.org'
-                    my_blocker: '^reproducible_fdroid.*'
+            my_hname: 'profitbricks7'
+            my_recipients: 'jenkins+reproducible-builds qa-jenkins-scm@lists.alioth.debian.org hans@guardianproject.info michael.poehn@fsfe.org'
+            my_blocker: '^reproducible_fdroid.*'
+            my_gitrepo: 'https://gitlab.com/fdroid/fdroidserver.git'
+            my_scmpoll: '*/6 * * * *'
             my_gitbranches: 'master'
             my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
             my_parse_rules: '/srv/jenkins/logparse/reproducible-extra.rules'
