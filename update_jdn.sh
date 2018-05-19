@@ -621,8 +621,7 @@ for dir in bin logparse live mustache-templates ; do
 done
 HOST_JOBS="hosts/$HOSTNAME/job-cfg"
 if [ -e "$HOST_JOBS" ] ; then
-	sudo rsync -rpt --copy-links --delete "$HOST_JOBS/" /srv/jenkins/job-cfg/
-	sudo chown -R jenkins-adm.jenkins-adm /srv/jenkins/$dir
+	sudo -u jenkins-adm rsync -rpt --copy-links --delete "$HOST_JOBS/" /srv/jenkins/job-cfg/
 else
 	# tidying up ... assuming that we don't want clutter on peripheral servers
 	[ -d /srv/jenkins/job-cfg ] && sudo rm -rf /srv/jenkins/job-cfg
