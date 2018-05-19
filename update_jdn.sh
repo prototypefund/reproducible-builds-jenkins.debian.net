@@ -675,7 +675,7 @@ if [ "$HOSTNAME" = "jenkins" ] || [ "$HOSTNAME" = "jenkins-test-vm" ] ; then
 	cd /srv/jenkins/job-cfg
 	for metaconfig in *.yaml.py ; do
 		# regen the file only if the .py is newer than the generated file
-		if [ ! -f "${metaconfig%.py}" ] && [ "$metaconfig" -nt "${metaconfig%.py}" ]; then
+		if [ ! -f "${metaconfig%.py}" ] || [ "$metaconfig" -nt "${metaconfig%.py}" ]; then
 			TMPFILE=$(sudo -u jenkins-adm mktemp)
 			sudo -u jenkins-adm "./$metaconfig" > "$TMPFILE"
 			sudo -u jenkins-adm mv "$TMPFILE" "${metaconfig%.py}"
