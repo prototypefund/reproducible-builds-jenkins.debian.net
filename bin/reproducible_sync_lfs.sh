@@ -11,5 +11,6 @@ if [ ! -d lfs ]; then
     cd lfs
     git lfs install
 fi
+cd lfs
 git pull
 git lfs pull
