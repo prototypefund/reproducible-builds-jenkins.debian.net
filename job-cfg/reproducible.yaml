@@ -121,11 +121,13 @@
           parse-rules: '{my_parse_rules}'
       - email: *email
       - naginator: *naginator
+    git_wipe_workspace: true    # j-j-b default
     scm:
       - git:
           url: '{my_gitrepo}'
           branches:
             - '{my_gitbranches}'
+          wipe-workspace: '{git_wipe_workspace}'
 
 - defaults:
     <<: *DEFAULTS
@@ -735,6 +737,7 @@
                     my_description: 'Pull big files from https://salsa.debian.org/reproducible-builds/reproducible-lfs so we can serve them from here'
                     my_timed: ''
                     my_gitrepo: 'https://salsa.debian.org/reproducible-builds/reproducible-lfs.git'
+                    git_wipe_workspace: false   # can't do it as it would otherwise take too much to checkout/clone
                     my_shell: '/srv/jenkins/bin/reproducible_sync_lfs.sh'
             my_recipients: 'jenkins+debian-reproducible jenkins+reproducible-builds qa-jenkins-scm@lists.alioth.debian.org'
             my_parse_rules: '/srv/jenkins/logparse/reproducible-extra.rules'
