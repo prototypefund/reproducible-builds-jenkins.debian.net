@@ -595,7 +595,7 @@ create_dashboard_page() {
 	# insane grep to filter people who committed with several
 	# usernames…
 	if [ -f ${NOTES_GIT_PATH}/packages.yml ] && [ -f ${NOTES_GIT_PATH}/issues.yml ] ; then
-		write_page "<tr><td class=\"left\">committers to <a href=\"https://anonscm.debian.org/git/reproducible/notes.git\" target=\"_parent\">notes.git</a> (in the last three months)</td><td>$(cd ${NOTES_GIT_PATH} ; git log --since="3 months ago"|grep Author|sort -u | \
+		write_page "<tr><td class=\"left\">committers to <a href=\"https://salsa.debian.org/reproducible-builds/reproducible-notes\" target=\"_parent\">notes.git</a> (in the last three months)</td><td>$(cd ${NOTES_GIT_PATH} ; git log --since="3 months ago"|grep Author|sort -u | \
 				grep -v alexis@passoire.fr | grep -v christoph.berg@credativ.de | grep -v d.s@daniel.shahaf.name | grep -v dhole@openmailbox.com | grep -v jelmer@jelmer.uk | grep -v mattia@mapreri.org | grep -v micha@lenk.info | grep -v mail@sandroknauss.de | grep -v sanvila@unex.es | \
 				wc -l)</td><td colspan=\"$AC\"></td></tr>"
 		write_page "<tr><td class=\"left\">committers to notes.git (in total)</td><td>$(cd ${NOTES_GIT_PATH} ; git log |grep Author|sort -u | \

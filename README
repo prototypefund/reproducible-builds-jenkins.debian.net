@@ -163,7 +163,7 @@ Installation tests inside chroot environments.
 
 * Several other jobs exist to build the HTML pages and to create two JSON files which can be downloaded from https://tests.reproducible-builds.org/reproducible.json and https://tests.reproducible-builds.org/reproducible-tracker.json. The 1st one has all the data (except history) and the 2nd has all the data we consider relevant to bother maintainers with, that is, some ftbfs isses are excluded.
 
-* Information from https://anonscm.debian.org/git/reproducible/notes.git is incorporated on pushes to that git repo.
+* Information from https://salsa.debian.org/reproducible-builds/reproducible-notes is incorporated on pushes to that git repo.
 
 * There are suite specific jobs to create the pbuilder base.tgz's per suite, which have the reproducible apt repo added. Similarly there's another job per suite to create the schroots used by the builder jobs to download the packages sources to build.
 
