@@ -141,9 +141,9 @@ def create_pkgset_navigation(suite, arch, view=None):
 def create_index_page(suite, arch):
     title = 'Package sets in %s/%s' % (suite, arch)
     body = create_pkgset_navigation(suite, arch)
-    destfile = os.path.join(DEBIAN_BASE, suite, arch,
+    destfile = os.path.join(DISTRO_BASE, suite, arch,
                             "index_pkg_sets.html")
-    suite_arch_nav_template = DEBIAN_URI + \
+    suite_arch_nav_template = DISTRO_URI + \
                               '/{{suite}}/{{arch}}/index_pkg_sets.html'
     left_nav_html = create_main_navigation(
         suite=suite,
@@ -170,7 +170,7 @@ def gen_other_arch_context(archs, suite, pkgset_name):
 
 
 def stats_png_file_href(suite, arch, pkgset_name):
-    return (os.path.join(DEBIAN_BASE, suite, arch, 'stats_meta_pkg_state_' +
+    return (os.path.join(DISTRO_BASE, suite, arch, 'stats_meta_pkg_state_' +
                          pkgset_name + '.png'),
             "/".join(["/debian", suite, arch, 'stats_meta_pkg_state_' +
                       pkgset_name + '.png'])
@@ -178,7 +178,7 @@ def stats_png_file_href(suite, arch, pkgset_name):
 
 
 def stats_thumb_file_href(suite, arch, pkgset_name):
-    return (os.path.join(DEBIAN_BASE, suite, arch, 'stats_meta_pkg_state_' +
+    return (os.path.join(DISTRO_BASE, suite, arch, 'stats_meta_pkg_state_' +
                          pkgset_name + '-thumbnail.png'),
             "/".join(["/debian", suite, arch, 'stats_meta_pkg_state_' +
                       pkgset_name + '-thumbnail.png'])
@@ -247,8 +247,8 @@ def create_pkgset_page_and_graphs(suite, arch, stats, pkgset_name):
     title = '%s package set for %s/%s' % \
             (pkgset_name, suite, arch)
     page = "pkg_set_" + pkgset_name + ".html"
-    destfile = os.path.join(DEBIAN_BASE, suite, arch, page)
-    suite_arch_nav_template = DEBIAN_URI + '/{{suite}}/{{arch}}/' + page
+    destfile = os.path.join(DISTRO_BASE, suite, arch, page)
+    suite_arch_nav_template = DISTRO_URI + '/{{suite}}/{{arch}}/' + page
     left_nav_html = create_main_navigation(
         suite=suite,
         arch=arch,

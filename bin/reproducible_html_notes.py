@@ -467,8 +467,8 @@ def index_issues(issues, scorefuncs):
             '</b> issues.</p>'
     html += tab*2 + '<p>' + NOTESGIT_DESCRIPTION + '</p>'
     title = 'Known issues related to reproducible builds'
-    destfile = DEBIAN_BASE + '/index_issues.html'
-    desturl = DEBIAN_URL + '/index_issues.html'
+    destfile = DISTRO_BASE + '/index_issues.html'
+    desturl = DISTRO_URL + '/index_issues.html'
     left_nav_html = create_main_navigation(displayed_page='issues')
     write_html_page(title=title, body=html, destfile=destfile,
                     left_nav_html=left_nav_html)

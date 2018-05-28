@@ -294,7 +294,7 @@ def _gen_files_html(header, entries):
     return html
 
 def create_breakages_graph(png_file, main_label):
-    png_fullpath = os.path.join(DEBIAN_BASE, png_file)
+    png_fullpath = os.path.join(DISTRO_BASE, png_file)
     table = "stats_breakages"
     columns = ["datum", "diffoscope_timeouts", "diffoscope_crashes"]
     query = "SELECT {fields} FROM {table} ORDER BY datum".format(
@@ -408,8 +408,8 @@ if __name__ == '__main__':
         html += '<p><b>COOL!!!</b> Everything is GOOD and not a single issue was '
         html += 'detected. <i>Enjoy!</i></p>'
     title = 'Breakage on the Debian pages of tests.reproducible-builds.org'
-    destfile = DEBIAN_BASE + '/index_breakages.html'
-    desturl = DEBIAN_URL + '/index_breakages.html'
+    destfile = DISTRO_BASE + '/index_breakages.html'
+    desturl = DISTRO_URL + '/index_breakages.html'
 
     left_nav_html = create_main_navigation(displayed_page='breakages')
     write_html_page(title, html, destfile, style_note=True,

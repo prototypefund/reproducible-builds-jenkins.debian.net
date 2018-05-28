@@ -107,7 +107,7 @@ def get_and_clean_dbd_links(package, eversion, suite, arch, status):
         }
     else:
         if status == 'unreproducible' and not args.ignore_missing_files:
-            log.critical(DEBIAN_URL + '/' + suite + '/' + arch + '/' + package +
+            log.critical(DISTRO_URL + '/' + suite + '/' + arch + '/' + package +
                          ' is unreproducible, but without diffoscope output.')
         # if there are no diffoscope results, we want to remove the old package
         # page used to display diffoscope results
@@ -169,7 +169,7 @@ def gen_suitearch_details(package, version, suite, arch, status, spokenstatus,
                                                           suite, arch)
     elif status not in ('untested', 'blacklisted') and \
          not args.ignore_missing_files:
-        log.critical(DEBIAN_URL  + '/' + suite + '/' + arch + '/' + package +
+        log.critical(DISTRO_URL  + '/' + suite + '/' + arch + '/' + package +
                      ' didn\'t produce a buildlog, even though it has been built.')
 
     context['has_buildloginfo'] = 'buildinfo_uri' in context or \
@@ -384,7 +384,7 @@ def gen_packages_html(packages, no_clean=False):
                     'suitearch_section_html': suitearch_section_html,
                     'project_links_html': project_links,
                     'reproducible': reproducible,
-                    'dashboard_url': DEBIAN_URL,
+                    'dashboard_url': DISTRO_URL,
                     'desturl': desturl,
                 })
 
@@ -481,7 +481,7 @@ def purge_old_pages():
                 pkg = page.rsplit('.', 1)[0]
                 if (pkg, suite, arch) not in cur_pkgs:
                     log.info('There is no package named ' + pkg + ' from ' +
-                             suite + '/' + arch + '/diffoscope-results in ' + 
+                             suite + '/' + arch + '/diffoscope-results in ' +
                              'the database. Removing old page.')
                     os.remove(RB_PKG_PATH + '/' + suite + '/' + arch + '/' +
                               'diffoscope-results/' + page)

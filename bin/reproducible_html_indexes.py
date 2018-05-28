@@ -772,15 +772,15 @@ def build_page(page, suite=None, arch=None):
             footnote = True if footnote1 else footnote
     suite_arch_nav_template = None
     if gpage:
-        destfile = DEBIAN_BASE + '/index_' + page + '.html'
-        desturl = DEBIAN_URL + '/index_' + page + '.html'
+        destfile = DISTRO_BASE + '/index_' + page + '.html'
+        desturl = DISTRO_URL + '/index_' + page + '.html'
         suite = defaultsuite  # used for the links in create_main_navigation
     else:
-        destfile = DEBIAN_BASE + '/' + suite + '/' + arch + '/index_' + \
+        destfile = DISTRO_BASE + '/' + suite + '/' + arch + '/index_' + \
                    page + '.html'
-        desturl = DEBIAN_URL + '/' + suite + '/' + arch + '/index_' + \
+        desturl = DISTRO_URL + '/' + suite + '/' + arch + '/index_' + \
                   page + '.html'
-        suite_arch_nav_template = DEBIAN_URI + '/{{suite}}/{{arch}}/index_' + \
+        suite_arch_nav_template = DISTRO_URI + '/{{suite}}/{{arch}}/index_' + \
                                   page + '.html'
     left_nav_html = create_main_navigation(
         suite=suite,

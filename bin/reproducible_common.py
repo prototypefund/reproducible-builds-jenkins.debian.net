@@ -99,19 +99,19 @@ TEMP_PATH = conf_distro['tempdir']
 
 REPRODUCIBLE_STYLES = os.path.join(BASE, conf_distro['css'])
 
-DEBIAN_URI = '/' + conf_distro['distro_root']
-DEBIAN_BASE = os.path.join(BASE, conf_distro['distro_root'])
+DISTRO_URI = '/' + conf_distro['distro_root']
+DISTRO_BASE = os.path.join(BASE, conf_distro['distro_root'])
 
-DBD_URI = os.path.join(DEBIAN_URI, conf_distro['diffoscope_html'])
-DBDTXT_URI = os.path.join(DEBIAN_URI, conf_distro['diffoscope_txt'])
-LOGS_URI = os.path.join(DEBIAN_URI, conf_distro['buildlogs'])
-DIFFS_URI = os.path.join(DEBIAN_URI, conf_distro['logdiffs'])
-NOTES_URI = os.path.join(DEBIAN_URI, conf_distro['notes'])
-ISSUES_URI = os.path.join(DEBIAN_URI, conf_distro['issues'])
-RB_PKG_URI = os.path.join(DEBIAN_URI, conf_distro['packages'])
-RBUILD_URI = os.path.join(DEBIAN_URI, conf_distro['rbuild'])
-HISTORY_URI = os.path.join(DEBIAN_URI, conf_distro['pkghistory'])
-BUILDINFO_URI = os.path.join(DEBIAN_URI, conf_distro['buildinfo'])
+DBD_URI = os.path.join(DISTRO_URI, conf_distro['diffoscope_html'])
+DBDTXT_URI = os.path.join(DISTRO_URI, conf_distro['diffoscope_txt'])
+LOGS_URI = os.path.join(DISTRO_URI, conf_distro['buildlogs'])
+DIFFS_URI = os.path.join(DISTRO_URI, conf_distro['logdiffs'])
+NOTES_URI = os.path.join(DISTRO_URI, conf_distro['notes'])
+ISSUES_URI = os.path.join(DISTRO_URI, conf_distro['issues'])
+RB_PKG_URI = os.path.join(DISTRO_URI, conf_distro['packages'])
+RBUILD_URI = os.path.join(DISTRO_URI, conf_distro['rbuild'])
+HISTORY_URI = os.path.join(DISTRO_URI, conf_distro['pkghistory'])
+BUILDINFO_URI = os.path.join(DISTRO_URI, conf_distro['buildinfo'])
 DBD_PATH = BASE + DBD_URI
 DBDTXT_PATH = BASE + DBDTXT_URI
 LOGS_PATH = BASE + LOGS_URI
@@ -123,12 +123,12 @@ RBUILD_PATH = BASE + RBUILD_URI
 HISTORY_PATH = BASE + HISTORY_URI
 BUILDINFO_PATH = BASE + BUILDINFO_URI
 
-REPRODUCIBLE_JSON = os.path.join(DEBIAN_BASE, conf_distro['json_out'])
-REPRODUCIBLE_TRACKER_JSON = os.path.join(DEBIAN_BASE, conf_distro['tracker.json_out'])
+REPRODUCIBLE_JSON = os.path.join(DISTRO_BASE, conf_distro['json_out'])
+REPRODUCIBLE_TRACKER_JSON = os.path.join(DISTRO_BASE, conf_distro['tracker.json_out'])
 
 REPRODUCIBLE_URL = conf_distro['base_url']
-DEBIAN_URL = urljoin(REPRODUCIBLE_URL, conf_distro['distro_root'])
-DEBIAN_DASHBOARD_URI = os.path.join(DEBIAN_URI, conf_distro['landing_page'])
+DISTRO_URL = urljoin(REPRODUCIBLE_URL, conf_distro['distro_root'])
+DISTRO_DASHBOARD_URI = os.path.join(DISTRO_URI, conf_distro['landing_page'])
 JENKINS_URL = conf_distro['jenkins_url']
 
 # global package set definitions
@@ -178,7 +178,7 @@ log.debug("BUILDINFO_PATH:\t" + BUILDINFO_PATH)
 log.debug("REPRODUCIBLE_JSON:\t" + REPRODUCIBLE_JSON)
 log.debug("JENKINS_URL:\t\t" + JENKINS_URL)
 log.debug("REPRODUCIBLE_URL:\t" + REPRODUCIBLE_URL)
-log.debug("DEBIAN_URL:\t" + DEBIAN_URL)
+log.debug("DISTRO_URL:\t" + DISTRO_URL)
 
 if args.ignore_missing_files:
     log.warning("Missing files will be ignored!")
@@ -346,7 +346,7 @@ def create_main_navigation(suite=defaultsuite, arch=defaultarch,
         'arch_nav': {
             'arch_list': arch_list
         } if len(arch_list) else '',
-        'debian_uri': DEBIAN_DASHBOARD_URI,
+        'debian_uri': DISTRO_DASHBOARD_URI,
         'cross_suite_arch_nav': True if suite_arch_nav_template else False,
     }
     if suite != 'experimental':

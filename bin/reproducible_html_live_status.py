@@ -85,9 +85,9 @@ def generate_schedule(arch):
         html += link_package(pkg, row[1], row[2], bugs)
         html += '</code></td><td>'+convert_into_status_html(str(row[4]))+'</td><td>'+duration+'</td><td>' + avg_duration + '</td></tr>\n'
     html += '</table></p>\n'
-    destfile = DEBIAN_BASE + '/index_' + arch + '_scheduled.html'
-    desturl = DEBIAN_URL + '/index_' + arch + '_scheduled.html'
-    suite_arch_nav_template = DEBIAN_URI + '/index_{{arch}}_scheduled.html'
+    destfile = DISTRO_BASE + '/index_' + arch + '_scheduled.html'
+    desturl = DISTRO_URL + '/index_' + arch + '_scheduled.html'
+    suite_arch_nav_template = DISTRO_URI + '/index_{{arch}}_scheduled.html'
     left_nav_html = create_main_navigation(arch=arch, no_suite=True,
         displayed_page='scheduled', suite_arch_nav_template=suite_arch_nav_template)
     write_html_page(title=title, body=html, destfile=destfile, style_note=True,
@@ -190,8 +190,8 @@ def generate_oldies(arch):
             html += link_package(pkg, row[0], row[1], bugs)
             html += '</code></td><td>'+convert_into_status_html(str(row[3]))+'</td><td>' + row[4] + '</td></tr>\n'
         html += '</table></p>\n'
-    destfile = DEBIAN_BASE + '/index_' + arch + '_oldies.html'
-    desturl = DEBIAN_URL + '/index_' + arch + '_oldies.html'
+    destfile = DISTRO_BASE + '/index_' + arch + '_oldies.html'
+    desturl = DISTRO_URL + '/index_' + arch + '_oldies.html'
     left_nav_html = create_main_navigation(arch=arch)
     write_html_page(title=title, body=html, destfile=destfile, style_note=True,
                     refresh_every=60, left_nav_html=left_nav_html)
@@ -201,4 +201,3 @@ if __name__ == '__main__':
     for arch in ARCHS:
         generate_schedule(arch)
         generate_oldies(arch)
-
