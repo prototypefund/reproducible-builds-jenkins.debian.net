@@ -16,7 +16,7 @@ def debug_info():
     # Debug info, to be removed once ready to go.
     print()
     print('WARNING: This endpoint is still a WORK IN PROGRESS. This means that the option details may change without notice.')
-    print('You are aunthenticated as: {}'.format(user))
+    print('You are authenticated as: {}'.format(user))
     print(cgi.FieldStorage())
 
 
