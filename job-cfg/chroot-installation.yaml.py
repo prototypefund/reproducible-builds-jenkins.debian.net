@@ -280,7 +280,9 @@ data.append(
                                                                'max-failed-builds': 3,
                                                                'regular-expression': '^E: (Couldn.t download .*/Packages|Unable to fetch some archives|Failed getting release file|Failed getting release signature file)'}}],
                         'triggers': [{   'timed': '{my_time}'}],
-                        'wrappers': [{   'timeout': {   'timeout': 360}}]}})
+                        'wrappers': [{   'timeout': {   'timeout': 360}}],
+                        'node': 'profitbricks10',
+}})
 data.append(
     {   'job-template': {   'defaults': 'chroot-installation',
                             'name': '{name}_{dist}_{action}'}})
