@@ -37,9 +37,9 @@ PACKAGES=$( grep salsa.debian.org/installer/team $TMPFILE|cut -d "/" -f6-|cut -d
 # check for each git repo if a jenkins job exists
 #
 for PACKAGE in $PACKAGES ; do
-	if grep -A 1 https://https://salsa.debian.org/installer-team/$PACKAGE $TMPFILE | grep -q "deleted = true" ; then
+	if grep -A 1 https://salsa.debian.org/installer-team/$PACKAGE $TMPFILE | grep -q "deleted = true" ; then
 		# ignore deleted repos
-		echo "Info: https://https://salsa.debian.org/installer-team/$PACKAGE ignored as it has been deleted."
+		echo "Info: https://salsa.debian.org/installer-team/$PACKAGE ignored as it has been deleted."
 		continue
 	elif [ ! -d ~jenkins/jobs/${DI_BUILD_JOB_PATTERN}${PACKAGE} ] ; then
 		echo "Warning: No build job '${DI_BUILD_JOB_PATTERN}${PACKAGE}'."
@@ -48,7 +48,7 @@ for PACKAGE in $PACKAGES ; do
 		# prepare yaml bits
 		#
 		echo "      - '{name}_build_$PACKAGE':" >> $PROJECT_JOBS
-		echo "         gitrepo: 'https://https://salsa.debian.org/installer-team/$PACKAGE'" >> $PROJECT_JOBS
+		echo "         gitrepo: 'https://salsa.debian.org/installer-team/$PACKAGE'" >> $PROJECT_JOBS
 		echo "- job-template:" >> $JOB_TEMPLATES
 		echo "    defaults: d-i-build" >> $JOB_TEMPLATES
 		echo "    name: '{name}_build_$PACKAGE'" >> $JOB_TEMPLATES
@@ -63,16 +63,16 @@ echo
 echo "Checking if there are jenkins jobs for which there is no repo in $URL - or only a deleted one."
 for JOB in $(ls -1 ~jenkins/jobs/ | grep ${DI_BUILD_JOB_PATTERN}) ; do
 	REPONAME=${JOB:10}
-	if grep -q https://https://salsa.debian.org/installer-team/$REPONAME $TMPFILE ; then
-		if grep -A 1 https://https://salsa.debian.org/installer-team/$REPONAME $TMPFILE | grep -q "deleted = true" ; then
+	if grep -q https://salsa.debian.org/installer-team/$REPONAME $TMPFILE ; then
+		if grep -A 1 https://salsa.debian.org/installer-team/$REPONAME $TMPFILE | grep -q "deleted = true" ; then
 			echo "Warning: Job $JOB exists, but has 'deleted = true' set in .mrconfig."
-			if ! grep -q "'https://https://salsa.debian.org/installer-team/$REPONAME'" /srv/jenkins/job-cfg/d-i.yaml ; then
+			if ! grep -q "'https://salsa.debian.org/installer-team/$REPONAME'" /srv/jenkins/job-cfg/d-i.yaml ; then
 				echo "jenkins-jobs delete $JOB" >> $CLEANUP
 			else
 				echo "# Please remove $JOB from job-cfg/d-i.yaml before deleting the job." >> $CLEANUP
 			fi
 		else
-			echo "Ok: Job $JOB for https://https://salsa.debian.org/installer-team/$REPONAME found."
+			echo "Ok: Job $JOB for https://salsa.debian.org/installer-team/$REPONAME found."
 		fi
 	else
 		echo "Warning: Git repo $REPONAME not found in $URL, but job $JOB exists."
