@@ -1,3 +1,2 @@
 cleanup LVC in bin/d-i_build.sh
-cleanup THANKS.head for pb10
 cleanup job-cfg/d-i.yaml.py (search for lvc)
