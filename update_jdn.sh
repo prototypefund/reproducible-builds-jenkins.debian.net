@@ -313,7 +313,6 @@ if [ -f /etc/debian_version ] ; then
 				g++
 				gawk
 				gcc
-				git
 				grep
 				iasl
 				libc6-dev
@@ -384,6 +383,7 @@ if [ -f /etc/debian_version ] ; then
 				flex
 				gawk 
 				ghc
+				git-lfs
 				git-notifier 
 				gocr 
 				graphviz 
