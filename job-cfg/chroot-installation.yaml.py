@@ -314,7 +314,7 @@ jobs.append({ '{name}_{dist}_{action}': {
                   'my_description': 'Maintainance job for chroot-installation_{dist}_* jobs, do some cleanups and monitoring so that there is a predictable environment.',
                   'my_prio': '135',
                   'my_recipients': 'qa-jenkins-scm@lists.alioth.debian.org',
-                  'my_shell': '/srv/jenkins/bin/maintenance.sh chroot-installation_{dist}',
+                  'my_shell': '/srv/jenkins/bin/jenkins_master_wrapper.sh chroot-installation_{dist}',
                   'my_view': 'jenkins.d.n'}})
 
 
@@ -339,7 +339,7 @@ for jobindex, jobspec in enumerate(jobspecs):
                       'my_prio': 131,
                       'my_time': '',
                       'my_recipients': get_recipients('bootstrap'),
-                      'my_shell': '/srv/jenkins/bin/chroot-installation.sh {dist} none'+jobspec['s_ext'],
+                      'my_shell': '/srv/jenkins/bin/jenkins_master_wrapper.sh {dist} none'+jobspec['s_ext'],
                       'my_view': get_view('bootstrap', None),
                   }}
                   for (dists, trigs) in js_dists_trigs[jobindex].keys()])
@@ -367,7 +367,7 @@ for jobindex, jobspec in enumerate(jobspecs):
                                  'my_recipients': get_recipients(t)}}
                              for t in dv_targs],
                   'my_description': 'Debootstrap {dist}, then install {my_spokenname}'+jobspec['d_ext']+'.',
-                  'my_shell': '/srv/jenkins/bin/chroot-installation.sh {dist} {target}'+jobspec['s_ext'],
+                  'my_shell': '/srv/jenkins/bin/jenkins_master_wrapper.sh {dist} {target}'+jobspec['s_ext'],
                   'my_view': view,
                   }}
                   for (dists, view), dv_targs in targets_per_distview[jobindex].items()])

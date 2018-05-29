@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
+# vim: set noexpandtab:
 
 # Copyright (c) 2009, 2010, 2012, 2015 Peter Palfrader
 #               2015-2017 Holger Levsen
-#               2017      Mattia Rizzolo <mattia@debian.org>
+#               2017-2018 Mattia Rizzolo <mattia@debian.org>
 #
 # Permission is hereby granted, free of charge, to any person obtaining
 # a copy of this software and associated documentation files (the
@@ -72,6 +73,10 @@ elif [[ "$*" =~ ^rebootstrap_.* ]] ; then
 	REBOOTSTRAPSH="/srv/jenkins/bin/rebootstrap.sh $@"
 	export LC_ALL=C
 	exec $REBOOTSTRAPSH; croak "Exec failed";
+elif [[ "$*" =~ ^chroot-installation_.*maintenance$ ]]; then
+	shift ; exec /srv/jenkins/bin/maintenance.sh $@ ; croak "Exec failed"
+elif [[ "$*" =~ ^chroot-installation_.* ]]; then
+	shift ; exec /srv/jenkins/bin/chroot-installation.sh $@ ; croak "Exec failed"
 elif [ "$*" = "reproducible_html_nodes_info" ] ; then
 	exec /srv/jenkins/bin/reproducible_info.sh ; croak "Exec failed";
 elif [ "$1" = "/srv/jenkins/bin/reproducible_build.sh" ] && ( [ "$2" = "1" ] || [ "$2" = "2" ] ) ; then

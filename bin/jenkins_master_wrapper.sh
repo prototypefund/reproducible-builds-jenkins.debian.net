@@ -1,7 +1,9 @@
 #!/bin/bash
+# vim: set noexpandtab:
 
 # Copyright 2015-2017 Holger Levsen <holger@layer-acht.org>
 #                2016 Phil Hands <phil@hands.com>
+#           2018      Mattia Rizzolo <mattia@debian.org>
 # released under the GPLv=2
 # based on an idea by Peter Palfrader (see bin/jenkins_node_wrapper.sh)
 
@@ -25,8 +27,9 @@ RETRIEVE_ARTIFACTS=no
 # add some more params if needed,
 # by default we just use the job name as param
 case $JOB_NAME in
-	rebootstrap_*) 	PARAMS="$JOB_NAME $@"
-			;;
+	rebootstrap_*|chroot-installation_*)
+		PARAMS="$JOB_NAME $@"
+		;;
 	lvc_*) 		PARAMS="$JOB_NAME $EXECUTOR_NUMBER TRIGGERING_BRANCH=${TRIGGERING_BRANCH:-} $@"
 			RETRIEVE_ARTIFACTS=yes
 			export
