@@ -325,6 +325,10 @@ _average_builds_per_day() {
 }
 write_build_performance_stats() {
 	local ARCH
+	local lockfile="/var/lib/jenkins/NO-RB-BUILDERS-PLEASE"
+	if [ -f "$lockfile" ]; then
+		write_page "<p><strong>Warning</strong>: lock file <code>$lockfile</code> present, the builders are shutting down due to administrator request.</p>"
+	fi
 	write_page "<table class=\"main\"><tr><th>Architecture build statistics</th>"
 	for ARCH in ${ARCHS} ; do
 		write_page " <th>$ARCH</th>"
