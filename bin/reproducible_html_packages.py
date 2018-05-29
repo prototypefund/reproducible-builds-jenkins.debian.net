@@ -79,7 +79,7 @@ def get_dbd_links(package, eversion, suite, arch):
     dbd_uri = DBD_URI + '/' + suite + '/' + arch + '/' +  package + '_' + \
               eversion + '.diffoscope.html'
     dbdtxt_uri = DBDTXT_URI + '/' + suite + '/' + arch + '/' +  package + '_' + \
-                eversion + '.diffoscope.txt'
+                eversion + '.diffoscope.txt.gz'
     dbd_page_uri = RB_PKG_URI + '/' + suite + '/' + arch + \
                    '/diffoscope-results/' + package + '.html'
     links = {}
@@ -161,7 +161,7 @@ def gen_suitearch_details(package, version, suite, arch, status, spokenstatus,
     rbuild = pkg_has_rbuild(package, version, suite, arch)
     if rbuild:  # being a tuple (rbuild path, size), empty if non existant
         url = RBUILD_URI + '/' + suite + '/' + arch + '/' + package + '_' + \
-              eversion + '.rbuild.log'  # apache ignores the trailing .gz
+              eversion + '.rbuild.log.gz'
         context['rbuild_uri'] = url
         context['rbuild_size'] = sizeof_fmt(rbuild[1])
         default_view = default_view if default_view else url
