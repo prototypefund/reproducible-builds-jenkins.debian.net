@@ -110,7 +110,6 @@ user_host_groups['holger','jenkins']="reproducible,${user_host_groups['holger','
 user_host_groups['mattia','*']="$sudo_groups"
 user_host_groups['mattia','jenkins']="reproducible,${user_host_groups['mattia','*']}"
 user_host_groups['phil','jenkins-test-vm']="$sudo_groups,libvirt,libvirt-qemu"
-user_host_groups['phil','profitbricks-build10-amd64']="$sudo_groups"
 user_host_groups['phil','jenkins']="$sudo_groups"
 user_host_groups['lunar','jenkins']='reproducible'
 user_host_groups['lynxis','profitbricks-build3-amd64']="$sudo_groups"
@@ -157,25 +156,11 @@ sudo mkdir -p /srv/workspace
 [ -h /chroots ] || sudo ln -s /srv/workspace/chroots /chroots
 [ -h /schroots ] || sudo ln -s /srv/schroots /schroots
 
-if [ "$HOSTNAME" = "jenkins-test-vm" ] || [ "$HOSTNAME" = "profitbricks-build10-amd64" ] || [ "$HOSTNAME" = "profitbricks-build7-amd64" ] ; then
+if [ "$HOSTNAME" = "jenkins-test-vm" ] || [ "$HOSTNAME" = "profitbricks-build7-amd64" ] ; then
 	# jenkins needs access to libvirt
 	sudo adduser jenkins kvm
 	sudo adduser jenkins libvirt
 	sudo adduser jenkins libvirt-qemu
-
-	# we need a directory for the VM's storage pools
-	VM_POOL_DIR=/srv/lvc/vm-pools
-	if [ ! -d $VM_POOL_DIR ] ; then
-		sudo mkdir -p $VM_POOL_DIR
-		sudo chown jenkins:libvirt-qemu $VM_POOL_DIR
-		sudo chmod 775 $VM_POOL_DIR
-	fi
-
-	# tidy up after ourselves, for a while at least
-	OLD_VM_POOL_DIR=/srv/workspace/vm-pools
-	if [ -d "$OLD_VM_POOL_DIR" ] ; then
-		sudo rm -r "$OLD_VM_POOL_DIR"
-	fi
 fi
 
 # prepare tmpfs on some hosts
@@ -217,22 +202,6 @@ case $HOSTNAME in
 				sudo mount /srv/workspace
 			else
 				explain "WARNING: mountpoint /srv/workspace is non-empty."
-			fi
-		fi
-		;;
-	*) ;;
-esac
-case $HOSTNAME in
-	profitbricks-build10-amd64)
-		[ -d /srv/lvc/vm-pools ] || sudo mkdir -p /srv/lvc/vm-pools
-		if ! grep -q '^/dev/vdb\s\+/srv/lvc/vm-pools\s' /etc/fstab; then
-			echo "/dev/vdb	/srv/lvc/vm-pools ext4	errors=remount-ro	0	2" | sudo tee -a /etc/fstab >/dev/null  
-		fi
-		if ! mountpoint -q /srv/lvc/vm-pools; then
-			if test -z "$(ls -A /srv/lvc/vm-pools)"; then
-				sudo mount /srv/lvc/vm-pools
-			else
-				explain "WARNING: mountpoint /srv/lvc/vm-pools is non-empty."
 			fi
 		fi
 		;;
