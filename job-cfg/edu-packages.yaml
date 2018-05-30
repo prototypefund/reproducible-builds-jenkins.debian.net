@@ -14,7 +14,7 @@
           url: http://www.profitbricks.co.uk
           text: Sponsored by Profitbricks
           icon: /userContent/images/profitbricks-24x24.png
-    description: 'Build the master branch of git://git.debian.org/git/debian-edu/{my_package}.git in sid on every commit.<br><br>Job configuration source is <a href=""https://salsa.debian.org/qa/jenkins.debian.net/blob/master/job-cfg/edu-packages.yaml>edu-packages.yaml</a>.'
+    description: 'Build the master branch of https://salsa.debian.org/debian-edu/{my_package} in sid on every commit.<br><br>Job configuration source is <a href=""https://salsa.debian.org/qa/jenkins.debian.net/blob/master/job-cfg/edu-packages.yaml>edu-packages.yaml</a>.'
     logrotate:
       daysToKeep: 90
       numToKeep: 30
@@ -49,7 +49,7 @@
     name: edu-packages
     my_distro: 'sid'
     my_shell: '/srv/jenkins/bin/chroot-run.sh {my_distro} debuild -b -uc -us'
-    my_url: 'git://git.debian.org/git/debian-edu/{my_package}.git'
+    my_url: 'https://salsa.debian.org/debian-edu/{my_package}'
     my_package:
         - 'debian-edu'
         - 'debian-edu-archive-keyring'
@@ -58,9 +58,9 @@
         - 'debian-edu-doc'
         - 'debian-edu-install'
         - 'sitesummary':
-           my_url: 'git://git.debian.org/git/debian-edu/upstream/{my_package}.git'
+           my_url: 'https://salsa.debian.org/debian-edu/upstream/{my_package}'
         - 'guacamole-client':
-           my_url: 'git://git.debian.org/git/pkg-remote/packages/{my_package}.git'
+           my_url: 'https://salsa.debian.org/debian-remote-team/{my_package}'
         - 'guacamole-server':
-           my_url: 'git://git.debian.org/git/pkg-remote/packages/{my_package}.git'
+           my_url: 'https://salsa.debian.org/debian-remote-team/{my_package}'
     jobs: ['{name}_{my_distro}_{my_package}']
