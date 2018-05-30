@@ -18,7 +18,7 @@
           url: http://www.profitbricks.co.uk
           text: Sponsored by Profitbricks
           icon: /userContent/images/profitbricks-24x24.png
-    description: '{my_description} running on {my_distro}.<br><br>Job  configuration source is <a href="https://anonscm.debian.org/git/qa/jenkins.debian.net.git/tree/job-cfg/packages-tests.yaml">packages-tests.yaml</a>.'
+    description: '{my_description} running on {my_distro}.<br><br>Job configuration source is <a href="https://salsa.debian.org/qa/jenkins.debian.net.git/blob/master/job-cfg/packages-tests.yaml">packages-tests.yaml</a>.'
     logrotate: &logrotate
       daysToKeep: 90
       numToKeep: 30
@@ -89,8 +89,6 @@
           <<: *distro_defaults_sid
           my_origin_triggers:
             - gitlab
-            - pollscm:
-                cron: '* H/2 * * *'
       - buster:
           <<: *distro_defaults_buster
           my_trigger: '{name}_stretch-backports'
@@ -113,8 +111,6 @@
           <<: *distro_defaults_sid
           my_origin_triggers:
             - gitlab
-            - pollscm:
-                cron: '* H/2 * * *'
       - buster: *distro_defaults_buster
       - stretch: *distro_defaults_stretch
     jobs:
