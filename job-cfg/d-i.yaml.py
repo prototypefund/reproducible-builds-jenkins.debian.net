@@ -371,7 +371,6 @@ data.append(gen_default(
     ))
 data.append(gen_default(
     name='{name}-pu-triggered',
-    downstream=[{'project': 'lvc_debian-miniiso', 'current-parameters': 'true'}],
     parameters=[ {'string': {'name': 'TRIGGERING_BRANCH', 'description': 'git branch that triggered the build that resulted in this subsequent build.'}}],
     ))
 

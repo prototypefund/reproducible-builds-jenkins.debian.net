@@ -10,7 +10,7 @@ common_init "$@"
 
 RESULT_DIR=$(readlink -f ..)
 ISO_DIR=/srv/d-i/isos
-LVC_HOST=profitbricks-build10-amd64.debian.net
+ISO_TEST_HOST=  # this will be set to wherever we test ISOs we create
 
 [ -v GIT_BRANCH ] || GIT_BRANCH="$(git branch -r --contains $GIT_COMMIT | tail -1 | cut -c3-)"
 
@@ -65,10 +65,12 @@ preserve_artifacts() {
 	fi
 
 	#
-	# Alternatively, if we built an images tarball and were triggered by a pu/ branch
+	# Alternatively, if we built an images tarball
+	#                   and were triggered by a pu/ branch
+	#                   and have somewhere to test the results
 	#
 	IMAGETAR=${RESULT_DIR}/debian-installer-images_*.tar.gz
-	if [ -f $IMAGETAR -a "$TRIGGERING_BRANCH" ] ; then
+	if [ -f $IMAGETAR -a "$TRIGGERING_BRANCH" -a "$ISO_TEST_HOST" ] ; then
 		[ -d ${ISO_DIR} ] || mkdir ${ISO_DIR}
 
 		echo "untaring the .iso images from $IMAGETAR:"
@@ -84,9 +86,9 @@ preserve_artifacts() {
 
 		if [ "$HOSTNAME" = "jenkins" ] ; then
 			# FIXME this rsync should probably be in a separate job that the one on pb10 could then depend on -- otherwise race conditions seem to lurk
-			echo "and rsync them to the target node ($LVC_HOST):"
-			ssh -o 'Batchmode = yes' $LVC_HOST mkdir -p $ISO_DIR
-			rsync -v -e "ssh -o 'Batchmode = yes'" -r $ISO_DIR/ $LVC_HOST:$ISO_DIR/
+			echo "and rsync them to the target node ($ISO_TEST_HOST):"
+			ssh -o 'Batchmode = yes' $ISO_TEST_HOST mkdir -p $ISO_DIR
+			rsync -v -e "ssh -o 'Batchmode = yes'" -r $ISO_DIR/ $ISO_TEST_HOST:$ISO_DIR/
 		fi
 	fi
 }
