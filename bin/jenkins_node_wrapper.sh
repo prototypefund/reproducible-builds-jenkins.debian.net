@@ -73,9 +73,9 @@ elif [[ "$*" =~ ^rebootstrap_.* ]] ; then
 	REBOOTSTRAPSH="/srv/jenkins/bin/rebootstrap.sh $@"
 	export LC_ALL=C
 	exec $REBOOTSTRAPSH; croak "Exec failed";
-elif [[ "$*" =~ ^chroot-installation_.*maintenance$ ]]; then
+elif [[ "$1" =~ ^chroot-installation_.*maintenance$ ]]; then
 	shift ; exec /srv/jenkins/bin/maintenance.sh $@ ; croak "Exec failed"
-elif [[ "$*" =~ ^chroot-installation_.* ]]; then
+elif [[ "$1" =~ ^chroot-installation_.* ]]; then
 	shift ; exec /srv/jenkins/bin/chroot-installation.sh $@ ; croak "Exec failed"
 elif [ "$*" = "reproducible_html_nodes_info" ] ; then
 	exec /srv/jenkins/bin/reproducible_info.sh ; croak "Exec failed";
