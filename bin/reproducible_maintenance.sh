@@ -1,7 +1,7 @@
 #!/bin/bash
 # vim: set noexpandtab:
 
-# Copyright 2014-2017 Holger Levsen <holger@layer-acht.org>
+# Copyright 2014-2018 Holger Levsen <holger@layer-acht.org>
 #         © 2015-2018 Mattia Rizzolo <mattia@debian.org>
 # released under the GPLv=2
 
@@ -555,7 +555,7 @@ if [ "$HOSTNAME" = "$MAINNODE" ] && [ $(date -u +%H) -eq 0 ]  ; then
 			TMPFILE=$(mktemp --tmpdir=$TEMPDIR maintenance-XXXXXXXXXXXX)
 			PKG=$(basename $NOTE)
 			mv $NOTE $TMPFILE
-			cat $TMPFILE | mail -s "$PKG: tests.reproducible-builds.org/debian status changed" \
+			cat $TMPFILE | mail -s "$PKG: status change on tests.reproducible-builds.org/debian" \
 				-a "From: Reproducible builds folks <reproducible-builds@lists.alioth.debian.org>" \
 				-a "X-Reproducible-Builds-Pkg: $PKG" \
 				 $PKG@packages.debian.org
