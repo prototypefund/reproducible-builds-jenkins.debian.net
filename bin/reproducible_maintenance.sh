@@ -557,6 +557,7 @@ if [ "$HOSTNAME" = "$MAINNODE" ] && [ $(date -u +%H) -eq 0 ]  ; then
 			mv $NOTE $TMPFILE
 			cat $TMPFILE | mail -s "tests.reproducible-builds.org/debian status changes for $PKG" \
 				-a "From: Reproducible builds folks <reproducible-builds@lists.alioth.debian.org>" \
+				-a "X-Reproducible-Builds-Pkg: $PKG" \
 				 $PKG@packages.debian.org
 			rm -f $TMPFILE
 	done
