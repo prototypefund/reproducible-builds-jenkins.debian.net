@@ -1,6 +1,8 @@
 #!/bin/bash
+# vim: set noexpandtab:
 
 # Copyright 2012-2017 Holger Levsen <holger@layer-acht.org>
+#           2018      Mattia Rizzolo <mattia@debian.org>
 # released under the GPLv=2
 
 DEBUG=true
@@ -38,7 +40,9 @@ cleanup_all() {
 		echo "HALP. CHROOT_TARGET = $CHROOT_TARGET"
 		exit 1
 	fi
-	sudo umount -l $CHROOT_TARGET/proc || fuser -mv $CHROOT_TARGET/proc
+	if mountpoint -q "$CHROOT_TARGET/proc" ; then
+		sudo umount -l "$CHROOT_TARGET/proc"
+	fi
 	sudo rm -rf --one-file-system $CHROOT_TARGET || fuser -mv $CHROOT_TARGET
 	rm -f $TMPLOG
 	echo "\$1 = $1"
