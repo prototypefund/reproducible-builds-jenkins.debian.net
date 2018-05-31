@@ -431,7 +431,7 @@ download_and_launch() {
 }
 
 merge_debian_branch() {
-	local DEBIAN_GIT_URL="git://git.debian.org/pkg-privacy/packages/torbrowser-launcher.git"
+	local DEBIAN_GIT_URL="https://salsa.debian.org/pkg-privacy-team/torbrowser-launcher"
 	local DEBIAN_BRANCH="debian/$1"
 	echo "$(date -u) - Merging branch $DEBIAN_BRANCH into $COMMIT_HASH now."
 	echo
