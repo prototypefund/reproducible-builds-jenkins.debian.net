@@ -10,7 +10,7 @@ common_init "$@"
 
 RESULT_DIR=$(readlink -f ..)
 ISO_DIR=/srv/d-i/isos
-ISO_TEST_HOST=  # this will be set to wherever we test ISOs we create
+ISO_TEST_HOST=openqa.debian.net
 
 [ -v GIT_BRANCH ] || GIT_BRANCH="$(git branch -r --contains $GIT_COMMIT | tail -1 | cut -c3-)"
 
