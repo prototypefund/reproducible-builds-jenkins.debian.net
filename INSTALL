@@ -70,7 +70,7 @@ We would prefer to run a jenkins package from jessie-backports.
 As user run:
 ----
 cd
-git clone https://salsa.debian.org:qa/jenkins.debian.net
+git clone https://salsa.debian.org/qa/jenkins.debian.net
 cd jenkins.debian.net
 ./update_jdn.sh
 ----
@@ -140,7 +140,7 @@ I've cloned these two git repos on my desktop and manually run `git pull`. This 
 
 If you'd like to run tests.repoducible-builds.org without the rest of the jenkins set up, here are some necessary steps. Note that most of these steps are performed in the update_jdn.sh script, so if you have a test system it might be simpler to just run it.
 
-Your clone of the jenkins git (https://salsa.debian.org:qa/jenkins.debian.net) will be referred to as $JENKINSGIT.
+Your clone of the jenkins git (https://salsa.debian.org/qa/jenkins.debian.net) will be referred to as $JENKINSGIT.
 
 ==== Dependencies, users, directories and files
 

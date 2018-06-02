@@ -12,7 +12,7 @@ About jenkins.debian.net
 
 https://jenkins.debian.net is a tool for automated quality monitoring of Debian. It is *work in progress* despite being in existence since October 15th 2012.
 
-Get the source by running `git clone https://salsa.debian.org:qa/jenkins.debian.net`. It's all in there, no (relevant) manual setup has been done besides what's in this git repository. (The irrelevant bits are some very simple configuration files containing passwords.)
+Get the source by running `git clone https://salsa.debian.org/qa/jenkins.debian.net`. It's all in there, no (relevant) manual setup has been done besides what's in this git repository. (The irrelevant bits are some very simple configuration files containing passwords.)
 
 The (virtualized) hardware is sponsored since October 2012 by http://www.profitbricks.co.uk - currently it's using more than hundred cores and almost 300 GB memory, thanks a lot!
 
