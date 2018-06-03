@@ -201,7 +201,7 @@ $JENKINSGIT/bin/reproducible_html_repository_comparison.sh
 This script construct pages that contain notes about the ongoing status and causes of nondeterminism for a package. These pages can be accessed at <host>/debian/notes/<package>_note.html
 
 First, clone the notes git repo:
-git clone https://anonscm.debian.org/cgit/reproducible/notes.git/
+git clone https://salsa.debian.org/reproducible-builds/reproducible-notes
 
 Create symlinks for the the files *packages.yml* and *issues.yml* in your $JENKINSGIT/bin/ directory.
 

@@ -137,7 +137,7 @@ Installation tests inside chroot environments.
 
 * The (current) purpose of https://tests.reproducible-builds.org is to show the potential of reproducible builds for Debian - and six other projects currently. This is research, showing what could (and should) be done... check https://wiki.debian.org/ReproducibleBuilds for the real status of the project for Debian!
 
-* For Debian, four suites, 'stretch', 'buster', 'unstable' and 'experimental', are tested on four architectures: 'amd64', 'i386', 'arm64' and 'armhf'. The tests are done using 'pbuilder' through several concurrent workers: 40 for 'amd64', 24 for 'i386', 32 for 'arm64' and 52 for 'armhf', which are each constantly testing packages and saving the results of these tests. There's a single link:https://anonscm.debian.org/git/qa/jenkins.debian.net.git/tree/bin/reproducible_build_service.sh[systemd service] starting all of these link:https://anonscm.debian.org/git/qa/jenkins.debian.net.git/tree/bin/reproducible_worker.sh[workers] which in turn launch the actual link:https://anonscm.debian.org/git/qa/jenkins.debian.net.git/tree/bin/reproducible_build.sh[build script]. (So the actual builds and tests are happening outside the jenkins service.)
+* For Debian, four suites, 'stretch', 'buster', 'unstable' and 'experimental', are tested on four architectures: 'amd64', 'i386', 'arm64' and 'armhf'. The tests are done using 'pbuilder' through several concurrent workers: 40 for 'amd64', 24 for 'i386', 32 for 'arm64' and 52 for 'armhf', which are each constantly testing packages and saving the results of these tests. There's a single link:https://salsa.debian.org/qa/jenkins.debian.net/blob/master/bin/reproducible_build_service.sh[systemd service] starting all of these link:https://salsa.debian.org/qa/jenkins.debian.net/blob/master/bin/reproducible_worker.sh[workers] which in turn launch the actual link:https://salsa.debian.org/qa/jenkins.debian.net/blob/master/bin/reproducible_build.sh[build script]. (So the actual builds and tests are happening outside the jenkins service.)
 ** To shutdown all the workers use:  `sudo systemctl stop reproducible_build@startup.service ; /srv/jenkins/bin/reproducible_cleanup_nodes.sh`
 ** To start all the workers use: `sudo systemctl start reproducible_build@startup.service`
 
@@ -209,7 +209,7 @@ link:https://www.torproject.org/projects/torbrowser.html.en[Tor Browser] is not 
 
 There is a link:https://jenkins.debian.net/view/torbrowser/[graphical status overview of torbrowser tests on Debian] which are tests installing torbrowser-launcher on and from sid, stretch, jessie-backports, jessie and wheezy-backports, which first download torbrowser via https and via tor, then launches it to finally connect to a debian mirror via an onion-address and then to www.debian.org. In addition to these there are also tests installing the package from stretch on jessie as well as the package from sid on stretch and jessie. Finally there are also tests for building the package from our git branches for various suites and finally there's a daily build of the package based on the upstream git master branch merged with our sid packaging.
 
-There are 17 different tests currently and they are configured in just two files, a 220 line link:https://anonscm.debian.org/git/qa/jenkins.debian.net.git/tree/job-cfg/torbrowser-launcher.yaml[yaml file defining the jenkins jobs] and 528 lines of link:https://anonscm.debian.org/git/qa/jenkins.debian.net.git/tree/bin/test_torbrowser-launcher.sh[bash script containing the actual test code].
+There are 17 different tests currently and they are configured in just two files, a 220 line link:https://salsa.debian.org/qa/jenkins.debian.net/blob/master/job-cfg/torbrowser-launcher.yaml[yaml file defining the jenkins jobs] and 528 lines of link:https://salsa.debian.org/qa/jenkins.debian.net/blob/master/bin/test_torbrowser-launcher.sh[bash script containing the actual test code].
 
 These tests are executed either daily or weekly (those testing the package from ftp.d.o) or on every commit and at least once every month (those testing the package build from git).
 
@@ -244,6 +244,6 @@ See link:https://jenkins.debian.net/userContent/thanks.html[THANKS].
 
 == License
 
-** GPLv2, see link:https://anonscm.debian.org/git/qa/jenkins.debian.net.git/LICENSE[LICENSE].
+** GPLv2, see link:https://salsa.debian.org/qa/jenkins.debian.net/blob/master/LICENSE[LICENSE].
 
 // vim: set filetype=asciidoc:
