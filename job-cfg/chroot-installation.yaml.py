@@ -103,7 +103,7 @@ all_targets = [
 # not all packages are available in all distros
 #
 def is_target_in_distro(distro, target):
-         # education-ltsp-server and education-roaming-workstation are only availble since stretch…
+         # education-ltsp-server and education-roaming-workstation are only available since stretch…
          if distro in ('jessie') and target in ('education-ltsp-server', 'education-roaming-workstation'):
              return False
          # education-thin-client-server is obsolete since stretch…
@@ -221,7 +221,7 @@ def get_targets_in_distro(distro):
 
 #
 # given a target, returns a list of ([dist], key) tuples, so we can handle the
-# edu packages having views that are distro dependant
+# edu packages having views that are distro dependent
 #
 # this groups all the distros that have matching views
 #

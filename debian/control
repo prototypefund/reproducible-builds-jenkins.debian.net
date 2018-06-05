@@ -18,7 +18,7 @@ Description: Stuff to setup a jenkins.debian.net instance
  Scripts and configuration files for running jenkins.debian.net, including
  the ability to turn any machine into jenkins.$localdomain. 
  .
- On installation of the package no adminstrative changes will be made the
+ On installation of the package no administrative changes will be made the
  system. To do so, run jenkins.debian.net-setup as root.
 
 Package: jenkins.debian.net-bin

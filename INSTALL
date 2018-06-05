@@ -175,7 +175,7 @@ Get a recent copy of the database from:
 wget https://tests.reproducible-builds.org/reproducible.sql.xz
 ----
 
-The database is kept using PostgreSQL and initialised by runing /srv/jenkins/bin/reproducible_db_maintenance.py manually as the jenkins user.
+The database is kept using PostgreSQL and initialised by running /srv/jenkins/bin/reproducible_db_maintenance.py manually as the jenkins user.
 
 ==== Websites scripts
 
