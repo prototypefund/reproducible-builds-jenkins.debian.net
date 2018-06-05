@@ -36,7 +36,7 @@ ok /HEAD is now at .+/
 # catch lintian warnings and errors
 warning /^W: /
 warning /^E: /
-# but supress things like 'N: 1 tag overridden (1 warning)'
+# but suppress things like 'N: 1 tag overridden (1 warning)'
 ok /N: \d+ tags? overridden \(\d+/
 
 # list of warnings here...

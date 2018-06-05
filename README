@@ -109,7 +109,7 @@ Installation tests inside chroot environments.
 *** tests apt installation of a metapackage in a specific distro.
 * 'edu-packages_$(distro)_$(src-package)':
 ** builds one of the six debian-edu packages ('debian-edu', 'debian-edu-config', 'debian-edu-install', 'debian-edu-doc', 'debian-edu-artwork', 'debian-edu-archive-keyring' on every push to it's git master branch
-** and whenever 'debian-edu-doc' is build, https://jenkins.debian.net/userContent/debian-edu-doc/ get's updated automatically afterwards too.
+** and whenever 'debian-edu-doc' is build, https://jenkins.debian.net/userContent/debian-edu-doc/ gets updated automatically afterwards too.
 
 === qa.debian.org related jobs
 

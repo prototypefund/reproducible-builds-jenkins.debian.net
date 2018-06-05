@@ -16,7 +16,7 @@
 # (interacting with the DSA machine setup which is in puppet…),
 # thus obsoleting this script gradually, though this is used on
 # 47 hosts currently (of which quite some were initially installed
-# manully…)
+# manually…)
 #
 # so, yes, patches welcome. saying this is crap alone is not helpful,
 # nor is just suggesting some new or old technology. patches most welcome!
@@ -102,7 +102,7 @@ sudo_groups='jenkins,jenkins-adm,sudo,adm'
 
 # if there's a need for host groups, a case statement on $HOSTNAME here that sets $GROUPNAME, say, should do the trick
 # then you can define user_host_groups['phil','lvm_group']=... below
-# and add checks for the GROUP version whereever the HOSTNAME is checked in the following code
+# and add checks for the GROUP version wherever the HOSTNAME is checked in the following code
 
 user_host_groups['helmut','*']="$sudo_groups"
 user_host_groups['holger','*']="$sudo_groups"
@@ -454,7 +454,7 @@ if [ -f /etc/debian_version ] ; then
 		fi
 		$UP2DATE || sudo apt-get update
 		$UP2DATE || sudo apt-get install $DEBS $MASTERDEBS
-		# dont (re-)install pbuilder if it's on hold
+		# don't (re-)install pbuilder if it's on hold
 		if [ "$(dpkg-query -W -f='${db:Status-Abbrev}\n' pbuilder)" != "hi " ] ; then
 			case $HOSTNAME in
 				codethink*) 	$UP2DATE || sudo apt-get install -t jessie-backports pbuilder
@@ -615,7 +615,7 @@ if [ "$HOSTNAME" = "jenkins" ] ; then
 	git log | grep ^Author| cut -d " " -f2-|sort -u -f > $TMPFILE
 	echo "----" >> $TMPFILE
 	sudo tee /var/lib/jenkins/userContent/THANKS > /dev/null < THANKS.head
-	# samuel, lunar, josch and phil committed with several commiters, only display one
+	# samuel, lunar, josch and phil committed with several committers, only display one
 	grep -v -e "samuel.thibault@ens-lyon.org" -e Lunar -e "j.schauer@email.de" -e "mattia@mapreri.org" -e "phil@jenkins-test-vm" $TMPFILE | sudo tee -a /var/lib/jenkins/userContent/THANKS > /dev/null
 	rm $TMPFILE
 	TMPDIR=$(mktemp -d -t update-jdn-XXXXXXXX)
