@@ -13,6 +13,7 @@
 # Build rb-pkg pages (the pages that describe the package status)
 
 from rblib import *
+from rblib.bugs import Bugs
 
 import csv
 import time
@@ -299,7 +300,7 @@ def create_pkgset_graph(png_file, suite, arch, pkgset_name):
                     y_label, '1920', '960'])
 
 
-bugs = get_bugs()
+bugs = Bugs().bugs
 for arch in ARCHS:
     for suite in SUITES:
         if suite == 'experimental':

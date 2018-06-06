@@ -15,12 +15,11 @@ from subprocess import Popen, PIPE
 from tempfile import NamedTemporaryFile
 
 from rblib import *
+from rblib.bugs import Bugs
 
 
 arch = 'amd64' # the arch is only relevant for link targets here
 mirror = 'http://deb.debian.org/debian'
-
-bugs = get_bugs()
 
 for suite in SUITES:
     remotefile = mirror + '/dists/' + suite + '/main/source/Sources.xz'
@@ -59,7 +58,7 @@ for suite in SUITES:
                 line = line.strip().split(None, 1)
                 html += '    '
                 # the final strip() is to avoid a newline
-                html += link_package(line[0], suite, arch, bugs).strip()
+                html += link_package(line[0], suite, arch, Bugs().bugs).strip()
                 try:
                     html += ' ' + line[1]  # eventual uploaders sign
                 except IndexError:

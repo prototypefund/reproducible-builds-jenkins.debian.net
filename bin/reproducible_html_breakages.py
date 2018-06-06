@@ -394,7 +394,6 @@ def gen_html():
 
 
 if __name__ == '__main__':
-    bugs = get_bugs()
     html = '<p>This page lists unexpected things a human should look at and '
     html += 'fix, like packages with an incoherent status or files that '
     html += 'should not be there. Some of these breakages are caused by '

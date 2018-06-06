@@ -14,7 +14,7 @@ from reproducible_html_indexes import build_leading_text_section
 from sqlalchemy import select, func, cast, Integer, and_, bindparam
 import glob
 
-bugs = get_bugs()
+from rblib.bugs import Bugs
 
 # sqlalchemy table definitions needed for queries
 results = db_table('results')
@@ -83,7 +83,7 @@ def generate_schedule(arch):
         avg_duration = convert_into_hms_string(row[6])
         html += tab + '<tr><td>&nbsp;</td><td>' + row[0] + '</td>'
         html += '<td>' + row[1] + '</td><td>' + row[2] + '</td><td><code>'
-        html += link_package(pkg, row[1], row[2], bugs)
+        html += link_package(pkg, row[1], row[2], Bugs().bugs)
         html += '</code></td><td>'+convert_into_status_html(str(row[4]))+'</td><td>'+duration+'</td><td>' + avg_duration + '</td></tr>\n'
     html += '</table></p>\n'
     destfile = DISTRO_BASE + '/index_' + arch + '_scheduled.html'
@@ -188,7 +188,7 @@ def generate_oldies(arch):
             pkg = row[2]
             html += tab + '<tr><td>&nbsp;</td><td>' + row[0] + '</td>'
             html += '<td>' + row[1] + '</td><td><code>'
-            html += link_package(pkg, row[0], row[1], bugs)
+            html += link_package(pkg, row[0], row[1], Bugs().bugs)
             html += '</code></td><td>'+convert_into_status_html(str(row[3]))+'</td><td>' + row[4] + '</td></tr>\n'
         html += '</table></p>\n'
     destfile = DISTRO_BASE + '/index_' + arch + '_oldies.html'

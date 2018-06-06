@@ -6,8 +6,6 @@
 # Based on the reproducible_common.sh by © 2014 Holger Levsen <holger@layer-acht.org>
 # Licensed under GPL-2
 #
-# Depends: python3 python3-psycopg2
-#
 # This is included by all reproducible_*.py scripts, it contains common functions
 
 import os
@@ -20,7 +18,6 @@ import hashlib
 import logging
 import argparse
 import pystache
-import psycopg2
 import configparser
 import html as HTML
 from string import Template
@@ -245,61 +242,6 @@ def query_db(query, *args, **kwargs):
         return None
 
 
-def start_udd_connection():
-    username = "public-udd-mirror"
-    password = "public-udd-mirror"
-    host = "public-udd-mirror.xvm.mit.edu"
-    port = 5432
-    db = "udd"
-    try:
-        try:
-            log.debug("Starting connection to the UDD database")
-            conn = psycopg2.connect(
-                database=db,
-                user=username,
-                host=host,
-                password=password,
-                connect_timeout=5,
-            )
-        except psycopg2.OperationalError as err:
-            if str(err) == 'timeout expired\n':
-                log.error('Connection to the UDD database replice timed out. '
-                          'Maybe the machine is offline or just unavailable.')
-                log.error('Failing nicely anyway, all queries will return an '
-                          'empty response.')
-                return None
-            else:
-                raise
-    except:
-        log.error('Erorr connecting to the UDD database replica.' +
-                  'The full error is:')
-        exc_type, exc_value, exc_traceback = sys.exc_info()
-        print_exception(exc_type, exc_value, exc_traceback)
-        log.error('Failing nicely anyway, all queries will return an empty ' +
-                  'response.')
-        return None
-    conn.set_client_encoding('utf8')
-    return conn
-
-def query_udd(query):
-    if not conn_udd:
-        log.error('There has been an error connecting to the UDD database. ' +
-                  'Please look for a previous error for more information.')
-        log.error('Failing nicely anyway, returning an empty response.')
-        return []
-    try:
-        cursor = conn_udd.cursor()
-        cursor.execute(query)
-    except:
-        log.error('The UDD server encountered a issue while executing the ' +
-                  'query. The full error is:')
-        exc_type, exc_value, exc_traceback = sys.exc_info()
-        print_exception(exc_type, exc_value, exc_traceback)
-        log.error('Failing nicely anyway, returning an empty response.')
-        return []
-    return cursor.fetchall()
-
-
 def package_has_notes(package):
     # not a really serious check, it'd be better to check the yaml file
     path = NOTES_PATH + '/' + package + '_note.html'
@@ -435,61 +377,6 @@ def pkg_has_rbuild(package, version=False, suite=defaultsuite, arch=defaultarch)
         return ()
 
 
-def get_bugs():
-    """
-    This function returns a dict:
-    { "package_name": {
-        bug1: {patch: True, done: False, title: "string"},
-        bug2: {patch: False, done: False, title: "string"},
-       }
-    }
-    """
-    query = """
-        SELECT bugs.id, bugs.source, bugs.done, ARRAY_AGG(tags.tag), bugs.title
-        FROM bugs JOIN bugs_usertags ON bugs.id = bugs_usertags.id
-                  LEFT JOIN (
-                    SELECT id, tag FROM bugs_tags
-                    WHERE tag='patch' OR tag='pending'
-                  ) AS tags ON bugs.id = tags.id
-        WHERE bugs_usertags.email = 'reproducible-builds@lists.alioth.debian.org'
-        AND bugs.id NOT IN (
-            SELECT id
-            FROM bugs_usertags
-            WHERE email = 'reproducible-builds@lists.alioth.debian.org'
-            AND (
-                bugs_usertags.tag = 'toolchain'
-                OR bugs_usertags.tag = 'infrastructure')
-            )
-        GROUP BY bugs.id, bugs.source, bugs.done
-    """
-    # returns a list of tuples [(id, source, done)]
-    global conn_udd
-    if not conn_udd:
-        conn_udd = start_udd_connection()
-    global bugs
-    if bugs:
-        return bugs
-    rows = query_udd(query)
-    log.info("finding out which usertagged bugs have been closed or at least have patches")
-    packages = {}
-
-    for bug in rows:
-        if bug[1] not in packages:
-            packages[bug[1]] = {}
-        # bug[0] = bug_id, bug[1] = source_name, bug[2] = who_when_done,
-        # bug[3] = tag (patch or pending), bug[4] = title
-        packages[bug[1]][bug[0]] = {
-            'done': False, 'patch': False, 'pending': False, 'title': bug[4]
-        }
-        if bug[2]:  # if the bug is done
-            packages[bug[1]][bug[0]]['done'] = True
-        if 'patch' in bug[3]:  # the bug is patched
-            packages[bug[1]][bug[0]]['patch'] = True
-        if 'pending' in bug[3]:  # the bug is pending
-            packages[bug[1]][bug[0]]['pending'] = True
-    return packages
-
-
 def get_trailing_icon(package, bugs):
     html = ''
     if package in bugs:
@@ -539,9 +426,3 @@ def irc_msg(msg, channel='debian-reproducible'):
     call(kgb)
 
 from .models import *
-
-# get_bugs() is the only user of this, let it initialize the connection itself,
-# during it's first call to speed up things when unneeded
-# also "share" the bugs, to avoid collecting them multiple times per run
-conn_udd = None
-bugs = None

@@ -17,6 +17,7 @@ import pystache
 from collections import OrderedDict
 from math import sqrt
 from rblib import *
+from rblib.bugs import Bugs
 from reproducible_html_packages import gen_packages_html
 from reproducible_html_indexes import build_page
 from sqlalchemy import select, and_, bindparam
@@ -477,7 +478,7 @@ def index_issues(issues, scorefuncs):
 
 if __name__ == '__main__':
     issues_count = {}
-    bugs = get_bugs()
+    bugs = Bugs().bugs
     notes = load_notes()
     issues = load_issues()
     iterate_over_notes(notes)
