@@ -31,6 +31,11 @@ pkg_legend_template = renderer.load_template(
 # we only do stats up until yesterday
 YESTERDAY = (datetime.now()-timedelta(days=1)).strftime('%Y-%m-%d')
 
+
+def percent(part, whole):
+    return round(100 * float(part)/float(whole), 1)
+
+
 def gather_meta_stats(suite, arch, pkgset_name):
     pkgset_file = os.path.join(PKGSET_DEF_PATH, 'meta_pkgsets-' + suite,
                                pkgset_name + '.pkgset')

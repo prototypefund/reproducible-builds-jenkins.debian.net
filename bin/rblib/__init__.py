@@ -76,10 +76,6 @@ def print_critical_message(msg):
     print('\n\n\n')
 
 
-def percent(part, whole):
-    return round(100 * float(part)/float(whole), 1)
-
-
 def create_temp_file(mode='w+b'):
     os.makedirs(TEMP_PATH, exist_ok=True)
     return NamedTemporaryFile(suffix=JOB_NAME, dir=TEMP_PATH, mode=mode)
