@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 #
-# Copyright © 2015 Mattia Rizzolo <mattia@mapreri.org>
+# Copyright © 2015-2018 Mattia Rizzolo <mattia@debian.org>
 # Copyright © 2015-2017 Holger Levsen <holger@layer-acht.org>
 # Based on the reproducible_common.sh by © 2014 Holger Levsen <holger@layer-acht.org>
 # Licensed under GPL-2
@@ -16,7 +16,6 @@ import sys
 import csv
 import json
 import errno
-import atexit
 import hashlib
 import logging
 import argparse
@@ -33,186 +32,13 @@ from datetime import datetime, timedelta
 from sqlalchemy import MetaData, Table, sql, create_engine
 from sqlalchemy.exc import NoSuchTableError, OperationalError
 
-DEBUG = False
-QUIET = False
 
 # don't try to run on test system
 if os.uname()[1] == 'jenkins-test-vm':
     sys.exit()
 
-__location__ = os.path.realpath(
-    os.path.join(os.getcwd(), os.path.dirname(__file__)))
-
-CONFIG = os.path.join(__location__, 'reproducible.ini')
-
-## command line option parsing
-parser = argparse.ArgumentParser()
-group = parser.add_mutually_exclusive_group()
-parser.add_argument('--distro', help='name of the distribution to work on',
-                    default='debian', nargs='?')
-group.add_argument("-d", "--debug", action="store_true")
-group.add_argument("-q", "--quiet", action="store_true")
-parser.add_argument("--skip-database-connection", action="store_true",
-                   help="skip connecting to database")
-parser.add_argument("--ignore-missing-files", action="store_true",
-                    help="useful for local testing, where you don't have all the build logs, etc..")
-args, unknown_args = parser.parse_known_args()
-DISTRO = args.distro
-log_level = logging.INFO
-if args.debug or DEBUG:
-    DEBUG = True
-    log_level = logging.DEBUG
-if args.quiet or QUIET:
-    log_level = logging.ERROR
-log = logging.getLogger(__name__)
-log.setLevel(log_level)
-sh = logging.StreamHandler()
-sh.setFormatter(logging.Formatter('[%(asctime)s] %(levelname)s: %(message)s', datefmt='%Y-%m-%d %H:%M:%S'))
-log.addHandler(sh)
-
-started_at = datetime.now()
-log.info('Starting at %s', started_at)
-
-
-## load configuration
-config = configparser.ConfigParser()
-config.read(CONFIG)
-try:
-    conf_distro = config[DISTRO]
-except KeyError:
-    log.critical('Distribution %s is not known.', DISTRO)
-    sys.exit(1)
-
-# tested suites
-SUITES = conf_distro['suites'].split()
-# tested architectures
-ARCHS = conf_distro['archs'].split()
-# defaults
-defaultsuite = conf_distro['defaultsuite']
-defaultarch = conf_distro['defaultarch']
-
-BIN_PATH = __location__
-BASE = conf_distro['basedir']
-TEMPLATE_PATH = conf_distro['templates']
-PKGSET_DEF_PATH = '/srv/reproducible-results'
-TEMP_PATH = conf_distro['tempdir']
-
-REPRODUCIBLE_STYLES = os.path.join(BASE, conf_distro['css'])
-
-DISTRO_URI = '/' + conf_distro['distro_root']
-DISTRO_BASE = os.path.join(BASE, conf_distro['distro_root'])
-
-DBD_URI = os.path.join(DISTRO_URI, conf_distro['diffoscope_html'])
-DBDTXT_URI = os.path.join(DISTRO_URI, conf_distro['diffoscope_txt'])
-LOGS_URI = os.path.join(DISTRO_URI, conf_distro['buildlogs'])
-DIFFS_URI = os.path.join(DISTRO_URI, conf_distro['logdiffs'])
-NOTES_URI = os.path.join(DISTRO_URI, conf_distro['notes'])
-ISSUES_URI = os.path.join(DISTRO_URI, conf_distro['issues'])
-RB_PKG_URI = os.path.join(DISTRO_URI, conf_distro['packages'])
-RBUILD_URI = os.path.join(DISTRO_URI, conf_distro['rbuild'])
-HISTORY_URI = os.path.join(DISTRO_URI, conf_distro['pkghistory'])
-BUILDINFO_URI = os.path.join(DISTRO_URI, conf_distro['buildinfo'])
-DBD_PATH = BASE + DBD_URI
-DBDTXT_PATH = BASE + DBDTXT_URI
-LOGS_PATH = BASE + LOGS_URI
-DIFFS_PATH = BASE + DIFFS_URI
-NOTES_PATH = BASE + NOTES_URI
-ISSUES_PATH = BASE + ISSUES_URI
-RB_PKG_PATH = BASE + RB_PKG_URI
-RBUILD_PATH = BASE + RBUILD_URI
-HISTORY_PATH = BASE + HISTORY_URI
-BUILDINFO_PATH = BASE + BUILDINFO_URI
-
-REPRODUCIBLE_JSON = os.path.join(DISTRO_BASE, conf_distro['json_out'])
-REPRODUCIBLE_TRACKER_JSON = os.path.join(DISTRO_BASE, conf_distro['tracker.json_out'])
-
-REPRODUCIBLE_URL = conf_distro['base_url']
-DISTRO_URL = urljoin(REPRODUCIBLE_URL, conf_distro['distro_root'])
-DISTRO_DASHBOARD_URI = os.path.join(DISTRO_URI, conf_distro['landing_page'])
-JENKINS_URL = conf_distro['jenkins_url']
-
-# global package set definitions
-# META_PKGSET[pkgset_id] = (pkgset_name, pkgset_group)
-# csv file columns: (pkgset_group, pkgset_name)
-META_PKGSET = []
-with open(os.path.join(BIN_PATH, './reproducible_pkgsets.csv'), newline='') as f:
-    for line in csv.reader(f):
-        META_PKGSET.append((line[1], line[0]))
-
-# DATABSE CONSTANT
-PGDATABASE = 'reproducibledb'
-
-
-
-# init the database data and connection
-if not args.skip_database_connection:
-    DB_ENGINE = create_engine("postgresql:///%s" % PGDATABASE)
-    DB_METADATA = MetaData(DB_ENGINE)  # Get all table definitions
-    conn_db = DB_ENGINE.connect()      # the local postgres reproducible db
-
-for key, value in conf_distro.items():
-    log.debug('%-16s: %s', key, value)
-log.debug("BIN_PATH:\t" + BIN_PATH)
-log.debug("BASE:\t\t" + BASE)
-log.debug("DISTRO:\t\t" + DISTRO)
-log.debug("DBD_URI:\t\t" + DBD_URI)
-log.debug("DBD_PATH:\t" + DBD_PATH)
-log.debug("DBDTXT_URI:\t" + DBDTXT_URI)
-log.debug("DBDTXT_PATH:\t" + DBDTXT_PATH)
-log.debug("LOGS_URI:\t" + LOGS_URI)
-log.debug("LOGS_PATH:\t" + LOGS_PATH)
-log.debug("DIFFS_URI:\t" + DIFFS_URI)
-log.debug("DIFFS_PATH:\t" + DIFFS_PATH)
-log.debug("NOTES_URI:\t" + NOTES_URI)
-log.debug("ISSUES_URI:\t" + ISSUES_URI)
-log.debug("NOTES_PATH:\t" + NOTES_PATH)
-log.debug("ISSUES_PATH:\t" + ISSUES_PATH)
-log.debug("RB_PKG_URI:\t" + RB_PKG_URI)
-log.debug("RB_PKG_PATH:\t" + RB_PKG_PATH)
-log.debug("RBUILD_URI:\t" + RBUILD_URI)
-log.debug("RBUILD_PATH:\t" + RBUILD_PATH)
-log.debug("HISTORY_URI:\t" + HISTORY_URI)
-log.debug("HISTORY_PATH:\t" + HISTORY_PATH)
-log.debug("BUILDINFO_URI:\t" + BUILDINFO_URI)
-log.debug("BUILDINFO_PATH:\t" + BUILDINFO_PATH)
-log.debug("REPRODUCIBLE_JSON:\t" + REPRODUCIBLE_JSON)
-log.debug("JENKINS_URL:\t\t" + JENKINS_URL)
-log.debug("REPRODUCIBLE_URL:\t" + REPRODUCIBLE_URL)
-log.debug("DISTRO_URL:\t" + DISTRO_URL)
-
-if args.ignore_missing_files:
-    log.warning("Missing files will be ignored!")
-
-tab = '  '
-
-# take a SHA1 of the css page for style version
-hasher = hashlib.sha1()
-with open(REPRODUCIBLE_STYLES, 'rb') as f:
-        hasher.update(f.read())
-REPRODUCIBLE_STYLE_SHA1 = hasher.hexdigest()
-
-# Templates used for creating package pages
-renderer = pystache.Renderer()
-status_icon_link_template = renderer.load_template(
-    TEMPLATE_PATH + '/status_icon_link')
-default_page_footer_template = renderer.load_template(
-    TEMPLATE_PATH + '/default_page_footer')
-pkg_legend_template = renderer.load_template(
-    TEMPLATE_PATH + '/pkg_symbol_legend')
-project_links_template = renderer.load_template(
-    os.path.join(TEMPLATE_PATH, 'project_links'))
-main_navigation_template = renderer.load_template(
-    os.path.join(TEMPLATE_PATH, 'main_navigation'))
-basic_page_template = renderer.load_template(
-    os.path.join(TEMPLATE_PATH, 'basic_page'))
-
-try:
-    JOB_URL = os.environ['JOB_URL']
-except KeyError:
-    JOB_URL = ''
-    JOB_NAME = ''
-else:
-    JOB_NAME = os.path.basename(JOB_URL[:-1])
+from .confparse import *
+from .const import *
 
 def create_default_page_footer(date):
     return renderer.render(default_page_footer_template, {
@@ -238,12 +64,6 @@ for issue in filtered_issues:
     else:
         filter_query += " OR n.issues LIKE '%%" + issue + "%%'"
         filter_html += ' or <a href="' + REPRODUCIBLE_URL + ISSUES_URI + '/$suite/' + issue + '_issue.html">' + issue + '</a>'
-
-
-@atexit.register
-def print_time():
-    log.info('Finished at %s, took: %s', datetime.now(),
-             datetime.now()-started_at)
 
 
 def print_critical_message(msg):
@@ -722,153 +542,7 @@ def irc_msg(msg, channel='debian-reproducible'):
     kgb.extend(str(msg).strip().split())
     call(kgb)
 
-
-class Bug:
-    def __init__(self, bug):
-        self.bug = bug
-
-    def __str__(self):
-        return str(self.bug)
-
-
-class Issue:
-    def __init__(self, name):
-        self.name = name
-        query = "SELECT url, description  FROM issues WHERE name='{}'"
-        result = query_db(query.format(self.name))
-        try:
-            self.url = result[0][0]
-        except IndexError:
-            self.url = ''
-        try:
-            self.desc = result[0][0]
-        except IndexError:
-            self.desc = ''
-
-
-class Note:
-    def __init__(self, pkg, results):
-        log.debug(str(results))
-        self.issues = [Issue(x) for x in json.loads(results[0])]
-        self.bugs = [Bug(x) for x in json.loads(results[1])]
-        self.comment = results[2]
-
-
-class NotedPkg:
-    def __init__(self, package, suite, arch):
-        self.package = package
-        self.suite = suite
-        self.arch = arch
-        query = """SELECT n.issues, n.bugs, n.comments
-                   FROM sources AS s JOIN notes AS n ON s.id=n.package_id
-                   WHERE s.name='{}' AND s.suite='{}' AND s.architecture='{}'"""
-        result = query_db(query.format(self.package, self.suite, self.arch))
-        try:
-            result = result[0]
-        except IndexError:
-            self.note = None
-        else:
-            self.note = Note(self, result)
-
-class Build:
-    def __init__(self, package, suite, arch):
-        self.package = package
-        self.suite = suite
-        self.arch = arch
-        self.status = False
-        self.version = False
-        self.build_date = False
-        self._get_package_status()
-
-    def _get_package_status(self):
-        try:
-            query = """SELECT r.status, r.version, r.build_date
-                       FROM results AS r JOIN sources AS s
-                       ON r.package_id=s.id WHERE s.name='{}'
-                       AND s.architecture='{}' AND s.suite='{}'"""
-            query = query.format(self.package, self.arch, self.suite)
-            result = query_db(query)[0]
-        except IndexError:  # not tested, look whether it actually exists
-            query = """SELECT version FROM sources WHERE name='{}'
-                       AND suite='{}' AND architecture='{}'"""
-            query = query.format(self.package, self.suite, self.arch)
-            try:
-                result = query_db(query)[0][0]
-                if result:
-                    result = ('untested', str(result), False)
-            except IndexError:  # there is no package with this name in this
-                return          # suite/arch, or none at all
-        self.status = str(result[0])
-        self.version = str(result[1])
-        if result[2]:
-            self.build_date = str(result[2]) + ' UTC'
-
-
-class Package:
-    def __init__(self, name, no_notes=False):
-        self.name = name
-        self._status = {}
-        for suite in SUITES:
-            self._status[suite] = {}
-            for arch in ARCHS:
-                self._status[suite][arch] = Build(self.name, suite, arch)
-                if not no_notes:
-                    self.note = NotedPkg(self.name, suite, arch).note
-                else:
-                    self.note = False
-        try:
-            self.status = self._status[defaultsuite][defaultarch].status
-        except KeyError:
-            self.status = False
-        query = "SELECT notify_maintainer FROM sources WHERE name='{}'"
-        try:
-            result = int(query_db(query.format(self.name))[0][0])
-        except IndexError:
-            result = 0
-        self.notify_maint = '⚑' if result == 1 else ''
-        self._history = None
-
-    @property
-    def history(self):
-        if self._history is None:
-            self._load_history()
-        return self._history
-
-    def _load_history(self):
-        self._history = []
-        keys = ['build ID', 'version', 'suite', 'architecture', 'result',
-            'build date', 'build duration', 'node1', 'node2', 'job',
-            'schedule message']
-        query = """
-                SELECT id, version, suite, architecture, status, build_date,
-                    build_duration, node1, node2, job
-                FROM stats_build WHERE name='{}' ORDER BY build_date DESC
-            """.format(self.name)
-        results = query_db(query)
-        for record in results:
-            self._history.append(dict(zip(keys, record)))
-
-    def get_status(self, suite, arch):
-        """ This returns False if the package does not exists in this suite """
-        try:
-            return self._status[suite][arch].status
-        except KeyError:
-            return False
-
-    def get_build_date(self, suite, arch):
-        """ This returns False if the package does not exists in this suite """
-        try:
-            return self._status[suite][arch].build_date
-        except KeyError:
-            return False
-
-    def get_tested_version(self, suite, arch):
-        """ This returns False if the package does not exists in this suite """
-        try:
-            return self._status[suite][arch].version
-        except KeyError:
-            return False
-
+from .models import *
 
 # get_bugs() is the only user of this, let it initialize the connection itself,
 # during it's first call to speed up things when unneeded
