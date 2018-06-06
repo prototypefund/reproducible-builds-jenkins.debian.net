@@ -31,6 +31,8 @@ ISSUES = 'issues.yml'
 
 NOTESGIT_DESCRIPTION = 'Our notes about issues affecting packages are stored in <a href="https://salsa.debian.org/reproducible-builds/reproducible-notes" target="_parent">notes.git</a> and are targeted at packages in Debian in \'unstable/amd64\' (unless they say otherwise).'
 
+url2html = re.compile(r'((mailto\:|((ht|f)tps?)\://|file\:///){1}\S+)')
+
 note_issues_html = Template((tab*3).join("""
 <tr>
   <td>

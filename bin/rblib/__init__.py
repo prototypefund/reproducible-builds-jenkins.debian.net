@@ -45,8 +45,6 @@ def create_default_page_footer(date):
             'jenkins_url': JENKINS_URL,
         })
 
-url2html = re.compile(r'((mailto\:|((ht|f)tps?)\://|file\:///){1}\S+)')
-
 # filter used on the index_FTBFS pages and for the reproducible.json
 filtered_issues = (
     'ftbfs_in_jenkins_setup',
