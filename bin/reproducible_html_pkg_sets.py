@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 #
 # Copyright © 2016 Valerie Young <spectranaut@riseup.net>
+#           © 2018 Mattia Rizzolo <mattia@mapreri.org>
 # Based on reproducible_html_pkg_sets.sh:
 #           © 2014-2016 Holger Levsen <holger@layer-acht.org>
 #           © 2015 Mattia Rizzolo <mattia@debian.org>
@@ -11,7 +12,7 @@
 #
 # Build rb-pkg pages (the pages that describe the package status)
 
-from reproducible_common import *
+from rblib import *
 
 import csv
 import time

@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 #
-# Copyright © 2015 Mattia Rizzolo <mattia@mapreri.org>
+# Copyright © 2015-2018 Mattia Rizzolo <mattia@mapreri.org>
 # Copyright © 2015-2017 Holger Levsen <holger@layer-acht.org>
 # Based on reproducible_scheduler.sh © 2014-2015 Holger Levsen <holger@layer-acht.org>
 # Licensed under GPL-2
@@ -21,7 +21,7 @@ from urllib.request import urlopen
 from sqlalchemy import sql
 from email.mime.text import MIMEText
 
-from reproducible_common import *
+from rblib import *
 from reproducible_html_live_status import generate_schedule
 from reproducible_html_packages import gen_packages_html
 from reproducible_html_packages import purge_old_pages

@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 #
-# Copyright © 2015-2016 Mattia Rizzolo <mattia@mapreri.org>
+# Copyright © 2015-2018 Mattia Rizzolo <mattia@mapreri.org>
 # Copyright © 2016-2017 Holger Levsen <holger@layer-acht.org>
 #
 # Licensed under GPL-2
@@ -10,7 +10,7 @@
 #
 # Build a page full of CI issues to investigate
 
-from reproducible_common import *
+from rblib import *
 import time
 import os.path
 

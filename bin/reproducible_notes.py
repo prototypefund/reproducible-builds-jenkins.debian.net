@@ -1,14 +1,14 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 #
-# Copyright © 2015 Mattia Rizzolo <mattia@mapreri.org>
+# Copyright © 2015-2018 Mattia Rizzolo <mattia@mapreri.org>
 # Licensed under GPL-2
 #
 # Depends: python3 python-apt python3-yaml
 #
 # Import the content of the notes.git repository into the reproducible database
 
-from reproducible_common import *
+from rblib import *
 
 import os
 import apt

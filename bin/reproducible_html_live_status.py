@@ -2,13 +2,14 @@
 # -*- coding: utf-8 -*-
 #
 # Copyright © 2015-2017 Holger Levsen <holger@layer-acht.org>
+#           © 2018      Mattia Rizzolo <mattia@mapreri.org>
 # based on ~jenkins.d.n:~mattia/status.sh by Mattia Rizzolo <mattia@mapreri.org>
 # Licensed under GPL-2
 #
 # Depends: python3
 #
 
-from reproducible_common import *
+from rblib import *
 from reproducible_html_indexes import build_leading_text_section
 from sqlalchemy import select, func, cast, Integer, and_, bindparam
 import glob

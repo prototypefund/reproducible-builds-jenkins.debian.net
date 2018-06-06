@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 #
-# Copyright © 2015 Mattia Rizzolo <mattia@mapreri.org>
+# Copyright © 2015-2018 Mattia Rizzolo <mattia@mapreri.org>
 # Copyright © 2015-2017 Holger Levsen <holger@layer-acht.org>
 # Based on reproducible_json.sh © 2014 Holger Levsen <holger@layer-acht.org>
 # Licensed under GPL-2
@@ -10,7 +10,7 @@
 #
 # Build the reproducible.json and reproducibe-tracker.json files, to provide nice datasources
 
-from reproducible_common import *
+from rblib import *
 
 from apt_pkg import version_compare
 import aptsources.sourceslist

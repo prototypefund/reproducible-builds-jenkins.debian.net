@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 #
-# Copyright © 2015 Mattia Rizzolo <mattia@mapreri.org>
+# Copyright © 2015-2018 Mattia Rizzolo <mattia@mapreri.org>
 # Copyright © 2016-2017 Valerie R Young <spectranaut@riseup.net>
 # Based on reproducible_html_packages.sh © 2014 Holger Levsen <holger@layer-acht.org>
 # Licensed under GPL-2
@@ -10,7 +10,7 @@
 #
 # Build rb-pkg pages (the pages that describe the package status)
 
-from reproducible_common import *
+from rblib import *
 import pystache
 import apt_pkg
 apt_pkg.init_system()

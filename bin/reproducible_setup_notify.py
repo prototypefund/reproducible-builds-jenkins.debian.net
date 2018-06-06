@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 #
-# Copyright © 2015 Mattia Rizzolo <mattia@mapreri.org>
+# Copyright © 2015-2018 Mattia Rizzolo <mattia@mapreri.org>
 # Licensed under GPL-2
 #
 # Depends: python3
@@ -25,7 +25,7 @@ parser.add_argument('-m', '--maintainer', default='',
 local_args = parser.parse_known_args()[0]
 
 # these are here as an hack to be able to parse the command line
-from reproducible_common import *
+from rblib import *
 from reproducible_html_packages import gen_packages_html
 from reproducible_html_indexes import build_page
 

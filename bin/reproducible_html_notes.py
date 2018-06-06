@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 #
-# Copyright © 2015 Mattia Rizzolo <mattia@mapreri.org>
+# Copyright © 2015-2018 Mattia Rizzolo <mattia@mapreri.org>
 # Copyright © 2015 Holger Levsen <holger@layer-acht.org>
 # Based on reproducible_html_notes.sh © 2014 Holger Levsen <holger@layer-acht.org>
 # Licensed under GPL-2
@@ -16,7 +16,7 @@ import popcon
 import pystache
 from collections import OrderedDict
 from math import sqrt
-from reproducible_common import *
+from rblib import *
 from reproducible_html_packages import gen_packages_html
 from reproducible_html_indexes import build_page
 from sqlalchemy import select, and_, bindparam

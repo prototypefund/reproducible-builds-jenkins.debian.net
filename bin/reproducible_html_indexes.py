@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 #
-# Copyright © 2015 Mattia Rizzolo <mattia@mapreri.org>
+# Copyright © 2015-2018 Mattia Rizzolo <mattia@maprerii.org>
 # Copyright © 2015-2016 Holger Levsen <holger@layer-acht.org>
 # Based on reproducible_html_indexes.sh © 2014 Holger Levsen <holger@layer-acht.org>
 # Licensed under GPL-2
@@ -10,7 +10,7 @@
 #
 # Build quite all index_* pages
 
-from reproducible_common import *
+from rblib import *
 from sqlalchemy import select, and_, or_, func, bindparam, desc
 
 """

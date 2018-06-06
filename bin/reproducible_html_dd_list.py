@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 #
 # Copyright © 2014 Holger Levsen <holger@layer-acht.org>
-#           © 2015 Mattia Rizzolo <mattia@mapreri.org>
+#           © 2015-2018 Mattia Rizzolo <mattia@mapreri.org>
 # Licensed under GPL-2
 #
 # Depends: python3
@@ -14,7 +14,7 @@ from urllib.request import urlopen
 from subprocess import Popen, PIPE
 from tempfile import NamedTemporaryFile
 
-from reproducible_common import *
+from rblib import *
 
 
 arch = 'amd64' # the arch is only relevant for link targets here

@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 #
-# Copyright © 2015 Mattia Rizzolo <mattia@mapreri.org>
+# Copyright © 2015-2018 Mattia Rizzolo <mattia@mapreri.org>
 # Copyright © 2015 Holger Levsen <holger@layer-acht.org>
 # Based on various reproducible_* files © 2014-2015 Holger Levsen <holger@layer-acht.org>
 # Licensed under GPL-2
@@ -11,7 +11,7 @@
 # Track the database schema and changes to it. Also allow simple creation
 # and migration of it.
 
-from reproducible_common import *
+from rblib import *
 
 now = datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
 

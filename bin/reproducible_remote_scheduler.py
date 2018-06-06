@@ -15,16 +15,13 @@ import sys
 import time
 import subprocess
 from sqlalchemy import sql
-from reproducible_common import (
-    # Use an explicit list rather than a star import, because the previous code had
-    # a mysterious comment about not being able to do a star import prior to
-    # parsing the command line, & debugging the mystery via edit-compile-h01ger-run
-    # detours is not practical.
-    SUITES, ARCHS,
-    bcolors, log,
-    query_db, db_table, sql, conn_db,
-    datetime, timedelta,
-    irc_msg, unknown_args
+from detetime import datetime, timedelta
+from rblib.consts import SUITES, ARCHS
+from rblib.confparse import unknown_args, log
+from rblib import (
+    bcolors,
+    query_db, db_table, conn_db,
+    irc_msg,
 )
 
 def packages_matching_criteria(arch, suite, criteria):
