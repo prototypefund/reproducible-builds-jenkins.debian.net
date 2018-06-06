@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 #
-# Copyright © 2015 Mattia Rizzolo <mattia@mapreri.org>
+# Copyright © 2015-2018 Mattia Rizzolo <mattia@mapreri.org>
 # Licensed under GPL-2
 #
 # Depends: python3
@@ -13,6 +13,7 @@ import os
 import re
 import sys
 import time
+import subprocess
 from sqlalchemy import sql
 from reproducible_common import (
     # Use an explicit list rather than a star import, because the previous code had
@@ -180,7 +181,7 @@ def parse_args():
 
     if len(packages) > 50 and notify:
         log.critical(bcolors.RED + bcolors.BOLD)
-        call(['figlet', 'No.'])
+        subprocess.run(('figlet', 'No.'))
         log.critical(bcolors.FAIL + 'Do not reschedule more than 50 packages ',
                      'with notification.\nIf you think you need to do this, ',
                      'please discuss this with the IRC channel first.',
