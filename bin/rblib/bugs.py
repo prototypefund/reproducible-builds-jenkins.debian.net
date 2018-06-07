@@ -139,3 +139,25 @@ class Bugs:
                 packages[bug[1]][bug[0]]['pending'] = True
         self._bugs = packages
         return packages
+
+    def get_trailing_icon(self, package):
+        """
+        determine the HTML representation of the bug status
+        """
+        html = ''
+
+        if package in self.bugs:
+            bb = self.bugs[package]
+            for bug in bb:
+                html += '<a href="https://bugs.debian.org/{bug}">'
+                html += '<span class="'
+                if bb[bug]['done']:
+                    html += 'bug-done" title="#{bug}, done">#</span>'
+                elif bb[bug]['pending']:
+                    html += 'bug-pending" title"#{bug}, pending">P</span>'
+                elif bb[bug]['patch']:
+                    html += 'bug-patch" title="#{bug}, with patch">+</span>'
+                else:
+                    html +='bug" title="#{bug}">#</span>'
+                html = html.format(bug=bug) + '</a>'
+        return html

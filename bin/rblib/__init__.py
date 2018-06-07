@@ -37,6 +37,7 @@ if os.uname()[1] == 'jenkins-test-vm':
 # temp while moving stuff around
 from .confparse import *
 from .const import *
+from .bugs import Bugs
 
 # needed by the functions below
 from .utils import (
@@ -249,7 +250,7 @@ def link_package(package, suite, arch, bugs={}, popcon=None, is_popular=None):
             title += notes[2]
     html = '<a href="' + url + '" class="' + ' '.join(css_classes) \
          + '" title="' + HTML.escape(title.strip()) + '">' + package + '</a>' \
-         + get_trailing_icon(package, bugs) + '\n'
+         + Bugs().get_trailing_icon(package) + '\n'
     return html
 
 
@@ -337,24 +338,6 @@ def pkg_has_rbuild(package, version=False, suite=defaultsuite, arch=defaultarch)
         return (rbuild+'.gz', os.stat(rbuild+'.gz').st_size)
     else:
         return ()
-
-
-def get_trailing_icon(package, bugs):
-    html = ''
-    if package in bugs:
-        for bug in bugs[package]:
-            html += '<a href="https://bugs.debian.org/{bug}">'.format(bug=bug)
-            html += '<span class="'
-            if bugs[package][bug]['done']:
-                html += 'bug-done" title="#' + str(bug) + ', done">#</span>'
-            elif bugs[package][bug]['pending']:
-                html += 'bug-pending" title="#' + str(bug) + ', pending">P</span>'
-            elif bugs[package][bug]['patch']:
-                html += 'bug-patch" title="#' + str(bug) + ', with patch">+</span>'
-            else:
-                html += 'bug" title="#' + str(bug) + '">#</span>'
-            html += '</a>'
-    return html
 
 
 def get_trailing_bug_icon(bug, bugs, package=None):
