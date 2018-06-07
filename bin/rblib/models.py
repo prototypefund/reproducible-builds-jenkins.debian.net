@@ -14,6 +14,7 @@ from .const import (
     defaultarch,
     defaultsuite,
     log,
+    RB_PKG_URI,
 )
 from .bugs import Bugs
 from . import query_db
@@ -44,7 +45,6 @@ class Issue:
 
 class Note:
     def __init__(self, pkg, results):
-        log.debug(str(results))
         self.issues = [Issue(x) for x in json.loads(results[0])]
         self.bugs = [Bug(x) for x in json.loads(results[1])]
         self.comment = results[2]
@@ -170,8 +170,8 @@ class Package:
         except KeyError:
             return False
 
-    def hml_link(self, suite, arch, bugs=False, popcon=None, is_popular=None):
-        url = urljoin(RB_PKG_URI, suite, arch, package+'.html')
+    def html_link(self, suite, arch, bugs=False, popcon=None, is_popular=None):
+        url = '/'.join((RB_PKG_URI, suite, arch, self.name+'.html'))
         css_classes = []
         title = ''
         if is_popular:
@@ -184,10 +184,10 @@ class Package:
         else:
             css_classes.append('noted')
             title += '\n'.join([x.name for x in notes.issues]) + '\n'
-            title += '\n'.join([x.bug for x in notes.bugs]) + '\n'
+            title += '\n'.join([str(x.bug) for x in notes.bugs]) + '\n'
             if notes.comment:
                 title += notes.comment
         html = '<a href="{url}" class="{cls}" title="{title}">{pkg}</a>{icon}\n'
-        bug_icon = Bugs().get_trailing_icon(package) if bugs else ''
-        return html.format({url: url, cls: ' '.join(css_classes), title: title,
-            icon: bug_icon)
+        bug_icon = Bugs().get_trailing_icon(self.name) if bugs else ''
+        return html.format(url=url, cls=' '.join(css_classes),
+                           title=title, pkg=self.name, icon=bug_icon)
