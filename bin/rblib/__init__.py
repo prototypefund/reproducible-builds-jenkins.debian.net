@@ -215,15 +215,6 @@ def query_db(query, *args, **kwargs):
         return None
 
 
-def package_has_notes(package):
-    # not a really serious check, it'd be better to check the yaml file
-    path = NOTES_PATH + '/' + package + '_note.html'
-    if os.access(path, os.R_OK):
-        return True
-    else:
-        return False
-
-
 def get_status_icon(status):
     table = {'reproducible' : 'weather-clear.png',
              'FTBFS': 'weather-storm.png',
