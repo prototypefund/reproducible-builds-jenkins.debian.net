@@ -136,12 +136,12 @@ class Package:
         self.name = name
 
     @lazyproperty
-    def _build_status(self):
-        self._l__build_status = {}
+    def builds(self):
+        self._l_builds = {}
         for suite in SUITES:
-            self._l__build_status[suite] = {}
+            self._l_builds[suite] = {}
             for arch in ARCHS:
-                self._l__build_status[suite][arch] = Build(self.name, suite, arch)
+                self._l_builds[suite][arch] = Build(self.name, suite, arch)
 
     @lazyproperty
     def status(self):
@@ -186,21 +186,21 @@ class Package:
     def get_status(self, suite, arch):
         """ This returns False if the package does not exists in this suite """
         try:
-            return self._build_status[suite][arch].status
+            return self.builds[suite][arch].status
         except KeyError:
             return False
 
     def get_build_date(self, suite, arch):
         """ This returns False if the package does not exists in this suite """
         try:
-            return self._build_status[suite][arch].build_date
+            return self.buils[suite][arch].build_date
         except KeyError:
             return False
 
     def get_tested_version(self, suite, arch):
         """ This returns False if the package does not exists in this suite """
         try:
-            return self._build_status[suite][arch].version
+            return self.builds[suite][arch].version
         except KeyError:
             return False
 
