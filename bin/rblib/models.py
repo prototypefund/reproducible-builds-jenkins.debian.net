@@ -108,7 +108,7 @@ class Build:
             try:
                 result = query_db(query)[0][0]
                 if result:
-                    result = ('untested', str(result), False)
+                    result = ('untested', str(result), None)
             except IndexError:  # there is no package with this name in this
                 result = (None, None, None)  # suite/arch, or none at all
         self._l_status = result[0]

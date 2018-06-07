@@ -350,7 +350,7 @@ def gen_packages_html(packages, no_clean=False):
                 status = package.get_status(suite, arch)
                 version = package.get_tested_version(suite, arch)
                 build_date = package.get_build_date(suite, arch)
-                if status == False:  # the package is not in the checked suite
+                if status is None:  # the package is not in the checked suite
                     continue
                 log.debug('Generating the page of %s/%s/%s @ %s built at %s',
                           pkg, suite, arch, version, build_date)
