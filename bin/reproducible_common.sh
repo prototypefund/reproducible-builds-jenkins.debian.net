@@ -539,30 +539,6 @@ publish_page() {
 	echo "Enjoy $REPRODUCIBLE_URL/$TARGET"
 }
 
-link_packages() {
-	set +x
-        local i
-	for (( i=1; i<$#+1; i=i+400 )) ; do
-		local string='['
-		local delimiter=''
-		local j
-		for (( j=0; j<400; j++)) ; do
-			local item=$(( $j+$i ))
-			if (( $item < $#+1 )) ; then
-				string+="${delimiter}\"${!item}\""
-				delimiter=','
-			fi
-		done
-		string+=']'
-		cd /srv/jenkins/bin
-		DATA=" $(python3 -c "from reproducible_common import link_packages; \
-				print(link_packages(${string}, '$SUITE', '$ARCH'))" 2> /dev/null)"
-		cd - > /dev/null
-		write_page "$DATA"
-	done
-	if "$DEBUG" ; then set -x ; fi
-}
-
 gen_package_html() {
 	cd /srv/jenkins/bin
 	python3 -c "import reproducible_html_packages as rep
