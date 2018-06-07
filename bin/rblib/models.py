@@ -23,7 +23,7 @@ from . import query_db
 
 
 def lazyproperty(fn):
-    attr_name = '_' + fn.__name__
+    attr_name = '_l_' + fn.__name__
 
     @property
     @functools.wraps(fn)
@@ -59,13 +59,13 @@ class Issue:
         query = "SELECT url, description  FROM issues WHERE name='{}'"
         result = query_db(query.format(self.name))
         try:
-            self._url = result[0][0]
+            self._l_url = result[0][0]
         except IndexError:
-            self._url = ''
+            self._l_url = ''
         try:
-            self._desc = result[0][1]
+            self._l_desc = result[0][1]
         except IndexError:
-            self._desc = ''
+            self._l_desc = ''
 
 
 class Note:
@@ -127,9 +127,9 @@ class Build:
         try:
             result = result[0]
         except IndexError:
-            self._note = None
+            self._l_note = None
         else:
-            self._note = Note(self, result)
+            self._l_note = Note(self, result)
 
 
 class Package:
@@ -161,7 +161,7 @@ class Package:
                 self._status[suite][arch] = Build(self.name, suite, arch)
 
     def _load_history(self):
-        self._history = []
+        self._l_history = []
         keys = [
             'build ID', 'version', 'suite', 'architecture', 'result',
             'build date', 'build duration', 'node1', 'node2', 'job',
@@ -174,7 +174,7 @@ class Package:
             """.format(self.name)
         results = query_db(query)
         for record in results:
-            self._history.append(dict(zip(keys, record)))
+            self._l_history.append(dict(zip(keys, record)))
 
     def get_status(self, suite, arch):
         """ This returns False if the package does not exists in this suite """
