@@ -80,9 +80,6 @@ class Build:
         self.package = package
         self.suite = suite
         self.arch = arch
-        self._status = False
-        self._version = False
-        self._build_date = False
 
     @lazyproperty
     def status(self):
@@ -152,7 +149,6 @@ class Package:
         except IndexError:
             result = 0
         self.notify_maint = '⚑' if result == 1 else ''
-        self._history = None
 
     @lazyproperty
     def history(self):
