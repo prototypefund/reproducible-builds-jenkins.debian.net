@@ -6,6 +6,7 @@
 # Licensed under GPL-2
 
 import json
+import functools
 from urllib.parse import urljoin
 
 from .const import (
@@ -20,6 +21,19 @@ from .bugs import Bugs
 from . import query_db
 
 
+def lazyproperty(fn):
+    attr_name = '_' + fn.__name__
+
+    @property
+    @functools.wraps(fn)
+    def _lazy(self):
+        if not hasattr(self, attr_name):
+            fn(self)
+        return getattr(self, attr_name)
+
+    return _lazy
+
+
 class Bug:
     def __init__(self, bug):
         self.bug = bug
@@ -31,16 +45,26 @@ class Bug:
 class Issue:
     def __init__(self, name):
         self.name = name
+
+    @lazyproperty
+    def url(self):
+        self._set()
+
+    @lazyproperty
+    def desc(self):
+        self._set()
+
+    def _set(self):
         query = "SELECT url, description  FROM issues WHERE name='{}'"
         result = query_db(query.format(self.name))
         try:
-            self.url = result[0][0]
+            self._url = result[0][0]
         except IndexError:
-            self.url = ''
+            self._url = ''
         try:
-            self.desc = result[0][1]
+            self._desc = result[0][1]
         except IndexError:
-            self.desc = ''
+            self._desc = ''
 
 
 class Note:
@@ -55,11 +79,22 @@ class Build:
         self.package = package
         self.suite = suite
         self.arch = arch
-        self.status = False
-        self.version = False
-        self.build_date = False
-        self._get_package_status()
+        self._status = False
+        self._version = False
+        self._build_date = False
         self._note = False
+
+    @lazyproperty
+    def status(self):
+        self._get_package_status()
+
+    @lazyproperty
+    def version(self):
+        self._get_package_status()
+
+    @lazyproperty
+    def build_date(self):
+        self._get_package_status()
 
     def _get_package_status(self):
         try:
