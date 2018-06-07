@@ -110,11 +110,10 @@ class Build:
                 if result:
                     result = ('untested', str(result), False)
             except IndexError:  # there is no package with this name in this
-                return          # suite/arch, or none at all
-        self.status = str(result[0])
-        self.version = str(result[1])
-        if result[2]:
-            self.build_date = str(result[2]) + ' UTC'
+                result = (None, None, None)  # suite/arch, or none at all
+        self._l_status = result[0]
+        self._l_version = result[1]
+        self._l_build_date = str(result[2]) + ' UTC' if result[2] else None
 
     @lazyproperty
     def note(self):
