@@ -6,7 +6,8 @@
 # Licensed under GPL-2
 
 import json
-import rblib
+from urllib.parse import urljoin
+
 from .const import (
     ARCHS,
     SUITES,
@@ -14,6 +15,7 @@ from .const import (
     defaultsuite,
     log,
 )
+from .bugs import Bugs
 from . import query_db
 
 
@@ -167,3 +169,25 @@ class Package:
             return self._status[suite][arch].version
         except KeyError:
             return False
+
+    def hml_link(self, suite, arch, bugs=False, popcon=None, is_popular=None):
+        url = urljoin(RB_PKG_URI, suite, arch, package+'.html')
+        css_classes = []
+        title = ''
+        if is_popular:
+            css_classes.append('package-popular')
+        if popcon is not None:
+            title += 'popcon score: {}\n'.format(popcon)
+        notes = self._status[suite][arch].note
+        if notes is None:
+            css_classes.append('package')
+        else:
+            css_classes.append('noted')
+            title += '\n'.join([x.name for x in notes.issues]) + '\n'
+            title += '\n'.join([x.bug for x in notes.bugs]) + '\n'
+            if notes.comment:
+                title += notes.comment
+        html = '<a href="{url}" class="{cls}" title="{title}">{pkg}</a>{icon}\n'
+        bug_icon = Bugs().get_trailing_icon(package) if bugs else ''
+        return html.format({url: url, cls: ' '.join(css_classes), title: title,
+            icon: bug_icon)
