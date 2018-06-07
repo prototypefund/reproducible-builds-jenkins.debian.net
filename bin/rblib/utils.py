@@ -10,7 +10,7 @@ import re
 import subprocess
 from tempfile import NamedTemporaryFile
 
-from rblib.consts import log, TEMP_PATH, JOB_NAME
+from rblib.const import log, TEMP_PATH, JOB_NAME
 
 url2html = re.compile(r'((mailto\:|((ht|f)tps?)\://|file\:///){1}\S+)')
 

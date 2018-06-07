@@ -15,7 +15,7 @@ import apt_pkg
 apt_pkg.init_system()
 
 from rblib import *
-from rblib.utils import strip_epoch
+from rblib.utils import strip_epoch, convert_into_hms_string
 
 # Templates used for creating package pages
 renderer = pystache.Renderer();
