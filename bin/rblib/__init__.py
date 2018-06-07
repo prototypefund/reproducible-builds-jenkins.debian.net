@@ -224,13 +224,6 @@ def package_has_notes(package):
         return False
 
 
-def link_packages(packages, suite, arch, bugs=None):
-    html = ''
-    for pkg in packages:
-        html += Package(pkg).html_link(suite, arch, bugs)
-    return html
-
-
 def get_status_icon(status):
     table = {'reproducible' : 'weather-clear.png',
              'FTBFS': 'weather-storm.png',

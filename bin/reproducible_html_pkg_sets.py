@@ -242,7 +242,7 @@ def create_pkgset_page_and_graphs(suite, arch, stats, pkgset_name):
         details_context = {
             'icon_html': icon_html,
             'description': description,
-            'package_list_html': link_packages(stats[cutename], suite, arch, bugs),
+            'package_list_html': ''.join([Package(x).html_link(suite, arch) for x in stats[cutename]]),
             'status_count': stats["count_" + cutename],
             'status_percent': stats["percent_" + cutename],
         }
