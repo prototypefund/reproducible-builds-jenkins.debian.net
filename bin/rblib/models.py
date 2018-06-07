@@ -82,7 +82,6 @@ class Build:
         self._status = False
         self._version = False
         self._build_date = False
-        self._note = False
 
     @lazyproperty
     def status(self):
@@ -119,22 +118,20 @@ class Build:
         if result[2]:
             self.build_date = str(result[2]) + ' UTC'
 
-    @property
+    @lazyproperty
     def note(self):
-        if self._note is False:
-            query = """
-                SELECT n.issues, n.bugs, n.comments
-                FROM sources AS s JOIN notes AS n ON s.id=n.package_id
-                WHERE s.name='{}' AND s.suite='{}' AND s.architecture='{}'
-            """
-            result = query_db(query.format(self.package, self.suite, self.arch))
-            try:
-                result = result[0]
-            except IndexError:
-                self._note = None
-            else:
-                self._note = Note(self, result)
-        return self._note
+        query = """
+            SELECT n.issues, n.bugs, n.comments
+            FROM sources AS s JOIN notes AS n ON s.id=n.package_id
+            WHERE s.name='{}' AND s.suite='{}' AND s.architecture='{}'
+        """
+        result = query_db(query.format(self.package, self.suite, self.arch))
+        try:
+            result = result[0]
+        except IndexError:
+            self._note = None
+        else:
+            self._note = Note(self, result)
 
 
 class Package:
@@ -156,11 +153,9 @@ class Package:
         self.notify_maint = '⚑' if result == 1 else ''
         self._history = None
 
-    @property
+    @lazyproperty
     def history(self):
-        if self._history is None:
-            self._load_history()
-        return self._history
+        self._load_history()
 
     def _load_status(self):
         for suite in SUITES:
