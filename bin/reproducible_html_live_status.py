@@ -15,6 +15,7 @@ from sqlalchemy import select, func, cast, Integer, and_, bindparam
 import glob
 
 from rblib.bugs import Bugs
+from rblib.utils import convert_into_hms_string
 
 # sqlalchemy table definitions needed for queries
 results = db_table('results')

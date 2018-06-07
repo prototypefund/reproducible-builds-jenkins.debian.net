@@ -22,6 +22,7 @@ from sqlalchemy import sql
 from email.mime.text import MIMEText
 
 from rblib import *
+from rblib.utils import print_critical_message
 from reproducible_html_live_status import generate_schedule
 from reproducible_html_packages import gen_packages_html
 from reproducible_html_packages import purge_old_pages

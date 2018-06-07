@@ -14,6 +14,7 @@
 
 from rblib import *
 from rblib.bugs import Bugs
+from rblib.utils import create_temp_file
 
 import csv
 import time

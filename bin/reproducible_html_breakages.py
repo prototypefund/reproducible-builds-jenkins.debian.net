@@ -10,9 +10,11 @@
 #
 # Build a page full of CI issues to investigate
 
-from rblib import *
 import time
 import os.path
+
+from rblib import *
+from rblib.utils import create_temp_file, convert_into_hms_string, strip_epoch
 
 def unrep_with_dbd_issues():
     log.info('running unrep_with_dbd_issues check...')

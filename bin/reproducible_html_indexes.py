@@ -13,6 +13,7 @@
 from sqlalchemy import select, and_, or_, func, bindparam, desc
 from rblib import *
 from rblib.bugs import Bugs
+from rblib.utils import print_critical_message
 
 """
 Reference doc for the folowing lists:

@@ -8,7 +8,6 @@
 #
 # Import the content of the notes.git repository into the reproducible database
 
-from rblib import *
 
 import os
 import apt
@@ -16,6 +15,10 @@ import yaml
 import json
 from sqlalchemy import sql
 from apt_pkg import version_compare
+
+from rblib import *
+from rblib.utils import print_critical_message, irc_msg
+
 
 NOTES = 'packages.yml'
 ISSUES = 'issues.yml'

@@ -18,11 +18,9 @@ from sqlalchemy import sql
 from detetime import datetime, timedelta
 from rblib.consts import SUITES, ARCHS
 from rblib.confparse import unknown_args, log
-from rblib import (
-    bcolors,
-    query_db, db_table, conn_db,
-    irc_msg,
-)
+from rblib.utils import irc_msg
+from rblib import  bcolors, query_db, db_table, conn_db
+
 
 def packages_matching_criteria(arch, suite, criteria):
     "Return a list of packages in (SUITE, ARCH) matching the given CRITERIA."

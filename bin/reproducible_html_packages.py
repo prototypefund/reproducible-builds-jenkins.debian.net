@@ -10,10 +10,12 @@
 #
 # Build rb-pkg pages (the pages that describe the package status)
 
-from rblib import *
 import pystache
 import apt_pkg
 apt_pkg.init_system()
+
+from rblib import *
+from rblib.utils import strip_epoch
 
 # Templates used for creating package pages
 renderer = pystache.Renderer();

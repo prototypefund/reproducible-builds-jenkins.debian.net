@@ -34,8 +34,15 @@ from sqlalchemy.exc import NoSuchTableError, OperationalError
 if os.uname()[1] == 'jenkins-test-vm':
     sys.exit()
 
+# temp while moving stuff around
 from .confparse import *
 from .const import *
+
+# needed by the functions below
+from .utils import (
+    print_critical_message,
+    strip_epoch,
+)
 
 def create_default_page_footer(date):
     return renderer.render(default_page_footer_template, {
@@ -61,21 +68,6 @@ for issue in filtered_issues:
         filter_html += ' or <a href="' + REPRODUCIBLE_URL + ISSUES_URI + '/$suite/' + issue + '_issue.html">' + issue + '</a>'
 
 
-def print_critical_message(msg):
-    print('\n\n\n')
-    try:
-        for line in msg.splitlines():
-            log.critical(line)
-    except AttributeError:
-        log.critical(msg)
-    print('\n\n\n')
-
-
-def create_temp_file(mode='w+b'):
-    os.makedirs(TEMP_PATH, exist_ok=True)
-    return NamedTemporaryFile(suffix=JOB_NAME, dir=TEMP_PATH, mode=mode)
-
-
 class bcolors:
     BOLD = '\033[1m' if sys.stdout.isatty() else ''
     UNDERLINE = '\033[4m' if sys.stdout.isatty() else ''
@@ -84,24 +76,6 @@ class bcolors:
     WARN = '\033[93m' + UNDERLINE if sys.stdout.isatty() else ''
     FAIL = RED + BOLD + UNDERLINE
     ENDC = '\033[0m' if sys.stdout.isatty() else ''
-
-
-def convert_into_hms_string(duration):
-    if not duration:
-        duration = ''
-    else:
-        duration = int(duration)
-        hours = int(duration/3600)
-        minutes = int((duration-(hours*3600))/60)
-        seconds = int(duration-(hours*3600)-(minutes*60))
-        duration = ''
-        if hours > 0:
-            duration = str(hours)+'h ' + str(minutes)+'m ' + str(seconds) + 's'
-        elif minutes > 0:
-            duration = str(minutes)+'m ' + str(seconds) + 's'
-        else:
-            duration = str(seconds)+'s'
-    return duration
 
 
 def gen_suite_arch_nav_context(suite, arch, suite_arch_nav_template=None,
@@ -329,16 +303,6 @@ def gen_status_link_icon(status, spokenstatus, icon, suite, arch):
     return renderer.render(status_icon_link_template, context)
 
 
-def strip_epoch(version):
-    """
-    Stip the epoch out of the version string. Some file (e.g. buildlogs, debs)
-    do not have epoch in their filenames.
-    """
-    try:
-        return version.split(':', 1)[1]
-    except IndexError:
-        return version
-
 def pkg_has_buildinfo(package, version=False, suite=defaultsuite, arch=defaultarch):
     """
     if there is no version specified it will use the version listed in
@@ -416,11 +380,5 @@ def get_trailing_bug_icon(bug, bugs, package=None):
             pass
     return html
 
-
-def irc_msg(msg, channel='debian-reproducible'):
-    kgb = ['kgb-client', '--conf', '/srv/jenkins/kgb/%s.conf' % channel,
-           '--relay-msg']
-    kgb.extend(str(msg).strip().split())
-    call(kgb)
 
 from .models import *

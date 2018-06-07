@@ -29,7 +29,8 @@ if not os.access(BACKUP_FILE, os.R_OK):
 # may not exist yet, but we would like to use the constants
 # available in reproducible_common.py
 sys.argv.append('--skip-database-connection')
-from reproducible_common import *
+from rblib import *
+from rblib.utils import print_critical_message
 
 # Get database defined in reproducible_common.py
 # Note: this script will ONLY run on a completely new DB. The backup
