@@ -11,6 +11,7 @@
 # Build a page full of CI issues to investigate
 
 import time
+import os
 import os.path
 
 from rblib import *
@@ -81,7 +82,9 @@ def lack_rbuild():
                ORDER BY s.name ASC, s.suite DESC, s.architecture ASC'''
     results = query_db(query)
     for pkg, version, suite, arch in results:
-        if not pkg_has_rbuild(pkg, version, suite, arch):
+        rbuild = os.path.join(RBUILD_PATH, suite, arch) + \
+                '/{}_{}.rbuild.log.gz'.format(pkg, strip_epoch(version))
+        if not os.access(rbuild, os.R_OK):
             bad_pkgs.append((pkg, version, suite, arch))
             log.warning(suite + '/' + arch + '/' + pkg + ' (' + version + ') has been '
                         'built, but a buildlog is missing.')
