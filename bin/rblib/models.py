@@ -99,6 +99,10 @@ class Build:
         def __bool__(self):
             return os.access(self.path, os.R_OK)
 
+        @property
+        def size(self):
+            return os.stat(self.path).st_size
+
     def __init__(self, package, suite, arch):
         self.package = package
         self.suite = suite
