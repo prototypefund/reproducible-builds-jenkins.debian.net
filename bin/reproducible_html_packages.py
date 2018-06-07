@@ -219,10 +219,10 @@ def gen_suitearch_section(package, current_suite, current_arch):
         suites = []
         for s in SUITES:
 
-            status = package.get_status(s, a)
+            status = package.builds[s][a].status
             if not status:  # The package is not available in that suite/arch
                 continue
-            version = package.get_tested_version(s, a)
+            version = package.builds[s][a].version
 
             if not final_version or not final_status:
                 final_version = version
@@ -231,7 +231,7 @@ def gen_suitearch_section(package, current_suite, current_arch):
                 final_status, final_version = determine_reproducibility(
                     final_status, final_version, status, version)
 
-            build_date = package.get_build_date(s, a)
+            build_date = package.builds[s][a].build_date
             status, icon, spokenstatus = get_status_icon(status)
 
             if not (build_date and status != 'blacklisted'):
@@ -347,9 +347,9 @@ def gen_packages_html(packages, no_clean=False):
         for suite in SUITES:
             for arch in ARCHS:
 
-                status = package.get_status(suite, arch)
-                version = package.get_tested_version(suite, arch)
-                build_date = package.get_build_date(suite, arch)
+                status = package.builds[suite][arch].status
+                version = package.builds[suite][arch].version
+                build_date = package.builds[suite][arch].build_date
                 if status is None:  # the package is not in the checked suite
                     continue
                 log.debug('Generating the page of %s/%s/%s @ %s built at %s',
