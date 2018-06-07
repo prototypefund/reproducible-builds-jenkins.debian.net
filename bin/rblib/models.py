@@ -183,27 +183,6 @@ class Package:
         for record in results:
             self._l_history.append(dict(zip(keys, record)))
 
-    def get_status(self, suite, arch):
-        """ This returns False if the package does not exists in this suite """
-        try:
-            return self.builds[suite][arch].status
-        except KeyError:
-            return False
-
-    def get_build_date(self, suite, arch):
-        """ This returns False if the package does not exists in this suite """
-        try:
-            return self.buils[suite][arch].build_date
-        except KeyError:
-            return False
-
-    def get_tested_version(self, suite, arch):
-        """ This returns False if the package does not exists in this suite """
-        try:
-            return self.builds[suite][arch].version
-        except KeyError:
-            return False
-
     def html_link(self, suite, arch, bugs=True, popcon=None, is_popular=None):
         url = '/'.join((RB_PKG_URI, suite, arch, self.name+'.html'))
         css_classes = []
