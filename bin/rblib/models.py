@@ -7,6 +7,7 @@
 
 import json
 import functools
+import html as HTML
 from urllib.parse import urljoin
 
 from .const import (
@@ -216,7 +217,7 @@ class Package:
             title += '\n'.join([x.name for x in notes.issues]) + '\n'
             title += '\n'.join([str(x.bug) for x in notes.bugs]) + '\n'
             if notes.comment:
-                title += notes.comment
+                title += HTML.escape(notes.comment)
         html = '<a href="{url}" class="{cls}" title="{title}">{pkg}</a>{icon}\n'
         bug_icon = Bugs().get_trailing_icon(self.name) if bugs else ''
         return html.format(url=url, cls=' '.join(css_classes),
