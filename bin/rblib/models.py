@@ -38,7 +38,7 @@ class Issue:
         except IndexError:
             self.url = ''
         try:
-            self.desc = result[0][0]
+            self.desc = result[0][1]
         except IndexError:
             self.desc = ''
 
