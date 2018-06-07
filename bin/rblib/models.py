@@ -134,14 +134,28 @@ class Build:
 class Package:
     def __init__(self, name, no_notes=False):
         self.name = name
-        self._status = {}
-        self._load_status()
+
+    @lazyproperty
+    def _build_status(self):
+        self._l__build_status = {}
+        for suite in SUITES:
+            self._l__build_status[suite] = {}
+            for arch in ARCHS:
+                self._l__build_status[suite][arch] = Build(self.name, suite, arch)
+
+    @lazyproperty
+    def status(self):
         try:
-            self.status = self._status[defaultsuite][defaultarch].status
-            self.note = self._status[defaultsuite][defaultarch].note
+            self._l_status = self._build_status[defaultsuite][defaultarch].status
         except KeyError:
-            self.status = False
-            self.note = False
+            self._l_status = False
+
+    @lazyproperty
+    def note(self):
+        try:
+            self._l_note = self._build_status[defaultsuite][defaultarch].note
+        except KeyError:
+            self._l_note = False
 
     @lazyproperty
     def notify_maint(self):
@@ -154,15 +168,6 @@ class Package:
 
     @lazyproperty
     def history(self):
-        self._load_history()
-
-    def _load_status(self):
-        for suite in SUITES:
-            self._status[suite] = {}
-            for arch in ARCHS:
-                self._status[suite][arch] = Build(self.name, suite, arch)
-
-    def _load_history(self):
         self._l_history = []
         keys = [
             'build ID', 'version', 'suite', 'architecture', 'result',
@@ -181,21 +186,21 @@ class Package:
     def get_status(self, suite, arch):
         """ This returns False if the package does not exists in this suite """
         try:
-            return self._status[suite][arch].status
+            return self._build_status[suite][arch].status
         except KeyError:
             return False
 
     def get_build_date(self, suite, arch):
         """ This returns False if the package does not exists in this suite """
         try:
-            return self._status[suite][arch].build_date
+            return self._build_status[suite][arch].build_date
         except KeyError:
             return False
 
     def get_tested_version(self, suite, arch):
         """ This returns False if the package does not exists in this suite """
         try:
-            return self._status[suite][arch].version
+            return self._build_status[suite][arch].version
         except KeyError:
             return False
 
@@ -207,7 +212,7 @@ class Package:
             css_classes.append('package-popular')
         if popcon is not None:
             title += 'popcon score: {}\n'.format(popcon)
-        notes = self._status[suite][arch].note
+        notes = self._build_status[suite][arch].note
         if notes is None:
             css_classes.append('package')
         else:
