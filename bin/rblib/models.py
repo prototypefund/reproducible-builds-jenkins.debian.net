@@ -200,7 +200,7 @@ class Package:
         except KeyError:
             return False
 
-    def html_link(self, suite, arch, bugs=False, popcon=None, is_popular=None):
+    def html_link(self, suite, arch, bugs=True, popcon=None, is_popular=None):
         url = '/'.join((RB_PKG_URI, suite, arch, self.name+'.html'))
         css_classes = []
         title = ''
