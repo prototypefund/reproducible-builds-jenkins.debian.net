@@ -19,8 +19,8 @@ from .const import (
     defaultsuite,
     log,
     RB_PKG_URI,
-    BUILDINFO_PATH,
-    BUILDINFO_URI,
+    BUILDINFO_PATH, BUILDINFO_URI,
+    RBUILD_PATH, RBUILD_URI,
 )
 from .bugs import Bugs
 from .utils import strip_epoch
@@ -163,6 +163,13 @@ class Build:
         path = os.path.join(BUILDINFO_PATH, self.suite, self.arch, filename)
         url = BUILDINFO_URI + '/{suite}/{arch}/{file}'
         self._l_buildinfo = self.__file(self, path, url, filename)
+
+    @lazyproperty
+    def rbuild(self):
+        filename = '{pkg}_{eversion}.rbuild.log.gz'
+        path = os.path.join(RBUILD_PATH, self.suite, self.arch, filename)
+        url = RBUILD_URI + '/{suite}/{arch}/{file}'
+        self._l_rbuild = self.__file(self, path, url, filename)
 
 
 class Package:
