@@ -48,25 +48,6 @@ class Note:
         self.comment = results[2]
 
 
-class NotedPkg:
-    def __init__(self, package, suite, arch):
-        self.package = package
-        self.suite = suite
-        self.arch = arch
-        query = """
-            SELECT n.issues, n.bugs, n.comments
-            FROM sources AS s JOIN notes AS n ON s.id=n.package_id
-            WHERE s.name='{}' AND s.suite='{}' AND s.architecture='{}'
-        """
-        result = query_db(query.format(self.package, self.suite, self.arch))
-        try:
-            result = result[0]
-        except IndexError:
-            self.note = None
-        else:
-            self.note = Note(self, result)
-
-
 class Build:
     def __init__(self, package, suite, arch):
         self.package = package
@@ -76,6 +57,7 @@ class Build:
         self.version = False
         self.build_date = False
         self._get_package_status()
+        self._note = False
 
     def _get_package_status(self):
         try:
@@ -100,6 +82,23 @@ class Build:
         if result[2]:
             self.build_date = str(result[2]) + ' UTC'
 
+    @property
+    def note(self):
+        if self._note is False:
+            query = """
+                SELECT n.issues, n.bugs, n.comments
+                FROM sources AS s JOIN notes AS n ON s.id=n.package_id
+                WHERE s.name='{}' AND s.suite='{}' AND s.architecture='{}'
+            """
+            result = query_db(query.format(self.package, self.suite, self.arch))
+            try:
+                result = result[0]
+            except IndexError:
+                self._note = None
+            else:
+                self._note = Note(self, result)
+        return self._note
+
 
 class Package:
     def __init__(self, name, no_notes=False):
@@ -108,8 +107,10 @@ class Package:
         self._load_status()
         try:
             self.status = self._status[defaultsuite][defaultarch].status
+            self.note = self._status[defaultsuite][defaultarch].note
         except KeyError:
             self.status = False
+            self.note = False
         query = "SELECT notify_maintainer FROM sources WHERE name='{}'"
         try:
             result = int(query_db(query.format(self.name))[0][0])
