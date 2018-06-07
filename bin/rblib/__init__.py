@@ -224,42 +224,10 @@ def package_has_notes(package):
         return False
 
 
-def link_package(package, suite, arch, bugs={}, popcon=None, is_popular=None):
-    url = RB_PKG_URI + '/' + suite + '/' + arch + '/' + package + '.html'
-    query = """SELECT n.issues, n.bugs, n.comments
-               FROM notes AS n JOIN sources AS s ON s.id=n.package_id
-               WHERE s.name='{pkg}' AND s.suite='{suite}'
-               AND s.architecture='{arch}'"""
-    css_classes = []
-    if is_popular:
-        css_classes += ["package-popular"]
-    title = ''
-    if popcon is not None:
-        title += 'popcon score: ' + str(popcon) + '\n'
-    try:
-        notes = query_db(query.format(pkg=package, suite=suite, arch=arch))[0]
-    except IndexError:  # no notes for this package
-        css_classes += ["package"]
-    else:
-        css_classes += ["noted"]
-        for issue in json.loads(notes[0]):
-            title += issue + '\n'
-        for bug in json.loads(notes[1]):
-            title += '#' + str(bug) + '\n'
-        if notes[2]:
-            title += notes[2]
-    html = '<a href="' + url + '" class="' + ' '.join(css_classes) \
-         + '" title="' + HTML.escape(title.strip()) + '">' + package + '</a>' \
-         + Bugs().get_trailing_icon(package) + '\n'
-    return html
-
-
 def link_packages(packages, suite, arch, bugs=None):
-    if bugs is None:
-        bugs = get_bugs()
     html = ''
     for pkg in packages:
-        html += link_package(pkg, suite, arch, bugs)
+        html += Package(pkg).html_link(suite, arch, bugs)
     return html
 
 

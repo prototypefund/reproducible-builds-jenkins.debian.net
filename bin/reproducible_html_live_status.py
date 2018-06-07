@@ -14,7 +14,6 @@ from reproducible_html_indexes import build_leading_text_section
 from sqlalchemy import select, func, cast, Integer, and_, bindparam
 import glob
 
-from rblib.bugs import Bugs
 from rblib.utils import convert_into_hms_string
 
 # sqlalchemy table definitions needed for queries
@@ -84,7 +83,7 @@ def generate_schedule(arch):
         avg_duration = convert_into_hms_string(row[6])
         html += tab + '<tr><td>&nbsp;</td><td>' + row[0] + '</td>'
         html += '<td>' + row[1] + '</td><td>' + row[2] + '</td><td><code>'
-        html += link_package(pkg, row[1], row[2], Bugs().bugs)
+        html += Package(pkg).html_link(row[1], row[2])
         html += '</code></td><td>'+convert_into_status_html(str(row[4]))+'</td><td>'+duration+'</td><td>' + avg_duration + '</td></tr>\n'
     html += '</table></p>\n'
     destfile = DISTRO_BASE + '/index_' + arch + '_scheduled.html'
@@ -148,7 +147,7 @@ def generate_live_status_table(arch):
         avg_duration = convert_into_hms_string(row[8])
         html += tab + '<tr><td>&nbsp;</td><td>' + str(row[0]) + '</td>'
         html += '<td>' + suite + '</td><td>' + arch + '</td>'
-        html += '<td><code>' + link_package(pkg, suite, arch) + '</code></td>'
+        html += '<td><code>' + Package(pkg).html_link(suite, arch, bugs=False) + '</code></td>'
         html += '<td>' + str(row[4]) + '</td><td>' + str(row[5]) + '</td>'
         html += '<td>' + convert_into_status_html(str(row[6])) + '</td><td>' + duration + '</td><td>' + avg_duration + '</td>'
         html += '<td><a href="https://tests.reproducible-builds.org/cgi-bin/nph-logwatch?' + str(row[9]) + '">' + str(row[9]) + '</a></td>'
@@ -189,7 +188,7 @@ def generate_oldies(arch):
             pkg = row[2]
             html += tab + '<tr><td>&nbsp;</td><td>' + row[0] + '</td>'
             html += '<td>' + row[1] + '</td><td><code>'
-            html += link_package(pkg, row[0], row[1], Bugs().bugs)
+            html += Package(pkg).html_link(row[0], row[1])
             html += '</code></td><td>'+convert_into_status_html(str(row[3]))+'</td><td>' + row[4] + '</td></tr>\n'
         html += '</table></p>\n'
     destfile = DISTRO_BASE + '/index_' + arch + '_oldies.html'

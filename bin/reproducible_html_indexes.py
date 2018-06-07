@@ -717,7 +717,7 @@ def build_page_section(page, section, suite, arch):
     html += '<p>\n' + tab + '<code>\n'
     for row in rows:
         pkg = row[0]
-        html += tab*2 + link_package(pkg, suite, arch, Bugs().bugs)
+        html += tab*2 + Package(pkg).html_link(suite, arch)
     else:
         html += tab + '</code>\n'
         html += '</p>'

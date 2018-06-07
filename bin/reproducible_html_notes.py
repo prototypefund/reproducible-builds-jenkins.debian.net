@@ -17,6 +17,7 @@ import pystache
 from collections import OrderedDict
 from math import sqrt
 from rblib import *
+from rblib.models import Package
 from rblib.bugs import Bugs
 from reproducible_html_packages import gen_packages_html
 from reproducible_html_indexes import build_page
@@ -310,7 +311,7 @@ def gen_html_issue(issue, suite):
             pkgs_popcon = issues_popcon_annotate(pkgs)
             try:
                 for pkg, popcon, is_popular in sorted(pkgs_popcon, key=lambda x: x[0] in bugs):
-                    affected += tab*6 + link_package(pkg, suite, arch, bugs, popcon, is_popular)
+                    affected += tab*6 + Package(pkg).html_link(suite, arch, bugs, popcon, is_popular)
             except ValueError:
                 pass
             affected += tab*5 + '</code>\n'

@@ -58,7 +58,7 @@ for suite in SUITES:
                 line = line.strip().split(None, 1)
                 html += '    '
                 # the final strip() is to avoid a newline
-                html += link_package(line[0], suite, arch, Bugs().bugs).strip()
+                html += Package(line[0]).html_link(suite, arch).strip()
                 try:
                     html += ' ' + line[1]  # eventual uploaders sign
                 except IndexError:
