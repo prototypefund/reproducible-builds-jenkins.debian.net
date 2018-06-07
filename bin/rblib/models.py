@@ -142,12 +142,15 @@ class Package:
         except KeyError:
             self.status = False
             self.note = False
+
+    @lazyproperty
+    def notify_maint(self):
         query = "SELECT notify_maintainer FROM sources WHERE name='{}'"
         try:
             result = int(query_db(query.format(self.name))[0][0])
         except IndexError:
             result = 0
-        self.notify_maint = '⚑' if result == 1 else ''
+        self._l_notify_maint = '⚑' if result == 1 else ''
 
     @lazyproperty
     def history(self):
