@@ -122,8 +122,7 @@ def get_and_clean_dbd_links(package, eversion, suite, arch, status):
 def gen_suitearch_details(package, version, suite, arch, status, spokenstatus,
                           build_date):
     eversion = strip_epoch(version) # epoch_free_version is too long
-    buildinfo_file = BUILDINFO_PATH + '/' + suite + '/' + arch + '/' + package + \
-                '_' + eversion + '_' + arch + '.buildinfo'
+    pkg = Package(package)
 
     context = {}
     default_view = ''
@@ -150,14 +149,13 @@ def gen_suitearch_details(package, version, suite, arch, status, spokenstatus,
         default_view = default_view if default_view else dbd_uri
 
     # Get buildinfo context
-    if pkg_has_buildinfo(package, version, suite, arch):
-        url = BUILDINFO_URI + '/' + suite + '/' + arch + '/' + package + \
-              '_' + eversion + '_' + arch + '.buildinfo'
-        context['buildinfo_uri'] = url
+    buildinfo = pkg.builds[suite][arch].buildinfo
+    if buildinfo:
+        context['buildinfo_uri'] = buildinfo.url
         default_view = default_view if default_view else url
     elif not args.ignore_missing_files and status not in \
         ('untested', 'blacklisted', 'FTBFS', 'not_for_us', 'depwait', '404'):
-            log.critical('buildinfo not detected at ' + buildinfo_file)
+            log.critical('buildinfo not detected at ' + buildinfo.path)
 
     # Get rbuild, build2 and build diffs context
     rbuild = pkg_has_rbuild(package, version, suite, arch)
