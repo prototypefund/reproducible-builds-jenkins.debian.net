@@ -105,14 +105,7 @@ class Package:
     def __init__(self, name, no_notes=False):
         self.name = name
         self._status = {}
-        for suite in SUITES:
-            self._status[suite] = {}
-            for arch in ARCHS:
-                self._status[suite][arch] = Build(self.name, suite, arch)
-                if not no_notes:
-                    self.note = NotedPkg(self.name, suite, arch).note
-                else:
-                    self.note = False
+        self._load_status()
         try:
             self.status = self._status[defaultsuite][defaultarch].status
         except KeyError:
@@ -130,6 +123,12 @@ class Package:
         if self._history is None:
             self._load_history()
         return self._history
+
+    def _load_status(self):
+        for suite in SUITES:
+            self._status[suite] = {}
+            for arch in ARCHS:
+                self._status[suite][arch] = Build(self.name, suite, arch)
 
     def _load_history(self):
         self._history = []
