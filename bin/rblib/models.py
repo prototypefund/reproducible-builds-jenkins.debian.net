@@ -19,6 +19,8 @@ from .const import (
     defaultsuite,
     log,
     RB_PKG_URI,
+    BUILDINFO_PATH,
+    BUILDINFO_URI,
 )
 from .bugs import Bugs
 from .utils import strip_epoch
@@ -150,6 +152,13 @@ class Build:
             self._l_note = None
         else:
             self._l_note = Note(self, result)
+
+    @lazyproperty
+    def buildinfo(self):
+        filename = '{pkg}_{eversion}_{arch}.buildinfo'
+        path = os.path.join(BUILDINFO_PATH, self.suite, self.arch, filename)
+        url = BUILDINFO_URI + '/{suite}/{arch}/{file}'
+        self._l_buildinfo = self.__file(self, path, url, filename)
 
 
 class Package:
