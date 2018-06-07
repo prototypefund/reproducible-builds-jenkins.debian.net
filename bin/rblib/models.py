@@ -5,7 +5,9 @@
 # Copyright © 2015-2017 Holger Levsen <holger@layer-acht.org>
 # Licensed under GPL-2
 
+import os
 import json
+import os.path
 import functools
 import html as HTML
 from urllib.parse import urljoin
@@ -19,6 +21,7 @@ from .const import (
     RB_PKG_URI,
 )
 from .bugs import Bugs
+from .utils import strip_epoch
 from . import query_db
 
 
@@ -76,6 +79,24 @@ class Note:
 
 
 class Build:
+    class __file:
+        def __init__(self, pkg, path_templ, url_templ, filename, formatter=None):
+            fmt = {
+                'pkg': pkg.package,
+                'eversion': strip_epoch(pkg.version),
+                'arch': pkg.arch,
+                'suite': pkg.suite,
+            }
+            if formatter is not None:
+                fmt = {**fmt, **formatter}
+            if 'file' not in fmt:
+                fmt['file'] = filename.format_map(fmt)
+            self.path = path_templ.format_map(fmt)
+            self.url = url_templ.format_map(fmt)
+
+        def __bool__(self):
+            return os.access(self.path, os.R_OK)
+
     def __init__(self, package, suite, arch):
         self.package = package
         self.suite = suite
