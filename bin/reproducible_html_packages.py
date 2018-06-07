@@ -158,12 +158,10 @@ def gen_suitearch_details(package, version, suite, arch, status, spokenstatus,
             log.critical('buildinfo not detected at ' + buildinfo.path)
 
     # Get rbuild, build2 and build diffs context
-    rbuild = pkg_has_rbuild(package, version, suite, arch)
-    if rbuild:  # being a tuple (rbuild path, size), empty if non existant
-        url = RBUILD_URI + '/' + suite + '/' + arch + '/' + package + '_' + \
-              eversion + '.rbuild.log.gz'
-        context['rbuild_uri'] = url
-        context['rbuild_size'] = sizeof_fmt(rbuild[1])
+    rbuild = pkg.builds[suite][arch].rbuild
+    if rbuild:
+        context['rbuild_uri'] = rbuild.url
+        context['rbuild_size'] = sizeof_fmt(rbuild.size)
         default_view = default_view if default_view else url
         context['buildlogs'] = get_buildlog_links_context(package, eversion,
                                                           suite, arch)
