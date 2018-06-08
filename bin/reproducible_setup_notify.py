@@ -26,16 +26,10 @@ local_args = parser.parse_known_args()[0]
 
 # these are here as an hack to be able to parse the command line
 from rblib import *
+from rblib.utils import bcolors
 from reproducible_html_packages import gen_packages_html
 from reproducible_html_indexes import build_page
 
-class bcolors:
-    BOLD = '\033[1m'
-    UNDERLINE = '\033[4m'
-    GOOD = '\033[92m'
-    WARN = '\033[93m' + UNDERLINE
-    FAIL = '\033[91m' + BOLD + UNDERLINE
-    ENDC = '\033[0m'
 
 packages = local_args.packages if local_args.packages else []
 maintainer = local_args.maintainer
