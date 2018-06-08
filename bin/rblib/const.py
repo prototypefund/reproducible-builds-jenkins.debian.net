@@ -127,3 +127,21 @@ except KeyError:
     JOB_NAME = ''
 else:
     JOB_NAME = os.path.basename(JOB_URL[:-1])
+
+
+# filter used on the index_FTBFS pages and for the reproducible.json
+filtered_issues = (
+    'ftbfs_in_jenkins_setup',
+    'ftbfs_build_depends_not_available_on_amd64',
+    'ftbfs_build-indep_not_build_on_some_archs'
+)
+filter_query = ''
+for issue in filtered_issues:
+    if filter_query == '':
+        filter_query = "n.issues LIKE '%%{}%%'".format(issue)
+        filter_html = '<a href="{}{}/$suite/{}_issue.html">{}</a>'.format(
+            REPRODUCIBLE_URL, ISSUES_URI, issue, issue)
+    else:
+        filter_query += " OR n.issues LIKE '%%{}%%'".format(issue)
+        filter_html = 'or <a href="{}{}/$suite/{}_issue.html">{}</a>'.format(
+            REPRODUCIBLE_URL, ISSUES_URI, issue, issue)

@@ -44,23 +44,6 @@ from .utils import (
     print_critical_message,
     strip_epoch,
 )
-
-# filter used on the index_FTBFS pages and for the reproducible.json
-filtered_issues = (
-    'ftbfs_in_jenkins_setup',
-    'ftbfs_build_depends_not_available_on_amd64',
-    'ftbfs_build-indep_not_build_on_some_archs'
-)
-filter_query = ''
-for issue in filtered_issues:
-    if filter_query == '':
-        filter_query = "n.issues LIKE '%%" + issue + "%%'"
-        filter_html = '<a href="' + REPRODUCIBLE_URL + ISSUES_URI + '/$suite/' + issue + '_issue.html">' + issue + '</a>'
-    else:
-        filter_query += " OR n.issues LIKE '%%" + issue + "%%'"
-        filter_html += ' or <a href="' + REPRODUCIBLE_URL + ISSUES_URI + '/$suite/' + issue + '_issue.html">' + issue + '</a>'
-
-
 class bcolors:
     BOLD = '\033[1m' if sys.stdout.isatty() else ''
     UNDERLINE = '\033[4m' if sys.stdout.isatty() else ''
