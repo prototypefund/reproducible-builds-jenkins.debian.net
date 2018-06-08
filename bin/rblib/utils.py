@@ -1,4 +1,3 @@
-#!/usr/bin/python3
 # -*- coding: utf-8 -*-
 #
 # Copyright © 2015-2018 Mattia Rizzolo <mattia@debian.org>
@@ -12,7 +11,18 @@ from tempfile import NamedTemporaryFile
 
 from rblib.const import log, TEMP_PATH, JOB_NAME
 
+
 url2html = re.compile(r'((mailto\:|((ht|f)tps?)\://|file\:///){1}\S+)')
+
+
+class bcolors:
+    BOLD = '\033[1m' if sys.stdout.isatty() else ''
+    UNDERLINE = '\033[4m' if sys.stdout.isatty() else ''
+    RED = '\033[91m' if sys.stdout.isatty() else ''
+    GOOD = '\033[92m' if sys.stdout.isatty() else ''
+    WARN = '\033[93m' + UNDERLINE if sys.stdout.isatty() else ''
+    FAIL = RED + BOLD + UNDERLINE
+    ENDC = '\033[0m' if sys.stdout.isatty() else ''
 
 
 def print_critical_message(msg):

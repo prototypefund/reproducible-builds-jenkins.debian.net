@@ -44,14 +44,6 @@ from .utils import (
     print_critical_message,
     strip_epoch,
 )
-class bcolors:
-    BOLD = '\033[1m' if sys.stdout.isatty() else ''
-    UNDERLINE = '\033[4m' if sys.stdout.isatty() else ''
-    RED = '\033[91m' if sys.stdout.isatty() else ''
-    GOOD = '\033[92m' if sys.stdout.isatty() else ''
-    WARN = '\033[93m' + UNDERLINE if sys.stdout.isatty() else ''
-    FAIL = RED + BOLD + UNDERLINE
-    ENDC = '\033[0m' if sys.stdout.isatty() else ''
 
 
 def db_table(table_name):
