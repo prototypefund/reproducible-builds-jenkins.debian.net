@@ -10,6 +10,10 @@ import subprocess
 import sys
 import os
 import argparse
+from subprocess import check_call
+
+from rblib.confparse import log
+from rblib.const import PGDATABASE
 
 parser = argparse.ArgumentParser(
     description='Create new Postgres database (reproducibledb) from backup.',
@@ -29,7 +33,6 @@ if not os.access(BACKUP_FILE, os.R_OK):
 # may not exist yet, but we would like to use the constants
 # available in reproducible_common.py
 sys.argv.append('--skip-database-connection')
-from rblib import *
 from rblib.utils import print_critical_message
 
 # Get database defined in reproducible_common.py

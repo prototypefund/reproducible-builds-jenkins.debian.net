@@ -10,15 +10,20 @@
 #
 # Build the reproducible.json and reproducibe-tracker.json files, to provide nice datasources
 
-from rblib import *
 
-from apt_pkg import version_compare
-import aptsources.sourceslist
-import json
 import os
-import subprocess
+import json
 import tempfile
+import subprocess
+from apt_pkg import version_compare
 
+from rblib import query_db
+from rblib.confparse import log
+from rblib.const import (
+    DISTRO_URL,
+    REPRODUCIBLE_JSON, REPRODUCIBLE_TRACKER_JSON,
+    filter_query,
+)
 
 output = []
 output4tracker = []

@@ -10,13 +10,14 @@
 
 
 import os
-import apt
 import yaml
 import json
 from sqlalchemy import sql
 from apt_pkg import version_compare
 
-from rblib import *
+from rblib import db_table, query_db
+from rblib.confparse import log
+from rblib.const import conn_db
 from rblib.utils import print_critical_message, irc_msg
 
 

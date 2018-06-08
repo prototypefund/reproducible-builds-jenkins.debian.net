@@ -10,10 +10,22 @@
 #
 # Build quite all index_* pages
 
+import sys
+from string import Template
+from datetime import datetime, timedelta
 from sqlalchemy import select, and_, or_, func, bindparam, desc
-from rblib import *
-from rblib.bugs import Bugs
+
+from rblib import query_db, db_table, get_status_icon
+from rblib.confparse import log
+from rblib.models import Package
 from rblib.utils import print_critical_message
+from rblib.html import tab, create_main_navigation, write_html_page
+from rblib.const import (
+    DISTRO_BASE, DISTRO_URI, DISTRO_URL,
+    SUITES, ARCHS,
+    defaultsuite, defaultarch,
+    filtered_issues, filter_html,
+)
 
 """
 Reference doc for the folowing lists:

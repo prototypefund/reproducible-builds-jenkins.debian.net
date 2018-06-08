@@ -10,12 +10,31 @@
 #
 # Build rb-pkg pages (the pages that describe the package status)
 
+import os
+import errno
 import pystache
 import apt_pkg
 apt_pkg.init_system()
 
-from rblib import *
+from rblib import query_db, get_status_icon
+from rblib.confparse import log, args
+from rblib.models import Package
 from rblib.utils import strip_epoch, convert_into_hms_string
+from rblib.html import gen_status_link_icon, write_html_page
+from rblib.const import (
+    TEMPLATE_PATH,
+    REPRODUCIBLE_URL,
+    DISTRO_URL,
+    SUITES, ARCHS,
+    RB_PKG_PATH, RB_PKG_URI,
+    HISTORY_PATH, HISTORY_URI,
+    NOTES_PATH, NOTES_URI,
+    DBDTXT_PATH, DBDTXT_URI,
+    DBD_PATH, DBD_URI,
+    DIFFS_PATH, DIFFS_URI,
+    LOGS_PATH, LOGS_URI,
+)
+
 
 # Templates used for creating package pages
 renderer = pystache.Renderer();
@@ -152,7 +171,7 @@ def gen_suitearch_details(package, version, suite, arch, status, spokenstatus,
     buildinfo = pkg.builds[suite][arch].buildinfo
     if buildinfo:
         context['buildinfo_uri'] = buildinfo.url
-        default_view = default_view if default_view else url
+        default_view = default_view if default_view else buildinfo.url
     elif not args.ignore_missing_files and status not in \
         ('untested', 'blacklisted', 'FTBFS', 'not_for_us', 'depwait', '404'):
             log.critical('buildinfo not detected at ' + buildinfo.path)
@@ -162,7 +181,7 @@ def gen_suitearch_details(package, version, suite, arch, status, spokenstatus,
     if rbuild:
         context['rbuild_uri'] = rbuild.url
         context['rbuild_size'] = sizeof_fmt(rbuild.size)
-        default_view = default_view if default_view else url
+        default_view = default_view if default_view else rbuild.url
         context['buildlogs'] = get_buildlog_links_context(package, eversion,
                                                           suite, arch)
     elif status not in ('untested', 'blacklisted') and \
@@ -180,7 +199,6 @@ def gen_suitearch_details(package, version, suite, arch, status, spokenstatus,
 
 
 def determine_reproducibility(status1, version1, status2, version2):
-    newstatus = ''
     versionscompared = apt_pkg.version_compare(version1, version2);
 
     # if version1 > version2,

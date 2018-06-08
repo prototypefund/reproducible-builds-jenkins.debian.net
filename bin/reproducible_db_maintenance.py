@@ -11,7 +11,14 @@
 # Track the database schema and changes to it. Also allow simple creation
 # and migration of it.
 
-from rblib import *
+import re
+import sys
+from datetime import datetime
+
+from rblib import query_db
+from rblib.confparse import log
+from rblib.const import DB_METADATA
+from rblib.utils import print_critiacal_message
 
 now = datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
 

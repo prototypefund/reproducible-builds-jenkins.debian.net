@@ -13,16 +13,18 @@
 import sys
 import lzma
 import deb822
-import aptsources.sourceslist
 import smtplib
-from subprocess import call
-from apt_pkg import version_compare
-from urllib.request import urlopen
 from sqlalchemy import sql
+from urllib.request import urlopen
+from apt_pkg import version_compare
 from email.mime.text import MIMEText
+from datetime import datetime, timedelta
 
-from rblib import *
+from rblib import query_db, db_table
+from rblib.confparse import log
+from rblib.const import SUITES, ARCHS, conn_db
 from rblib.utils import print_critical_message
+from brlib.models import Package
 from reproducible_html_live_status import generate_schedule
 from reproducible_html_packages import gen_packages_html
 from reproducible_html_packages import purge_old_pages

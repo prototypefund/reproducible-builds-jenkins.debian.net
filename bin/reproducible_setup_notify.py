@@ -9,6 +9,7 @@
 # Configure which packages should trigger an email to the maintainer when the
 # reproducibly status change
 
+import sys
 import argparse
 
 parser = argparse.ArgumentParser(
@@ -25,7 +26,10 @@ parser.add_argument('-m', '--maintainer', default='',
 local_args = parser.parse_known_args()[0]
 
 # these are here as an hack to be able to parse the command line
-from rblib import *
+from rblib import query_db, db_table
+from rblib.confparse import log, DEBUG
+from rblib.const import conn_db
+from rblib.models import Package
 from rblib.utils import bcolors
 from rblib.bugs import Udd
 from reproducible_html_packages import gen_packages_html

@@ -7,14 +7,21 @@
 # Licensed under GPL-2
 #
 # Depends: python3
-#
 
-from rblib import *
-from reproducible_html_indexes import build_leading_text_section
+from string import Template
 from sqlalchemy import select, func, cast, Integer, and_, bindparam
-import glob
 
+from rblib import query_db, db_table, get_status_icon
+from rblib.confparse import log
+from rblib.models import Package
 from rblib.utils import convert_into_hms_string
+from rblib.html import tab, create_main_navigation, write_html_page
+from reproducible_html_indexes import build_leading_text_section
+from rblib.const import (
+    DISTRO_BASE, DISTRO_URL, DISTRO_URI,
+    ARCHS, SUITES,
+    defaultsuite,
+)
 
 # sqlalchemy table definitions needed for queries
 results = db_table('results')

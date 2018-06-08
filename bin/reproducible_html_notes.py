@@ -10,18 +10,35 @@
 #
 # Build HTML pages based on the content of the notes.git repository
 
+import os
+import re
+import sys
 import copy
 import yaml
 import popcon
 import pystache
+from string import Template
 from collections import OrderedDict
 from math import sqrt
-from rblib import *
 from rblib.models import Package
 from rblib.bugs import Bugs
 from reproducible_html_packages import gen_packages_html
 from reproducible_html_indexes import build_page
 from sqlalchemy import select, and_, bindparam
+
+from rblib import query_db, get_status_icon, db_table, get_trailing_bug_icon
+from rblib.confparse import log
+from rblib.html import tab, create_main_navigation, write_html_page
+from rblib.const import (
+    REPRODUCIBLE_URL,
+    TEMPLATE_PATH,
+    DISTRO_BASE, DISTRO_URL,
+    SUITES, ARCHS,
+    defaultsuite,
+    ISSUES_PATH, ISSUES_URI,
+    NOTES_PATH, NOTES_URI,
+)
+
 
 renderer = pystache.Renderer()
 notes_body_template = renderer.load_template(

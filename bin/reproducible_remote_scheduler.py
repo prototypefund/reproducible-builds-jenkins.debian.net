@@ -16,10 +16,11 @@ import time
 import subprocess
 from sqlalchemy import sql
 from detetime import datetime, timedelta
-from rblib.consts import SUITES, ARCHS
+
+from rblib import query_db, db_table
+from rblib.consts import SUITES, ARCHS, conn_db
 from rblib.confparse import unknown_args, log
-from rblib.utils import irc_msg
-from rblib import  bcolors, query_db, db_table, conn_db
+from rblib.utils import bcolors, irc_msg
 
 
 def packages_matching_criteria(arch, suite, criteria):
