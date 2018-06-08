@@ -27,6 +27,7 @@ local_args = parser.parse_known_args()[0]
 # these are here as an hack to be able to parse the command line
 from rblib import *
 from rblib.utils import bcolors
+from rblib.bugs import Udd
 from reproducible_html_packages import gen_packages_html
 from reproducible_html_indexes import build_page
 
@@ -65,20 +66,14 @@ def process_pkg(package, deactivate):
         log.debug(query_db(query))
 
 if maintainer:
-    global conn_udd
-    if not conn_udd:
-        conn_udd = start_udd_connection()
-    c = conn_udd.cursor()
     query = "SELECT source FROM sources WHERE maintainer_email = '{}' " + \
             "AND release = 'sid' AND component = 'main'"
+    ret = Udd().query(query.format(maintainer))
     try:
-        c.execute(query.format(maintainer))
-        pkgs = [x[0] for x in c.fetchall()]
+        pkgs = [x[0] for x in ret]
     except IndexError:
         log.info('No packages maintained by ' + maintainer)
         sys.exit(0)
-    finally:
-        conn_udd.close()
     log.info('Packages maintained by ' + maintainer + ':')
     log.info('\t' + ', '.join(pkgs))
     packages.extend(pkgs)
