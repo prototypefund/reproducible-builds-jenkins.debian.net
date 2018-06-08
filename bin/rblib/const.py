@@ -120,29 +120,6 @@ log.debug("DISTRO_URL:\t" + DISTRO_URL)
 if args.ignore_missing_files:
     log.warning("Missing files will be ignored!")
 
-tab = '  '
-
-# take a SHA1 of the css page for style version
-hasher = hashlib.sha1()
-with open(REPRODUCIBLE_STYLES, 'rb') as f:
-        hasher.update(f.read())
-REPRODUCIBLE_STYLE_SHA1 = hasher.hexdigest()
-
-# Templates used for creating package pages
-renderer = pystache.Renderer()
-status_icon_link_template = renderer.load_template(
-    TEMPLATE_PATH + '/status_icon_link')
-default_page_footer_template = renderer.load_template(
-    TEMPLATE_PATH + '/default_page_footer')
-pkg_legend_template = renderer.load_template(
-    TEMPLATE_PATH + '/pkg_symbol_legend')
-project_links_template = renderer.load_template(
-    os.path.join(TEMPLATE_PATH, 'project_links'))
-main_navigation_template = renderer.load_template(
-    os.path.join(TEMPLATE_PATH, 'main_navigation'))
-basic_page_template = renderer.load_template(
-    os.path.join(TEMPLATE_PATH, 'basic_page'))
-
 try:
     JOB_URL = os.environ['JOB_URL']
 except KeyError:
