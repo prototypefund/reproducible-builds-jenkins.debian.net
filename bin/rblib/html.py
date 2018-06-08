@@ -54,11 +54,12 @@ def _create_default_page_footer(date):
 
 
 def _gen_suite_arch_nav_context(suite, arch, suite_arch_nav_template=None,
-                               ignore_experimental=False, no_suite=None,
-                               no_arch=None):
+                                ignore_experimental=False, no_suite=None,
+                                no_arch=None):
     # if a template is not passed in to navigate between suite and archs the
     # current page, we use the "default" suite/arch summary view.
-    default_nav_template = '/{{distro}}/{{suite}}/index_suite_{{arch}}_stats.html'
+    default_nav_template = \
+            '/{{distro}}/{{suite}}/index_suite_{{arch}}_stats.html'
     if not suite_arch_nav_template:
         suite_arch_nav_template = default_nav_template
 
@@ -96,7 +97,7 @@ def create_main_navigation(suite=defaultsuite, arch=defaultarch,
                            ignore_experimental=False, no_suite=None,
                            no_arch=None):
     suite_list, arch_list = _gen_suite_arch_nav_context(suite, arch,
-        suite_arch_nav_template, ignore_experimental, no_suite, no_arch)
+            suite_arch_nav_template, ignore_experimental, no_suite, no_arch)
     context = {
         'suite': suite,
         'arch': arch,
@@ -116,7 +117,7 @@ def create_main_navigation(suite=defaultsuite, arch=defaultarch,
     # the "display_page" argument controls which of the main page navigation
     # items will be highlighted.
     if displayed_page:
-       context[displayed_page] = True
+        context[displayed_page] = True
     return renderer.render(main_navigation_template, context)
 
 

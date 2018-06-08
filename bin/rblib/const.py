@@ -1,4 +1,3 @@
-#!/usr/bin/python3
 # -*- coding: utf-8 -*-
 #
 # Copyright © 2015-2018 Mattia Rizzolo <mattia@debian.org>
@@ -7,8 +6,6 @@
 
 import os
 import csv
-import hashlib
-import pystache
 from urllib.parse import urljoin
 from sqlalchemy import MetaData, create_engine
 
@@ -78,7 +75,6 @@ with open(os.path.join(BIN_PATH, 'reproducible_pkgsets.csv'), newline='') as f:
 
 # DATABSE CONSTANT
 PGDATABASE = 'reproducibledb'
-
 
 
 # init the database data and connection

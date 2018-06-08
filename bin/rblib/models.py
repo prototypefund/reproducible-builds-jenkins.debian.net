@@ -1,4 +1,3 @@
-#!/usr/bin/python3
 # -*- coding: utf-8 -*-
 #
 # Copyright © 2015-2018 Mattia Rizzolo <mattia@debian.org>
@@ -10,14 +9,12 @@ import json
 import os.path
 import functools
 import html as HTML
-from urllib.parse import urljoin
 
 from .const import (
     ARCHS,
     SUITES,
     defaultarch,
     defaultsuite,
-    log,
     RB_PKG_URI,
     BUILDINFO_PATH, BUILDINFO_URI,
     RBUILD_PATH, RBUILD_URI,
@@ -82,7 +79,8 @@ class Note:
 
 class Build:
     class __file:
-        def __init__(self, pkg, path_templ, url_templ, filename, formatter=None):
+        def __init__(self, pkg, path_templ, url_templ,
+                     filename, formatter=None):
             fmt = {
                 'pkg': pkg.package,
                 'eversion': strip_epoch(pkg.version),
@@ -187,7 +185,8 @@ class Package:
     @lazyproperty
     def status(self):
         try:
-            self._l_status = self._build_status[defaultsuite][defaultarch].status
+            self._l_status = \
+                self._build_status[defaultsuite][defaultarch].status
         except KeyError:
             self._l_status = False
 
@@ -241,7 +240,7 @@ class Package:
             title += '\n'.join([str(x.bug) for x in notes.bugs]) + '\n'
             if notes.comment:
                 title += HTML.escape(notes.comment)
-        html = '<a href="{url}" class="{cls}" title="{title}">{pkg}</a>{icon}\n'
+        html = '<a href="{url}" class="{cls}" title="{title}">{pkg}</a>{ico}\n'
         bug_icon = Bugs().get_trailing_icon(self.name) if bugs else ''
         return html.format(url=url, cls=' '.join(css_classes),
-                           title=title, pkg=self.name, icon=bug_icon)
+                           title=title, pkg=self.name, ico=bug_icon)

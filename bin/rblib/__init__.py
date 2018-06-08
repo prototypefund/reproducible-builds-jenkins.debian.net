@@ -22,8 +22,9 @@ def db_table(table_name):
     try:
         return Table(table_name, DB_METADATA, autoload=True)
     except NoSuchTableError:
-        log.error("Table %s does not exist or schema for %s could not be loaded",
-                  table_name, PGDATABASE)
+        log.error(
+            "Table %s does not exist or schema for %s could not be loaded",
+            table_name, PGDATABASE)
         raise
 
 
@@ -53,9 +54,9 @@ def query_db(query, *args, **kwargs):
 
 
 def get_status_icon(status):
-    table = {'reproducible' : 'weather-clear.png',
+    table = {'reproducible': 'weather-clear.png',
              'FTBFS': 'weather-storm.png',
-             'FTBR' : 'weather-showers-scattered.png',
+             'FTBR': 'weather-showers-scattered.png',
              '404': 'weather-severe-alert.png',
              'depwait': 'weather-snow.png',
              'not for us': 'weather-few-clouds-night.png',

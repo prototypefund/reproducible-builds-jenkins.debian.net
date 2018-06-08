@@ -6,6 +6,7 @@
 
 import os
 import re
+import sys
 import subprocess
 from tempfile import NamedTemporaryFile
 

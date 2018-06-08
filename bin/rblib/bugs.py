@@ -1,4 +1,3 @@
-#!/usr/bin/python3
 # -*- coding: utf-8 -*-
 #
 # Copyright © 2015-2018 Mattia Rizzolo <mattia@debian.org>
@@ -8,6 +7,7 @@
 import psycopg2
 
 from .confparse import log
+
 
 class Udd:
     __singleton = {}
@@ -47,7 +47,7 @@ class Udd:
                     conn = False
                 else:
                     raise
-        except Exception as e:
+        except Exception:
             log.exception('Erorr connecting to the UDD database replica. '
                           'The full error is:')
             log.error('Failing nicely , all queries will return an empty '
@@ -65,7 +65,7 @@ class Udd:
         try:
             cursor = self._conn.cursor()
             cursor.execute(query)
-        except:
+        except Exception:
             log.exception('The UDD server encountered a issue while '
                           'executing the query.  The full error is:')
             log.error('Failing nicely, returning an empty response.')
@@ -82,7 +82,8 @@ class Bugs:
                     SELECT id, tag FROM bugs_tags
                     WHERE tag='patch' OR tag='pending'
                   ) AS tags ON bugs.id = tags.id
-        WHERE bugs_usertags.email = 'reproducible-builds@lists.alioth.debian.org'
+        WHERE
+            bugs_usertags.email = 'reproducible-builds@lists.alioth.debian.org'
         AND bugs.id NOT IN (
             SELECT id
             FROM bugs_usertags
@@ -158,6 +159,6 @@ class Bugs:
                 elif bb[bug]['patch']:
                     html += 'bug-patch" title="#{bug}, with patch">+</span>'
                 else:
-                    html +='bug" title="#{bug}">#</span>'
+                    html += 'bug" title="#{bug}">#</span>'
                 html = html.format(bug=bug) + '</a>'
         return html
