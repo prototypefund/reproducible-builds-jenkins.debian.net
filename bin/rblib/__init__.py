@@ -108,25 +108,6 @@ def get_status_icon(status):
         return (status, '', spokenstatus)
 
 
-def gen_status_link_icon(status, spokenstatus, icon, suite, arch):
-    """
-    Returns the html for "<icon> <spokenstatus>" with both icon and status
-    linked to the appropriate index page for the status, arch and suite.
-
-    If icon is set to None, the icon will be ommited.
-    If spokenstatus is set to None, the spokenstatus link be ommited.
-    """
-    context = {
-        'status': status,
-        'spokenstatus': spokenstatus,
-        'icon': icon,
-        'suite': suite,
-        'arch': arch,
-        'untested': True if status == 'untested' else False,
-    }
-    return renderer.render(status_icon_link_template, context)
-
-
 def get_trailing_bug_icon(bug, bugs, package=None):
     html = ''
     if not package:

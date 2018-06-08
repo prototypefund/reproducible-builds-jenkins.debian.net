@@ -148,3 +148,22 @@ def write_html_page(title, body, destfile, no_header=False, style_note=False,
     log.debug("Writing " + destfile)
     with open(destfile, 'w', encoding='UTF-8') as fd:
         fd.write(html)
+
+
+def gen_status_link_icon(status, spokenstatus, icon, suite, arch):
+    """
+    Returns the html for "<icon> <spokenstatus>" with both icon and status
+    linked to the appropriate index page for the status, arch and suite.
+
+    If icon is set to None, the icon will be ommited.
+    If spokenstatus is set to None, the spokenstatus link be ommited.
+    """
+    context = {
+        'status': status,
+        'spokenstatus': spokenstatus,
+        'icon': icon,
+        'suite': suite,
+        'arch': arch,
+        'untested': True if status == 'untested' else False,
+    }
+    return renderer.render(status_icon_link_template, context)
