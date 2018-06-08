@@ -29,23 +29,23 @@ with open(REPRODUCIBLE_STYLES, 'rb') as f:
 REPRODUCIBLE_STYLE_SHA1 = _hasher.hexdigest()
 
 # Templates used for creating package pages
-renderer = pystache.Renderer()
-status_icon_link_template = renderer.load_template(
+_renderer = pystache.Renderer()
+status_icon_link_template = _renderer.load_template(
     TEMPLATE_PATH + '/status_icon_link')
-default_page_footer_template = renderer.load_template(
+default_page_footer_template = _renderer.load_template(
     TEMPLATE_PATH + '/default_page_footer')
-pkg_legend_template = renderer.load_template(
+pkg_legend_template = _renderer.load_template(
     TEMPLATE_PATH + '/pkg_symbol_legend')
-project_links_template = renderer.load_template(
+project_links_template = _renderer.load_template(
     os.path.join(TEMPLATE_PATH, 'project_links'))
-main_navigation_template = renderer.load_template(
+main_navigation_template = _renderer.load_template(
     os.path.join(TEMPLATE_PATH, 'main_navigation'))
-basic_page_template = renderer.load_template(
+basic_page_template = _renderer.load_template(
     os.path.join(TEMPLATE_PATH, 'basic_page'))
 
 
 def _create_default_page_footer(date):
-    return renderer.render(default_page_footer_template, {
+    return _renderer.render(default_page_footer_template, {
             'date': date,
             'job_url': JOB_URL,
             'job_name': JOB_NAME,
@@ -72,7 +72,7 @@ def _gen_suite_arch_nav_context(suite, arch, suite_arch_nav_template=None,
             suite_list.append({
                 's': s,
                 'class': 'current' if s == suite else '',
-                'uri': renderer.render(suite_arch_nav_template,
+                'uri': _renderer.render(suite_arch_nav_template,
                                        {'distro': conf_distro['distro_root'],
                                         'suite': s, 'arch': arch})
                 if include_suite else '',
@@ -84,7 +84,7 @@ def _gen_suite_arch_nav_context(suite, arch, suite_arch_nav_template=None,
             arch_list.append({
                 'a': a,
                 'class': 'current' if a == arch else '',
-                'uri': renderer.render(suite_arch_nav_template,
+                'uri': _renderer.render(suite_arch_nav_template,
                                        {'distro': conf_distro['distro_root'],
                                         'suite': suite, 'arch': a}),
             })
@@ -101,7 +101,7 @@ def create_main_navigation(suite=defaultsuite, arch=defaultarch,
     context = {
         'suite': suite,
         'arch': arch,
-        'project_links_html': renderer.render(project_links_template),
+        'project_links_html': _renderer.render(project_links_template),
         'suite_nav': {
             'suite_list': suite_list
         } if len(suite_list) else '',
@@ -118,7 +118,7 @@ def create_main_navigation(suite=defaultsuite, arch=defaultarch,
     # items will be highlighted.
     if displayed_page:
         context[displayed_page] = True
-    return renderer.render(main_navigation_template, context)
+    return _renderer.render(main_navigation_template, context)
 
 
 def write_html_page(title, body, destfile, no_header=False, style_note=False,
@@ -127,7 +127,7 @@ def write_html_page(title, body, destfile, no_header=False, style_note=False,
     meta_refresh_html = '<meta http-equiv="refresh" content="%d"></meta>' % \
         refresh_every if refresh_every is not None else ''
     if style_note:
-        body += renderer.render(pkg_legend_template, {})
+        body += _renderer.render(pkg_legend_template, {})
     if not noendpage:
         now = datetime.utcnow().strftime('%Y-%m-%d %H:%M UTC')
         body += _create_default_page_footer(now)
@@ -139,7 +139,7 @@ def write_html_page(title, body, destfile, no_header=False, style_note=False,
         'main_html': body,
         'style_dot_css_sha1sum': REPRODUCIBLE_STYLE_SHA1,
     }
-    html = renderer.render(basic_page_template, context)
+    html = _renderer.render(basic_page_template, context)
 
     try:
         os.makedirs(destfile.rsplit('/', 1)[0], exist_ok=True)
@@ -167,4 +167,4 @@ def gen_status_link_icon(status, spokenstatus, icon, suite, arch):
         'arch': arch,
         'untested': True if status == 'untested' else False,
     }
-    return renderer.render(status_icon_link_template, context)
+    return _renderer.render(status_icon_link_template, context)
