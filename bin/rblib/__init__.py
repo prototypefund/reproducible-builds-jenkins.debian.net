@@ -1,49 +1,15 @@
-#!/usr/bin/python3
 # -*- coding: utf-8 -*-
 #
 # Copyright © 2015-2018 Mattia Rizzolo <mattia@debian.org>
 # Copyright © 2015-2017 Holger Levsen <holger@layer-acht.org>
-# Based on the reproducible_common.sh by © 2014 Holger Levsen <holger@layer-acht.org>
 # Licensed under GPL-2
-#
-# This is included by all reproducible_*.py scripts, it contains common functions
 
-import os
-import re
-import sys
-import csv
-import json
-import errno
-import hashlib
-import logging
-import argparse
-import pystache
-import configparser
-import html as HTML
-from string import Template
-from urllib.parse import urljoin
-from traceback import print_exception
-from subprocess import call, check_call
-from tempfile import NamedTemporaryFile
-from datetime import datetime, timedelta
-from sqlalchemy import MetaData, Table, sql, create_engine
+from sqlalchemy import Table
 from sqlalchemy.exc import NoSuchTableError, OperationalError
 
-
-# don't try to run on test system
-if os.uname()[1] == 'jenkins-test-vm':
-    sys.exit()
-
-# temp while moving stuff around
-from .confparse import *
-from .const import *
-from .bugs import Bugs
-
-# needed by the functions below
-from .utils import (
-    print_critical_message,
-    strip_epoch,
-)
+from .confparse import log
+from .const import PGDATABASE, DB_METADATA, conn_db
+from .utils import print_critical_message
 
 
 def db_table(table_name):
@@ -130,6 +96,3 @@ def get_trailing_bug_icon(bug, bugs, package=None):
         except KeyError:
             pass
     return html
-
-
-from .models import *
