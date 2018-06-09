@@ -114,26 +114,6 @@
     name: '{name}_debian_{my_ver}_{my_profile}_{my_theme}'
 
 - job-group:
-    name: '{name}_{my_dist}_group'
-    my_disksize: 25
-    jobs:
-      - '{name}_{my_dist}_{my_ver}_{my_profile}':
-          my_title: '{my_distname} ({my_ver}) {my_profile}'
-          my_description: 'Do a fully automated installation of a {my_distname} {my_ver} {my_profile} profile - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/{my_dist}_{my_ver}_{my_profile}_preseed.cfg">this preseed.cfg</a>) using the netinst CD image.'
-          my_trigger: ''
-          my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org'
-
-- job-group:
-    name: '{name}_{my_dist}_desktop_group'
-    my_disksize: 25
-    jobs:
-      - '{name}_{my_dist}_{my_ver}_{my_profile}_{my_desktop}':
-          my_title: '{my_distname} ({my_ver}) {my_profile} ({my_desktop})'
-          my_description: 'Do a fully automated installation of a {my_distname} {my_ver} {my_profile} profile - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/{my_dist}_{my_ver}_{my_profile}_preseed.cfg">this preseed.cfg</a>) using the netinst CD image.'
-          my_trigger: ''
-          my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org'
-
-- job-group:
     name: '{name}_{my_dist}_{my_ver}_group'
     my_time: ''
     my_desktop: ''
@@ -220,31 +200,6 @@
                 my_optdesc: ' with Speakup support'
                 my_time: ''
                 my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org debian-accessibility@lists.debian.org'
-      - '{name}_{my_dist}_group':
-          my_dist:
-            - debian-edu:
-                my_distname: 'Debian Edu'
-          my_ver: stretch-daily-netinst
-          my_verdesc: Stretch
-          my_inst_url: 'http://ftp.skolelinux.org/cd-stretch-amd64-i386-netinst/debian-edu-amd64-i386-NETINST-1.iso'
-          my_profile:
-            - minimal:      { my_time: '23 20 * * 3,6' }
-            - standalone:   { my_time: '42 20 * * 3,6' }
-            - workstation:  { my_time: '42 22 * * 3' }
-            - combi-server: { my_time: '42 0 * * 3', my_disksize: 70 }
-            - main-server:  { my_time: '42 2 * * 3,6', my_disksize: 30 }
-      - '{name}_{my_dist}_desktop_group':
-          my_dist:
-            - debian-edu:
-                my_distname: 'Debian Edu'
-          my_ver: stretch-daily-netinst
-          my_verdesc: Stretch
-          my_inst_url: 'http://ftp.skolelinux.org/cd-stretch-amd64-i386-netinst/debian-edu-amd64-i386-NETINST-1.iso'
-          my_profile: standalone
-          my_desktop:
-            - gnome:    { my_time: '42 18 * * 3,6' }
-            - lxde:     { my_time: '42 22 * * 3,6' }
-            - xfce:     { my_time: '42 2 * * 3,6' }
 
       - '{name}_debian_{my_ver}_desktops_group':
           my_ver: sid_daily
@@ -298,32 +253,6 @@
                 my_verdesc: 'sid daily build CD'
 
       - '{name}_debian_sid_daily_rescue_translations_group'
-
-      - '{name}_{my_dist}_{my_ver}_group':
-          my_dist:
-            - debian-edu:
-                my_distname: 'Debian Edu'
-                my_recipients: 'jenkins+debian-edu debian-edu-commits@lists.alioth.debian.org'
-          my_ver:
-            - jessie-daily-usb:
-                my_verdesc: Jessie
-                my_inst_url: http://ftp.skolelinux.org/cd-jessie-usbstick/debian-edu-amd64-i386-BD-1.iso
-            - jessie-daily-netinst:
-                my_verdesc: Jessie
-                my_inst_url: http://ftp.skolelinux.org/cd-jessie-amd64-i386-netinst/debian-edu-amd64-i386-NETINST-1.iso
-            - jessie-final-usb:
-                my_verdesc: Jessie
-                my_inst_url: http://ftp.skolelinux.org/skolelinux-cd/debian-edu-8+edu1/debian-edu-8+edu1-USB.iso
-            - jessie-final-netinst:
-                my_verdesc: Jessie
-                my_inst_url: http://ftp.skolelinux.org/skolelinux-cd/debian-edu-8+edu1/debian-edu-8+edu1-CD.iso
-          my_profile:
-            - standalone:       { my_time: '42 1 18 * *', my_disksize: 25,
-                                  my_title_extra: ' (Default)' }
-            - standalone_mate:  { my_time: '23 2 18 * *', my_disksize: 25 }
-            - main-server:      { my_time: '23 3 18 * *',   my_disksize: 40 }
-            - workstation:  { my_time: '42 22 18 * *', my_disksize: 25 }
-            - combi-server: { my_time: '42 0 18 * *',   my_disksize: 60 }
 
       - '{name}_debian_{my_ver}_presentation':
           my_ver:
