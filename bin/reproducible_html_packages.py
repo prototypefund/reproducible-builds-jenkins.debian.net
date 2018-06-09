@@ -63,21 +63,6 @@ def sizeof_fmt(num):
     return str(int(round(float("%f" % num), 0))) + "%s" % ('Yi')
 
 
-def get_buildlog_links_context(package, eversion, suite, arch):
-    log = suite + '/' + arch + '/' + package + '_' + eversion + '.build2.log.gz'
-    diff = suite + '/' + arch + '/' + package + '_' + eversion + '.diff.gz'
-
-    context = {}
-    if os.access(LOGS_PATH+'/'+log, os.R_OK):
-        context['build2_uri'] = LOGS_URI + '/' + log
-        context['build2_size'] = sizeof_fmt(os.stat(LOGS_PATH+'/'+log).st_size)
-
-    if os.access(DIFFS_PATH+'/'+diff, os.R_OK):
-        context['diff_uri'] = DIFFS_URI + '/' + diff
-
-    return context
-
-
 def get_dbd_links(package, eversion, suite, arch):
     """Returns dictionary of links to diffoscope pages.
 
@@ -182,8 +167,15 @@ def gen_suitearch_details(package, version, suite, arch, status, spokenstatus,
         context['rbuild_uri'] = rbuild.url
         context['rbuild_size'] = sizeof_fmt(rbuild.size)
         default_view = default_view if default_view else rbuild.url
-        context['buildlogs'] = get_buildlog_links_context(package, eversion,
-                                                          suite, arch)
+        context['buildlogs'] = {}
+        build2 = pkg.builds[suite][arch].build2
+        logdiff = pkg.builds[suite][arch].logdiff
+        if build2 and logdiff:
+            context['buildlogs']['build2_uri'] = build2.url
+            context['buildlogs']['build2_size'] = build2.size
+            context['buildlogs']['diff_uri'] = logdiff.url
+        else:
+            log.error('{} or {} is missing'.format(build2.path, logdiff.path))
     elif status not in ('untested', 'blacklisted') and \
          not args.ignore_missing_files:
         log.critical(DISTRO_URL  + '/' + suite + '/' + arch + '/' + package +
