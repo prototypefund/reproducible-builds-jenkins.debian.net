@@ -170,8 +170,26 @@ class Build:
         self._l_rbuild = self.__file(self, path, url, filename)
 
 
+
+class _Package_cache:
+    __singleton = {}
+
+    def __init__(self):
+        self.__dict__ = self.__singleton
+        if not self.__singleton:
+            self._cache = {}
+
+    def get(self, pkgname):
+        try:
+            return self._cache[pkgname]
+        except KeyError:
+            self._cache[pkgname] = {}
+            return self._cache[pkgname]
+
+
 class Package:
     def __init__(self, name, no_notes=False):
+        self.__dict__ = _Package_cache().get(name)
         self.name = name
 
     @lazyproperty
