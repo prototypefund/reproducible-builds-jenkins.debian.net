@@ -79,14 +79,18 @@ class Note:
 
 class Build:
     class __file:
-        def __init__(self, pkg, filename, path_templ, url_templ,
-                     formatter=None):
+        def __init__(self, pkg, filename, base_path=None, base_url=None,
+                     path_templ=None, url_templ=None, formatter=None):
             fmt = {
                 'pkg': pkg.package,
                 'eversion': strip_epoch(pkg.version),
                 'arch': pkg.arch,
                 'suite': pkg.suite,
             }
+            if path_templ is None:
+                path_templ = os.path.join(base_path, pkg.suite, pkg.arch, filename)
+            if url_templ is None:
+                url_templ = base_url + '/{suite}/{arch}/{file}'
             if formatter is not None:
                 fmt = {**fmt, **formatter}
             if 'file' not in fmt:
@@ -158,16 +162,12 @@ class Build:
     @lazyproperty
     def buildinfo(self):
         filename = '{pkg}_{eversion}_{arch}.buildinfo'
-        path = os.path.join(BUILDINFO_PATH, self.suite, self.arch, filename)
-        url = BUILDINFO_URI + '/{suite}/{arch}/{file}'
-        self._l_buildinfo = self.__file(self, filename, path, url)
+        self._l_buildinfo = self.__file(self, filename, BUILDINFO_PATH, BUILDINFO_URI)
 
     @lazyproperty
     def rbuild(self):
         filename = '{pkg}_{eversion}.rbuild.log.gz'
-        path = os.path.join(RBUILD_PATH, self.suite, self.arch, filename)
-        url = RBUILD_URI + '/{suite}/{arch}/{file}'
-        self._l_rbuild = self.__file(self, filename, path, url)
+        self._l_rbuild = self.__file(self, filename, RBUILD_PATH, RBUILD_URI)
 
 
 
