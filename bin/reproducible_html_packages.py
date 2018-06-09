@@ -127,6 +127,7 @@ def gen_suitearch_details(package, version, suite, arch, status, spokenstatus,
                           build_date):
     eversion = strip_epoch(version) # epoch_free_version is too long
     pkg = Package(package)
+    build = pkg[suite][arch]
 
     context = {}
     default_view = ''
@@ -153,29 +154,26 @@ def gen_suitearch_details(package, version, suite, arch, status, spokenstatus,
         default_view = default_view if default_view else dbd_uri
 
     # Get buildinfo context
-    buildinfo = pkg.builds[suite][arch].buildinfo
-    if buildinfo:
-        context['buildinfo_uri'] = buildinfo.url
-        default_view = default_view if default_view else buildinfo.url
+    if build.buildinfo:
+        context['buildinfo_uri'] = build.buildinfo.url
+        default_view = default_view if default_view else build.buildinfo.url
     elif not args.ignore_missing_files and status not in \
         ('untested', 'blacklisted', 'FTBFS', 'not_for_us', 'depwait', '404'):
-            log.critical('buildinfo not detected at ' + buildinfo.path)
+            log.critical('buildinfo not detected at ' + build.buildinfo.path)
 
     # Get rbuild, build2 and build diffs context
-    rbuild = pkg.builds[suite][arch].rbuild
-    if rbuild:
-        context['rbuild_uri'] = rbuild.url
-        context['rbuild_size'] = sizeof_fmt(rbuild.size)
-        default_view = default_view if default_view else rbuild.url
+    if build.rbuild:
+        context['rbuild_uri'] = build.rbuild.url
+        context['rbuild_size'] = sizeof_fmt(build.rbuild.size)
+        default_view = default_view if default_view else build.rbuild.url
         context['buildlogs'] = {}
-        build2 = pkg.builds[suite][arch].build2
-        logdiff = pkg.builds[suite][arch].logdiff
-        if build2 and logdiff:
-            context['buildlogs']['build2_uri'] = build2.url
-            context['buildlogs']['build2_size'] = build2.size
-            context['buildlogs']['diff_uri'] = logdiff.url
+        if build.build2 and build.logdiff:
+            context['buildlogs']['build2_uri'] = build.build2.url
+            context['buildlogs']['build2_size'] = build.build2.size
+            context['buildlogs']['diff_uri'] = build.logdiff.url
         else:
-            log.error('{} or {} is missing'.format(build2.path, logdiff.path))
+            log.error('Either {} or {} is missing'.format(
+                build.build2.path, build.logdiff.path))
     elif status not in ('untested', 'blacklisted') and \
          not args.ignore_missing_files:
         log.critical(DISTRO_URL  + '/' + suite + '/' + arch + '/' + package +
