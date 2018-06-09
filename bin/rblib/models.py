@@ -18,6 +18,8 @@ from .const import (
     RB_PKG_URI,
     BUILDINFO_PATH, BUILDINFO_URI,
     RBUILD_PATH, RBUILD_URI,
+    LOGS_PATH, LOGS_URI,
+    DIFFS_PATH, DIFFS_URI,
 )
 from .bugs import Bugs
 from .utils import strip_epoch
@@ -169,6 +171,15 @@ class Build:
         filename = '{pkg}_{eversion}.rbuild.log.gz'
         self._l_rbuild = self.__file(self, filename, RBUILD_PATH, RBUILD_URI)
 
+    @lazyproperty
+    def build2(self):
+        filename = '{pkg}_{eversion}.build2.log.gz'
+        self._l_build2 = self.__file(self, filename, LOGS_PATH, LOGS_URI)
+
+    @lazyproperty
+    def logdiff(self):
+        filename = '{pkg}_{eversion}.diff.gz'
+        self._l_logdiff = self.__file(self, filename, DIFFS_PATH, DIFFS_URI)
 
 
 class _Package_cache:
