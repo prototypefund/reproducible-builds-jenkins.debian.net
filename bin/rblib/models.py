@@ -185,15 +185,14 @@ class Package:
     @lazyproperty
     def status(self):
         try:
-            self._l_status = \
-                self._build_status[defaultsuite][defaultarch].status
+            self._l_status = self.builds[defaultsuite][defaultarch].status
         except KeyError:
             self._l_status = False
 
     @lazyproperty
     def note(self):
         try:
-            self._l_note = self._build_status[defaultsuite][defaultarch].note
+            self._l_note = self.builds[defaultsuite][defaultarch].note
         except KeyError:
             self._l_note = False
 
@@ -231,7 +230,7 @@ class Package:
             css_classes.append('package-popular')
         if popcon is not None:
             title += 'popcon score: {}\n'.format(popcon)
-        notes = self._build_status[suite][arch].note
+        notes = self.builds[suite][arch].note
         if notes is None:
             css_classes.append('package')
         else:
