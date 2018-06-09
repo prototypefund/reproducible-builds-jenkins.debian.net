@@ -79,8 +79,8 @@ class Note:
 
 class Build:
     class __file:
-        def __init__(self, pkg, path_templ, url_templ,
-                     filename, formatter=None):
+        def __init__(self, pkg, filename, path_templ, url_templ,
+                     formatter=None):
             fmt = {
                 'pkg': pkg.package,
                 'eversion': strip_epoch(pkg.version),
@@ -160,14 +160,14 @@ class Build:
         filename = '{pkg}_{eversion}_{arch}.buildinfo'
         path = os.path.join(BUILDINFO_PATH, self.suite, self.arch, filename)
         url = BUILDINFO_URI + '/{suite}/{arch}/{file}'
-        self._l_buildinfo = self.__file(self, path, url, filename)
+        self._l_buildinfo = self.__file(self, filename, path, url)
 
     @lazyproperty
     def rbuild(self):
         filename = '{pkg}_{eversion}.rbuild.log.gz'
         path = os.path.join(RBUILD_PATH, self.suite, self.arch, filename)
         url = RBUILD_URI + '/{suite}/{arch}/{file}'
-        self._l_rbuild = self.__file(self, path, url, filename)
+        self._l_rbuild = self.__file(self, filename, path, url)
 
 
 
