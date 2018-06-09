@@ -166,7 +166,7 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 ** include diffoscope run time in log
 
 * missing variations:
-** prebuilder does (user) group variation like this: https://anonscm.debian.org/git/reproducible/misc.git/tree/prebuilder/pbuilderhooks/A02_user
+** prebuilder does (user) group variation like this: https://salsa.debian.org/reproducible-builds/reproducible-misc/blob/master/prebuilder/pbuilderhooks/A02_user
 ** variation of $TERM and $COLUMN (and maybe $LINES), unset in the first run, set to "linux" and "77" (and maybe "42") in the 2nd run.
 *** actually TERM is set to "linux" by default already, COLUMN is unset
 ** vary order of $PATH entries, see #844500
@@ -459,8 +459,8 @@ correctly, Guix is ready for work.
 === chroot-installation_*
 
 * use schroot for chroot-installation, stop using plain chroot everywhere
-** https://anonscm.debian.org/git/mirror/dsa-puppet.git/tree/modules/schroot
-** https://anonscm.debian.org/git/mirror/dsa-puppet.git/tree/modules/porterbox/files/dd-schroot-cmd
+** https://salsa.debian.org/dsa-team/mirror/dsa-puppet/tree/master/modules/schroot
+** https://salsa.debian.org/dsa-team/mirror/dsa-puppet/tree/master/modules/porterbox/files/dd-schroot-cmd
 ** https://gitweb.torproject.org/project/jenkins/tools.git/tree/slaves/linux/build-wrapper
 * add alternative tests with aptitude and possible apt
 * split etc/schroot/default
