@@ -13,9 +13,10 @@
 
 import os
 import json
+import apt_pkg
+apt_pkg.init_system()
 import tempfile
 import subprocess
-from apt_pkg import version_compare
 
 from rblib import query_db
 from rblib.confparse import log
@@ -66,7 +67,7 @@ for row in result:
             # compare the versions (only keep most up to date!)
             version1 = crossarch[package]['version']
             version2 = pkg['version']
-            versionscompared = version_compare(version1, version2);
+            versionscompared = apt_pkg.version_compare(version1, version2);
 
             # if version1 > version2,
             # skip the package results we are currently inspecting

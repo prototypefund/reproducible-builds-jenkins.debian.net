@@ -12,8 +12,9 @@
 import os
 import yaml
 import json
+import apt_pkg
+apt_pkg.init_system()
 from sqlalchemy import sql
-from apt_pkg import version_compare
 
 from rblib import db_table, query_db
 from rblib.confparse import log
@@ -71,7 +72,7 @@ def load_notes():
                 pkg_details = {}
 # https://image-store.slidesharecdn.com/c2c44a06-5e28-4296-8d87-419529750f6b-original.jpeg
                 try:
-                    if version_compare(str(original[pkg]['version']),
+                    if apt_pkg.version_compare(str(original[pkg]['version']),
                                        str(suite[1])) > 0:
                         continue
                 except KeyError:

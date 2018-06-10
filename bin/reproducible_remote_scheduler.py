@@ -15,10 +15,10 @@ import sys
 import time
 import subprocess
 from sqlalchemy import sql
-from detetime import datetime, timedelta
+from datetime import datetime, timedelta
 
 from rblib import query_db, db_table
-from rblib.consts import SUITES, ARCHS, conn_db
+from rblib.const import SUITES, ARCHS, conn_db
 from rblib.confparse import unknown_args, log
 from rblib.utils import bcolors, irc_msg
 

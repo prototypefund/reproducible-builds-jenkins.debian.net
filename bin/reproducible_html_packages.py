@@ -127,7 +127,7 @@ def gen_suitearch_details(package, version, suite, arch, status, spokenstatus,
                           build_date):
     eversion = strip_epoch(version) # epoch_free_version is too long
     pkg = Package(package)
-    build = pkg[suite][arch]
+    build = pkg.builds[suite][arch]
 
     context = {}
     default_view = ''
@@ -334,7 +334,7 @@ def gen_packages_html(packages, no_clean=False):
     packages should be a list of Package objects.
     """
     total = len(packages)
-    log.debug('Generating the pages of ' + str(total) + ' package(s)')
+    log.info('Generating the pages of ' + str(total) + ' package(s)')
     for package in sorted(packages, key=lambda x: x.name):
         assert isinstance(package, Package)
         gen_history_page(package)
