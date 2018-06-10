@@ -1,7 +1,8 @@
 #!/bin/bash
+# vim: set noexpandtab:
 
 # Copyright 2014-2018 Holger Levsen <holger@layer-acht.org>
-#              © 2015 Mattia Rizzolo <mattia@mapreri.org>
+#         © 2015-2018 Mattia Rizzolo <mattia@mapreri.org>
 # released under the GPLv=2
 #
 # included by all reproducible_*.sh scripts, so be quiet
@@ -542,7 +543,8 @@ publish_page() {
 gen_package_html() {
 	cd /srv/jenkins/bin
 	python3 -c "import reproducible_html_packages as rep
-pkg = rep.Package('$1', no_notes=True)
+from rblib.models import Package
+pkg = Package('$1', no_notes=True)
 rep.gen_packages_html([pkg], no_clean=True)" || echo "Warning: cannot update HTML pages for $1"
 	cd - > /dev/null
 }
