@@ -15,9 +15,8 @@ import re
 import csv
 import time
 import os.path
-import datetime
 from subprocess import check_call
-from datetime import timedelta
+from datetime import datetime, timedelta
 
 from rblib import query_db
 from rblib.confparse import log
