@@ -366,7 +366,7 @@ def gen_html():
         html += _gen_packages_html('failed to satisfy their build-dependencies:',
                          broken_pkgs)
     # diffoscope troubles
-    html += '<h2>Breakage involving diffscope</h2>'
+    html += '<h2>Breakage involving diffoscope</h2>'
     without_dbd, bad_dbd, sources_without_dbd = unrep_with_dbd_issues()
     html += str(len(sources_without_dbd))
     html += ' source packages on which diffoscope ran into timeouts ('
