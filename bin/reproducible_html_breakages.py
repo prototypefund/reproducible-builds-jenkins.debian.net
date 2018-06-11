@@ -295,7 +295,8 @@ def _gen_packages_html(header, pkgs):
         html += header
         html += '<br/><pre>\n'
         for pkg in pkgs:
-            html += tab + Package(pkg[0]).html_link(pkg[2], pkg[3], bugs=False)
+            html += tab
+            html += Package(pkg[0]).html_link(pkg[2], pkg[3], bugs=False).strip()
             html += ' (' + pkg[1] + ' in ' + pkg[2] + '/' + pkg[3] + ')\n'
         html += '</pre></p>\n'
     return html
