@@ -21,7 +21,7 @@ from collections import OrderedDict
 
 from rblib import query_db, get_status_icon
 from rblib.bugs import Bugs
-from rblib.confpase import log
+from rblib.confparse import log
 from rblib.models import Package
 from rblib.utils import create_temp_file
 from rblib.html import create_main_navigation, write_html_page, gen_status_link_icon
