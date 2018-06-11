@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Copyright 2015-2017 Holger Levsen <holger@layer-acht.org>
+# Copyright 2015-2018 Holger Levsen <holger@layer-acht.org>
 # released under the GPLv=2
 
 DEBUG=false
