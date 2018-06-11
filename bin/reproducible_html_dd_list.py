@@ -2,25 +2,30 @@
 # -*- coding: utf-8 -*-
 #
 # Copyright © 2014 Holger Levsen <holger@layer-acht.org>
-#           © 2015 Mattia Rizzolo <mattia@mapreri.org>
+#           © 2015-2018 Mattia Rizzolo <mattia@mapreri.org>
 # Licensed under GPL-2
 #
 # Depends: python3
 #
 # Get the output of dd-list(1) and turn it into some nice html
 
+import os
+import re
 import lzma
+import html as HTML
 from urllib.request import urlopen
 from subprocess import Popen, PIPE
 from tempfile import NamedTemporaryFile
 
-from reproducible_common import *
+from rblib import query_db
+from rblib.confparse import log
+from rblib.const import DISTRO_BASE, DISTRO_URI, DISTRO_URL, SUITES
+from rblib.models import Package
+from rblib.html import create_main_navigation, write_html_page
 
 
 arch = 'amd64' # the arch is only relevant for link targets here
 mirror = 'http://deb.debian.org/debian'
-
-bugs = get_bugs()
 
 for suite in SUITES:
     remotefile = mirror + '/dists/' + suite + '/main/source/Sources.xz'
@@ -59,7 +64,7 @@ for suite in SUITES:
                 line = line.strip().split(None, 1)
                 html += '    '
                 # the final strip() is to avoid a newline
-                html += link_package(line[0], suite, arch, bugs).strip()
+                html += Package(line[0]).html_link(suite, arch).strip()
                 try:
                     html += ' ' + line[1]  # eventual uploaders sign
                 except IndexError:

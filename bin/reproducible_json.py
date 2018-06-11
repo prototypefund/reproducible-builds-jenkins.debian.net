@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 #
-# Copyright © 2015 Mattia Rizzolo <mattia@mapreri.org>
+# Copyright © 2015-2018 Mattia Rizzolo <mattia@mapreri.org>
 # Copyright © 2015-2017 Holger Levsen <holger@layer-acht.org>
 # Based on reproducible_json.sh © 2014 Holger Levsen <holger@layer-acht.org>
 # Licensed under GPL-2
@@ -10,15 +10,21 @@
 #
 # Build the reproducible.json and reproducibe-tracker.json files, to provide nice datasources
 
-from reproducible_common import *
 
-from apt_pkg import version_compare
-import aptsources.sourceslist
-import json
 import os
-import subprocess
+import json
+import apt_pkg
+apt_pkg.init_system()
 import tempfile
+import subprocess
 
+from rblib import query_db
+from rblib.confparse import log
+from rblib.const import (
+    DISTRO_URL,
+    REPRODUCIBLE_JSON, REPRODUCIBLE_TRACKER_JSON,
+    filter_query,
+)
 
 output = []
 output4tracker = []
@@ -61,7 +67,7 @@ for row in result:
             # compare the versions (only keep most up to date!)
             version1 = crossarch[package]['version']
             version2 = pkg['version']
-            versionscompared = version_compare(version1, version2);
+            versionscompared = apt_pkg.version_compare(version1, version2);
 
             # if version1 > version2,
             # skip the package results we are currently inspecting

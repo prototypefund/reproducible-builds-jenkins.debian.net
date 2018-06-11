@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 #
-# Copyright © 2015 Mattia Rizzolo <mattia@mapreri.org>
+# Copyright © 2015-2018 Mattia Rizzolo <mattia@mapreri.org>
 # Licensed under GPL-2
 #
 # Depends: python3
@@ -13,18 +13,15 @@ import os
 import re
 import sys
 import time
+import subprocess
 from sqlalchemy import sql
-from reproducible_common import (
-    # Use an explicit list rather than a star import, because the previous code had
-    # a mysterious comment about not being able to do a star import prior to
-    # parsing the command line, & debugging the mystery via edit-compile-h01ger-run
-    # detours is not practical.
-    SUITES, ARCHS,
-    bcolors, log,
-    query_db, db_table, sql, conn_db,
-    datetime, timedelta,
-    irc_msg, unknown_args
-)
+from datetime import datetime, timedelta
+
+from rblib import query_db, db_table
+from rblib.const import SUITES, ARCHS, conn_db
+from rblib.confparse import unknown_args, log
+from rblib.utils import bcolors, irc_msg
+
 
 def packages_matching_criteria(arch, suite, criteria):
     "Return a list of packages in (SUITE, ARCH) matching the given CRITERIA."
@@ -180,7 +177,7 @@ def parse_args():
 
     if len(packages) > 50 and notify:
         log.critical(bcolors.RED + bcolors.BOLD)
-        call(['figlet', 'No.'])
+        subprocess.run(('figlet', 'No.'))
         log.critical(bcolors.FAIL + 'Do not reschedule more than 50 packages ',
                      'with notification.\nIf you think you need to do this, ',
                      'please discuss this with the IRC channel first.',

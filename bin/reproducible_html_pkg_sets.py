@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 #
 # Copyright © 2016 Valerie Young <spectranaut@riseup.net>
+#           © 2018 Mattia Rizzolo <mattia@mapreri.org>
 # Based on reproducible_html_pkg_sets.sh:
 #           © 2014-2016 Holger Levsen <holger@layer-acht.org>
 #           © 2015 Mattia Rizzolo <mattia@debian.org>
@@ -11,12 +12,26 @@
 #
 # Build rb-pkg pages (the pages that describe the package status)
 
-from reproducible_common import *
-
+import os
 import csv
-import time
 import pystache
+from datetime import datetime, timedelta
+from subprocess import check_call
 from collections import OrderedDict
+
+from rblib import query_db, get_status_icon
+from rblib.bugs import Bugs
+from rblib.confpase import log
+from rblib.models import Package
+from rblib.utils import create_temp_file
+from rblib.html import create_main_navigation, write_html_page, gen_status_link_icon
+from rblib.const import (
+    BIN_PATH,
+    SUITES, ARCHS,
+    DISTRO_BASE, DISTRO_URI,
+    META_PKGSET, PKGSET_DEF_PATH,
+    TEMPLATE_PATH,
+)
 
 # Templates used for creating package pages
 renderer = pystache.Renderer()
@@ -29,6 +44,11 @@ pkg_legend_template = renderer.load_template(
 
 # we only do stats up until yesterday
 YESTERDAY = (datetime.now()-timedelta(days=1)).strftime('%Y-%m-%d')
+
+
+def percent(part, whole):
+    return round(100 * float(part)/float(whole), 1)
+
 
 def gather_meta_stats(suite, arch, pkgset_name):
     pkgset_file = os.path.join(PKGSET_DEF_PATH, 'meta_pkgsets-' + suite,
@@ -234,7 +254,7 @@ def create_pkgset_page_and_graphs(suite, arch, stats, pkgset_name):
         details_context = {
             'icon_html': icon_html,
             'description': description,
-            'package_list_html': link_packages(stats[cutename], suite, arch, bugs),
+            'package_list_html': ''.join([Package(x).html_link(suite, arch) for x in stats[cutename]]),
             'status_count': stats["count_" + cutename],
             'status_percent': stats["percent_" + cutename],
         }
@@ -293,7 +313,7 @@ def create_pkgset_graph(png_file, suite, arch, pkgset_name):
                     y_label, '1920', '960'])
 
 
-bugs = get_bugs()
+bugs = Bugs().bugs
 for arch in ARCHS:
     for suite in SUITES:
         if suite == 'experimental':

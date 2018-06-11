@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 #
-# Copyright © 2015 Mattia Rizzolo <mattia@mapreri.org>
+# Copyright © 2015-2018 Mattia Rizzolo <mattia@mapreri.org>
 # Copyright © 2015-2017 Holger Levsen <holger@layer-acht.org>
 # Based on reproducible_scheduler.sh © 2014-2015 Holger Levsen <holger@layer-acht.org>
 # Licensed under GPL-2
@@ -13,15 +13,19 @@
 import sys
 import lzma
 import deb822
-import aptsources.sourceslist
 import smtplib
-from subprocess import call
-from apt_pkg import version_compare
-from urllib.request import urlopen
+import apt_pkg
+apt_pkg.init_system()
 from sqlalchemy import sql
+from urllib.request import urlopen
 from email.mime.text import MIMEText
+from datetime import datetime, timedelta
 
-from reproducible_common import *
+from rblib import query_db, db_table
+from rblib.confparse import log
+from rblib.const import SUITES, ARCHS, conn_db
+from rblib.utils import print_critical_message
+from rblib.models import Package
 from reproducible_html_live_status import generate_schedule
 from reproducible_html_packages import gen_packages_html
 from reproducible_html_packages import purge_old_pages
@@ -311,7 +315,7 @@ def update_sources_db(suite, arch, sources):
         pkg_id = result[0]
         old_version = result[1]
         notify_maint = int(result[2])
-        if version_compare(pkg[1], old_version) > 0:
+        if apt_pkg.version_compare(pkg[1], old_version) > 0:
             log.debug('New version: ' + str(pkg) + ' (we had  ' +
                       old_version + ')')
             updated_pkgs.append({
@@ -472,7 +476,7 @@ def query_new_versions(suite, arch, limit):
     # packages in our repository != official repo,
     # so they will always be selected by the query above
     # so we only accept them if there version is greater than the already tested one
-    packages = [(x[0], x[1]) for x in pkgs if version_compare(x[2], x[3]) > 0]
+    packages = [(x[0], x[1]) for x in pkgs if apt_pkg.version_compare(x[2], x[3]) > 0]
     print_schedule_result(suite, arch, criteria, packages)
     return packages
 

@@ -1,7 +1,8 @@
 #!/bin/bash
+# vim: set noexpandtab:
 
 # Copyright 2014-2018 Holger Levsen <holger@layer-acht.org>
-#              © 2015 Mattia Rizzolo <mattia@mapreri.org>
+#         © 2015-2018 Mattia Rizzolo <mattia@mapreri.org>
 # released under the GPLv=2
 #
 # included by all reproducible_*.sh scripts, so be quiet
@@ -539,34 +540,11 @@ publish_page() {
 	echo "Enjoy $REPRODUCIBLE_URL/$TARGET"
 }
 
-link_packages() {
-	set +x
-        local i
-	for (( i=1; i<$#+1; i=i+400 )) ; do
-		local string='['
-		local delimiter=''
-		local j
-		for (( j=0; j<400; j++)) ; do
-			local item=$(( $j+$i ))
-			if (( $item < $#+1 )) ; then
-				string+="${delimiter}\"${!item}\""
-				delimiter=','
-			fi
-		done
-		string+=']'
-		cd /srv/jenkins/bin
-		DATA=" $(python3 -c "from reproducible_common import link_packages; \
-				print(link_packages(${string}, '$SUITE', '$ARCH'))" 2> /dev/null)"
-		cd - > /dev/null
-		write_page "$DATA"
-	done
-	if "$DEBUG" ; then set -x ; fi
-}
-
 gen_package_html() {
 	cd /srv/jenkins/bin
 	python3 -c "import reproducible_html_packages as rep
-pkg = rep.Package('$1', no_notes=True)
+from rblib.models import Package
+pkg = Package('$1', no_notes=True)
 rep.gen_packages_html([pkg], no_clean=True)" || echo "Warning: cannot update HTML pages for $1"
 	cd - > /dev/null
 }

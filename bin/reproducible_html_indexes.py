@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 #
-# Copyright © 2015 Mattia Rizzolo <mattia@mapreri.org>
+# Copyright © 2015-2018 Mattia Rizzolo <mattia@maprerii.org>
 # Copyright © 2015-2016 Holger Levsen <holger@layer-acht.org>
 # Based on reproducible_html_indexes.sh © 2014 Holger Levsen <holger@layer-acht.org>
 # Licensed under GPL-2
@@ -10,8 +10,22 @@
 #
 # Build quite all index_* pages
 
-from reproducible_common import *
+import sys
+from string import Template
+from datetime import datetime, timedelta
 from sqlalchemy import select, and_, or_, func, bindparam, desc
+
+from rblib import query_db, db_table, get_status_icon
+from rblib.confparse import log
+from rblib.models import Package
+from rblib.utils import print_critical_message
+from rblib.html import tab, create_main_navigation, write_html_page
+from rblib.const import (
+    DISTRO_BASE, DISTRO_URI, DISTRO_URL,
+    SUITES, ARCHS,
+    defaultsuite, defaultarch,
+    filtered_issues, filter_html,
+)
 
 """
 Reference doc for the folowing lists:
@@ -715,7 +729,7 @@ def build_page_section(page, section, suite, arch):
     html += '<p>\n' + tab + '<code>\n'
     for row in rows:
         pkg = row[0]
-        html += tab*2 + link_package(pkg, suite, arch, bugs)
+        html += tab*2 + Package(pkg).html_link(suite, arch)
     else:
         html += tab + '</code>\n'
         html += '</p>'
@@ -792,8 +806,6 @@ def build_page(page, suite=None, arch=None):
                     left_nav_html=left_nav_html)
     log.info('"' + title + '" now available at ' + desturl)
 
-
-bugs = get_bugs() # this variable should not be global, else merely importing _html_indexes always queries UDD
 
 if __name__ == '__main__':
     for arch in ARCHS:

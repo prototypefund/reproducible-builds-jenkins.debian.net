@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 #
-# Copyright © 2015 Mattia Rizzolo <mattia@mapreri.org>
+# Copyright © 2015-2018 Mattia Rizzolo <mattia@mapreri.org>
 # Copyright © 2015 Holger Levsen <holger@layer-acht.org>
 # Based on reproducible_html_notes.sh © 2014 Holger Levsen <holger@layer-acht.org>
 # Licensed under GPL-2
@@ -10,16 +10,35 @@
 #
 # Build HTML pages based on the content of the notes.git repository
 
+import os
+import re
+import sys
 import copy
 import yaml
 import popcon
 import pystache
+from string import Template
 from collections import OrderedDict
 from math import sqrt
-from reproducible_common import *
+from rblib.models import Package
+from rblib.bugs import Bugs
 from reproducible_html_packages import gen_packages_html
 from reproducible_html_indexes import build_page
 from sqlalchemy import select, and_, bindparam
+
+from rblib import query_db, get_status_icon, db_table, get_trailing_bug_icon
+from rblib.confparse import log
+from rblib.html import tab, create_main_navigation, write_html_page
+from rblib.const import (
+    REPRODUCIBLE_URL,
+    TEMPLATE_PATH,
+    DISTRO_BASE, DISTRO_URL,
+    SUITES, ARCHS,
+    defaultsuite,
+    ISSUES_PATH, ISSUES_URI,
+    NOTES_PATH, NOTES_URI,
+)
+
 
 renderer = pystache.Renderer()
 notes_body_template = renderer.load_template(
@@ -29,6 +48,8 @@ NOTES = 'packages.yml'
 ISSUES = 'issues.yml'
 
 NOTESGIT_DESCRIPTION = 'Our notes about issues affecting packages are stored in <a href="https://salsa.debian.org/reproducible-builds/reproducible-notes" target="_parent">notes.git</a> and are targeted at packages in Debian in \'unstable/amd64\' (unless they say otherwise).'
+
+url2html = re.compile(r'((mailto\:|((ht|f)tps?)\://|file\:///){1}\S+)')
 
 note_issues_html = Template((tab*3).join("""
 <tr>
@@ -307,7 +328,7 @@ def gen_html_issue(issue, suite):
             pkgs_popcon = issues_popcon_annotate(pkgs)
             try:
                 for pkg, popcon, is_popular in sorted(pkgs_popcon, key=lambda x: x[0] in bugs):
-                    affected += tab*6 + link_package(pkg, suite, arch, bugs, popcon, is_popular)
+                    affected += tab*6 + Package(pkg).html_link(suite, arch, bugs, popcon, is_popular)
             except ValueError:
                 pass
             affected += tab*5 + '</code>\n'
@@ -477,7 +498,7 @@ def index_issues(issues, scorefuncs):
 
 if __name__ == '__main__':
     issues_count = {}
-    bugs = get_bugs()
+    bugs = Bugs().bugs
     notes = load_notes()
     issues = load_issues()
     iterate_over_notes(notes)

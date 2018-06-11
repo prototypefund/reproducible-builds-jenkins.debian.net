@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 #
-# Copyright © 2015 Mattia Rizzolo <mattia@mapreri.org>
+# Copyright © 2015-2018 Mattia Rizzolo <mattia@mapreri.org>
 # Licensed under GPL-2
 #
 # Depends: python3
@@ -9,6 +9,7 @@
 # Configure which packages should trigger an email to the maintainer when the
 # reproducibly status change
 
+import sys
 import argparse
 
 parser = argparse.ArgumentParser(
@@ -25,17 +26,15 @@ parser.add_argument('-m', '--maintainer', default='',
 local_args = parser.parse_known_args()[0]
 
 # these are here as an hack to be able to parse the command line
-from reproducible_common import *
+from rblib import query_db, db_table
+from rblib.confparse import log, DEBUG
+from rblib.const import conn_db
+from rblib.models import Package
+from rblib.utils import bcolors
+from rblib.bugs import Udd
 from reproducible_html_packages import gen_packages_html
 from reproducible_html_indexes import build_page
 
-class bcolors:
-    BOLD = '\033[1m'
-    UNDERLINE = '\033[4m'
-    GOOD = '\033[92m'
-    WARN = '\033[93m' + UNDERLINE
-    FAIL = '\033[91m' + BOLD + UNDERLINE
-    ENDC = '\033[0m'
 
 packages = local_args.packages if local_args.packages else []
 maintainer = local_args.maintainer
@@ -71,20 +70,14 @@ def process_pkg(package, deactivate):
         log.debug(query_db(query))
 
 if maintainer:
-    global conn_udd
-    if not conn_udd:
-        conn_udd = start_udd_connection()
-    c = conn_udd.cursor()
     query = "SELECT source FROM sources WHERE maintainer_email = '{}' " + \
             "AND release = 'sid' AND component = 'main'"
+    ret = Udd().query(query.format(maintainer))
     try:
-        c.execute(query.format(maintainer))
-        pkgs = [x[0] for x in c.fetchall()]
+        pkgs = [x[0] for x in ret]
     except IndexError:
         log.info('No packages maintained by ' + maintainer)
         sys.exit(0)
-    finally:
-        conn_udd.close()
     log.info('Packages maintained by ' + maintainer + ':')
     log.info('\t' + ', '.join(pkgs))
     packages.extend(pkgs)

@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 #
-# Copyright © 2015-2016 Mattia Rizzolo <mattia@mapreri.org>
+# Copyright © 2015-2018 Mattia Rizzolo <mattia@mapreri.org>
 # Copyright © 2016-2017 Holger Levsen <holger@layer-acht.org>
 #
 # Licensed under GPL-2
@@ -10,9 +10,26 @@
 #
 # Build a page full of CI issues to investigate
 
-from reproducible_common import *
+import os
+import re
+import csv
 import time
 import os.path
+import datetime
+from subprocess import check_call
+from timedate import timedelta
+
+from rblib import query_db
+from rblib.confparse import log
+from rblib.models import Package
+from rblib.html import tab, create_main_navigation, write_html_page
+from rblib.utils import bcolors, create_temp_file, strip_epoch
+from rblib.const import (
+    BIN_PATH,
+    DISTRO_BASE, DISTRO_URL,
+    HISTORY_PATH, RB_PKG_PATH, DBD_PATH, DBDTXT_PATH,
+    BUILDINFO_PATH, LOGS_PATH, DIFFS_PATH, RBUILD_PATH,
+)
 
 def unrep_with_dbd_issues():
     log.info('running unrep_with_dbd_issues check...')
@@ -79,7 +96,9 @@ def lack_rbuild():
                ORDER BY s.name ASC, s.suite DESC, s.architecture ASC'''
     results = query_db(query)
     for pkg, version, suite, arch in results:
-        if not pkg_has_rbuild(pkg, version, suite, arch):
+        rbuild = os.path.join(RBUILD_PATH, suite, arch) + \
+                '/{}_{}.rbuild.log.gz'.format(pkg, strip_epoch(version))
+        if not os.access(rbuild, os.R_OK):
             bad_pkgs.append((pkg, version, suite, arch))
             log.warning(suite + '/' + arch + '/' + pkg + ' (' + version + ') has been '
                         'built, but a buildlog is missing.')
@@ -277,7 +296,7 @@ def _gen_packages_html(header, pkgs):
         html += header
         html += '<br/><pre>\n'
         for pkg in pkgs:
-            html += tab + link_package(pkg[0], pkg[2], pkg[3]).strip()
+            html += tab + Package(pkg[0]).html_link(pkg[2], pkg[3], bugs=False)
             html += ' (' + pkg[1] + ' in ' + pkg[2] + '/' + pkg[3] + ')\n'
         html += '</pre></p>\n'
     return html
@@ -394,7 +413,6 @@ def gen_html():
 
 
 if __name__ == '__main__':
-    bugs = get_bugs()
     html = '<p>This page lists unexpected things a human should look at and '
     html += 'fix, like packages with an incoherent status or files that '
     html += 'should not be there. Some of these breakages are caused by '

@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 #
-# Copyright © 2015 Mattia Rizzolo <mattia@mapreri.org>
+# Copyright © 2015-2018 Mattia Rizzolo <mattia@mapreri.org>
 # Copyright © 2016-2017 Valerie R Young <spectranaut@riseup.net>
 # Based on reproducible_html_packages.sh © 2014 Holger Levsen <holger@layer-acht.org>
 # Licensed under GPL-2
@@ -10,10 +10,31 @@
 #
 # Build rb-pkg pages (the pages that describe the package status)
 
-from reproducible_common import *
+import os
+import errno
 import pystache
 import apt_pkg
 apt_pkg.init_system()
+
+from rblib import query_db, get_status_icon
+from rblib.confparse import log, args
+from rblib.models import Package
+from rblib.utils import strip_epoch, convert_into_hms_string
+from rblib.html import gen_status_link_icon, write_html_page
+from rblib.const import (
+    TEMPLATE_PATH,
+    REPRODUCIBLE_URL,
+    DISTRO_URL,
+    SUITES, ARCHS,
+    RB_PKG_PATH, RB_PKG_URI,
+    HISTORY_PATH, HISTORY_URI,
+    NOTES_PATH, NOTES_URI,
+    DBDTXT_PATH, DBDTXT_URI,
+    DBD_PATH, DBD_URI,
+    DIFFS_PATH, DIFFS_URI,
+    LOGS_PATH, LOGS_URI,
+)
+
 
 # Templates used for creating package pages
 renderer = pystache.Renderer();
@@ -40,21 +61,6 @@ def sizeof_fmt(num):
             return str(int(round(float("%3f" % num), 0))) + "%s" % (unit)
         num /= 1024.0
     return str(int(round(float("%f" % num), 0))) + "%s" % ('Yi')
-
-
-def get_buildlog_links_context(package, eversion, suite, arch):
-    log = suite + '/' + arch + '/' + package + '_' + eversion + '.build2.log.gz'
-    diff = suite + '/' + arch + '/' + package + '_' + eversion + '.diff.gz'
-
-    context = {}
-    if os.access(LOGS_PATH+'/'+log, os.R_OK):
-        context['build2_uri'] = LOGS_URI + '/' + log
-        context['build2_size'] = sizeof_fmt(os.stat(LOGS_PATH+'/'+log).st_size)
-
-    if os.access(DIFFS_PATH+'/'+diff, os.R_OK):
-        context['diff_uri'] = DIFFS_URI + '/' + diff
-
-    return context
 
 
 def get_dbd_links(package, eversion, suite, arch):
@@ -120,8 +126,8 @@ def get_and_clean_dbd_links(package, eversion, suite, arch, status):
 def gen_suitearch_details(package, version, suite, arch, status, spokenstatus,
                           build_date):
     eversion = strip_epoch(version) # epoch_free_version is too long
-    buildinfo_file = BUILDINFO_PATH + '/' + suite + '/' + arch + '/' + package + \
-                '_' + eversion + '_' + arch + '.buildinfo'
+    pkg = Package(package)
+    build = pkg.builds[suite][arch]
 
     context = {}
     default_view = ''
@@ -148,25 +154,26 @@ def gen_suitearch_details(package, version, suite, arch, status, spokenstatus,
         default_view = default_view if default_view else dbd_uri
 
     # Get buildinfo context
-    if pkg_has_buildinfo(package, version, suite, arch):
-        url = BUILDINFO_URI + '/' + suite + '/' + arch + '/' + package + \
-              '_' + eversion + '_' + arch + '.buildinfo'
-        context['buildinfo_uri'] = url
-        default_view = default_view if default_view else url
+    if build.buildinfo:
+        context['buildinfo_uri'] = build.buildinfo.url
+        default_view = default_view if default_view else build.buildinfo.url
     elif not args.ignore_missing_files and status not in \
         ('untested', 'blacklisted', 'FTBFS', 'not_for_us', 'depwait', '404'):
-            log.critical('buildinfo not detected at ' + buildinfo_file)
+            log.critical('buildinfo not detected at ' + build.buildinfo.path)
 
     # Get rbuild, build2 and build diffs context
-    rbuild = pkg_has_rbuild(package, version, suite, arch)
-    if rbuild:  # being a tuple (rbuild path, size), empty if non existant
-        url = RBUILD_URI + '/' + suite + '/' + arch + '/' + package + '_' + \
-              eversion + '.rbuild.log.gz'
-        context['rbuild_uri'] = url
-        context['rbuild_size'] = sizeof_fmt(rbuild[1])
-        default_view = default_view if default_view else url
-        context['buildlogs'] = get_buildlog_links_context(package, eversion,
-                                                          suite, arch)
+    if build.rbuild:
+        context['rbuild_uri'] = build.rbuild.url
+        context['rbuild_size'] = sizeof_fmt(build.rbuild.size)
+        default_view = default_view if default_view else build.rbuild.url
+        context['buildlogs'] = {}
+        if build.build2 and build.logdiff:
+            context['buildlogs']['build2_uri'] = build.build2.url
+            context['buildlogs']['build2_size'] = build.build2.size
+            context['buildlogs']['diff_uri'] = build.logdiff.url
+        else:
+            log.error('Either {} or {} is missing'.format(
+                build.build2.path, build.logdiff.path))
     elif status not in ('untested', 'blacklisted') and \
          not args.ignore_missing_files:
         log.critical(DISTRO_URL  + '/' + suite + '/' + arch + '/' + package +
@@ -182,7 +189,6 @@ def gen_suitearch_details(package, version, suite, arch, status, spokenstatus,
 
 
 def determine_reproducibility(status1, version1, status2, version2):
-    newstatus = ''
     versionscompared = apt_pkg.version_compare(version1, version2);
 
     # if version1 > version2,
@@ -217,10 +223,10 @@ def gen_suitearch_section(package, current_suite, current_arch):
         suites = []
         for s in SUITES:
 
-            status = package.get_status(s, a)
+            status = package.builds[s][a].status
             if not status:  # The package is not available in that suite/arch
                 continue
-            version = package.get_tested_version(s, a)
+            version = package.builds[s][a].version
 
             if not final_version or not final_status:
                 final_version = version
@@ -229,7 +235,7 @@ def gen_suitearch_section(package, current_suite, current_arch):
                 final_status, final_version = determine_reproducibility(
                     final_status, final_version, status, version)
 
-            build_date = package.get_build_date(s, a)
+            build_date = package.builds[s][a].build_date
             status, icon, spokenstatus = get_status_icon(status)
 
             if not (build_date and status != 'blacklisted'):
@@ -328,7 +334,7 @@ def gen_packages_html(packages, no_clean=False):
     packages should be a list of Package objects.
     """
     total = len(packages)
-    log.debug('Generating the pages of ' + str(total) + ' package(s)')
+    log.info('Generating the pages of ' + str(total) + ' package(s)')
     for package in sorted(packages, key=lambda x: x.name):
         assert isinstance(package, Package)
         gen_history_page(package)
@@ -345,10 +351,10 @@ def gen_packages_html(packages, no_clean=False):
         for suite in SUITES:
             for arch in ARCHS:
 
-                status = package.get_status(suite, arch)
-                version = package.get_tested_version(suite, arch)
-                build_date = package.get_build_date(suite, arch)
-                if status == False:  # the package is not in the checked suite
+                status = package.builds[suite][arch].status
+                version = package.builds[suite][arch].version
+                build_date = package.builds[suite][arch].build_date
+                if status is None:  # the package is not in the checked suite
                     continue
                 log.debug('Generating the page of %s/%s/%s @ %s built at %s',
                           pkg, suite, arch, version, build_date)
