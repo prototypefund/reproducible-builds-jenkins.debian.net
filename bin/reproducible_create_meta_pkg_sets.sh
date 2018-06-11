@@ -232,8 +232,11 @@ update_pkg_set_specific() {
 			;;
 		had_a_DSA)
 			# packages which had a DSA
-			svn export svn://svn.debian.org/svn/secure-testing/data/DSA/list ${TMPFILE2}
+			DSA=$(mktemp --tmpdir=$TEMPDIR pkg-sets-XXXXXXXXX -u)
+			git clone --depth 1 https://salsa.debian.org:security-tracker-team/security-tracker $DSA
+			cp $DSA/data/DSA/list ${TMPFILE2}
 			grep "^\[" ${TMPFILE2} | grep "DSA-" | cut -d " " -f5 > $TMPFILE
+			rm $DSA -r
 			;;
 		cii-census)
 			# packages from the cii-census
