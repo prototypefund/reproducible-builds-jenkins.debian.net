@@ -727,6 +727,11 @@
                     my_gitrepo: 'https://salsa.debian.org/reproducible-builds/reproducible-website.git'
                     my_gitbranches: 'origin/master'
                     my_shell: 'jekyll build -s . -d /srv/reproducible-builds.org/www'
+                - 'builds_style_guide':
+                    my_description: 'Build https://reproducible-builds.org/style on every git commit to {my_gitrepo} with jekyll'
+                    my_gitrepo: 'https://salsa.debian.org/reproducible-builds/reproducible-styleguide.git'
+                    my_timed: ''
+                    my_shell: 'mkdir -pv /srv/reproducible-builds.org/style && jekyll build -s . -d /srv/reproducible-builds.org/style'
                 - 'builds_diffoscope_website':
                     my_description: 'Build https://diffoscope.org/ on every git commit to {my_gitrepo}'
                     my_timed: ''
