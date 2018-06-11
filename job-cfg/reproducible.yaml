@@ -722,13 +722,13 @@
                     my_shell: '/srv/jenkins/bin/chroot-run.sh sid gbp buildpackage -uc -us --git-upstream-branch=master'
                     my_parse_rules: '/srv/jenkins/logparse/debian-pkg-ci.rules'
                 - 'builds_website':
-                    my_description: 'Build https://reproducible-builds.org on every git commit to https://salsa.debian.org/reproducible-builds/reproducible-website.git with jekyll.'
+                    my_description: 'Build https://reproducible-builds.org on every git commit to {my_gitrepo} with jekyll.'
                     my_timed: ''
                     my_gitrepo: 'https://salsa.debian.org/reproducible-builds/reproducible-website.git'
                     my_gitbranches: 'origin/master'
                     my_shell: 'jekyll build -s . -d /srv/reproducible-builds.org/www'
                 - 'builds_diffoscope_website':
-                    my_description: 'Build https://diffoscope.org/ on every git commit to https://salsa.debian.org/reproducible-builds/diffoscope-website.git'
+                    my_description: 'Build https://diffoscope.org/ on every git commit to {my_gitrepo}'
                     my_timed: ''
                     my_gitrepo: 'https://salsa.debian.org/reproducible-builds/diffoscope-website.git'
                     my_gitbranches: 'origin/master'
