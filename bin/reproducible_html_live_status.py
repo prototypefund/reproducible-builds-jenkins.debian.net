@@ -11,9 +11,9 @@
 from string import Template
 from sqlalchemy import select, func, cast, Integer, and_, bindparam
 
-from rblib import query_db, db_table, get_status_icon
+from rblib import query_db, db_table
 from rblib.confparse import log
-from rblib.models import Package
+from rblib.models import Package, Status
 from rblib.utils import convert_into_hms_string
 from rblib.html import tab, create_main_navigation, write_html_page
 from reproducible_html_indexes import build_leading_text_section
@@ -29,12 +29,12 @@ sources = db_table('sources')
 schedule = db_table('schedule')
 stats_build = db_table('stats_build')
 
-def convert_into_status_html(status):
-    if status != 'None':
-        status, icon, spokenstatus = get_status_icon(status)
-        return status + ' <img src="/static/' + icon +'" alt="' + status + '" title="' + status + '"/>'
-    else:
+def convert_into_status_html(statusname):
+    if statusname == 'None':
         return ''
+    status = Status.get(statusname)
+    return '{n} <img src="/static/{icon}" alt="{n}" title="{n}" />'.format(
+            n=status.value.name, icon=status.value.icon)
 
 
 def generate_schedule(arch):
