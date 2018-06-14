@@ -15,9 +15,9 @@ from string import Template
 from datetime import datetime, timedelta
 from sqlalchemy import select, and_, or_, func, bindparam, desc
 
-from rblib import query_db, db_table, get_status_icon
+from rblib import query_db, db_table
 from rblib.confparse import log
-from rblib.models import Package
+from rblib.models import Status, Package
 from rblib.utils import print_critical_message
 from rblib.html import tab, create_main_navigation, write_html_page
 from rblib.const import (
@@ -40,7 +40,7 @@ Reference doc for the folowing lists:
     the string above
   + `body`: a list of dicts containing every section that made up the page.
     Every section has:
-    - `icon_status`: the name of a icon (see get_status_icon())
+    - `icon_status`: the name of a icon (see rblib.models.Status)
     - `icon_link`: a link to hide below the icon
     - `query`: query to perform against the reproducible db to get the list of
       packages to show
@@ -113,14 +113,14 @@ queries = {
         ),
     "reproducible_all":
         select_sources.where(
-            results.c.status == 'reproducible',
+            results.c.status == Status.REPRODUCIBLE.value.name,
         ).order_by(
             desc(results.c.build_date)
         ),
     "reproducible_last24h":
         select_sources.where(
             and_(
-                results.c.status == 'reproducible',
+                results.c.status == Status.REPRODUCIBLE.value.name,
                 results.c.build_date > timespan_date_map[24],
             )
         ).order_by(
@@ -129,7 +129,7 @@ queries = {
     "reproducible_last48h":
         select_sources.where(
             and_(
-                results.c.status == 'reproducible',
+                results.c.status == Status.REPRODUCIBLE.value.name,
                 results.c.build_date > timespan_date_map[48],
             )
         ).order_by(
@@ -137,20 +137,20 @@ queries = {
         ),
     "reproducible_all_abc":
         select_sources.where(
-            results.c.status == 'reproducible',
+            results.c.status == Status.REPRODUCIBLE.value.name,
         ).order_by(
             sources.c.name
         ),
     "FTBR_all":
         select_sources.where(
-            results.c.status == 'FTBR',
+            results.c.status == Status.FTBR.value.name
         ).order_by(
             desc(results.c.build_date)
         ),
     "FTBR_last24h":
         select_sources.where(
             and_(
-                results.c.status == 'FTBR',
+                results.c.status == Status.FTBR.value.name,
                 results.c.build_date > timespan_date_map[24],
             )
         ).order_by(
@@ -159,7 +159,7 @@ queries = {
     "FTBR_last48h":
         select_sources.where(
             and_(
-                results.c.status == 'FTBR',
+                results.c.status == Status.FTBR.value.name,
                 results.c.build_date > timespan_date_map[48],
             )
         ).order_by(
@@ -167,20 +167,20 @@ queries = {
         ),
     "FTBR_all_abc":
         select_sources.where(
-            results.c.status == 'FTBR',
+            results.c.status == Status.FTBR.value.name
         ).order_by(
             sources.c.name
         ),
     "FTBFS_all":
         select_sources.where(
-            results.c.status == 'FTBFS',
+            results.c.status == Status.FTBFS.value.name,
         ).order_by(
             desc(results.c.build_date)
         ),
     "FTBFS_last24h":
         select_sources.where(
             and_(
-                results.c.status == 'FTBFS',
+                results.c.status == Status.FTBFS.value.name,
                 results.c.build_date > timespan_date_map[24],
             )
         ).order_by(
@@ -189,7 +189,7 @@ queries = {
     "FTBFS_last48h":
         select_sources.where(
             and_(
-                results.c.status == 'FTBFS',
+                results.c.status == Status.FTBFS.value.name,
                 results.c.build_date > timespan_date_map[48],
             )
         ).order_by(
@@ -197,14 +197,14 @@ queries = {
         ),
     "FTBFS_all_abc":
         select_sources.where(
-            results.c.status == 'FTBFS',
+            results.c.status == Status.FTBFS.value.name,
         ).order_by(
             sources.c.name
         ),
     "FTBFS_filtered":
         select_sources.where(
             and_(
-                results.c.status == 'FTBFS',
+                results.c.status == Status.FTBFS.value.name,
                 sources.c.id.notin_(
                     select(
                         [notes.c.package_id]
@@ -221,7 +221,7 @@ queries = {
     "FTBFS_caused_by_us":
         select_sources.where(
             and_(
-                results.c.status == 'FTBFS',
+                results.c.status == Status.FTBFS.value.name,
                 sources.c.id.in_(
                     select(
                         [notes.c.package_id]
@@ -237,32 +237,32 @@ queries = {
         ),
     "E404_all":
         select_sources.where(
-            results.c.status == 'E404',
+            results.c.status == Status.E404.value.name,
         ).order_by(
             desc(results.c.build_date)
         ),
     "E404_all_abc":
         select_sources.where(
-            results.c.status == 'E404',
+            results.c.status == Status.E404.value.name,
         ).order_by(
             sources.c.name
         ),
     "depwait_all":
         select_sources.where(
-            results.c.status == 'depwait',
+            results.c.status == Status.DEPWAIT.value.name,
         ).order_by(
             desc(results.c.build_date)
         ),
     "depwait_all_abc":
         select_sources.where(
-            results.c.status == 'depwait',
+            results.c.status == Status.DEPWAIT.value.name,
         ).order_by(
             sources.c.name
         ),
     "depwait_last24h":
         select_sources.where(
             and_(
-                results.c.status == 'depwait',
+                results.c.status == Status.DEPWAIT.value.name,
                 results.c.build_date > timespan_date_map[24],
 
             )
@@ -272,7 +272,7 @@ queries = {
     "depwait_last48h":
         select_sources.where(
             and_(
-                results.c.status == 'depwait',
+                results.c.status == Status.DEPWAIT.value.name,
                 results.c.build_date > timespan_date_map[48],
             )
         ).order_by(
@@ -281,15 +281,14 @@ queries = {
     "not_for_us_all":
         select_sources.where(
             and_(
-                results.c.status == 'NFU',
-
+                results.c.status == Status.NFU.value.name
             )
         ).order_by(
             sources.c.name
         ),
     "blacklisted_all":
         select_sources.where(
-            results.c.status == 'blacklisted',
+            results.c.status == Status.BLACKLISTED.value.name,
         ).order_by(
             sources.c.name
         ),
@@ -332,7 +331,7 @@ pages = {
         'title': 'Packages in {suite}/{arch} which built reproducibly',
         'body': [
             {
-                'icon_status': 'reproducible',
+                'icon_status': Status.REPRODUCIBLE.value.icon,
                 'icon_link': '/index_reproducible.html',
                 'query': 'reproducible_all',
                 'text': Template('$tot ($percent%) packages which built reproducibly in $suite/$arch:')
@@ -343,7 +342,7 @@ pages = {
         'title': 'Packages in {suite}/{arch} which failed to build reproducibly',
         'body': [
             {
-                'icon_status': 'FTBR',
+                'icon_status': Status.FTBR.value.icon,
                 'query': 'FTBR_all',
                 'text': Template('$tot ($percent%) packages which failed to build reproducibly in $suite/$arch:')
             }
@@ -353,12 +352,12 @@ pages = {
         'title': 'Packages in {suite}/{arch} which failed to build from source',
         'body': [
             {
-                'icon_status': 'FTBFS',
+                'icon_status': Status.FTBFS.value.icon,
                 'query': 'FTBFS_filtered',
                 'text': Template('$tot ($percent%) packages which failed to build from source in $suite/$arch: (this list is filtered and only shows unexpected ftbfs issues - see the list below for expected failures.)')
             },
             {
-                'icon_status': 'FTBFS',
+                'icon_status': Status.FTBFS.value.icon,
                 'query': 'FTBFS_caused_by_us',
                 'text': Template('$tot ($percent%) packages which failed to build from source in $suite/$arch due to our changes in the toolchain or due to our setup.\n This list includes packages tagged ' + filter_html + '.'),
             }
@@ -368,7 +367,7 @@ pages = {
         'title': 'Packages in {suite}/{arch} where the sources failed to download',
         'body': [
             {
-                'icon_status': 'E404',
+                'icon_status': Status.E404.value.icon,
                 'query': 'E404_all',
                 'text': Template('$tot ($percent%) packages where the sources failed to download in $suite/$arch:')
             }
@@ -378,7 +377,7 @@ pages = {
         'title': 'Packages in {suite}/{arch} where the build dependencies failed to be satisfied',
         'body': [
             {
-                'icon_status': 'depwait',
+                'icon_status': Status.DEPWAIT.value.icon,
                 'query': 'depwait_all',
                 'text': Template('$tot ($percent%) packages where the build dependencies failed to be satisfied. Note that temporary failures (eg. due to network problems) are automatically rescheduled every 4 hours.')
             }
@@ -388,7 +387,7 @@ pages = {
         'title': 'Packages in {suite}/{arch} which should not be build on "{arch}"',
         'body': [
             {
-                'icon_status': 'NFU',
+                'icon_status': Status.NFU.value.icon,
                 'query': 'not_for_us_all',
                 'text': Template('$tot ($percent%) packages which should not be build in $suite/$arch:')
             }
@@ -398,7 +397,7 @@ pages = {
         'title': 'Packages in {suite}/{arch} which have been blacklisted',
         'body': [
             {
-                'icon_status': 'blacklisted',
+                'icon_status': Status.BLACKLISTED.value.icon,
                 'query': 'blacklisted_all',
                 'text': Template('$tot ($percent%) packages which have been blacklisted in $suite/$arch: (If you see packages listed here without a bug filed against them, it \'s probably a good idea to file one.)')
             }
@@ -408,43 +407,43 @@ pages = {
         'title': 'Alphabetically sorted overview of all tested packages in {suite}/{arch}',
         'body': [
             {
-                'icon_status': 'FTBR',
+                'icon_status': Status.FTBR.value.icon,
                 'icon_link': '/index_unreproducible.html',
                 'query': 'FTBR_all_abc',
                 'text': Template('$tot packages ($percent%) failed to build reproducibly in total in $suite/$arch:')
             },
             {
-                'icon_status': 'FTBFS',
+                'icon_status': Status.FTBFS.value.icon,
                 'icon_link': '/index_FTBFS.html',
                 'query': 'FTBFS_all_abc',
                 'text': Template('$tot packages ($percent%) failed to build from source in total $suite/$arch:')
             },
             {
-                'icon_status': 'NFU',
+                'icon_status': Status.NFU.value.icon,
                 'icon_link': '/index_not_for_us.html',
                 'query': 'not_for_us_all',
                 'text': Template('$tot ($percent%) packages which should not be build in $suite/$arch:')
             },
             {
-                'icon_status': 'E404',
+                'icon_status': Status.E404.value.icon,
                 'icon_link': '/index_404.html',
                 'query': 'E404_all_abc',
                 'text': Template('$tot ($percent%) source packages could not be downloaded in $suite/$arch:')
             },
             {
-                'icon_status': 'depwait',
+                'icon_status': Status.DEPWAIT.value.icon,
                 'icon_link': '/index_depwait.html',
                 'query': 'depwait_all_abc',
                 'text': Template('$tot ($percent%) source packages failed to satisfy their build-dependencies:')
             },
             {
-                'icon_status': 'blacklisted',
+                'icon_status': Status.BLACKLISTED.value.icon,
                 'icon_link': '/index_blacklisted.html',
                 'query': 'blacklisted_all',
                 'text': Template('$tot ($percent%) packages are blacklisted and will not be tested in $suite/$arch:')
             },
             {
-                'icon_status': 'reproducible',
+                'icon_status': Status.REPRODUCIBLE.value.icon,
                 'icon_link': '/index_reproducible.html',
                 'query': 'reproducible_all_abc',
                 'text': Template('$tot ($percent%) packages successfully built reproducibly in $suite/$arch:')
@@ -455,7 +454,7 @@ pages = {
         'title': 'Packages in {suite}/{arch} tested in the last 24h for build reproducibility',
         'body': [
             {
-                'icon_status': 'FTBR',
+                'icon_status': Status.FTBR.value.icon,
                 'icon_link': '/index_unreproducible.html',
                 'query': 'FTBR_last24h',
                 'query2': 'FTBR_all',
@@ -464,7 +463,7 @@ pages = {
                 'timespan': 24
             },
             {
-                'icon_status': 'FTBFS',
+                'icon_status': Status.FTBFS.value.icon,
                 'icon_link': '/index_FTBFS.html',
                 'query': 'FTBFS_last24h',
                 'query2': 'FTBFS_all',
@@ -473,7 +472,7 @@ pages = {
                 'timespan': 24
             },
             {
-                'icon_status': 'depwait',
+                'icon_status': Status.DEPWAIT.value.icon,
                 'icon_link': '/index_depwait.html',
                 'query': 'depwait_last24h',
                 'query2': 'depwait_all',
@@ -482,7 +481,7 @@ pages = {
                 'timespan': 24
             },
             {
-                'icon_status': 'reproducible',
+                'icon_status': Status.REPRODUCIBLE.value.icon,
                 'icon_link': '/index_reproducible.html',
                 'query': 'reproducible_last24h',
                 'query2': 'reproducible_all',
@@ -496,7 +495,7 @@ pages = {
         'title': 'Packages in {suite}/{arch} tested in the last 48h for build reproducibility',
         'body': [
             {
-                'icon_status': 'FTBR',
+                'icon_status': Status.FTBR.value.icon,
                 'icon_link': '/index_unreproducible.html',
                 'query': 'FTBR_last48h',
                 'query2': 'FTBR_all',
@@ -505,7 +504,7 @@ pages = {
                 'timespan': 48
             },
             {
-                'icon_status': 'FTBFS',
+                'icon_status': Status.FTBFS.value.icon,
                 'icon_link': '/index_FTBFS.html',
                 'query': 'FTBFS_last48h',
                 'query2': 'FTBFS_all',
@@ -514,7 +513,7 @@ pages = {
                 'timespan': 48
             },
             {
-                'icon_status': 'depwait',
+                'icon_status': Status.DEPWAIT.value.icon,
                 'icon_link': '/index_depwait.html',
                 'query': 'depwait_last48h',
                 'query2': 'depwait_all',
@@ -523,7 +522,7 @@ pages = {
                 'timespan': 48
             },
             {
-                'icon_status': 'reproducible',
+                'icon_status': Status.REPRODUCIBLE.value.icon,
                 'icon_link': '/index_reproducible.html',
                 'query': 'reproducible_last48h',
                 'query2': 'reproducible_all',
@@ -540,47 +539,41 @@ pages = {
         'header_query': "SELECT count(*) FROM (SELECT s.name FROM sources AS s JOIN notes AS n ON n.package_id=s.id WHERE s.suite='{suite}' AND s.architecture='{arch}' GROUP BY s.name) AS tmp",
         'body': [
             {
-                'icon_status': 'FTBR',
-                'db_status': 'FTBR',
+                'status': Status.FTBR,
                 'icon_link': '/index_FTBR.html',
                 'query': 'notes',
                 'nosuite': True,
                 'text': Template('$tot unreproducible packages in $suite/$arch, ordered by build date:')
             },
             {
-                'icon_status': 'FTBFS',
-                'db_status': 'FTBFS',
+                'status': Status.FTBFS,
                 'icon_link': '/index_FTBFS.html',
                 'query': 'notes',
                 'nosuite': True,
                 'text': Template('$tot FTBFS packages in $suite/$arch, ordered by build date:')
             },
             {
-                'icon_status': 'depwait',
-                'db_status': 'depwait',
+                'status': Status.DEPWAIT,
                 'icon_link': '/index_depwait.html',
                 'query': 'depwait_all_abc',
                 'text': Template('$tot ($percent%) source packages failed to satisfy their build-dependencies, ordered by build date:')
             },
             {
-                'icon_status': 'NFU',
-                'db_status': 'NFU',
+                'status': Status.NFU,
                 'icon_link': '/index_not_for_us.html',
                 'query': 'notes',
                 'nosuite': True,
                 'text': Template('$tot not for us packages in $suite/$arch:')
             },
             {
-                'icon_status': 'blacklisted',
-                'db_status': 'blacklisted',
+                'status': Status.BLACKLISTED,
                 'icon_link': '/index_blacklisted.html',
                 'query': 'notes',
                 'nosuite': True,
                 'text': Template('$tot blacklisted packages in $suite/$arch:')
             },
             {
-                'icon_status': 'reproducible',
-                'db_status': 'reproducible',
+                'status': Status.REPRODUCIBLE,
                 'icon_link': '/index_reproducible.html',
                 'query': 'notes',
                 'nosuite': True,
@@ -596,22 +589,19 @@ pages = {
         'header_query': "SELECT COUNT(*) FROM (SELECT s.id FROM sources AS s JOIN results AS r ON r.package_id=s.id WHERE r.status IN ('FTBR', 'FTBFS', 'blacklisted') AND s.id NOT IN (SELECT package_id FROM notes) AND s.suite='{suite}' AND s.architecture='{arch}') AS tmp",
         'body': [
             {
-                'icon_status': 'FTBR',
-                'db_status': 'FTBR',
+                'status': Status.FTBR,
                 'icon_link': '/index_FTBR.html',
                 'query': 'no_notes',
                 'text': Template('$tot unreproducible packages in $suite/$arch, ordered by build date:')
             },
             {
-                'icon_status': 'FTBFS',
-                'db_status': 'FTBFS',
+                'status': Status.FTBFS,
                 'icon_link': '/index_FTBFS.html',
                 'query': 'no_notes',
                 'text': Template('$tot FTBFS packages in $suite/$arch, ordered by build date:')
             },
             {
-                'icon_status': 'blacklisted',
-                'db_status': 'blacklisted',
+                'status': Status.BLACKLISTED,
                 'icon_link': '/index_blacklisted.html',
                 'query': 'no_notes',
                 'text': Template('$tot blacklisted packages in $suite/$arch, ordered by name:')
@@ -627,24 +617,21 @@ pages = {
         'header_query': "SELECT COUNT(*) FROM sources WHERE suite='{suite}' AND architecture='{arch}' AND notify_maintainer = 1",
         'body': [
             {
-                'icon_status': 'FTBR',
-                'db_status': 'FTBR',
+                'status': Status.FTBR,
                 'icon_link': '/index_FTBR.html',
                 'query': 'notification',
                 'text': Template('$tot unreproducible packages in $suite/$arch:'),
                 'nosuite': True
             },
             {
-                'icon_status': 'FTBFS',
-                'db_status': 'FTBFS',
+                'status': Status.FTBFS,
                 'icon_link': '/index_FTBFS.html',
                 'query': 'notification',
                 'text': Template('$tot FTBFS packages in $suite/$arch:'),
                 'nosuite': True
             },
             {
-                'icon_status': 'reproducible',
-                'db_status': 'reproducible',
+                'status': Status.REPRODUCIBLE,
                 'icon_link': '/index_reproducible.html',
                 'query': 'notification',
                 'text': Template('$tot reproducible packages in $suite/$arch:'),
@@ -671,8 +658,7 @@ def build_leading_text_section(section, rows, suite, arch):
     except KeyError:
         no_icon_link = True  # to avoid closing the </a> tag below
     if section.get('icon_status'):
-        html += '<img src="/static/'
-        html += get_status_icon(section['icon_status'])[1]
+        html += '<img src="/static/' + section['icon_status']
         html += '" alt="reproducible icon" />'
     if not no_icon_link:
         html += '</a>'
@@ -712,8 +698,14 @@ def build_page_section(page, section, suite, arch):
             suite = defaultsuite
             arch = defaultarch
         if pages[page].get('notes') and pages[page]['notes']:
+            # FIXME normalize 'reproducible' with 'FTBR' in the db
+            db_status = section['status'].value.name
+            if db_status == 'FTBR': db_status = 'unreproducible'
             query = queries[section['query']].params({
-                'status': section['db_status'], 'suite': suite, 'arch': arch})
+                'status': db_status,
+                'suite': suite, 'arch': arch
+            })
+            section['icon_status'] = section['status'].value.icon
         else:
             query = queries[section['query']].params({'suite': suite, 'arch': arch})
         rows = query_db(query)
@@ -777,7 +769,7 @@ def build_page(page, suite=None, arch=None):
             else:
                 for suite in SUITES:
                     for arch in ARCHS:
-                        log.debug('global page §' + section['db_status'] +
+                        log.debug('global page §' + section['status'].name +
                                   ' in ' + page + ' for ' + suite + '/' + arch)
                         html += build_page_section(page, section, suite, arch)[0]
             footnote = True
