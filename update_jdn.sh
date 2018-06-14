@@ -597,7 +597,7 @@ else
 fi
 
 
-sudo mkdir -m 700 /var/lib/jenkins/.ssh
+sudo mkdir -p -m 700 /var/lib/jenkins/.ssh
 if [ "$HOSTNAME" = "jenkins" ] ; then
 	sudo -u jenkins install -m 600 jenkins-home/authorized_keys /var/lib/jenkins/.ssh/authorized_keys
 	sudo -u jenkins cp jenkins-home/procmailrc /var/lib/jenkins/.procmailrc
