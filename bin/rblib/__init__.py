@@ -59,15 +59,14 @@ def get_status_icon(status):
              'FTBR': 'weather-showers-scattered.png',
              '404': 'weather-severe-alert.png',
              'depwait': 'weather-snow.png',
-             'not for us': 'weather-few-clouds-night.png',
-             'not_for_us': 'weather-few-clouds-night.png',
+             'NFU': 'weather-few-clouds-night.png',
              'untested': 'weather-clear-night.png',
              'blacklisted': 'error.png'}
     spokenstatus = status
     if status == 'unreproducible':
             status = 'FTBR'
-    elif status == 'not for us':
-            status = 'not_for_us'
+    elif status in ('not for us', 'not_for_us'):
+            status = 'NFU'
     try:
         return (status, table[status], spokenstatus)
     except KeyError:

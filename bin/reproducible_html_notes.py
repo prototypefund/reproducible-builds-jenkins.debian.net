@@ -314,7 +314,7 @@ def gen_html_issue(issue, suite):
     )
     try:
         arch = 'amd64'
-        for status in ['unreproducible', 'FTBFS', 'not for us', 'blacklisted', 'reproducible', 'depwait']:
+        for status in ['unreproducible', 'FTBFS', 'NFU', 'blacklisted', 'reproducible', 'depwait']:
             pkgs = query_db(sql.where(sources.c.name.in_(issues_count[issue]))\
                    .params({'suite': suite, 'arch': arch, 'status': status}))
             pkgs = [p[0] for p in pkgs]

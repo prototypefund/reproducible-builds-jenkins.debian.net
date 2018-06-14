@@ -244,7 +244,7 @@ def create_pkgset_page_and_graphs(suite, arch, stats, pkgset_name):
     for (status, cutename, description) in status_cutename_descriptions:
         icon_html = ''
         if status == 'rest':
-            for s in ['depwait', 'blacklisted', 'not_for_us', '404']:
+            for s in ['depwait', 'blacklisted', 'NFU', '404']:
                 s, icon, spokenstatus = get_status_icon(s)
                 icon_html += gen_status_link_icon(s, None, icon, suite, arch)
         else:

@@ -634,6 +634,11 @@ schema_updates = {
         "ALTER TABLE schedule DROP COLUMN message",
         "ALTER TABLE stats_build DROP COLUMN schedule_message",
     ],
+    34: [ # rename status "not for us" to "NFU"
+        "UPDATE results SET status='NFU' WHERE status='not for us'",
+        "UPDATE stats_build SET status='NFU' WHERE status='not for us'",
+        "INSERT INTO rb_schema (version, date) VALUES (34, CURRENT_TIMESTAMP)",
+    ],
 }
 
 

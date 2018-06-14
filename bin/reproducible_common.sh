@@ -140,7 +140,7 @@ set_icon() {
 	case "$1" in
 		reproducible)		ICON=weather-clear.png
 					;;
-		unreproducible|FTBR)	ICON=weather-showers-scattered.png
+		FTBR)		ICON=weather-showers-scattered.png
 					STATE_TARGET_NAME="FTBR"
 					;;
 		FTBFS)			ICON=weather-storm.png
@@ -149,8 +149,8 @@ set_icon() {
 					;;
 		404)			ICON=weather-severe-alert.png
 					;;
-		not_for_us|"not for us")	ICON=weather-few-clouds-night.png
-					STATE_TARGET_NAME="not_for_us"
+		NFU|not_for_us|"not for us")	ICON=weather-few-clouds-night.png
+					STATE_TARGET_NAME="NFU"
 					;;
 		blacklisted)		ICON=error.png
 					;;

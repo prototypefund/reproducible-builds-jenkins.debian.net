@@ -156,7 +156,7 @@ update_db_and_html() {
 		query_db "INSERT INTO results (package_id, version, status, build_date, build_duration, node1, node2, job) VALUES ('$SRCPKGID', '$VERSION', '$STATUS', '$DATE', '$DURATION', '$NODE1', '$NODE2', '$JOB')" || \
 		query_db "INSERT INTO results (package_id, version, status, build_date, build_duration, node1, node2, job) VALUES ('$SRCPKGID', '$VERSION', '$STATUS', '$DATE', '$DURATION', '$NODE1', '$NODE2', '$JOB')"
 	fi
-	if [ ! -z "$DURATION" ] ; then  # this happens when not 404 and not_for_us
+	if [ ! -z "$DURATION" ] ; then  # this happens when not 404 and NFU
 		query_db "INSERT INTO stats_build (name, version, suite, architecture, status, build_date, build_duration, node1, node2, job) VALUES ('$SRCPACKAGE', '$VERSION', '$SUITE', '$ARCH', '$STATUS', '$DATE', '$DURATION', '$NODE1', '$NODE2', '$JOB')" || \
 		query_db "INSERT INTO stats_build (name, version, suite, architecture, status, build_date, build_duration, node1, node2, job) VALUES ('$SRCPACKAGE', '$VERSION', '$SUITE', '$ARCH', '$STATUS', '$DATE', '$DURATION', '$NODE1', '$NODE2', '$JOB')"
 	fi
@@ -226,12 +226,12 @@ handle_depwait() {
 	if [ -n "$NOTIFY" ] ; then NOTIFY="depwait" ; fi
 }
 
-handle_not_for_us() {
+handle_NFU() {
 	# a list of valid architecture for this package should be passed to this function
 	log_info "Package ${SRCPACKAGE} (${VERSION}) shall only be build on \"$(echo "$@" | xargs echo )\" and thus was skipped."
 	DURATION=0
 	update_rbuildlog
-	update_db_and_html "not for us"
+	update_db_and_html "NFU"
 	if [ $SAVE_ARTIFACTS -eq 1 ] ; then SAVE_ARTIFACTS=0 ; fi
 	if [ ! -z "$NOTIFY" ] ; then NOTIFY="failure" ; fi
 	exit 0 # RBUILDLOG and SAVE_ARTIFACTS and NOTIFY are used in cleanup_all called at exit
@@ -580,7 +580,7 @@ check_suitability() {
 		fi
 
 	done
-	if ! $SUITABLE ; then handle_not_for_us $ARCHITECTURES ; fi
+	if ! $SUITABLE ; then handle_NFU $ARCHITECTURES ; fi
 }
 
 first_build() {

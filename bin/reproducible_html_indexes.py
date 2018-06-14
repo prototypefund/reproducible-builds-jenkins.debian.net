@@ -281,7 +281,7 @@ queries = {
     "not_for_us_all":
         select_sources.where(
             and_(
-                results.c.status == 'not for us',
+                results.c.status == 'NFU',
 
             )
         ).order_by(
@@ -388,7 +388,7 @@ pages = {
         'title': 'Packages in {suite}/{arch} which should not be build on "{arch}"',
         'body': [
             {
-                'icon_status': 'not_for_us',
+                'icon_status': 'NFU',
                 'query': 'not_for_us_all',
                 'text': Template('$tot ($percent%) packages which should not be build in $suite/$arch:')
             }
@@ -420,7 +420,7 @@ pages = {
                 'text': Template('$tot packages ($percent%) failed to build from source in total $suite/$arch:')
             },
             {
-                'icon_status': 'not_for_us',
+                'icon_status': 'NFU',
                 'icon_link': '/index_not_for_us.html',
                 'query': 'not_for_us_all',
                 'text': Template('$tot ($percent%) packages which should not be build in $suite/$arch:')
@@ -563,8 +563,8 @@ pages = {
                 'text': Template('$tot ($percent%) source packages failed to satisfy their build-dependencies, ordered by build date:')
             },
             {
-                'icon_status': 'not_for_us',
-                'db_status': 'not for us',
+                'icon_status': 'NFU',
+                'db_status': 'NFU',
                 'icon_link': '/index_not_for_us.html',
                 'query': 'notes',
                 'nosuite': True,
