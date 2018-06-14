@@ -9,6 +9,8 @@ import json
 import os.path
 import functools
 import html as HTML
+from enum import Enum
+from collections import namedtuple
 
 from .const import (
     ARCHS,
@@ -37,6 +39,28 @@ def lazyproperty(fn):
         return getattr(self, attr_name)
 
     return _lazy
+
+
+class Status(Enum):
+    """
+    Values of the tuple:
+    name: computer-friendly name yet readable by humans.  Used in paths, db, …
+    spokenstatus: to be used in human-oriented strings
+    icon: file name of the icon representing the status
+    """
+    _status = namedtuple('Status', 'name, spokenstatus, icon')
+    REPRODUCIBLE = _status('reproducible', 'reproducible', 'weather-clear.png')
+    FTBFS = _status('FTBFS', 'FTBFS', 'weather-storm.png')
+    FTBR = _status('FTBR', 'unreproducible', 'weather-showers-scattered.png')
+    E404 = _status('E404', '404', 'weather-severe-alert.png')
+    DEPWAIT = _status('depwait', 'depwait', 'weather-snow.png')
+    NFU = _status('NFU', 'not for us', 'weather-few-clouds-night.png')
+    UNTESTED = _status('untested', 'untested', 'weather-clear-night.png')
+    BLACKLISTED = _status('blacklisted', 'blacklisted', 'error.png')
+
+    @classmethod
+    def get(cls, name):
+        return cls[name.upper()]
 
 
 class Bug:
