@@ -597,16 +597,13 @@ else
 fi
 
 
-sudo mkdir -p /var/lib/jenkins/.ssh
+sudo mkdir -m 700 /var/lib/jenkins/.ssh
 if [ "$HOSTNAME" = "jenkins" ] ; then
-	sudo cp jenkins-home/procmailrc /var/lib/jenkins/.procmailrc
-	sudo cp jenkins-home/authorized_keys /var/lib/jenkins/.ssh/authorized_keys
+	sudo -u jenkins install -m 600 jenkins-home/authorized_keys /var/lib/jenkins/.ssh/authorized_keys
+	sudo -u jenkins cp jenkins-home/procmailrc /var/lib/jenkins/.procmailrc
 else
 	sudo cp jenkins-nodes-home/authorized_keys /var/lib/jenkins/.ssh/authorized_keys
 fi
-sudo chown -R jenkins:jenkins /var/lib/jenkins/.ssh
-sudo chmod 700 /var/lib/jenkins/.ssh
-sudo chmod 600 /var/lib/jenkins/.ssh/authorized_keys
 explain "scripts and configurations for jenkins updated."
 
 if [ "$HOSTNAME" = "jenkins" ] ; then
