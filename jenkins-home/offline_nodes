@@ -1,0 +1,5 @@
+# The hosts listed below are known to be down atm.
+# No builds will be dispatched to those nodes, and the nodes will be marked
+# as offline in the jenkins UI.
+
+
