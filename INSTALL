@@ -105,7 +105,9 @@ Process to follow to add a new node to jenkins:
   * 'Usage': select "Only build jobs with label expressions matching this node"
   * 'Launch method': select "Launch agent via execution of command on the master"
      * 'Launch command': `/srv/jenkins/bin/start-slave.sh`
-  * 'Availability': select "Keep this agent online as much as possible"
+  * 'Availability': select "Take this agent online when in demand, and offline when idle"
+    * 'In demand delay': 0 (so that builds will start right away)
+    * 'Idle delay': 5 (this is an arbitrary amount of time)
 
 The slave setup is done so that the slave.jar program doesn't get run on the remote nodes,
 to avoid needing Java available in there.
