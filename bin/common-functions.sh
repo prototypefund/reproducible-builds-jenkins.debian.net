@@ -1,6 +1,8 @@
 #!/bin/bash
+# vim: set noexpandtab:
 
 # Copyright 2014-2017 Holger Levsen <holger@layer-acht.org>
+#         © 2018      Mattia Rizzolo <mattia@mapreri.org>
 # released under the GPLv=2
 
 common_cleanup() {
@@ -54,18 +56,17 @@ if [ "${0:0:5}" != "/tmp/" ] ; then
 		exit 1
 	fi
 	# abort certain jobs if we know they will fail due to certain bugs…
-	BLOCKER=848422
 	case $JOB_NAME in
 		#chroot-installation_*_install_design-desktop-*)
 		#	for BLOCKER in 869155 867695 ; do
 		#		abort_if_bug_is_still_open $BLOCKER
 		#	done ;;
-		chroot-installation_buster_install_parl-desktop*)
-			for BLOCKER in 886676 ; do
-				abort_if_bug_is_still_open $BLOCKER
-			done ;;
-		#dpkg_*_find_trigger_cycles)
-		#	abort_if_bug_is_still_open 874504 ;;
+		chroot-installation_sid_install_parl-desktop-eu)
+			abort_if_bug_is_still_open 886676 ;;
+		chroot-installation_sid_install_parl-desktop-world)
+			abort_if_bug_is_still_open 886676 ;;
+		chroot-installation_buster_install_parl-*)
+			abort_if_bug_is_still_open 886676 ;;
 		*) ;;
 	esac
 	# mktemp some place for us...
