@@ -722,8 +722,9 @@ def build_page_section(page, section, suite, arch):
         raise
     html = ''
     footnote = True if rows else False
-    if not rows:                            # there are no package in this set
-        log.debug('empty query: %s' % query)  # do not output anything.
+    if not rows: # there are no package in this set, do not output anything
+        log.debug('empty query: %s' %
+            query.compile(compile_kwargs={"literal_binds": True}))
         return (html, footnote)
     html += build_leading_text_section(section, rows, suite, arch)
     html += '<p>\n' + tab + '<code>\n'
