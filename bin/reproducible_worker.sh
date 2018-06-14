@@ -57,6 +57,15 @@ while true ; do
 		echo "The lockfile $LOCKFILE is present, thus stopping this"
 		break
 	fi
+	JENKINS_OFFLINE_LIST="/var/lib/jenkins/offline_nodes"
+	if [ -f "$JENKINS_OFFLINE_LIST" ]; then
+		for n in "$NODE1" "$NODE2"; do
+			if grep -q "$n" "$JENKINS_OFFLINE_LIST"; then
+				echo "$n is currently marked as offline, stopping the worker."
+				break
+			fi
+		done
+	fi
 
 	# sleep up to 2.3 seconds (additionally to the random sleep reproducible_build.sh does anyway)
 	/bin/sleep $(echo "scale=1 ; $(shuf -i 1-23 -n 1)/10" | bc )
