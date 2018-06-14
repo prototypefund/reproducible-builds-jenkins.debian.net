@@ -71,8 +71,8 @@ def get_status_icon(status):
     try:
         return (status, table[status], spokenstatus)
     except KeyError:
-        log.error('Status ' + status + ' not recognized')
-        return (status, '', spokenstatus)
+        log.exception('Status %s not recognized', status)
+        raise
 
 
 def get_trailing_bug_icon(bug, bugs, package=None):
