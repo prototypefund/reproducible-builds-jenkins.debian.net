@@ -6,7 +6,7 @@
 # from here, let's just hope all WORKSPACE have been set correctly
 NODE_NAME="$(basename ${WORKSPACE})"
 
-echo "Starting slave.jar for $NODE_NAME}..."
+echo "Starting slave.jar for ${NODE_NAME}..."
 
 f="/var/lib/jenkins/offline_nodes"
 if [ -f "$f" ]; then
