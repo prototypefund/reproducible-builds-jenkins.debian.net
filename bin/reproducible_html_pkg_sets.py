@@ -83,7 +83,7 @@ def gather_meta_stats(suite, arch, pkgset_name):
     stats['good'] = [t[0] for t in good]
     stats['count_good'] = len(stats['good'])
 
-    bad = query_db(root_query + "AND r.status = 'unreproducible'" +
+    bad = query_db(root_query + "AND r.status = 'FTBR'" +
                    "ORDER BY r.build_date;")
     stats['bad'] = [t[0] for t in bad]
     stats['count_bad'] = len(stats['bad'])
@@ -94,7 +94,7 @@ def gather_meta_stats(suite, arch, pkgset_name):
     stats['count_ugly'] = len(stats['ugly'])
 
     rest = query_db(root_query + "AND (r.status != 'FTBFS' AND " +
-                    "r.status != 'unreproducible' AND " +
+                    "r.status != 'FTBR' AND " +
                     "r.status != 'reproducible') ORDER BY r.build_date;")
     stats['rest'] = [t[0] for t in rest]
     stats['count_rest'] = len(stats['rest'])
@@ -234,7 +234,7 @@ def create_pkgset_page_and_graphs(suite, arch, stats, pkgset_name):
     pkgset_context['status_details'] = []
 
     status_cutename_descriptions = [
-        ('unreproducible', 'bad', 'failed to build reproducibly'),
+        ('FTBR', 'bad', 'failed to build reproducibly'),
         ('FTBFS', 'ugly', 'failed to build from source'),
         ('rest', 'rest',
          'are either in depwait state, blacklisted, not for us, or cannot be downloaded'),
@@ -259,7 +259,7 @@ def create_pkgset_page_and_graphs(suite, arch, stats, pkgset_name):
             'status_percent': stats["percent_" + cutename],
         }
 
-        if (status in ('reproducible', 'unreproducible') or
+        if (status in ('reproducible', 'FTBR') or
                 stats["count_" + cutename] != 0):
             pkgset_context['status_details'].append(details_context)
 
@@ -284,7 +284,7 @@ def create_pkgset_page_and_graphs(suite, arch, stats, pkgset_name):
 
 def create_pkgset_graph(png_file, suite, arch, pkgset_name):
     table = "stats_meta_pkg_state"
-    columns = ["datum", "reproducible", "unreproducible", "FTBFS", "other"]
+    columns = ["datum", "reproducible", "FTBR", "FTBFS", "other"]
     where = "WHERE suite = '%s' AND architecture = '%s' AND meta_pkg = '%s'" % \
             (suite, arch, pkgset_name)
     if arch == 'i386':

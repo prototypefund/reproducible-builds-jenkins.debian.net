@@ -40,7 +40,7 @@ for suite in SUITES:
             continue
         query = "SELECT s.name " + \
                 "FROM results AS r JOIN sources AS s ON r.package_id=s.id " + \
-                "WHERE r.status='unreproducible' AND s.suite='{suite}'"
+                "WHERE r.status='FTBR' AND s.suite='{suite}'"
         try:
             pkgs = [x[0] for x in query_db(query.format(suite=suite))]
         except IndexError:

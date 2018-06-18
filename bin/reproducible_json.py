@@ -88,8 +88,8 @@ for row in result:
             else:
                 if 'FTBFS' in [status1, status2]:
                     newstatus = 'FTBFS'
-                elif 'unreproducible' in [status1, status2]:
-                    newstatus = 'unreproducible'
+                elif 'FTBR' in [status1, status2]:
+                    newstatus = 'FTBR'
                 elif 'reproducible' in [status1, status2]:
                     newstatus = 'reproducible'
                 else:

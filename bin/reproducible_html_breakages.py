@@ -37,7 +37,7 @@ def unrep_with_dbd_issues():
     sources_without_dbd = set()
     query = '''SELECT s.name, r.version, s.suite, s.architecture
                FROM sources AS s JOIN results AS r ON r.package_id=s.id
-               WHERE r.status='unreproducible'
+               WHERE r.status='FTBR'
                ORDER BY s.name ASC, s.suite DESC, s.architecture ASC'''
     results = query_db(query)
     for pkg, version, suite, arch in results:
@@ -48,7 +48,7 @@ def unrep_with_dbd_issues():
             without_dbd.append((pkg, version, suite, arch))
             sources_without_dbd.add(pkg)
             log.warning(suite + '/' + arch + '/' + pkg + ' (' + version + ') is '
-                        'unreproducible without diffoscope file.')
+                        'FTBR without diffoscope file.')
         else:
             log.debug(dbd + ' found.')
             data = open(dbd, 'br').read(3)
@@ -72,7 +72,7 @@ def not_unrep_with_dbd_file():
     bad_pkgs = []
     query = '''SELECT s.name, r.version, s.suite, s.architecture
                FROM sources AS s JOIN results AS r ON r.package_id=s.id
-               WHERE r.status != 'unreproducible'
+               WHERE r.status != 'FTBR'
                ORDER BY s.name ASC, s.suite DESC, s.architecture ASC'''
     results = query_db(query)
     for pkg, version, suite, arch in results:
@@ -82,7 +82,7 @@ def not_unrep_with_dbd_file():
         if os.access(dbd, os.R_OK):
             bad_pkgs.append((pkg, version, suite, arch))
             log.warning(dbd + ' exists but ' + suite + '/' + arch + '/' + pkg + ' (' + version + ')'
-                        ' is not unreproducible.')
+                        ' is not FTBR.')
     return bad_pkgs
 
 
@@ -206,7 +206,7 @@ def alien_buildinfo():
                FROM sources AS s JOIN results AS r ON r.package_id=s.id
                WHERE r.status != '' AND s.name='{pkg}' AND s.suite='{suite}'
                AND s.architecture='{arch}'
-               AND r.status IN ('reproducible', 'unreproducible')
+               AND r.status IN ('reproducible', 'FTBR')
                ORDER BY s.name ASC, s.suite DESC, s.architecture ASC'''
     bad_files = []
     for root, dirs, files in os.walk(BUILDINFO_PATH):
@@ -382,10 +382,10 @@ def gen_html():
     # link artifacts
     html += '<br/> <a href="https://tests.reproducible-builds.org/debian/artifacts/">Artifacts diffoscope crashed</a> on are available for 48h for download.'
 
-    html += _gen_packages_html('are marked as unreproducible, but there is no ' +
+    html += _gen_packages_html('are marked as FTBR, but there is no ' +
                          'diffoscope output - so probably diffoscope ' +
                          'crashed:', without_dbd)
-    html += _gen_packages_html('are marked as unreproducible, but their ' +
+    html += _gen_packages_html('are marked as FTBR, but their ' +
                          'diffoscope output does not seem to be an html ' +
                          'file - so probably diffoscope ran into a ' +
                          'timeout:', bad_dbd)
@@ -402,7 +402,7 @@ def gen_html():
     html += _gen_files_html('history pages that should not be there and thus have been removed:',
                          entries=alien_history())
     # diffoscope reports where they shouldn't be
-    html += _gen_packages_html('are not marked as unreproducible, but they ' +
+    html += _gen_packages_html('are not marked as FTBR, but they ' +
                          'have a diffoscope file:', not_unrep_with_dbd_file())
     # missing files
     html += _gen_packages_html('have been built but don\'t have a buildlog:',

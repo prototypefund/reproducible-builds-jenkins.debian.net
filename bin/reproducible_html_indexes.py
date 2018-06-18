@@ -143,14 +143,14 @@ queries = {
         ),
     "FTBR_all":
         select_sources.where(
-            results.c.status == 'unreproducible',
+            results.c.status == 'FTBR',
         ).order_by(
             desc(results.c.build_date)
         ),
     "FTBR_last24h":
         select_sources.where(
             and_(
-                results.c.status == 'unreproducible',
+                results.c.status == 'FTBR',
                 results.c.build_date > timespan_date_map[24],
             )
         ).order_by(
@@ -159,7 +159,7 @@ queries = {
     "FTBR_last48h":
         select_sources.where(
             and_(
-                results.c.status == 'unreproducible',
+                results.c.status == 'FTBR',
                 results.c.build_date > timespan_date_map[48],
             )
         ).order_by(
@@ -167,7 +167,7 @@ queries = {
         ),
     "FTBR_all_abc":
         select_sources.where(
-            results.c.status == 'unreproducible',
+            results.c.status == 'FTBR',
         ).order_by(
             sources.c.name
         ),
@@ -541,7 +541,7 @@ pages = {
         'body': [
             {
                 'icon_status': 'FTBR',
-                'db_status': 'unreproducible',
+                'db_status': 'FTBR',
                 'icon_link': '/index_FTBR.html',
                 'query': 'notes',
                 'nosuite': True,
@@ -593,11 +593,11 @@ pages = {
         'notes_hint': True,
         'title': 'Packages without notes',
         'header': '<p>There are {tot} faulty packages without notes in {suite}/{arch}.{hint}</p>',
-        'header_query': "SELECT COUNT(*) FROM (SELECT s.id FROM sources AS s JOIN results AS r ON r.package_id=s.id WHERE r.status IN ('unreproducible', 'FTBFS', 'blacklisted') AND s.id NOT IN (SELECT package_id FROM notes) AND s.suite='{suite}' AND s.architecture='{arch}') AS tmp",
+        'header_query': "SELECT COUNT(*) FROM (SELECT s.id FROM sources AS s JOIN results AS r ON r.package_id=s.id WHERE r.status IN ('FTBR', 'FTBFS', 'blacklisted') AND s.id NOT IN (SELECT package_id FROM notes) AND s.suite='{suite}' AND s.architecture='{arch}') AS tmp",
         'body': [
             {
                 'icon_status': 'FTBR',
-                'db_status': 'unreproducible',
+                'db_status': 'FTBR',
                 'icon_link': '/index_FTBR.html',
                 'query': 'no_notes',
                 'text': Template('$tot unreproducible packages in $suite/$arch, ordered by build date:')
@@ -628,7 +628,7 @@ pages = {
         'body': [
             {
                 'icon_status': 'FTBR',
-                'db_status': 'unreproducible',
+                'db_status': 'FTBR',
                 'icon_link': '/index_FTBR.html',
                 'query': 'notification',
                 'text': Template('$tot unreproducible packages in $suite/$arch:'),

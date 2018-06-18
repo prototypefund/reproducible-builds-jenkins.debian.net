@@ -278,7 +278,7 @@ write_page_header() {
 		write_page "   <a href=\"$JENKINS_URL/userContent/about.html#_reproducible_builds_jobs\">jenkins.debian.net</a>."
 		write_page "   Thanks to <a href=\"https://www.profitbricks.co.uk\">Profitbricks</a> for donating the virtual machines this is running on!"
 		write_page "</ul>"
-		LATEST=$(query_db "SELECT s.name FROM results AS r JOIN sources AS s ON r.package_id = s.id WHERE r.status IN ('unreproducible') AND s.suite = 'unstable' AND s.architecture = 'amd64' AND s.id NOT IN (SELECT package_id FROM notes) ORDER BY build_date DESC LIMIT 23"|sort -R|head -1)
+		LATEST=$(query_db "SELECT s.name FROM results AS r JOIN sources AS s ON r.package_id = s.id WHERE r.status = 'FTBR' AND s.suite = 'unstable' AND s.architecture = 'amd64' AND s.id NOT IN (SELECT package_id FROM notes) ORDER BY build_date DESC LIMIT 23"|sort -R|head -1)
 		write_page "<form action=\"$REPRODUCIBLE_URL/redirect\" method=\"GET\">$REPRODUCIBLE_URL/"
 		write_page "<input type=\"text\" name=\"SrcPkg\" placeholder=\"Type my friend..\" value=\"$LATEST\" />"
 		write_page "<input type=\"submit\" value=\"submit source package name\" />"
@@ -723,10 +723,10 @@ create_png_from_table() {
 			 COALESCE(reproducible_buster,0) AS reproducible_buster,
 			 COALESCE(reproducible_unstable,0) AS reproducible_unstable,
 			 COALESCE(reproducible_experimental,0) AS reproducible_experimental,
-			 COALESCE(unreproducible_stretch,0) AS unreproducible_stretch,
-			 COALESCE(unreproducible_buster,0) AS unreproducible_buster,
-			 COALESCE(unreproducible_unstable,0) AS unreproducible_unstable,
-			 COALESCE(unreproducible_experimental,0) AS unreproducible_experimental,
+			 COALESCE(FTBR_stretch,0) AS FTBR_stretch,
+			 COALESCE(FTBR_buster,0) AS FTBR_buster,
+			 COALESCE(FTBR_unstable,0) AS FTBR_unstable,
+			 COALESCE(FTBR_experimental,0) AS FTBR_experimental,
 			 COALESCE(FTBFS_stretch,0) AS FTBFS_stretch,
 			 COALESCE(FTBFS_buster,0) AS FTBFS_buster,
 			 COALESCE(FTBFS_unstable,0) AS FTBFS_unstable,
@@ -740,10 +740,10 @@ create_png_from_table() {
 			 COALESCE((SELECT e.reproducible FROM stats_builds_per_day AS e WHERE s.datum=e.datum AND suite='buster' $WHERE_EXTRA),0) AS reproducible_buster,
 			 COALESCE((SELECT e.reproducible FROM stats_builds_per_day AS e WHERE s.datum=e.datum AND suite='unstable' $WHERE_EXTRA),0) AS reproducible_unstable,
 			 COALESCE((SELECT e.reproducible FROM stats_builds_per_day AS e WHERE s.datum=e.datum AND suite='experimental' $WHERE_EXTRA),0) AS reproducible_experimental,
-			 (SELECT e.unreproducible FROM stats_builds_per_day e WHERE s.datum=e.datum AND suite='stretch' $WHERE_EXTRA) AS unreproducible_stretch,
-			 (SELECT e.unreproducible FROM stats_builds_per_day e WHERE s.datum=e.datum AND suite='buster' $WHERE_EXTRA) AS unreproducible_buster,
-			 (SELECT e.unreproducible FROM stats_builds_per_day e WHERE s.datum=e.datum AND suite='unstable' $WHERE_EXTRA) AS unreproducible_unstable,
-			 (SELECT e.unreproducible FROM stats_builds_per_day e WHERE s.datum=e.datum AND suite='experimental' $WHERE_EXTRA) AS unreproducible_experimental,
+			 (SELECT e.FTBR FROM stats_builds_per_day e WHERE s.datum=e.datum AND suite='stretch' $WHERE_EXTRA) AS FTBR_stretch,
+			 (SELECT e.FTBR FROM stats_builds_per_day e WHERE s.datum=e.datum AND suite='buster' $WHERE_EXTRA) AS FTBR_buster,
+			 (SELECT e.FTBR FROM stats_builds_per_day e WHERE s.datum=e.datum AND suite='unstable' $WHERE_EXTRA) AS FTBR_unstable,
+			 (SELECT e.FTBR FROM stats_builds_per_day e WHERE s.datum=e.datum AND suite='experimental' $WHERE_EXTRA) AS FTBR_experimental,
 			 (SELECT e.FTBFS FROM stats_builds_per_day e WHERE s.datum=e.datum AND suite='stretch' $WHERE_EXTRA) AS FTBFS_stretch,
 			 (SELECT e.FTBFS FROM stats_builds_per_day e WHERE s.datum=e.datum AND suite='buster' $WHERE_EXTRA) AS FTBFS_buster,
 			 (SELECT e.FTBFS FROM stats_builds_per_day e WHERE s.datum=e.datum AND suite='unstable' $WHERE_EXTRA) AS FTBFS_unstable,
@@ -755,7 +755,7 @@ create_png_from_table() {
 			 FROM stats_builds_per_day AS s $WHERE2_EXTRA GROUP BY s.datum) as stats
 			ORDER BY datum" >> ${TABLE[$1]}.csv
 	elif [ $1 -eq 2 ] ; then
-		# just make a graph of the oldest reproducible build (ignore FTBFS and unreproducible)
+		# just make a graph of the oldest reproducible build (ignore FTBFS and FTBR)
 		query_to_csv "SELECT datum, oldest_reproducible FROM ${TABLE[$1]} ${WHERE_EXTRA} ORDER BY datum" >> ${TABLE[$1]}.csv
 	elif [ $1 -eq 7 ] ; then
 		query_to_csv "SELECT datum, $SUM_DONE, $SUM_OPEN from ${TABLE[3]} ORDER BY datum" >> ${TABLE[$1]}.csv

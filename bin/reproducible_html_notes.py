@@ -188,7 +188,7 @@ def load_notes():
                     "FROM results AS r JOIN sources AS s ON r.package_id=s.id " + \
                     "WHERE s.name='{pkg}' AND r.status != ''"
             query = query.format(pkg=package)
-            result = query_db(query)[0]
+            query_db(query)[0]  # just discard this result, we only care of its success
         except IndexError:
             log.warning("This query produces no results: " + query)
             log.warning("This means there is no tested package with the name " + package + ".")
@@ -314,7 +314,7 @@ def gen_html_issue(issue, suite):
     )
     try:
         arch = 'amd64'
-        for status in ['unreproducible', 'FTBFS', 'NFU', 'blacklisted', 'reproducible', 'depwait']:
+        for status in ['FTBR', 'FTBFS', 'NFU', 'blacklisted', 'reproducible', 'depwait']:
             pkgs = query_db(sql.where(sources.c.name.in_(issues_count[issue]))\
                    .params({'suite': suite, 'arch': arch, 'status': status}))
             pkgs = [p[0] for p in pkgs]
@@ -327,8 +327,8 @@ def gen_html_issue(issue, suite):
             affected += tab*5 + '<code>\n'
             pkgs_popcon = issues_popcon_annotate(pkgs)
             try:
-                for pkg, popcon, is_popular in sorted(pkgs_popcon, key=lambda x: x[0] in bugs):
-                    affected += tab*6 + Package(pkg).html_link(suite, arch, bugs, popcon, is_popular)
+                for pkg, popc_num, is_popular in sorted(pkgs_popcon, key=lambda x: x[0] in bugs):
+                    affected += tab*6 + Package(pkg).html_link(suite, arch, bugs, popc_num, is_popular)
             except ValueError:
                 pass
             affected += tab*5 + '</code>\n'

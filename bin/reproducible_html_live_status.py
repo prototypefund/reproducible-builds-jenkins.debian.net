@@ -49,7 +49,7 @@ def generate_schedule(arch):
         func.coalesce(func.avg(cast(stats_build.c.build_duration, Integer)), 0)
     ]).where(
         and_(
-            stats_build.c.status.in_(('reproducible', 'unreproducible')),
+            stats_build.c.status.in_(('reproducible', 'FTBR')),
             stats_build.c.name == sources.c.name,
             stats_build.c.suite == sources.c.suite,
             stats_build.c.architecture == sources.c.architecture,
@@ -108,7 +108,7 @@ def generate_live_status_table(arch):
         func.coalesce(func.avg(cast(stats_build.c.build_duration, Integer)), 0)
     ]).where(
         and_(
-            stats_build.c.status.in_(('reproducible', 'unreproducible')),
+            stats_build.c.status.in_(('reproducible', 'FTBR')),
             stats_build.c.name == sources.c.name,
             stats_build.c.suite == sources.c.suite,
             stats_build.c.architecture == sources.c.architecture,

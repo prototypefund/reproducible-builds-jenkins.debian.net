@@ -22,9 +22,9 @@ touch -d "$(date '+%Y-%m-%d') 00:00 UTC" $DUMMY_FILE
 NOTES_GIT_PATH="/var/lib/jenkins/jobs/reproducible_html_notes/workspace"
 
 # variables related to the stats we update
-FIELDS[0]="datum, reproducible, unreproducible, FTBFS, other, untested"
+FIELDS[0]="datum, reproducible, FTBR, FTBFS, other, untested"
 FIELDS[1]="datum"
-for i in reproducible unreproducible FTBFS other ; do
+for i in reproducible FTBR FTBFS other ; do
 	for j in $SUITES ; do
 		FIELDS[1]="${FIELDS[1]}, ${i}_${j}"
 	done
@@ -110,14 +110,14 @@ update_suite_arch_stats() {
 		ALL=$(query_db "SELECT count(name) FROM sources WHERE suite='${SUITE}' AND architecture='$ARCH'")
 		GOOD=$(query_db "SELECT count(r.status) FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite='$SUITE' AND s.architecture='$ARCH' AND r.status = 'reproducible' AND date(r.build_date)<='$DATE';")
 		GOOAY=$(query_db "SELECT count(r.status) FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite='$SUITE' AND s.architecture='$ARCH' AND r.status = 'reproducible' AND date(r.build_date)='$DATE';")
-		BAD=$(query_db "SELECT count(r.status) FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite='$SUITE' AND s.architecture='$ARCH' AND r.status = 'unreproducible' AND date(r.build_date)<='$DATE';")
-		BAAY=$(query_db "SELECT count(r.status) FROM results AS r JOIN sources AS s ON r.package_id=s.id  WHERE s.suite='$SUITE' AND s.architecture='$ARCH' AND r.status = 'unreproducible' AND date(r.build_date)='$DATE';")
+		BAD=$(query_db "SELECT count(r.status) FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite='$SUITE' AND s.architecture='$ARCH' AND r.status = 'FTBR' AND date(r.build_date)<='$DATE';")
+		BAAY=$(query_db "SELECT count(r.status) FROM results AS r JOIN sources AS s ON r.package_id=s.id  WHERE s.suite='$SUITE' AND s.architecture='$ARCH' AND r.status = 'FTBR' AND date(r.build_date)='$DATE';")
 		UGLY=$(query_db "SELECT count(r.status) FROM results AS r JOIN sources AS s ON r.package_id=s.id  WHERE s.suite='$SUITE' AND s.architecture='$ARCH' AND r.status = 'FTBFS' AND date(r.build_date)<='$DATE';")
 		UGLDAY=$(query_db "SELECT count(r.status) FROM results AS r JOIN sources AS s ON r.package_id=s.id  WHERE s.suite='$SUITE' AND s.architecture='$ARCH' AND r.status = 'FTBFS' AND date(r.build_date)='$DATE';")
-		REST=$(query_db "SELECT count(r.status) FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE (r.status != 'FTBFS' AND r.status != 'unreproducible' AND r.status != 'reproducible') AND s.suite='$SUITE' AND s.architecture='$ARCH' AND date(r.build_date)<='$DATE';")
-		RESDAY=$(query_db "SELECT count(r.status) FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE (r.status != 'FTBFS' AND r.status != 'unreproducible' AND r.status != 'reproducible') AND s.suite='$SUITE' AND s.architecture='$ARCH' AND date(r.build_date)='$DATE';")
+		REST=$(query_db "SELECT count(r.status) FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE (r.status != 'FTBFS' AND r.status != 'FTBR' AND r.status != 'reproducible') AND s.suite='$SUITE' AND s.architecture='$ARCH' AND date(r.build_date)<='$DATE';")
+		RESDAY=$(query_db "SELECT count(r.status) FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE (r.status != 'FTBFS' AND r.status != 'FTBR' AND r.status != 'reproducible') AND s.suite='$SUITE' AND s.architecture='$ARCH' AND date(r.build_date)='$DATE';")
 		OLDESTG=$(query_db "SELECT r.build_date FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE r.status = 'reproducible' AND s.suite='$SUITE' AND s.architecture='$ARCH' AND NOT date(r.build_date)>='$DATE' ORDER BY r.build_date LIMIT 1;")
-		OLDESTB=$(query_db "SELECT r.build_date FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite='$SUITE' AND s.architecture='$ARCH' AND r.status = 'unreproducible' AND NOT date(r.build_date)>='$DATE' ORDER BY r.build_date LIMIT 1;")
+		OLDESTB=$(query_db "SELECT r.build_date FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite='$SUITE' AND s.architecture='$ARCH' AND r.status = 'FTBR' AND NOT date(r.build_date)>='$DATE' ORDER BY r.build_date LIMIT 1;")
 		OLDESTU=$(query_db "SELECT r.build_date FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite='$SUITE' AND s.architecture='$ARCH' AND r.status = 'FTBFS' AND NOT date(r.build_date)>='$DATE' ORDER BY r.build_date LIMIT 1;")
 		# only if we have results…
 		if [ -n "$OLDESTG" ] ; then
@@ -192,7 +192,7 @@ gather_suite_arch_stats() {
 	AMOUNT=$(query_db "SELECT count(*) FROM sources WHERE suite='${SUITE}' AND architecture='$ARCH'")
 	COUNT_TOTAL=$(query_db "SELECT COUNT(*) FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite='$SUITE' AND s.architecture='$ARCH'")
 	COUNT_GOOD=$(query_db "SELECT COUNT(*) FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite='$SUITE' AND s.architecture='$ARCH' AND r.status='reproducible'")
-	COUNT_BAD=$(query_db "SELECT COUNT(s.name) FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite='$SUITE' AND s.architecture='$ARCH' AND r.status = 'unreproducible'")
+	COUNT_BAD=$(query_db "SELECT COUNT(s.name) FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite='$SUITE' AND s.architecture='$ARCH' AND r.status = 'FTBR'")
 	COUNT_UGLY=$(query_db "SELECT COUNT(s.name) FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite='$SUITE' AND s.architecture='$ARCH' AND r.status = 'FTBFS'")
 	COUNT_SOURCELESS=$(query_db "SELECT COUNT(s.name) FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite='$SUITE' AND s.architecture='$ARCH' AND r.status = '404'")
 	COUNT_NOTFORUS=$(query_db "SELECT COUNT(s.name) FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite='$SUITE' AND s.architecture='$ARCH' AND r.status = 'NFU'")
@@ -335,10 +335,10 @@ write_build_performance_stats() {
 	done
 	write_page "</tr><tr><td class=\"left\">oldest build result in stretch / buster / unstable / experimental</td>"
 	for ARCH in ${ARCHS} ; do
-		AGE_UNSTABLE=$(query_db "SELECT CAST(greatest(max(oldest_reproducible), max(oldest_unreproducible), max(oldest_FTBFS)) AS INTEGER) FROM ${TABLE[2]} WHERE suite='unstable' AND architecture='$ARCH' AND datum='$DATE'")
-		AGE_EXPERIMENTAL=$(query_db "SELECT CAST(greatest(max(oldest_reproducible), max(oldest_unreproducible), max(oldest_FTBFS)) AS INTEGER) FROM ${TABLE[2]} WHERE suite='experimental' AND architecture='$ARCH' AND datum='$DATE'")
-		AGE_STRETCH=$(query_db "SELECT CAST(greatest(max(oldest_reproducible), max(oldest_unreproducible), max(oldest_FTBFS)) AS INTEGER) FROM ${TABLE[2]} WHERE suite='stretch' AND architecture='$ARCH' AND datum='$DATE'")
-		AGE_BUSTER=$(query_db "SELECT CAST(greatest(max(oldest_reproducible), max(oldest_unreproducible), max(oldest_FTBFS)) AS INTEGER) FROM ${TABLE[2]} WHERE suite='buster' AND architecture='$ARCH' AND datum='$DATE'")
+		AGE_UNSTABLE=$(query_db "SELECT CAST(greatest(max(oldest_reproducible), max(oldest_FTBR), max(oldest_FTBFS)) AS INTEGER) FROM ${TABLE[2]} WHERE suite='unstable' AND architecture='$ARCH' AND datum='$DATE'")
+		AGE_EXPERIMENTAL=$(query_db "SELECT CAST(greatest(max(oldest_reproducible), max(oldest_FTBR), max(oldest_FTBFS)) AS INTEGER) FROM ${TABLE[2]} WHERE suite='experimental' AND architecture='$ARCH' AND datum='$DATE'")
+		AGE_STRETCH=$(query_db "SELECT CAST(greatest(max(oldest_reproducible), max(oldest_FTBR), max(oldest_FTBFS)) AS INTEGER) FROM ${TABLE[2]} WHERE suite='stretch' AND architecture='$ARCH' AND datum='$DATE'")
+		AGE_BUSTER=$(query_db "SELECT CAST(greatest(max(oldest_reproducible), max(oldest_FTBR), max(oldest_FTBFS)) AS INTEGER) FROM ${TABLE[2]} WHERE suite='buster' AND architecture='$ARCH' AND datum='$DATE'")
 		write_page "<td>$AGE_STRETCH / $AGE_BUSTER / $AGE_UNSTABLE / $AGE_EXPERIMENTAL days</td>"
 	done
 	write_page "</tr><tr><td class=\"left\">Build jobs configured</td>"
@@ -414,7 +414,7 @@ write_suite_arch_table() {
 	set_icon reproducible
 	write_icon
 	write_page "reproducible packages</th><th class=\"center\">"
-	set_icon unreproducible
+	set_icon FTBR
 	write_icon
 	write_page "unreproducible packages</th><th class=\"center\">"
 	set_icon FTBFS
@@ -460,7 +460,7 @@ create_suite_arch_stats_page() {
 	set_icon reproducible
 	write_icon
 	write_page "$COUNT_GOOD packages ($PERCENT_GOOD%) successfully built reproducibly in $SUITE/$ARCH.<br />"
-	set_icon unreproducible
+	set_icon FTBR
 	write_icon
 	write_page "$COUNT_BAD packages ($PERCENT_BAD%) failed to build reproducibly.<br />"
 	set_icon FTBFS
@@ -567,9 +567,9 @@ create_dashboard_page() {
 		gather_suite_arch_stats
 		TD_PKG_SID_ISSUES="$TD_PKG_SID_ISSUES<td>$(echo $COUNT_BAD + $COUNT_UGLY |bc) / $(echo $PERCENT_BAD + $PERCENT_UGLY|bc)%</td>"
 
-		RESULT=$(query_db "SELECT COUNT(*) FROM (SELECT s.id FROM sources AS s JOIN results AS r ON r.package_id=s.id WHERE r.status IN ('unreproducible', 'FTBFS', 'blacklisted') AND s.id NOT IN (SELECT package_id FROM notes) AND s.suite='$SUITE' AND s.architecture='$ARCH') tmp")
+		RESULT=$(query_db "SELECT COUNT(*) FROM (SELECT s.id FROM sources AS s JOIN results AS r ON r.package_id=s.id WHERE r.status IN ('FTBR', 'FTBFS', 'blacklisted') AND s.id NOT IN (SELECT package_id FROM notes) AND s.suite='$SUITE' AND s.architecture='$ARCH') tmp")
 		TD_PKG_SID_NOISSUES="$TD_PKG_SID_NOISSUES<td><a href=\"/debian/$SUITE/$ARCH/index_no_notes.html\">$RESULT</a> / $(echo "scale=1 ; ($RESULT*100/$COUNT_TOTAL)" | bc)%</td>"
-		RESULT=$(query_db "SELECT COUNT(*) FROM (SELECT s.id FROM sources AS s JOIN results AS r ON r.package_id=s.id WHERE r.status='unreproducible' AND s.id NOT IN (SELECT package_id FROM notes) AND s.suite='$SUITE' AND s.architecture='$ARCH') tmp")
+		RESULT=$(query_db "SELECT COUNT(*) FROM (SELECT s.id FROM sources AS s JOIN results AS r ON r.package_id=s.id WHERE r.status='FTBR' AND s.id NOT IN (SELECT package_id FROM notes) AND s.suite='$SUITE' AND s.architecture='$ARCH') tmp")
 		TD_PKG_SID_FTBR="$TD_PKG_SID_FTBR<td>$RESULT / $(echo "scale=1 ; ($RESULT*100/$COUNT_TOTAL)" | bc)%</td>"
 		RESULT=$(query_db "SELECT COUNT(*) FROM (SELECT s.id FROM sources AS s JOIN results AS r ON r.package_id=s.id WHERE r.status='FTBFS' AND s.id NOT IN (SELECT package_id FROM notes) AND s.suite='$SUITE' AND s.architecture='$ARCH') tmp")
 		TD_PKG_SID_FTBFS="$TD_PKG_SID_FTBFS<td>$RESULT / $(echo "scale=1 ; ($RESULT*100/$COUNT_TOTAL)" | bc)%</td>"
@@ -577,9 +577,9 @@ create_dashboard_page() {
 		SUITE="buster"
 		gather_suite_arch_stats
 		TD_PKG_BUSTER_ISSUES="$TD_PKG_BUSTER_ISSUES<td>$(echo $COUNT_BAD + $COUNT_UGLY |bc) / $(echo $PERCENT_BAD + $PERCENT_UGLY|bc)%</td>"
-		RESULT=$(query_db "SELECT COUNT(*) FROM (SELECT s.id FROM sources AS s JOIN results AS r ON r.package_id=s.id WHERE r.status IN ('unreproducible', 'FTBFS', 'blacklisted') AND s.id NOT IN (SELECT package_id FROM notes) AND s.suite='$SUITE' AND s.architecture='$ARCH') tmp")
+		RESULT=$(query_db "SELECT COUNT(*) FROM (SELECT s.id FROM sources AS s JOIN results AS r ON r.package_id=s.id WHERE r.status IN ('FTBR', 'FTBFS', 'blacklisted') AND s.id NOT IN (SELECT package_id FROM notes) AND s.suite='$SUITE' AND s.architecture='$ARCH') tmp")
 		TD_PKG_BUSTER_NOISSUES="$TD_PKG_BUSTER_NOISSUES<td><a href=\"/debian/$SUITE/$ARCH/index_no_notes.html\">$RESULT</a> / $(echo "scale=1 ; ($RESULT*100/$COUNT_TOTAL)" | bc)%</td>"
-		RESULT=$(query_db "SELECT COUNT(*) FROM (SELECT s.id FROM sources AS s JOIN results AS r ON r.package_id=s.id WHERE r.status='unreproducible' AND s.id NOT IN (SELECT package_id FROM notes) AND s.suite='$SUITE' AND s.architecture='$ARCH') tmp")
+		RESULT=$(query_db "SELECT COUNT(*) FROM (SELECT s.id FROM sources AS s JOIN results AS r ON r.package_id=s.id WHERE r.status='FTBR' AND s.id NOT IN (SELECT package_id FROM notes) AND s.suite='$SUITE' AND s.architecture='$ARCH') tmp")
 		TD_PKG_BUSTER_FTBR="$TD_PKG_BUSTER_FTBR<td>$RESULT / $(echo "scale=1 ; ($RESULT*100/$COUNT_TOTAL)" | bc)%</td>"
 		RESULT=$(query_db "SELECT COUNT(*) FROM (SELECT s.id FROM sources AS s JOIN results AS r ON r.package_id=s.id WHERE r.status='FTBFS' AND s.id NOT IN (SELECT package_id FROM notes) AND s.suite='$SUITE' AND s.architecture='$ARCH') tmp")
 		TD_PKG_BUSTER_FTBFS="$TD_PKG_BUSTER_FTBFS<td>$RESULT / $(echo "scale=1 ; ($RESULT*100/$COUNT_TOTAL)" | bc)%</td>"

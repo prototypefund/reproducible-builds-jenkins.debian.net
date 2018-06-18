@@ -112,7 +112,7 @@ def get_and_clean_dbd_links(package, eversion, suite, arch, status):
             'dbd_uri': links['dbd_uri'],
         }
     else:
-        if status == 'unreproducible' and not args.ignore_missing_files:
+        if status == 'FTBR' and not args.ignore_missing_files:
             log.critical(DISTRO_URL + '/' + suite + '/' + arch + '/' + package +
                          ' is unreproducible, but without diffoscope output.')
         # if there are no diffoscope results, we want to remove the old package
