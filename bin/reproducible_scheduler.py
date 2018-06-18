@@ -64,7 +64,7 @@ else:
 So, the 3rd step happens only when there are more than 350 packages queued up.
 
 
-LIMITS_404 defines how many packages with status 404 are rescheduled at max.
+LIMITS_E404 defines how many packages with status E404 are rescheduled at max.
 
 """
 # only old packages older than this will be rescheduled
@@ -204,8 +204,8 @@ LIMITS = {
         }
     }
 }
-# maximum amount of packages with status 404 which will be rescheduled
-LIMIT_404 = 255
+# maximum amount of packages with status E404 which will be rescheduled
+LIMIT_E404 = 255
 
 
 class Limit:
@@ -540,14 +540,14 @@ def query_old_versions(suite, arch, limit):
     print_schedule_result(suite, arch, criteria, packages)
     return packages
 
-def query_404_versions(suite, arch, limit):
-    criteria = """tested at least 12h ago, status 404,
+def query_e404_versions(suite, arch, limit):
+    criteria = """tested at least 12h ago, status E404,
                sorted by last build date"""
     date = (datetime.now()-timedelta(days=0.5)).strftime('%Y-%m-%d %H:%M')
     query = """SELECT s.id, s.name, max(r.build_date) max_date
                 FROM sources AS s JOIN results AS r ON s.id = r.package_id
                 WHERE s.suite='{suite}' AND s.architecture='{arch}'
-                AND r.status = '404'
+                AND r.status = 'E404'
                 AND r.build_date < '{date}'
                 AND s.id NOT IN (SELECT schedule.package_id FROM schedule)
                 GROUP BY s.id, s.name
@@ -657,18 +657,18 @@ def schedule_old_versions(arch, total):
         msg = ''
     return packages, msg
 
-def schedule_404_versions(arch, total):
+def schedule_e404_versions(arch, total):
     packages = {}
     for suite in SUITES:
-        log.info('Requesting 404 packages in %s/%s...',
+        log.info('Requesting E404 packages in %s/%s...',
                  suite, arch)
-        packages[suite] = query_404_versions(suite, arch, LIMIT_404)
+        packages[suite] = query_e404_versions(suite, arch, LIMIT_E404)
         log.info('Received ' + str(len(packages[suite])) +
-                 ' 404 packages in ' + suite + '/' + arch + ' to schedule.')
+                 ' E404 packages in ' + suite + '/' + arch + ' to schedule.')
         log.info('--------------------------------------------------------------')
     msg = add_up_numbers(packages, arch)
     if msg != '0':
-        msg += ' with status \'404\''
+        msg += ' with status \'E404\''
     else:
         msg = ''
     return packages, msg
@@ -692,7 +692,7 @@ def scheduler(arch):
         old_ftbfs, msg_old_ftbfs = empty_pkgs, ''
         old_depwait, msg_old_depwait = empty_pkgs, ''
         old, msg_old = empty_pkgs, ''
-        four04, msg_404 = empty_pkgs, ''
+        four04, msg_e404 = empty_pkgs, ''
     else:
         log.info(str(total) + ' packages already scheduled' +
                  ', scheduling some more...')
@@ -700,7 +700,7 @@ def scheduler(arch):
         new, msg_new = schedule_new_versions(arch, total+len(untested))
         old_ftbfs, msg_old_ftbfs = schedule_old_ftbfs_versions(arch, total+len(untested)+len(new))
         old_depwait, msg_old_depwait = schedule_old_depwait_versions(arch, total+len(untested)+len(new)+len(old_ftbfs))
-        four04, msg_404 = schedule_404_versions(arch, total+len(untested)+len(new)+len(old_ftbfs)+len(old_depwait))
+        four04, msg_e404 = schedule_e404_versions(arch, total+len(untested)+len(new)+len(old_ftbfs)+len(old_depwait))
         old, msg_old = schedule_old_versions(arch, total+len(untested)+len(new)+len(old_ftbfs)+len(old_depwait)+len(four04))
 
     now_queued_here = {}
@@ -734,8 +734,8 @@ def scheduler(arch):
         message += msg_untested + ', '
     if msg_new:
         message += msg_new + ', '
-    if msg_404:
-        message += msg_404 + ', '
+    if msg_e404:
+        message += msg_e404 + ', '
     if msg_old_ftbfs:
         message += msg_old_ftbfs + ', '
     if msg_old_depwait:

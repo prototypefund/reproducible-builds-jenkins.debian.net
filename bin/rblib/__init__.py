@@ -57,7 +57,7 @@ def get_status_icon(status):
     table = {'reproducible': 'weather-clear.png',
              'FTBFS': 'weather-storm.png',
              'FTBR': 'weather-showers-scattered.png',
-             '404': 'weather-severe-alert.png',
+             'E404': 'weather-severe-alert.png',
              'depwait': 'weather-snow.png',
              'NFU': 'weather-few-clouds-night.png',
              'untested': 'weather-clear-night.png',

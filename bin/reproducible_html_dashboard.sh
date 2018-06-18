@@ -194,7 +194,7 @@ gather_suite_arch_stats() {
 	COUNT_GOOD=$(query_db "SELECT COUNT(*) FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite='$SUITE' AND s.architecture='$ARCH' AND r.status='reproducible'")
 	COUNT_BAD=$(query_db "SELECT COUNT(s.name) FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite='$SUITE' AND s.architecture='$ARCH' AND r.status = 'FTBR'")
 	COUNT_UGLY=$(query_db "SELECT COUNT(s.name) FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite='$SUITE' AND s.architecture='$ARCH' AND r.status = 'FTBFS'")
-	COUNT_SOURCELESS=$(query_db "SELECT COUNT(s.name) FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite='$SUITE' AND s.architecture='$ARCH' AND r.status = '404'")
+	COUNT_SOURCELESS=$(query_db "SELECT COUNT(s.name) FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite='$SUITE' AND s.architecture='$ARCH' AND r.status = 'E404'")
 	COUNT_NOTFORUS=$(query_db "SELECT COUNT(s.name) FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite='$SUITE' AND s.architecture='$ARCH' AND r.status = 'NFU'")
 	COUNT_BLACKLISTED=$(query_db "SELECT COUNT(s.name) FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite='$SUITE' AND s.architecture='$ARCH' AND r.status = 'blacklisted'")
 	COUNT_DEPWAIT=$(query_db "SELECT COUNT(s.name) FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite='$SUITE' AND s.architecture='$ARCH' AND r.status = 'depwait'")
@@ -472,7 +472,7 @@ create_suite_arch_stats_page() {
 		write_page "$COUNT_DEPWAIT ($PERCENT_DEPWAIT%) source packages had build-depends which could not be satisfied.<br />"
 	fi
 	if [ $COUNT_SOURCELESS -gt 0 ] ; then
-		set_icon 404
+		set_icon E404
 		write_icon
 		write_page "$COUNT_SOURCELESS ($PERCENT_SOURCELESS%) source packages could not be downloaded.<br />"
 	fi

@@ -141,7 +141,7 @@ update_db_and_html() {
 		fi
 		if [ "$OLD_STATUS" != "$STATUS" ] && [ "$NOTIFY_MAINTAINER" -eq 1 ] && \
 		  [ "$OLD_STATUS" != "depwait" ] && [ "$STATUS" != "depwait" ] && \
-		  [ "$OLD_STATUS" != "404" ] && [ "$STATUS" != "404" ]; then
+		  [ "$OLD_STATUS" != "E404" ] && [ "$STATUS" != "E404" ]; then
 			# spool notifications and mail them once a day
 			mkdir -p /srv/reproducible-results/notification-emails
 			echo "$(date -u +'%Y-%m-%d %H:%M') $DEBIAN_URL/$SUITE/$ARCH/$SRCPACKAGE changed from $OLD_STATUS -> $STATUS" >> /srv/reproducible-results/notification-emails/$SRCPACKAGE
@@ -156,7 +156,7 @@ update_db_and_html() {
 		query_db "INSERT INTO results (package_id, version, status, build_date, build_duration, node1, node2, job) VALUES ('$SRCPKGID', '$VERSION', '$STATUS', '$DATE', '$DURATION', '$NODE1', '$NODE2', '$JOB')" || \
 		query_db "INSERT INTO results (package_id, version, status, build_date, build_duration, node1, node2, job) VALUES ('$SRCPKGID', '$VERSION', '$STATUS', '$DATE', '$DURATION', '$NODE1', '$NODE2', '$JOB')"
 	fi
-	if [ ! -z "$DURATION" ] ; then  # this happens when not 404 and NFU
+	if [ ! -z "$DURATION" ] ; then  # this happens when not E404 and NFU
 		query_db "INSERT INTO stats_build (name, version, suite, architecture, status, build_date, build_duration, node1, node2, job) VALUES ('$SRCPACKAGE', '$VERSION', '$SUITE', '$ARCH', '$STATUS', '$DATE', '$DURATION', '$NODE1', '$NODE2', '$JOB')" || \
 		query_db "INSERT INTO stats_build (name, version, suite, architecture, status, build_date, build_duration, node1, node2, job) VALUES ('$SRCPACKAGE', '$VERSION', '$SUITE', '$ARCH', '$STATUS', '$DATE', '$DURATION', '$NODE1', '$NODE2', '$JOB')"
 	fi
@@ -203,13 +203,13 @@ diff_copy_buildlogs() {
 	fi
 }
 
-handle_404() {
+handle_E404() {
 	log_warning "Download of ${SRCPACKAGE} sources from ${SUITE} failed."
 	ls -l ${SRCPACKAGE}* | log_file -
 	log_warning "Maybe there was a network problem, or ${SRCPACKAGE} is not a source package in ${SUITE}, or it was removed or renamed. Please investigate. Sleeping 30m as this should not happen."
 	DURATION=0
 	update_rbuildlog
-	update_db_and_html "404"
+	update_db_and_html "E404"
 	if [ $SAVE_ARTIFACTS -eq 1 ] ; then SAVE_ARTIFACTS=0 ; fi
 	if [ ! -z "$NOTIFY" ] ; then NOTIFY="failure" ; fi
 	sleep 30m
@@ -550,9 +550,9 @@ get_source_package() {
 	download_again_if_needed # yes, this is called three times. this should really not happen
 	if [ "$(ls ${SRCPACKAGE}_${EVERSION}.dsc 2> /dev/null)" = "" ] || [ ! -z "$PARSED_RESULT" ] ; then
 		if [ "$MODE" = "master" ] ; then
-			handle_404
+			handle_E404
 		else
-			exit 404
+			exit E404
 		fi
 	fi
 }
@@ -739,7 +739,7 @@ remote_build() {
 	RESULT=$?
 	# 404-256=148... (ssh 'really' only 'supports' exit codes below 255...)
 	if [ $RESULT -eq 148 ] ; then
-		handle_404
+		handle_E404
 	elif [ $RESULT -eq 100 ] ; then
 		log_error "Version mismatch between main node and build $BUILDNR, aborting. Please upgrade the schroots..."
 		# reschedule the package for later and quit the build without saving anything

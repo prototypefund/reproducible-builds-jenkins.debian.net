@@ -235,15 +235,15 @@ queries = {
         ).order_by(
             desc(results.c.build_date)
         ),
-    "404_all":
+    "E404_all":
         select_sources.where(
-            results.c.status == '404',
+            results.c.status == 'E404',
         ).order_by(
             desc(results.c.build_date)
         ),
-    "404_all_abc":
+    "E404_all_abc":
         select_sources.where(
-            results.c.status == '404',
+            results.c.status == 'E404',
         ).order_by(
             sources.c.name
         ),
@@ -368,8 +368,8 @@ pages = {
         'title': 'Packages in {suite}/{arch} where the sources failed to download',
         'body': [
             {
-                'icon_status': '404',
-                'query': '404_all',
+                'icon_status': 'E404',
+                'query': 'E404_all',
                 'text': Template('$tot ($percent%) packages where the sources failed to download in $suite/$arch:')
             }
         ]
@@ -426,9 +426,9 @@ pages = {
                 'text': Template('$tot ($percent%) packages which should not be build in $suite/$arch:')
             },
             {
-                'icon_status': '404',
+                'icon_status': 'E404',
                 'icon_link': '/index_404.html',
-                'query': '404_all_abc',
+                'query': 'E404_all_abc',
                 'text': Template('$tot ($percent%) source packages could not be downloaded in $suite/$arch:')
             },
             {

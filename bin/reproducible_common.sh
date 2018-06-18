@@ -147,7 +147,7 @@ set_icon() {
 					;;
 		depwait)		ICON=weather-snow.png
 					;;
-		404)			ICON=weather-severe-alert.png
+		E404)			ICON=weather-severe-alert.png
 					;;
 		NFU|not_for_us|"not for us")	ICON=weather-few-clouds-night.png
 					STATE_TARGET_NAME="NFU"
