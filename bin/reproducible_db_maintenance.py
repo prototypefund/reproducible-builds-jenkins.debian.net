@@ -637,7 +637,6 @@ schema_updates = {
     34: [ # rename status "not for us" to "NFU"
         "UPDATE results SET status='NFU' WHERE status='not for us'",
         "UPDATE stats_build SET status='NFU' WHERE status='not for us'",
-        "INSERT INTO rb_schema (version, date) VALUES (34, CURRENT_TIMESTAMP)",
     ],
     35: [ # rename status "unreproducible" to "FTBR"
         "UPDATE results SET status='FTBR' WHERE status='unreproducible'",
@@ -647,12 +646,10 @@ schema_updates = {
         "ALTER TABLE stats_builds_per_day RENAME COLUMN unreproducible to FTBR",
         "ALTER TABLE stats_builds_age " + \
          "RENAME COLUMN oldest_unreproducible to oldest_FTBR",
-        "INSERT INTO rb_schema (version, date) VALUES (35, CURRENT_TIMESTAMP)",
     ],
     36: [ # rename status "404" to "E404"
         "UPDATE results SET status='E404' WHERE status='404'",
         "UPDATE stats_build SET status='E404' WHERE status='404'",
-        "INSERT INTO rb_schema (version, date) VALUES (36, CURRENT_TIMESTAMP)",
     ],
 }
 
