@@ -31,8 +31,8 @@ from rblib.const import (
     NOTES_PATH, NOTES_URI,
     DBDTXT_PATH, DBDTXT_URI,
     DBD_PATH, DBD_URI,
-    DIFFS_PATH, DIFFS_URI,
-    LOGS_PATH, LOGS_URI,
+#    DIFFS_PATH, DIFFS_URI,
+#    LOGS_PATH, LOGS_URI,
 )
 
 
@@ -291,7 +291,7 @@ def gen_history_page(package, arch=None):
 
     context = {}
     try:
-        head = package.history[0]
+        package.history[0]  # we don't care about the actual value, it jst need to exist
     except IndexError:
         context['arch'] = arch
     else:
