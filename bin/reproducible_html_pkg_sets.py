@@ -19,10 +19,10 @@ from datetime import datetime, timedelta
 from subprocess import check_call
 from collections import OrderedDict
 
-from rblib import query_db, get_status_icon
+from rblib import query_db
 from rblib.bugs import Bugs
 from rblib.confparse import log
-from rblib.models import Package
+from rblib.models import Package, Status
 from rblib.utils import create_temp_file
 from rblib.html import create_main_navigation, write_html_page, gen_status_link_icon
 from rblib.const import (
@@ -244,12 +244,14 @@ def create_pkgset_page_and_graphs(suite, arch, stats, pkgset_name):
     for (status, cutename, description) in status_cutename_descriptions:
         icon_html = ''
         if status == 'rest':
-            for s in ['depwait', 'blacklisted', 'NFU', 'E404']:
-                s, icon, spokenstatus = get_status_icon(s)
-                icon_html += gen_status_link_icon(s, None, icon, suite, arch)
+            for x in ['depwait', 'blacklisted', 'NFU', 'E404']:
+                s = Status.get(x)
+                icon_html += gen_status_link_icon(
+                    s.value.name, None, s.value.icon, suite, arch)
         else:
-            status, icon, spokenstatus = get_status_icon(status)
-            icon_html = gen_status_link_icon(status, None, icon, suite, arch)
+            s = Status.get(status)
+            icon_html += gen_status_link_icon(
+                s.value.name, None, s.value.icon, suite, arch)
 
         details_context = {
             'icon_html': icon_html,
