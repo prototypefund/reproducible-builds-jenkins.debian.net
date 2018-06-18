@@ -18,7 +18,7 @@ from datetime import datetime
 from rblib import query_db
 from rblib.confparse import log
 from rblib.const import DB_METADATA
-from rblib.utils import print_critiacal_message
+from rblib.utils import print_critical_message
 
 now = datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
 
@@ -682,8 +682,8 @@ def db_update():
     if current == last:
         return False
     if current > last:
-        print_critiacal_message('The active database schema is higher than' +
-                                '  the last update available.\nPlease check!')
+        print_critical_message('The active database schema is higher than' +
+                               '  the last update available.\nPlease check!')
         sys.exit(1)
     log.info('Found schema updates.')
     for update in range(current+1, last+1):
