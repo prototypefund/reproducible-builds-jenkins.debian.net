@@ -14,10 +14,11 @@
 import re
 import sys
 from datetime import datetime
+from sqlalchemy.orm import sessionmaker
 
 from rblib import query_db
 from rblib.confparse import log
-from rblib.const import DB_METADATA
+from rblib.const import DB_ENGINE, DB_METADATA
 from rblib.utils import print_critical_message
 
 now = datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
@@ -686,12 +687,15 @@ def db_update():
                                '  the last update available.\nPlease check!')
         sys.exit(1)
     log.info('Found schema updates.')
+    Session = sessionmaker(bind=DB_ENGINE, autocommit=True)
+    session = Session()
     for update in range(current+1, last+1):
         log.info('Applying database update #' + str(update) + '. Queries:')
         startTime = datetime.now()
-        for query in schema_updates[update]:
-            log.info('\t' + query)
-            query_db(query)
+        with session.begin():
+            for query in schema_updates[update]:
+                log.info('\t' + query)
+                session.execute(query)
         log.info(str(len(schema_updates[update])) + ' queries executed in ' +
                  str(datetime.now() - startTime))
     return True
