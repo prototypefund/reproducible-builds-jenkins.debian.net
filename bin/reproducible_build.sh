@@ -116,6 +116,8 @@ cleanup_all() {
 		irc_message debian-reproducible "$DEBIAN_URL/$SUITE/$ARCH/$SRCPACKAGE done: $STATUS"
 	elif [ "$NOTIFY" = "diffoscope" ] ; then
 			irc_message debian-reproducible-changes "$DEBIAN_URL/$SUITE/$ARCH/$SRCPACKAGE $STATUS and $DIFFOSCOPE failed"
+	elif [ "$NOTIFY" = "0" ]; then
+		:
 	elif [ ! -z "$NOTIFY" ] ; then
 		# a weird value of $NOTIFY that we don't know about
 		irc_message debian-reproducible-changes "$DEBIAN_URL/$SUITE/$ARCH/$SRCPACKAGE done: $STATUS debug: $NOTIFY"
