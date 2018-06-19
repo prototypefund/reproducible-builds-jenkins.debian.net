@@ -20,13 +20,13 @@ import pystache
 from string import Template
 from collections import OrderedDict
 from math import sqrt
-from rblib.models import Package
-from rblib.bugs import Bugs
 from reproducible_html_packages import gen_packages_html
 from reproducible_html_indexes import build_page
 from sqlalchemy import select, and_, bindparam
 
-from rblib import query_db, get_status_icon, db_table, get_trailing_bug_icon
+from rblib import query_db, db_table, get_trailing_bug_icon
+from rblib.models import Package, Status
+from rblib.bugs import Bugs
 from rblib.confparse import log
 from rblib.html import tab, create_main_navigation, write_html_page
 from rblib.const import (
@@ -321,7 +321,8 @@ def gen_html_issue(issue, suite):
             if not pkgs:
                 continue
             affected += tab*4 + '<p>\n'
-            affected += tab*5 + '<img src="/static/' + get_status_icon(status)[1] + '"'
+            icon = Status.get(status).value.icon
+            affected += tab*5 + '<img src="/static/{}"'.format(icon)
             affected += ' alt="' + status + ' icon" />\n'
             affected += tab*5 + str(len(pkgs)) + ' ' + status + ' packages in ' + suite + '/' + arch +':\n'
             affected += tab*5 + '<code>\n'
