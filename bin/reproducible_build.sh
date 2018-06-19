@@ -5,6 +5,12 @@
 #         © 2015-2018 Mattia Rizzolo <mattia@debian.org>
 # released under the GPLv=2
 
+# Exit status of this script:
+# - when run in remote mode:
+#   - 2 → the build failed
+#   - 3 → the build timeouted
+#   - 404 → failed to download the sources
+
 DEBUG=false
 . /srv/jenkins/bin/common-functions.sh
 common_init "$@"
@@ -239,9 +245,11 @@ handle_NFU() {
 }
 
 handle_ftbfs() {
-	if ! "$DEBUG" ; then set +x ; fi
-	local BUILD
 	echo "${SRCPACKAGE} failed to build from source."
+	cleanup_pkg_files
+	diff_copy_buildlogs
+	update_rbuildlog
+	local BUILD NEEDLE
 	for BUILD in "1" "2"; do
 		local nodevar="NODE$BUILD"
 		local node=""
@@ -283,6 +291,8 @@ handle_ftbfs() {
 	update_db_and_html "FTBFS"
 	if [ $SAVE_ARTIFACTS -eq 1 ] ; then SAVE_ARTIFACTS=0 ; fi
 	if [ ! -z "$NOTIFY" ] ; then NOTIFY="failure" ; fi
+	print_out_duration
+	exit 0
 }
 
 handle_ftbr() {
@@ -590,7 +600,6 @@ first_build() {
 	echo "Date:     $(date)"
 	echo "Date UTC: $(date -u)"
 	echo "============================================================================="
-	set -x
 	local TMPCFG=$(mktemp -t pbuilderrc_XXXX --tmpdir=$TMPDIR)
 	cat > "$TMPCFG" << EOF
 BUILDUSERID=1111
@@ -620,14 +629,20 @@ EOF
 		--logfile b1/build.log \
 		${SRCPACKAGE}_${EVERSION}.dsc
 	) 2>&1 | log_file -
-	PRESULT=${PIPESTATUS[0]}
-	if [ $PRESULT -eq 124 ] ; then
-		msg="pbuilder was killed by timeout after 18h."
-		log_error "$msg"
-		echo "$(date -u) - $msg" | tee -a b1/build.log
-	fi
+	local PRESULT=${PIPESTATUS[0]}
 	if ! "$DEBUG" ; then set +x ; fi
 	rm $TMPCFG
+	case $PRESULT in
+		124)
+			msg="pbuilder was killed by timeout after 18h."
+			log_error "$msg"
+			echo "$(date -u) - $msg" | tee -a b1/build.log
+			exit 3
+			;;
+		1)  # FTBFS, for whatever reason.
+			exit 2
+			;;
+	esac
 }
 
 second_build() {
@@ -689,13 +704,20 @@ EOF
 			--buildresult $TMPDIR/b2 \
 			--logfile b2/build.log \
 			${SRCPACKAGE}_${EVERSION}.dsc
-	PRESULT=$?
+	local PRESULT=$?
 	set -e
-	if [ $PRESULT -eq 124 ] ; then
-		echo "$(date -u) - pbuilder was killed by timeout after 24h." | tee -a b2/build.log
-	fi
 	if ! "$DEBUG" ; then set +x ; fi
 	rm $TMPCFG
+	case $PRESULT in
+		124)
+			echo "$(date -u) - pbuilder was killed by timeout after 24h." | tee -a b2/build.log
+			exit 3
+			;;
+		1)  # FTBFS, for whatever reason.
+			exit 2
+			;;
+	esac
+
 }
 
 check_node_is_up() {
@@ -741,6 +763,9 @@ remote_build() {
 	case $RESULT in
 		148)  # 404-256=148... (ssh 'really' only 'supports' exit codes below 255...)
 			handle_E404
+			;;
+		2|3)
+			handle_ftbfs
 			;;
 		0)  # build succcessfully completed
 			;;
@@ -843,23 +868,15 @@ share_buildinfo() {
 }
 
 build_rebuild() {
-	FTBFS=1
 	CHANGES="${SRCPACKAGE}_${EVERSION}_${ARCH}.changes" # changes file with expected version
 	mkdir b1 b2
 	log_info "Starting 1st build on remote node $NODE1."
 	remote_build 1 $NODE1
-	if [ -f b1/$CHANGES ] ; then
-		log_info "1st build successful. Starting 2nd build on remote node $NODE2."
-		remote_build 2 $NODE2
-		if [ -f b2/$CHANGES ] ; then
-			# both builds were fine, i.e., they did not FTBFS.
-			FTBFS=0
-			log_info "$CHANGES:"
-			log_file b1/$CHANGES
-		else
-			log_error "the second build failed, even though the first build was successful."
-		fi
-	fi
+	log_info "1st build successful. Starting 2nd build on remote node $NODE2."
+	remote_build 2 $NODE2
+	# both builds were fine, i.e., they did not FTBFS.
+	log_info "$CHANGES:"
+	log_file b1/$CHANGES
 }
 
 #
@@ -933,18 +950,12 @@ log_info "${SRCPACKAGE}_${EVERSION}.dsc"
 log_file ${SRCPACKAGE}_${EVERSION}.dsc
 
 check_suitability
-build_rebuild  # defines FTBFS, CHANGES redefines RBUILDLOG
-if [ $FTBFS -eq 0 ] ; then
-	check_installed_build_depends
-fi
+build_rebuild  # defines CHANGES redefines RBUILDLOG
+check_installed_build_depends
 cleanup_pkg_files
 diff_copy_buildlogs
 update_rbuildlog
-if [ $FTBFS -eq 1 ] ; then
-	handle_ftbfs
-elif [ $FTBFS -eq 0 ] ; then
-	filter_changes_files
-	call_diffoscope_on_changes_files  # defines DIFFOSCOPE, update_db_and_html defines STATUS
-	share_buildinfo
-fi
+filter_changes_files
+call_diffoscope_on_changes_files  # defines DIFFOSCOPE, update_db_and_html defines STATUS
+share_buildinfo
 print_out_duration
