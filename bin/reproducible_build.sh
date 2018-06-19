@@ -101,6 +101,7 @@ save_artifacts() {
 
 cleanup_all() {
 	echo "Starting cleanup."
+	cd  # move out of $TMPDIR, if we are still inside
 	if [ "$SAVE_ARTIFACTS" = "1" ] ; then
 		save_artifacts  # this will also notify IRC as needed
 	elif [ "$NOTIFY" = "2" ] ; then
@@ -947,8 +948,3 @@ elif [ $FTBFS -eq 0 ] ; then
 	share_buildinfo
 fi
 print_out_duration
-
-cd ..
-cleanup_all
-trap - INT TERM EXIT
-
