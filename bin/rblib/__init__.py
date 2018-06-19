@@ -53,27 +53,6 @@ def query_db(query, *args, **kwargs):
         return None
 
 
-def get_status_icon(status):
-    table = {'reproducible': 'weather-clear.png',
-             'FTBFS': 'weather-storm.png',
-             'FTBR': 'weather-showers-scattered.png',
-             'E404': 'weather-severe-alert.png',
-             'depwait': 'weather-snow.png',
-             'NFU': 'weather-few-clouds-night.png',
-             'untested': 'weather-clear-night.png',
-             'blacklisted': 'error.png'}
-    spokenstatus = status
-    if status == 'unreproducible':
-            status = 'FTBR'
-    elif status in ('not for us', 'not_for_us'):
-            status = 'NFU'
-    try:
-        return (status, table[status], spokenstatus)
-    except KeyError:
-        log.exception('Status %s not recognized', status)
-        raise
-
-
 def get_trailing_bug_icon(bug, bugs, package=None):
     html = ''
     if not package:
