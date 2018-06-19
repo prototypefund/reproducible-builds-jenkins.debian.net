@@ -16,9 +16,9 @@ import pystache
 import apt_pkg
 apt_pkg.init_system()
 
-from rblib import query_db, get_status_icon
+from rblib import query_db
 from rblib.confparse import log, args
-from rblib.models import Package
+from rblib.models import Package, Status
 from rblib.utils import strip_epoch, convert_into_hms_string
 from rblib.html import gen_status_link_icon, write_html_page
 from rblib.const import (
@@ -236,7 +236,7 @@ def gen_suitearch_section(package, current_suite, current_arch):
                     final_status, final_version, status, version)
 
             build_date = package.builds[s][a].build_date
-            status, icon, spokenstatus = get_status_icon(status)
+            status = Status.get(status)
 
             if not (build_date and status != 'blacklisted'):
                 build_date = ''
@@ -249,21 +249,22 @@ def gen_suitearch_section(package, current_suite, current_arch):
             suitearch_details_html = ''
             if (s == current_suite and a == current_arch):
                 suitearch_details_html, default_view = gen_suitearch_details(
-                    package.name, version, s, a, status, spokenstatus, build_date)
+                    package.name, version, s, a,
+                    status.value.name, status.value.spokenstatus, build_date)
 
             dbd_links = get_dbd_links(package.name, strip_epoch(version), s, a)
             dbd_page_uri = dbd_links.get('dbd_page_uri', '')
             suites.append({
                 'package': package.name,
-                'status': status,
+                'status': status.value.name,
                 'version': version,
                 'build_date': build_date,
-                'icon': icon,
-                'spokenstatus': spokenstatus,
+                'icon': status.value.icon,
+                'spokenstatus': status.value.spokenstatus,
                 'li_classes': ' '.join(li_classes),
                 'arch': a,
                 'suite': s,
-                'untested': status == 'untested',
+                'untested': status == Status.UNTESTED,
                 'current_suitearch': s == current_suite and a == current_arch,
                 'package_uri': package_uri,
                 'suitearch_details_html': suitearch_details_html,
@@ -307,9 +308,10 @@ def gen_history_page(package, arch=None):
             record['node1'] = shorten_if_debiannet(record['node1'])
             record['node2'] = shorten_if_debiannet(record['node2'])
             # add icon to result
-            status, icon, spokenstatus = get_status_icon(record['result'])
-            result_html = spokenstatus + ' <img src="/static/{icon}" alt="{spokenstatus}" title="{spokenstatus}"/>'
-            record['result'] = result_html.format(icon=icon, spokenstatus=spokenstatus)
+            status = Status.get(record['result'])
+            result_html = '{spokenstatus}<img src="/static/{icon}" alt="{spokenstatus}" title="{spokenstatus}"/>'
+            record['result'] = result_html.format(
+                icon=status.value.icon, spokenstatus=status.value.spokenstatus)
             # human formatting of build duration
             record['build duration'] = convert_into_hms_string(
                 int(record['build duration']))
