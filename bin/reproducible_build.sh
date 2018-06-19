@@ -110,17 +110,20 @@ cleanup_all() {
 	cd  # move out of $TMPDIR, if we are still inside
 	if [ "$SAVE_ARTIFACTS" = "1" ] ; then
 		save_artifacts  # this will also notify IRC as needed
-	elif [ "$NOTIFY" = "2" ] ; then
-		irc_message debian-reproducible "$DEBIAN_URL/$SUITE/$ARCH/$SRCPACKAGE done: $STATUS debug: $NOTIFY"
-	elif [ "$NOTIFY" = "1" ] ; then
-		irc_message debian-reproducible "$DEBIAN_URL/$SUITE/$ARCH/$SRCPACKAGE done: $STATUS"
-	elif [ "$NOTIFY" = "diffoscope" ] ; then
-			irc_message debian-reproducible-changes "$DEBIAN_URL/$SUITE/$ARCH/$SRCPACKAGE $STATUS and $DIFFOSCOPE failed"
-	elif [ "$NOTIFY" = "0" ]; then
-		:
-	elif [ ! -z "$NOTIFY" ] ; then
-		# a weird value of $NOTIFY that we don't know about
-		irc_message debian-reproducible-changes "$DEBIAN_URL/$SUITE/$ARCH/$SRCPACKAGE done: $STATUS debug: $NOTIFY"
+	else
+		case "$NOTIFY" in
+			0) ;;
+			1|2)
+				irc_message debian-reproducible "$DEBIAN_URL/$SUITE/$ARCH/$SRCPACKAGE done: $STATUS"
+				;;
+			diffoscope)
+				irc_message debian-reproducible-changes "$DEBIAN_URL/$SUITE/$ARCH/$SRCPACKAGE $STATUS and $DIFFOSCOPE failed"
+				;;
+			*)
+				# a weird value of $NOTIFY that we don't know about
+				irc_message debian-reproducible-changes "$DEBIAN_URL/$SUITE/$ARCH/$SRCPACKAGE done: $STATUS debug: $NOTIFY"
+				;;
+		esac
 	fi
 	[ ! -f $RBUILDLOG ] || gzip -9fvn $RBUILDLOG
 	if [ "$MODE" = "master" ] ; then
