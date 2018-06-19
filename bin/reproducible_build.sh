@@ -386,6 +386,8 @@ dbd_timeout() {
 }
 
 call_diffoscope_on_changes_files() {
+	# filter lines describing .buildinfo files from .changes file
+	sed -i -e '/^ [a-f0-9]\{32,64\} .*\.buildinfo$/d' b{1,2}/$CHANGES
 	local TMPLOG=$(mktemp --tmpdir=$TMPDIR)
 	local TIMEOUT="120m"
 	DBDSUITE=$SUITE
@@ -798,11 +800,6 @@ remote_build() {
 	fi
 }
 
-filter_changes_files() {
-	# filter lines describing .buildinfo files from .changes file
-	sed -i -e '/^ [a-f0-9]\{32,64\} .*\.buildinfo$/d' b{1,2}/$CHANGES
-}
-
 check_installed_build_depends() {
 	local TMPFILE1=$(mktemp --tmpdir=$TMPDIR)
 	local TMPFILE2=$(mktemp --tmpdir=$TMPDIR)
@@ -960,6 +957,5 @@ check_installed_build_depends
 cleanup_pkg_files
 diff_copy_buildlogs
 update_rbuildlog
-filter_changes_files
 call_diffoscope_on_changes_files  # defines DIFFOSCOPE, update_db_and_html defines STATUS
 share_buildinfo
