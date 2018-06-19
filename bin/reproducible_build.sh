@@ -129,6 +129,7 @@ cleanup_all() {
 		rm -r $TMPDIR || true
 	fi
 	echo "All cleanup done."
+	print_out_duration
 }
 
 update_db_and_html() {
@@ -291,7 +292,6 @@ handle_ftbfs() {
 	update_db_and_html "FTBFS"
 	if [ $SAVE_ARTIFACTS -eq 1 ] ; then SAVE_ARTIFACTS=0 ; fi
 	if [ ! -z "$NOTIFY" ] ; then NOTIFY="failure" ; fi
-	print_out_duration
 	exit 0
 }
 
@@ -958,4 +958,3 @@ update_rbuildlog
 filter_changes_files
 call_diffoscope_on_changes_files  # defines DIFFOSCOPE, update_db_and_html defines STATUS
 share_buildinfo
-print_out_duration
