@@ -112,7 +112,7 @@ cleanup_all() {
 		save_artifacts  # this will also notify IRC as needed
 	else
 		case "$NOTIFY" in
-			0) ;;
+			''|0) ;;
 			1|2)
 				irc_message debian-reproducible "$DEBIAN_URL/$SUITE/$ARCH/$SRCPACKAGE done: $STATUS"
 				;;
