@@ -766,8 +766,26 @@ remote_build() {
 	check_node_is_up $NODE $PORT $SLEEPTIME
 	set +e
 	ssh -o "BatchMode = yes" -p $PORT $NODE /srv/jenkins/bin/reproducible_build.sh $BUILDNR ${SRCPACKAGE} ${SUITE} ${TMPDIR} "$VERSION"
-	local RESULT=$?
-	case $RESULT in
+	local BUILD_RESULT=$?
+	rsync -e "ssh -o 'BatchMode = yes' -p $PORT" -r $NODE:$TMPDIR/b$BUILDNR $TMPDIR/
+	local RSYNC_RESULT=$?
+	if [ $RSYNC_RESULT -ne 0 ] ; then
+		log_warning "rsync from $NODE failed, sleeping 2m before re-trying..."
+		sleep 2m
+		rsync -e "ssh -o 'BatchMode = yes' -p $PORT" -r $NODE:$TMPDIR/b$BUILDNR $TMPDIR/
+		local RSYNC_RESULT=$?
+		if [ $RSYNC_RESULT -ne 0 ] ; then
+			handle_remote_error "when rsyncing remote build #$BUILDNR results from $NODE"
+		fi
+	fi
+	ls -lR $TMPDIR
+	log_info "Deleting \$TMPDIR on $NODE."
+	ssh -o "BatchMode = yes" -p $PORT $NODE "rm -r $TMPDIR"
+	set -e
+	if [ $BUILDNR -eq 1 ] ; then
+		log_file $TMPDIR/b1/build.log
+	fi
+	case $BUILD_RESULT in
 		148)  # 404-256=148... (ssh 'really' only 'supports' exit codes below 255...)
 			handle_E404
 			;;
@@ -780,24 +798,6 @@ remote_build() {
 			handle_remote_error "with exit code $RESULT from $NODE for build #$BUILDNR for ${SRCPACKAGE} on ${SUITE}/${ARCH}"
 			;;
 	esac
-	rsync -e "ssh -o 'BatchMode = yes' -p $PORT" -r $NODE:$TMPDIR/b$BUILDNR $TMPDIR/
-	RESULT=$?
-	if [ $RESULT -ne 0 ] ; then
-		log_warning "rsync from $NODE failed, sleeping 2m before re-trying..."
-		sleep 2m
-		rsync -e "ssh -o 'BatchMode = yes' -p $PORT" -r $NODE:$TMPDIR/b$BUILDNR $TMPDIR/
-		RESULT=$?
-		if [ $RESULT -ne 0 ] ; then
-			handle_remote_error "when rsyncing remote build #$BUILDNR results from $NODE"
-		fi
-	fi
-	ls -lR $TMPDIR
-	log_info "Deleting \$TMPDIR on $NODE."
-	ssh -o "BatchMode = yes" -p $PORT $NODE "rm -r $TMPDIR"
-	set -e
-	if [ $BUILDNR -eq 1 ] ; then
-		log_file $TMPDIR/b1/build.log
-	fi
 }
 
 check_installed_build_depends() {
