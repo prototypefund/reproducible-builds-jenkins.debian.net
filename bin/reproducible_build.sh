@@ -736,19 +736,17 @@ remote_build() {
 	check_node_is_up $NODE $PORT $SLEEPTIME
 	set +e
 	ssh -o "BatchMode = yes" -p $PORT $NODE /srv/jenkins/bin/reproducible_build.sh $BUILDNR ${SRCPACKAGE} ${SUITE} ${TMPDIR} "$VERSION"
-	RESULT=$?
-	# 404-256=148... (ssh 'really' only 'supports' exit codes below 255...)
-	if [ $RESULT -eq 148 ] ; then
-		handle_E404
-	elif [ $RESULT -eq 100 ] ; then
-		log_error "Version mismatch between main node and build $BUILDNR, aborting. Please upgrade the schroots..."
-		# reschedule the package for later and quit the build without saving anything
-		query_db "UPDATE schedule SET date_build_started = NULL, job = NULL, date_scheduled='$(date -u +'%Y-%m-%d %H:%M')' WHERE package_id='$SRCPKGID'"
-		NOTIFY=""
-		exit 0
-	elif [ $RESULT -ne 0 ] ; then
-		handle_remote_error "with exit code $RESULT from $NODE for build #$BUILDNR for ${SRCPACKAGE} on ${SUITE}/${ARCH}"
-	fi
+	local RESULT=$?
+	case $RESULT in
+		148)  # 404-256=148... (ssh 'really' only 'supports' exit codes below 255...)
+			handle_E404
+			;;
+		0)  # build succcessfully completed
+			;;
+		*)
+			handle_remote_error "with exit code $RESULT from $NODE for build #$BUILDNR for ${SRCPACKAGE} on ${SUITE}/${ARCH}"
+			;;
+	esac
 	rsync -e "ssh -o 'BatchMode = yes' -p $PORT" -r $NODE:$TMPDIR/b$BUILDNR $TMPDIR/
 	RESULT=$?
 	if [ $RESULT -ne 0 ] ; then
