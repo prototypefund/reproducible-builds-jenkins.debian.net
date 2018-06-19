@@ -552,7 +552,7 @@ get_source_package() {
 		if [ "$MODE" = "master" ] ; then
 			handle_E404
 		else
-			exit E404
+			exit 404
 		fi
 	fi
 }
