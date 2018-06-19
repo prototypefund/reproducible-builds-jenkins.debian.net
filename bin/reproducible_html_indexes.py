@@ -698,9 +698,7 @@ def build_page_section(page, section, suite, arch):
             suite = defaultsuite
             arch = defaultarch
         if pages[page].get('notes') and pages[page]['notes']:
-            # FIXME normalize 'reproducible' with 'FTBR' in the db
             db_status = section['status'].value.name
-            if db_status == 'FTBR': db_status = 'unreproducible'
             query = queries[section['query']].params({
                 'status': db_status,
                 'suite': suite, 'arch': arch
