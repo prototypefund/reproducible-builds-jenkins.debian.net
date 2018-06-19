@@ -626,8 +626,9 @@ EOF
 	else
 		echo "BUILDDIR=/build" >> "$TMPCFG"
 	fi
+	set +e
 	# remember to change the sudoers setting if you change the following command
-	( sudo timeout -k 18.1h 18h /usr/bin/ionice -c 3 /usr/bin/nice \
+	sudo timeout -k 18.1h 18h /usr/bin/ionice -c 3 /usr/bin/nice \
 	  /usr/sbin/pbuilder --build \
 		--configfile $TMPCFG \
 		--debbuildopts "-b --buildinfo-id=${ARCH}" \
@@ -635,15 +636,13 @@ EOF
 		--buildresult $TMPDIR/b1 \
 		--logfile b1/build.log \
 		${SRCPACKAGE}_${EVERSION}.dsc
-	) 2>&1 | log_file -
-	local PRESULT=${PIPESTATUS[0]}
+	local PRESULT=$?
+	set -e
 	if ! "$DEBUG" ; then set +x ; fi
 	rm $TMPCFG
 	case $PRESULT in
 		124)
-			msg="pbuilder was killed by timeout after 18h."
-			log_error "$msg"
-			echo "$(date -u) - $msg" | tee -a b1/build.log
+			echo "$(date -u) - pbuilder was killed by timeout after 18h." | tee -a b1/build.log
 			exit 3
 			;;
 		1)  # FTBFS, for whatever reason.
