@@ -876,9 +876,16 @@ build_rebuild() {
 	remote_build 1 $NODE1
 	log_info "1st build successful. Starting 2nd build on remote node $NODE2."
 	remote_build 2 $NODE2
-	# both builds were fine, i.e., they did not FTBFS.
+	# at this point, both builds were fine, i.e., they did not FTBFS.
 	log_info "$CHANGES:"
 	log_file b1/$CHANGES
+	check_installed_build_depends
+	# save the build:
+	cleanup_pkg_files
+	diff_copy_buildlogs
+	update_rbuildlog
+	call_diffoscope_on_changes_files  # defines DIFFOSCOPE, update_db_and_html defines STATUS
+	share_buildinfo
 }
 
 #
@@ -952,10 +959,4 @@ log_info "${SRCPACKAGE}_${EVERSION}.dsc"
 log_file ${SRCPACKAGE}_${EVERSION}.dsc
 
 check_suitability
-build_rebuild  # defines CHANGES redefines RBUILDLOG
-check_installed_build_depends
-cleanup_pkg_files
-diff_copy_buildlogs
-update_rbuildlog
-call_diffoscope_on_changes_files  # defines DIFFOSCOPE, update_db_and_html defines STATUS
-share_buildinfo
+build_rebuild
