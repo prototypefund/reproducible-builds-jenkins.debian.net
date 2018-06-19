@@ -24,7 +24,7 @@ common_init "$@"
 notify_log_of_failure() {
 	tee -a /var/log/jenkins/reproducible-builder-errors.log <<-END
 
-		$WORKER_NAME/$BUILD_ID exited with an error.  Return code: $RETCODE
+		$(date -u) - $WORKER_NAME/$BUILD_ID exited with an error.  Return code: $RETCODE
 		Check out the log at $BUILD_URL
 
 		END
