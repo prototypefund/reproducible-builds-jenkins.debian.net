@@ -346,10 +346,10 @@ if [ "$HOSTNAME" = "$MAINNODE" ] ; then
 		query_to_print "$QUERY" 2> /dev/null || echo "Warning: SQL query '$QUERY' failed."
 		echo
 		for PKG in $(cat $PACKAGES | cut -d "|" -f1) ; do
-			echo "query_db \"DELETE FROM schedule WHERE package_id = '$PKG';\""
-			query_db "DELETE FROM schedule WHERE package_id = '$PKG';"
+			echo "query_db \"UPDATE schedule SET date_build_started = NULL, job = NULL WHERE package_id = '$PKG';\""
+			query_db "UPDATE schedule SET date_build_started = NULL, job = NULL WHERE package_id = '$PKG';"
 		done
-		echo "Packages have been removed from scheduling."
+		echo "Packages have been rescheduled."
 		echo
 		DIRTY=true
 	fi
