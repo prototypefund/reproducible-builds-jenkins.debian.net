@@ -149,7 +149,7 @@ set_icon() {
 					;;
 		E404)			ICON=weather-severe-alert.png
 					;;
-		NFU|not_for_us|"not for us")	ICON=weather-few-clouds-night.png
+		NFU)		ICON=weather-few-clouds-night.png
 					STATE_TARGET_NAME="NFU"
 					;;
 		blacklisted)		ICON=error.png
