@@ -264,7 +264,7 @@ handle_ftbfs() {
 		if [ ! -f "$DEBIAN_BASE/logs/$SUITE/$ARCH/${SRCPACKAGE}_${EVERSION}.build${BUILD}.log.gz" ] ; then
 			continue
 		fi
-		if zgrep -F "E: pbuilder-satisfydepends failed." "$DEBIAN_BASE/logs/$SUITE/$ARCH/${SRCPACKAGE}_${EVERSION}.build${BUILD}.log.gz" ; then
+		if zgrep -q -F "E: pbuilder-satisfydepends failed." "$DEBIAN_BASE/logs/$SUITE/$ARCH/${SRCPACKAGE}_${EVERSION}.build${BUILD}.log.gz" ; then
 			handle_depwait
 		fi
 		for NEEDLE in \
@@ -279,7 +279,7 @@ handle_ftbfs() {
 			'^dpkg-source: error: cannot create directory .* No space left on device$' \
 			'Requested size .* exceeds available storage space .*\(No space left on device\)$' \
 			; do
-			if zgrep -e "$NEEDLE" "$DEBIAN_BASE/logs/$SUITE/$ARCH/${SRCPACKAGE}_${EVERSION}.build${BUILD}.log.gz" ; then
+			if zgrep -q -e "$NEEDLE" "$DEBIAN_BASE/logs/$SUITE/$ARCH/${SRCPACKAGE}_${EVERSION}.build${BUILD}.log.gz" ; then
 				handle_enospace $node
 			fi
 		done
