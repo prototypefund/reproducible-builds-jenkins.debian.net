@@ -207,7 +207,6 @@ diff_copy_buildlogs() {
 		elif [ "${1:-}" = "ftbfs" ] ; then
 			log_warning "No second build log, what happened?"
 		fi
-		set -x # # to debug diffoscope/schroot problems
 		echo "Compressing the 1st log..."
 		gzip -9cvn b1/build.log > $DEBIAN_BASE/logs/$SUITE/$ARCH/${SRCPACKAGE}_${EVERSION}.build1.log.gz
 		chmod 644 $DEBIAN_BASE/logs/$SUITE/$ARCH/${SRCPACKAGE}_${EVERSION}.build1.log.gz
