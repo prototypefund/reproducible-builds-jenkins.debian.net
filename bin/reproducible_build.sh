@@ -392,14 +392,12 @@ call_diffoscope_on_changes_files() {
 	# filter lines describing .buildinfo files from .changes file
 	sed -i -e '/^ [a-f0-9]\{32,64\} .*\.buildinfo$/d' b{1,2}/$CHANGES
 	local TMPLOG=$(mktemp --tmpdir=$TMPDIR)
-	local TIMEOUT="120m"
+	local TIMEOUT="120m"  # note that below there is another instance of this + 5 minutes
 	DBDSUITE=$SUITE
 	if [ "$SUITE" = "experimental" ] ; then
 		# there is no extra diffoscope-schroot for experimental ( because we specical case ghc enough already )
 		DBDSUITE="unstable"
 	fi
-	# to debug diffoscope/schroot problems
-	set -x
 	# diffoscope temporary files are going to end up in this
 	local TEMP=$(mktemp --tmpdir=$TMPDIR -d dbd-tmp-XXXXXXX)
 	local session="$(schroot --begin-session -c "chroot:jenkins-reproducible-$DBDSUITE-diffoscope")"
@@ -407,11 +405,11 @@ call_diffoscope_on_changes_files() {
 	log_info "$DIFFOSCOPE will be used to compare the two builds:"
 	set +e
 	set -x
-	( timeout $TIMEOUT nice schroot \
+	( timeout 125m nice schroot \
 		--directory $TMPDIR \
 		--run-session \
 		-c "$session" \
-		-- sh -c "export TMPDIR=$TEMP ; diffoscope \
+		-- sh -c "export TMPDIR=$TEMP ; timeout $TIMEOUT diffoscope \
 			--html $TMPDIR/${DBDREPORT} \
 			--text $TMPDIR/$DBDTXT \
 			--profile=- \
