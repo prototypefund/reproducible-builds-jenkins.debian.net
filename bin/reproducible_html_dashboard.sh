@@ -442,7 +442,7 @@ write_suite_arch_table() {
 			if [ $(echo $PERCENT_TOTAL/1|bc) -lt 99 ] ; then
 				write_page "<span style=\"font-size:0.8em;\">($PERCENT_TOTAL% tested)</span>"
 			fi
-			write_page "</td><td>$COUNT_GOOD / $PERCENT_GOOD%</td><td>$COUNT_BAD / $PERCENT_BAD%</td><td>$COUNT_UGLY / $PERCENT_UGLY%</td><td>$COUNT_TIMEOUT / $PERCEN_TIMEOUT</td><td>$COUNT_DEPWAIT / $PERCENT_DEPWAIT%</td><td>$COUNT_NOTFORUS / $PERCENT_NOTFORUS%</td><td>$COUNT_BLACKLISTED / $PERCENT_BLACKLISTED%</td></tr>"
+			write_page "</td><td>$COUNT_GOOD / $PERCENT_GOOD%</td><td>$COUNT_BAD / $PERCENT_BAD%</td><td>$COUNT_UGLY / $PERCENT_UGLY%</td><td>$COUNT_TIMEOUT / $PERCENT_TIMEOUT%</td><td>$COUNT_DEPWAIT / $PERCENT_DEPWAIT%</td><td>$COUNT_NOTFORUS / $PERCENT_NOTFORUS%</td><td>$COUNT_BLACKLISTED / $PERCENT_BLACKLISTED%</td></tr>"
 		done
 	done
         write_page "</table>"
