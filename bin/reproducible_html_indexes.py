@@ -402,12 +402,12 @@ pages = {
         ]
     },
     'timeout': {
-        'title': 'Packages in {suite}/{arch} which build timed out',
+        'title': 'Packages in {suite}/{arch} where the build timed out',
         'body': [
             {
                 'icon_status': Status.TIMEOUT.value.icon,
                 'query': 'timeout_all',
-                'text': Template('$tot ($percent%) packages which build timed out:')
+                'text': Template('$tot ($percent%) packages where the build timed out:')
             }
         ]
     },
