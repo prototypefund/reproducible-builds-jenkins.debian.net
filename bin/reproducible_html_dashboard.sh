@@ -487,7 +487,7 @@ create_suite_arch_stats_page() {
 	if [ "$ARCH" = "armhf" ] || [ "$ARCH" = "arm64" ]; then
 		ARMSPECIALARCH=" 'any-arm',"
 	fi
-	write_page "$COUNT_NOTFORUS ($PERCENT_NOTFORUS%) packages which are neither Architecture: 'any', 'all', '$ARCH', 'linux-any', 'linux-$ARCH'$ARMSPECIALARCH nor 'any-$ARCH' will not be build here.<br />"
+	write_page "$COUNT_NOTFORUS ($PERCENT_NOTFORUS%) packages which are neither Architecture: 'any', 'all', '$ARCH', 'linux-any', 'linux-$ARCH'$ARMSPECIALARCH nor 'any-$ARCH' will not be built here.<br />"
 	set_icon blacklisted
 	write_icon
 	write_page "$COUNT_BLACKLISTED ($PERCENT_BLACKLISTED%) packages have been blacklisted on $SUITE/$ARCH.<br />"
