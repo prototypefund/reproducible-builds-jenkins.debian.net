@@ -236,6 +236,7 @@ handle_depwait() {
 	update_db_and_html "depwait"
 	if [ $SAVE_ARTIFACTS -eq 1 ] ; then SAVE_ARTIFACTS=0 ; fi
 	if [ -n "$NOTIFY" ] ; then NOTIFY="depwait" ; fi
+	exit 0
 }
 
 handle_NFU() {
@@ -265,7 +266,6 @@ handle_ftbfs() {
 		fi
 		if zgrep -F "E: pbuilder-satisfydepends failed." "$DEBIAN_BASE/logs/$SUITE/$ARCH/${SRCPACKAGE}_${EVERSION}.build${BUILD}.log.gz" ; then
 			handle_depwait
-			return
 		fi
 		for NEEDLE in \
 			'^tar:.*Cannot write: No space left on device' \
@@ -281,7 +281,6 @@ handle_ftbfs() {
 			; do
 			if zgrep -e "$NEEDLE" "$DEBIAN_BASE/logs/$SUITE/$ARCH/${SRCPACKAGE}_${EVERSION}.build${BUILD}.log.gz" ; then
 				handle_enospace $node
-				return
 			fi
 		done
 		# notify about unkown diskspace issues where we are not 100% sure yet those are diskspace issues
