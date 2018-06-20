@@ -204,7 +204,7 @@ diff_copy_buildlogs() {
 			gzip -9vn $DIFF
 			gzip -9cvn b2/build.log > $DEBIAN_BASE/logs/$SUITE/$ARCH/${SRCPACKAGE}_${EVERSION}.build2.log.gz
 			chmod 644 $DEBIAN_BASE/logs/$SUITE/$ARCH/${SRCPACKAGE}_${EVERSION}.build2.log.gz
-		elif [ $FTBFS -eq 0 ] ; then
+		elif [ "${1:-}" = "ftbfs" ] ; then
 			log_warning "No second build log, what happened?"
 		fi
 		set -x # # to debug diffoscope/schroot problems
@@ -253,7 +253,7 @@ handle_NFU() {
 handle_ftbfs() {
 	echo "${SRCPACKAGE} failed to build from source."
 	cleanup_pkg_files
-	diff_copy_buildlogs
+	diff_copy_buildlogs ftbfs
 	update_rbuildlog
 	local BUILD NEEDLE
 	for BUILD in "1" "2"; do
