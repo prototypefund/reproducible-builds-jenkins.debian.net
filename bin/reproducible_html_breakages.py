@@ -11,7 +11,6 @@
 # Build a page full of CI issues to investigate
 
 import os
-import re
 import csv
 import time
 import os.path
@@ -67,6 +66,7 @@ def count_pkgs(pkgs_to_count=[]):
              counted_pkgs.append(pkg)
     return len(counted_pkgs)
 
+
 def not_unrep_with_dbd_file():
     log.info('running not_unrep_with_dbd_file check...')
     bad_pkgs = []
@@ -121,33 +121,6 @@ def lack_buildinfo():
             bad_pkgs.append((pkg, version, suite, arch))
             log.warning(suite + '/' + arch + '/' + pkg + ' (' + version + ') has been '
                         'successfully built, but a .buildinfo is missing')
-    return bad_pkgs
-
-
-def pbuilder_dep_fail():
-    log.info('running pbuilder_dep_fail check...')
-    bad_pkgs = []
-    # we only care about these failures in the !unstable !experimental suites
-    # as they happen all the time in there, as packages are buggy
-    # and specific versions also come and go
-    query = '''SELECT s.name, r.version, s.suite, s.architecture
-               FROM sources AS s JOIN results AS r ON r.package_id=s.id
-               WHERE r.status = 'FTBFS'
-               AND s.suite NOT IN ('unstable', 'experimental')
-               ORDER BY s.name ASC, s.suite DESC, s.architecture ASC'''
-    results = query_db(query)
-    for pkg, version, suite, arch in results:
-        eversion = strip_epoch(version)
-        rbuild = RBUILD_PATH + '/' + suite + '/' + arch + '/' + pkg + '_' + \
-            eversion + '.rbuild.log'
-        if os.access(rbuild, os.R_OK):
-            log.debug('\tlooking at ' + rbuild)
-            with open(rbuild, "br") as fd:
-                for line in fd:
-                    if re.search(b'E: pbuilder-satisfydepends failed.', line):
-                        bad_pkgs.append((pkg, version, suite, arch))
-                        log.warning(suite + '/' + arch + '/' + pkg + ' (' + version +
-                                    ') failed to satisfy its dependencies.')
     return bad_pkgs
 
 
@@ -359,12 +332,6 @@ def update_stats_breakages(diffoscope_timeouts, diffoscope_crashes):
 
 def gen_html():
     html = ''
-    # pbuilder-satisfydepends failed
-    broken_pkgs = pbuilder_dep_fail()
-    if broken_pkgs != []:
-        html += '<h3>Breakage caused by broken packages</h3>'
-        html += _gen_packages_html('failed to satisfy their build-dependencies:',
-                         broken_pkgs)
     # diffoscope troubles
     html += '<h2>Breakage involving diffoscope</h2>'
     without_dbd, bad_dbd, sources_without_dbd = unrep_with_dbd_issues()
