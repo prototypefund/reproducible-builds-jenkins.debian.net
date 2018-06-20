@@ -114,8 +114,11 @@ notification() {
 			1|2)
 				irc_message debian-reproducible "$DEBIAN_URL/$SUITE/$ARCH/$SRCPACKAGE done: $STATUS"
 				;;
-			diffoscope)
-				irc_message debian-reproducible-changes "$DEBIAN_URL/$SUITE/$ARCH/$SRCPACKAGE $STATUS and $DIFFOSCOPE failed"
+			diffoscope_err)
+				irc_message debian-reproducible "$DEBIAN_URL/$SUITE/$ARCH/$SRCPACKAGE $STATUS and $DIFFOSCOPE failed"
+				;;
+			diffoscope_timeout)
+				irc_message debian-reproducible-changes "$DEBIAN_URL/$SUITE/$ARCH/$SRCPACKAGE $STATUS and $DIFFOSCOPE timed out"
 				;;
 			*)
 				# a weird value of $NOTIFY that we don't know about
@@ -390,7 +393,7 @@ dbd_timeout() {
 		msg="$msg, but there is still $DEBIAN_URL/dbd/$SUITE/$ARCH/$DDBREPORT"
 	fi
 	SAVE_ARTIFACTS=0
-	NOTIFY="diffoscope"
+	NOTIFY="diffoscope_timeout"
 	handle_ftbr "$msg"
 }
 
@@ -437,7 +440,7 @@ call_diffoscope_on_changes_files() {
 			;;
 		2)
 			SAVE_ARTIFACTS=1
-			NOTIFY="diffoscope"
+			NOTIFY="diffoscope_err"
 			handle_ftbr "$DIFFOSCOPE had trouble comparing the two builds. Please investigate $DEBIAN_URL/rbuild/${SUITE}/${ARCH}/${SRCPACKAGE}_${EVERSION}.rbuild.log"
 			;;
 		124)
