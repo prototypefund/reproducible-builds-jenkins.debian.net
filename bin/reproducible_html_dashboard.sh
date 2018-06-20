@@ -476,16 +476,12 @@ create_suite_arch_stats_page() {
 	set_icon timeout
 	write_icon
 	write_page "$COUNT_TIMEOUT packages ($PERCENT_TIMEOUT%) timed out during the build.<br />"
-	if [ $COUNT_DEPWAIT -gt 0 ] ; then
-		set_icon depwait
-		write_icon
-		write_page "$COUNT_DEPWAIT ($PERCENT_DEPWAIT%) source packages had build-depends which could not be satisfied.<br />"
-	fi
-	if [ $COUNT_SOURCELESS -gt 0 ] ; then
-		set_icon E404
-		write_icon
-		write_page "$COUNT_SOURCELESS ($PERCENT_SOURCELESS%) source packages could not be downloaded.<br />"
-	fi
+	set_icon depwait
+	write_icon
+	write_page "$COUNT_DEPWAIT ($PERCENT_DEPWAIT%) source packages had build-depends which could not be satisfied.<br />"
+	set_icon E404
+	write_icon
+	write_page "$COUNT_SOURCELESS ($PERCENT_SOURCELESS%) source packages could not be downloaded.<br />"
 	set_icon NFU
 	write_icon
 	if [ "$ARCH" = "armhf" ] || [ "$ARCH" = "arm64" ]; then
