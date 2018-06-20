@@ -472,6 +472,10 @@ create_suite_arch_stats_page() {
 	set_icon FTBFS
 	write_icon
 	write_page "$COUNT_UGLY packages ($PERCENT_UGLY%) failed to build from source.<br /></p>"
+	write_page "<p>"
+	set_icon timeout
+	write_icon
+	write_page "$COUNT_TIMEOUT packages ($PERCENT_TIMEOUT%) timed out during the build.<br />"
 	if [ $COUNT_DEPWAIT -gt 0 ] ; then
 		set_icon depwait
 		write_icon
