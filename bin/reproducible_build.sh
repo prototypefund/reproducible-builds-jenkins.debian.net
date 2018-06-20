@@ -121,7 +121,7 @@ cleanup_all() {
 				;;
 			*)
 				# a weird value of $NOTIFY that we don't know about
-				irc_message debian-reproducible-changes "$DEBIAN_URL/$SUITE/$ARCH/$SRCPACKAGE done: $STATUS debug: $NOTIFY"
+				irc_message debian-reproducible-changes "$DEBIAN_URL/$SUITE/$ARCH/$SRCPACKAGE done: '$STATUS' debug: '$NOTIFY'"
 				;;
 		esac
 	fi
