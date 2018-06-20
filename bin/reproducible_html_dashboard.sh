@@ -429,7 +429,7 @@ write_suite_arch_table() {
 	set_icon depwait
 	write_icon
 	write_page "packages in depwait state</th><th class=\"center\">"
-	set_icon not_for_us
+	set_icon NFU
 	write_icon
 	write_page "not for this architecture</th><th class=\"center\">"
 	set_icon blacklisted
@@ -482,7 +482,7 @@ create_suite_arch_stats_page() {
 		write_icon
 		write_page "$COUNT_SOURCELESS ($PERCENT_SOURCELESS%) source packages could not be downloaded.<br />"
 	fi
-	set_icon not_for_us
+	set_icon NFU
 	write_icon
 	if [ "$ARCH" = "armhf" ] || [ "$ARCH" = "arm64" ]; then
 		ARMSPECIALARCH=" 'any-arm',"
