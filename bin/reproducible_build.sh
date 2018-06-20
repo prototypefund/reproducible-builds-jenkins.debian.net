@@ -105,9 +105,7 @@ save_artifacts() {
 		fi
 }
 
-cleanup_all() {
-	echo "Starting cleanup."
-	cd  # move out of $TMPDIR, if we are still inside
+notification() {
 	if [ "$SAVE_ARTIFACTS" = "1" ] ; then
 		save_artifacts  # this will also notify IRC as needed
 	else
@@ -125,12 +123,20 @@ cleanup_all() {
 				;;
 		esac
 	fi
+	# final compress, the RBUILDLOG is already in place.
 	[ ! -f $RBUILDLOG ] || gzip -9fvn $RBUILDLOG
+	# XXX quite ugly: this is just needed to update the sizes of the
+	# compressed files in the html. It's cheap and quite safe so, *shrugs*...
+	gen_package_html $SRCPACKAGE
+}
+
+cleanup_all() {
+	echo "Starting cleanup."
+	cd  # move out of $TMPDIR, if we are still inside
 	if [ "$MODE" = "master" ] ; then
-		# XXX quite ugly: this is just needed to update the sizes of the
-		# compressed files in the html. It's cheap and quite safe so, *shrugs*...
-		gen_package_html $SRCPACKAGE
-		cd
+		notification
+		# the TMPDIR in the remote nodes is removed by a later ssh call
+		# from master after the artifacts have been copied out.
 		rm -r $TMPDIR || true
 	fi
 	echo "All cleanup done."
