@@ -871,7 +871,7 @@ share_buildinfo() {
 
 	log_info "Done submitting .buildinfo files."
 	log_info "Removing signed $BUILDINFO_SIGNED files:"
-	rm -vf ./b1/$BUILDINFO_SIGNED ./b2/$BUILDINFO_SIGNED
+	rm -vf ./b1/$BUILDINFO_SIGNED ./b2/$BUILDINFO_SIGNED | tee -a "$RBUILDLOG"
 }
 
 build_rebuild() {
