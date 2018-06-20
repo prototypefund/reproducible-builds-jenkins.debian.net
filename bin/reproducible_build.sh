@@ -163,18 +163,14 @@ update_db_and_html() {
 	RESULTID=$(query_db "SELECT id FROM results WHERE package_id=$SRCPKGID")
 	# Insert or replace existing entry in results table
 	if [ ! -z "$RESULTID" ] ; then
-		query_db "UPDATE results set package_id='$SRCPKGID', version='$VERSION', status='$STATUS', build_date='$DATE', build_duration='$DURATION', node1='$NODE1', node2='$NODE2', job='$JOB' WHERE id=$RESULTID" || \
 		query_db "UPDATE results set package_id='$SRCPKGID', version='$VERSION', status='$STATUS', build_date='$DATE', build_duration='$DURATION', node1='$NODE1', node2='$NODE2', job='$JOB' WHERE id=$RESULTID"
 	else
-		query_db "INSERT INTO results (package_id, version, status, build_date, build_duration, node1, node2, job) VALUES ('$SRCPKGID', '$VERSION', '$STATUS', '$DATE', '$DURATION', '$NODE1', '$NODE2', '$JOB')" || \
 		query_db "INSERT INTO results (package_id, version, status, build_date, build_duration, node1, node2, job) VALUES ('$SRCPKGID', '$VERSION', '$STATUS', '$DATE', '$DURATION', '$NODE1', '$NODE2', '$JOB')"
 	fi
 	if [ ! -z "$DURATION" ] ; then  # this happens when not E404 and NFU
-		query_db "INSERT INTO stats_build (name, version, suite, architecture, status, build_date, build_duration, node1, node2, job) VALUES ('$SRCPACKAGE', '$VERSION', '$SUITE', '$ARCH', '$STATUS', '$DATE', '$DURATION', '$NODE1', '$NODE2', '$JOB')" || \
 		query_db "INSERT INTO stats_build (name, version, suite, architecture, status, build_date, build_duration, node1, node2, job) VALUES ('$SRCPACKAGE', '$VERSION', '$SUITE', '$ARCH', '$STATUS', '$DATE', '$DURATION', '$NODE1', '$NODE2', '$JOB')"
 	fi
 	# unmark build since it's properly finished
-	query_db "DELETE FROM schedule WHERE package_id='$SRCPKGID';" || \
 	query_db "DELETE FROM schedule WHERE package_id='$SRCPKGID';"
 	gen_package_html $SRCPACKAGE
 	echo
