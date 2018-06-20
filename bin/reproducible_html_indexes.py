@@ -278,6 +278,14 @@ queries = {
         ).order_by(
             desc(results.c.build_date)
         ),
+    "timeout_all":
+        select_sources.where(
+            and_(
+                results.c.status == Status.TIMEOUT.value.name
+            )
+        ).order_by(
+            sources.c.name
+        ),
     "not_for_us_all":
         select_sources.where(
             and_(
@@ -393,6 +401,16 @@ pages = {
             }
         ]
     },
+    'timeout': {
+        'title': 'Packages in {suite}/{arch} which build timed out',
+        'body': [
+            {
+                'icon_status': Status.TIMEOUT.value.icon,
+                'query': 'timeout_all',
+                'text': Template('$tot ($percent%) packages which build timed out:')
+            }
+        ]
+    },
     'blacklisted': {
         'title': 'Packages in {suite}/{arch} which have been blacklisted',
         'body': [
@@ -423,6 +441,12 @@ pages = {
                 'icon_link': '/index_not_for_us.html',
                 'query': 'not_for_us_all',
                 'text': Template('$tot ($percent%) packages which should not be build in $suite/$arch:')
+            },
+            {
+                'icon_status': Status.TIMEOUT.value.icon,
+                'icon_lnk': '/index_timeout.html',
+                'query': 'timeout_all',
+                'text': Template('$tot ($percent%) packages which build timed out in $suite/$arch:')
             },
             {
                 'icon_status': Status.E404.value.icon,
@@ -564,6 +588,13 @@ pages = {
                 'query': 'notes',
                 'nosuite': True,
                 'text': Template('$tot not for us packages in $suite/$arch:')
+            },
+            {
+                'status': Status.TIMEOUT,
+                'icon_link': '/index_timeout.html',
+                'query': 'notes',
+                'nosuite': True,
+                'text': Template('$tot timing out packages in $suite/$arch:')
             },
             {
                 'status': Status.BLACKLISTED,

@@ -1,4 +1,5 @@
 #!/bin/bash
+# vim: set noexpandtab:
 
 # Copyright 2014-2017 Holger Levsen <holger@layer-acht.org>
 #         © 2015 Mattia Rizzolo <mattia@mapreri.org>
@@ -194,15 +195,17 @@ gather_suite_arch_stats() {
 	COUNT_GOOD=$(query_db "SELECT COUNT(*) FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite='$SUITE' AND s.architecture='$ARCH' AND r.status='reproducible'")
 	COUNT_BAD=$(query_db "SELECT COUNT(s.name) FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite='$SUITE' AND s.architecture='$ARCH' AND r.status = 'FTBR'")
 	COUNT_UGLY=$(query_db "SELECT COUNT(s.name) FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite='$SUITE' AND s.architecture='$ARCH' AND r.status = 'FTBFS'")
+	COUNT_TIMEOUT=$(query_db "SELECT COUNT(s.name) FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite='$SUITE' AND s.architecture='$ARCH' AND r.status = 'timeout'")
 	COUNT_SOURCELESS=$(query_db "SELECT COUNT(s.name) FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite='$SUITE' AND s.architecture='$ARCH' AND r.status = 'E404'")
 	COUNT_NOTFORUS=$(query_db "SELECT COUNT(s.name) FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite='$SUITE' AND s.architecture='$ARCH' AND r.status = 'NFU'")
 	COUNT_BLACKLISTED=$(query_db "SELECT COUNT(s.name) FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite='$SUITE' AND s.architecture='$ARCH' AND r.status = 'blacklisted'")
 	COUNT_DEPWAIT=$(query_db "SELECT COUNT(s.name) FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE s.suite='$SUITE' AND s.architecture='$ARCH' AND r.status = 'depwait'")
-	COUNT_OTHER=$(( $COUNT_SOURCELESS+$COUNT_NOTFORUS+$COUNT_BLACKLISTED+$COUNT_DEPWAIT ))
+	COUNT_OTHER=$(( $COUNT_SOURCELESS+$COUNT_NOTFORUS+$COUNT_BLACKLISTED+$COUNT_DEPWAIT+$COUNT_TIMEOUT ))
 	PERCENT_TOTAL=$(echo "scale=1 ; ($COUNT_TOTAL*100/$AMOUNT)" | bc)
 	PERCENT_GOOD=$(echo "scale=1 ; ($COUNT_GOOD*100/$COUNT_TOTAL)" | bc || echo 0)
 	PERCENT_BAD=$(echo "scale=1 ; ($COUNT_BAD*100/$COUNT_TOTAL)" | bc || echo 0)
 	PERCENT_UGLY=$(echo "scale=1 ; ($COUNT_UGLY*100/$COUNT_TOTAL)" | bc || echo 0)
+	PERCENT_TIMEOUT=$(echo "scale=1 ; ($COUNT_TIMEOUT*100/$COUNT_TOTAL)" | bc || echo 0)
 	PERCENT_NOTFORUS=$(echo "scale=1 ; ($COUNT_NOTFORUS*100/$COUNT_TOTAL)" | bc || echo 0)
 	PERCENT_DEPWAIT=$(echo "scale=1 ; ($COUNT_DEPWAIT*100/$COUNT_TOTAL)" | bc || echo 0)
 	PERCENT_SOURCELESS=$(echo "scale=1 ; ($COUNT_SOURCELESS*100/$COUNT_TOTAL)" | bc || echo 0)
@@ -420,6 +423,9 @@ write_suite_arch_table() {
 	set_icon FTBFS
 	write_icon
 	write_page "packages failing to build</th><th class=\"center\">"
+	set_icon timeout
+	write_icon
+	write_page "packages timing out</th><th class=\"center\">"
 	set_icon depwait
 	write_icon
 	write_page "packages in depwait state</th><th class=\"center\">"
@@ -436,7 +442,7 @@ write_suite_arch_table() {
 			if [ $(echo $PERCENT_TOTAL/1|bc) -lt 99 ] ; then
 				write_page "<span style=\"font-size:0.8em;\">($PERCENT_TOTAL% tested)</span>"
 			fi
-			write_page "</td><td>$COUNT_GOOD / $PERCENT_GOOD%</td><td>$COUNT_BAD / $PERCENT_BAD%</td><td>$COUNT_UGLY / $PERCENT_UGLY%</td><td>$COUNT_DEPWAIT / $PERCENT_DEPWAIT%</td><td>$COUNT_NOTFORUS / $PERCENT_NOTFORUS%</td><td>$COUNT_BLACKLISTED / $PERCENT_BLACKLISTED%</td></tr>"
+			write_page "</td><td>$COUNT_GOOD / $PERCENT_GOOD%</td><td>$COUNT_BAD / $PERCENT_BAD%</td><td>$COUNT_UGLY / $PERCENT_UGLY%</td><td>$COUNT_TIMEOUT / $PERCEN_TIMEOUT</td><td>$COUNT_DEPWAIT / $PERCENT_DEPWAIT%</td><td>$COUNT_NOTFORUS / $PERCENT_NOTFORUS%</td><td>$COUNT_BLACKLISTED / $PERCENT_BLACKLISTED%</td></tr>"
 		done
 	done
         write_page "</table>"

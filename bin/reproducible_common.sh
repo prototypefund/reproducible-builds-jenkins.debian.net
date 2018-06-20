@@ -145,6 +145,7 @@ set_icon() {
 					;;
 		FTBFS)			ICON=weather-storm.png
 					;;
+		timeout)	ICON=Current_event_clock.png ;;
 		depwait)		ICON=weather-snow.png
 					;;
 		E404)			ICON=weather-severe-alert.png

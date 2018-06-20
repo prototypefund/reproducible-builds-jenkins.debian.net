@@ -1,5 +1,9 @@
 ## Copyright and License information
 
+* Current_event_clock.png
+  + https://commons.wikimedia.org/wiki/File:Current_event_clock.svg
+  + Public Domain
+
 * error.png
 * weather-clear-night.png
 * weather-clear.png

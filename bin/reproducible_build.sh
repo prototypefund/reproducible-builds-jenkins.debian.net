@@ -146,7 +146,7 @@ update_db_and_html() {
 			   query_db "SELECT status FROM results WHERE package_id='${SRCPKGID}'")
 	# irc+mail notifications for changing status in unstable and experimental
 	if [ "$SUITE" = "unstable" ] || [ "$SUITE" = "experimental" ] ; then
-		if ([ "$OLD_STATUS" = "reproducible" ] && ( [ "$STATUS" = "FTBR" ] || [ "$STATUS" = "FTBFS" ] )) || \
+		if ([ "$OLD_STATUS" = "reproducible" ] && ( [ "$STATUS" = "FTBR" ] || [ "$STATUS" = "FTBFS" ] || [ "$STATUS" = "timeout" ])) || \
 			([ "$OLD_STATUS" = "FTBR" ] && [ "$STATUS" = "FTBFS" ] ); then
 			MESSAGE="${DEBIAN_URL}/${SUITE}/${ARCH}/${SRCPACKAGE} : ${OLD_STATUS} ➤ ${STATUS}"
 			log_info "$MESSAGE"
@@ -241,6 +241,18 @@ handle_NFU() {
 	if [ $SAVE_ARTIFACTS -eq 1 ] ; then SAVE_ARTIFACTS=0 ; fi
 	if [ ! -z "$NOTIFY" ] ; then NOTIFY="failure" ; fi
 	exit 0 # RBUILDLOG and SAVE_ARTIFACTS and NOTIFY are used in cleanup_all called at exit
+}
+
+handle_timeout() {
+	echo "${SRCPACKAGE} build timed out"
+	cleanup_pkg_files
+	diff_copy_buildlogs
+	update_rbuildlog
+	calculate_build_duration
+	update_db_and_html "timeout"
+	if [ $SAVE_ARTIFACTS -eq 1 ] ; then SAVE_ARTIFACTS=0 ; fi
+	if [ ! -z "$NOTIFY" ] ; then NOTIFY="timeout" ; fi
+	exit 0
 }
 
 handle_ftbfs() {
@@ -779,8 +791,11 @@ remote_build() {
 		148)  # 404-256=148... (ssh 'really' only 'supports' exit codes below 255...)
 			handle_E404
 			;;
-		2|3)
+		2)
 			handle_ftbfs
+			;;
+		3)
+			handle_timeout
 			;;
 		0)  # build succcessfully completed
 			;;

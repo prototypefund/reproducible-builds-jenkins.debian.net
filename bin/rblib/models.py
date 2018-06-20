@@ -53,6 +53,7 @@ class Status(Enum):
     FTBFS = _status('FTBFS', 'FTBFS', 'weather-storm.png')
     FTBR = _status('FTBR', 'unreproducible', 'weather-showers-scattered.png')
     E404 = _status('E404', '404', 'weather-severe-alert.png')
+    TIMEOUT = _status('timeout', 'build timeout', 'Current_event_clock.png')
     DEPWAIT = _status('depwait', 'depwait', 'weather-snow.png')
     NFU = _status('NFU', 'not for us', 'weather-few-clouds-night.png')
     UNTESTED = _status('untested', 'untested', 'weather-clear-night.png')
