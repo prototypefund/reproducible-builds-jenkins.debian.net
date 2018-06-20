@@ -115,7 +115,7 @@ notification() {
 				irc_message debian-reproducible "$DEBIAN_URL/$SUITE/$ARCH/$SRCPACKAGE done: $STATUS"
 				;;
 			diffoscope_err)
-				irc_message debian-reproducible "$DEBIAN_URL/$SUITE/$ARCH/$SRCPACKAGE $STATUS and $DIFFOSCOPE failed"
+				irc_message debian-reproducible-changes "$DEBIAN_URL/$SUITE/$ARCH/$SRCPACKAGE $STATUS and $DIFFOSCOPE failed"
 				;;
 			diffoscope_timeout)
 				irc_message debian-reproducible-changes "$DEBIAN_URL/$SUITE/$ARCH/$SRCPACKAGE $STATUS and $DIFFOSCOPE timed out"
