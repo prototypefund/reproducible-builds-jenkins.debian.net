@@ -176,6 +176,7 @@ update_db_and_html() {
 	else
 		query_db "INSERT INTO results (package_id, version, status, build_date, build_duration, node1, node2, job) VALUES ('$SRCPKGID', '$VERSION', '$STATUS', '$DATE', '$DURATION', '$NODE1', '$NODE2', '$JOB')"
 	fi
+	query_db "INSERT INTO stats_build (name, version, suite, architecture, status, build_date, build_duration, node1, node2, job) VALUES ('$SRCPACKAGE', '$VERSION', '$SUITE', '$ARCH', '$STATUS', '$DATE', '$DURATION', '$NODE1', '$NODE2', '$JOB')"
 	# unmark build since it's properly finished
 	query_db "DELETE FROM schedule WHERE package_id='$SRCPKGID';"
 	gen_package_html $SRCPACKAGE
