@@ -13,12 +13,12 @@ export PGDATABASE=reproducibledb
 
 # query reproducible database
 query_db() {
-	psql -t --no-align -c "$@"
+	psql -t --no-align -c "$@" || exit 1
 }
 
 # query reproducible database, output to csv format
 query_to_csv() {
-	psql -c "COPY ($@) to STDOUT with csv DELIMITER ','"
+	psql -c "COPY ($@) to STDOUT with csv DELIMITER ','" || exit 1
 }
 
 # common variables
