@@ -314,17 +314,18 @@ def gen_html_issue(issue, suite):
     )
     try:
         arch = 'amd64'
-        for status in ['FTBR', 'FTBFS', 'NFU', 'blacklisted', 'reproducible', 'depwait']:
+        for status in Status:
+            status = status.value
             pkgs = query_db(sql.where(sources.c.name.in_(issues_count[issue]))\
-                   .params({'suite': suite, 'arch': arch, 'status': status}))
+                .params({'suite': suite, 'arch': arch, 'status': status.name}))
             pkgs = [p[0] for p in pkgs]
             if not pkgs:
                 continue
             affected += tab*4 + '<p>\n'
-            icon = Status.get(status).value.icon
-            affected += tab*5 + '<img src="/static/{}"'.format(icon)
-            affected += ' alt="' + status + ' icon" />\n'
-            affected += tab*5 + str(len(pkgs)) + ' ' + status + ' packages in ' + suite + '/' + arch +':\n'
+            affected += tab*5 + '<img src="/static/{}"'.format(status.icon)
+            affected += ' alt="' + status.name + ' icon" />\n'
+            affected += tab*5 + str(len(pkgs)) + ' ' + status.spokenstatus
+            affected += ' packages in ' + suite + '/' + arch +':\n'
             affected += tab*5 + '<code>\n'
             pkgs_popcon = issues_popcon_annotate(pkgs)
             try:
