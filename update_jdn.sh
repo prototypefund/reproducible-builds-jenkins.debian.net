@@ -455,12 +455,7 @@ if [ -f /etc/debian_version ] ; then
 		$UP2DATE || sudo apt-get install $DEBS $MASTERDEBS
 		# don't (re-)install pbuilder if it's on hold
 		if [ "$(dpkg-query -W -f='${db:Status-Abbrev}\n' pbuilder)" != "hi " ] ; then
-			case $HOSTNAME in
-				codethink*) 	$UP2DATE || sudo apt-get install -t jessie-backports pbuilder
-						;;
-				*)		$UP2DATE || sudo apt-get install pbuilder
-				;;
-			esac
+			$UP2DATE || sudo apt-get install pbuilder
 		fi
 		# remove unattended-upgrades if it's installed
 		if [ "$(dpkg-query -W -f='${db:Status-Abbrev}\n' unattended-upgrades 2>/dev/null || true)" = "ii "  ] ; then

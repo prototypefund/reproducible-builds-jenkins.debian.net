@@ -1,0 +1,7 @@
+Package: pbuilder
+Pin: release o=Debian Backports
+Pin-Priority: 990
+
+Package: *
+Pin: release o=Debian Backports
+Pin-Priority: -1
