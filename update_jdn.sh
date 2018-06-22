@@ -252,7 +252,6 @@ if [ -f /etc/debian_version ] ; then
 			haveged
 			htop
 			less
-			lintian
 			locales-all
 			lsof
 			molly-guard
@@ -459,7 +458,7 @@ if [ -f /etc/debian_version ] ; then
 			case $HOSTNAME in
 				codethink*) 	$UP2DATE || sudo apt-get install -t jessie-backports pbuilder
 						;;
-				*)		$UP2DATE || sudo apt-get install pbuilder lintian
+				*)		$UP2DATE || sudo apt-get install pbuilder
 				;;
 			esac
 		fi
