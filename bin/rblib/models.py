@@ -41,6 +41,9 @@ def lazyproperty(fn):
     return _lazy
 
 
+_status = namedtuple('Status', 'name, spokenstatus, icon')
+
+
 class Status(Enum):
     """
     Values of the tuple:
@@ -48,7 +51,6 @@ class Status(Enum):
     spokenstatus: to be used in human-oriented strings
     icon: file name of the icon representing the status
     """
-    _status = namedtuple('Status', 'name, spokenstatus, icon')
     REPRODUCIBLE = _status('reproducible', 'reproducible', 'weather-clear.png')
     FTBFS = _status('FTBFS', 'FTBFS', 'weather-storm.png')
     FTBR = _status('FTBR', 'unreproducible', 'weather-showers-scattered.png')
