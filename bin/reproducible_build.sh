@@ -95,7 +95,8 @@ save_artifacts() {
 		# irc message
 		if [ ! -z "$NOTIFY" ] ; then
 			local MESSAGE="Artifacts for ${SRCPACKAGE}, $STATUS in ${SUITE}/${ARCH}: $URL"
-			if [ "$NOTIFY" = "diffoscope" ] ; then
+			if [ "$NOTIFY" = "diffoscope_err" ] ; then
+				irc_message debian-reproducible-changes "$DEBIAN_URL/$SUITE/$ARCH/$SRCPACKAGE $STATUS and $DIFFOSCOPE failed"
 				irc_message debian-reproducible-changes "$MESSAGE (error running $DIFFOSCOPE)"
 				MESSAGE="$MESSAGE (error running $DIFFOSCOPE)"
 			else
@@ -109,13 +110,10 @@ notification() {
 	if [ "$SAVE_ARTIFACTS" = "1" ] ; then
 		save_artifacts  # this will also notify IRC as needed
 	else
-		case "$NOTIFY" in
+		case "$NOTIFY" in  # the diffoscope_err case is handled by save_artifacts()
 			''|0) ;;
 			1|2)
 				irc_message debian-reproducible "$DEBIAN_URL/$SUITE/$ARCH/$SRCPACKAGE done: $STATUS"
-				;;
-			diffoscope_err)
-				irc_message debian-reproducible-changes "$DEBIAN_URL/$SUITE/$ARCH/$SRCPACKAGE $STATUS and $DIFFOSCOPE failed"
 				;;
 			diffoscope_timeout)
 				irc_message debian-reproducible-changes "$DEBIAN_URL/$SUITE/$ARCH/$SRCPACKAGE $STATUS and $DIFFOSCOPE timed out"
