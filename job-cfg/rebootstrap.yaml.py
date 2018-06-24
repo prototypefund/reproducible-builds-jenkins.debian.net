@@ -89,7 +89,7 @@ print("""
           regular-expression: 'Caused by: hudson.plugins.git.GitException: Command "git fetch'
     triggers:
       - pollscm:
-          cron: '*/6 * * * *'
+          cron: 'H H * * *'
     node: '{my_node}'
 """)
 
