@@ -113,7 +113,7 @@ else
 		case $HOSTNAME in
 			jenkins|jenkins-test-vm|profitbricks-build*)
 				export MIRROR=http://deb.debian.org/debian ;;
-			bbx15|bpi0|cb3*|cbxi4*|hb0|wbq0|odxu4*|odu3*|odc*|wbd0|rpi2*|ff*|ff4*|opi2*|jt?1*|p64*)
+			bbx15|cb3*|cbxi4*|wbq0|odxu4*|odu3*|odc*|ff*|ff4*|opi2*|jt?1*|p64*)
 				export MIRROR=http://deb.debian.org/debian ;;
 			codethink*)
 				export MIRROR=http://deb.debian.org/debian ;;
@@ -127,7 +127,7 @@ else
 		case $HOSTNAME in
 			jenkins|jenkins-test-vm|profitbricks-build*|codethink*)
 				export http_proxy="http://localhost:3128" ;;
-			bbx15|bpi0|cb3*|cbxi4*|hb0|wbq0|odxu4*|odu3*|odc*|wbd0|rpi2*|ff*|ff4*|opi2*|jt?1*|p64*)
+			bbx15|cb3*|cbxi4*|wbq0|odxu4*|odu3*|odc*|ff*|ff4*|opi2*|jt?1*|p64*)
 				export http_proxy="http://10.0.0.15:8000/" ;;
 			spectrum)
 				export MIRROR=none ;;

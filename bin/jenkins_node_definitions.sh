@@ -12,7 +12,6 @@
 #		  nice to also include pb-build3+4+7+9+10, to also cleanup
 #		  jobs there…
 BUILD_NODES="bbx15-armhf-rb.debian.net
-bpi0-armhf-rb.debian.net
 cb3a-armhf-rb.debian.net
 cbxi4a-armhf-rb.debian.net
 cbxi4b-armhf-rb.debian.net
@@ -29,7 +28,6 @@ ff2a-armhf-rb.debian.net
 ff2b-armhf-rb.debian.net
 ff4a-armhf-rb.debian.net
 ff64a-armhf-rb.debian.net
-hb0-armhf-rb.debian.net
 jtk1a-armhf-rb.debian.net
 jtk1b-armhf-rb.debian.net
 jtx1a-armhf-rb.debian.net
@@ -52,9 +50,6 @@ profitbricks-build11-amd64.debian.net
 profitbricks-build12-i386.debian.net
 profitbricks-build15-amd64.debian.net
 profitbricks-build16-i386.debian.net
-rpi2b-armhf-rb.debian.net
-rpi2c-armhf-rb.debian.net
-wbd0-armhf-rb.debian.net
 wbq0-armhf-rb.debian.net"
 
 # return the ports sshd is listening on
@@ -64,12 +59,6 @@ get_node_ssh_port() {
 	case "$NODE_NAME" in
 	  bbx15*)
 	    PORT=2242
-	    ;;
-	  bpi0*)
-	    PORT=2222
-	    ;;
-	  hb0*)
-	    PORT=2224
 	    ;;
 	  wbq0*)
 	    PORT=2225
@@ -85,15 +74,6 @@ get_node_ssh_port() {
 	    ;;
 	  odxu4a*)
 	    PORT=2229
-	    ;;
-	  wbd0*)
-	    PORT=2223
-	    ;;
-	  rpi2b*)
-	    PORT=2230
-	    ;;
-	  rpi2c*)
-	    PORT=2235
 	    ;;
 	  odxu4b*)
 	    PORT=2232

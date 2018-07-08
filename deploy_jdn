@@ -54,7 +54,6 @@ profitbricks-build10-amd64.debian.net
 profitbricks-build11-amd64.debian.net
 profitbricks-build15-amd64.debian.net
 bbx15-armhf-rb.debian.net
-bpi0-armhf-rb.debian.net
 cb3a-armhf-rb.debian.net
 cbxi4a-armhf-rb.debian.net
 cbxi4b-armhf-rb.debian.net
@@ -63,7 +62,6 @@ ff2a-armhf-rb.debian.net
 ff2b-armhf-rb.debian.net
 ff4a-armhf-rb.debian.net
 ff64a-armhf-rb.debian.net
-hb0-armhf-rb.debian.net
 jtk1a-armhf-rb.debian.net
 jtk1b-armhf-rb.debian.net
 jtx1a-armhf-rb.debian.net
@@ -78,9 +76,6 @@ opi2b-armhf-rb.debian.net
 opi2c-armhf-rb.debian.net
 p64b-armhf-rb.debian.net
 p64c-armhf-rb.debian.net
-rpi2b-armhf-rb.debian.net
-rpi2c-armhf-rb.debian.net
-wbd0-armhf-rb.debian.net
 wbq0-armhf-rb.debian.net
 root@jenkins.debian.net
 )
