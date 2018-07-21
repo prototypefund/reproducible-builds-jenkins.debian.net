@@ -58,9 +58,9 @@ class Udd:
 
     def query(self, query):
         if not self._conn:
-            log.error('There has been an error connecting to UDD. '
+            log.debug('There has been an error connecting to UDD. '
                       'Look for a previous error for more information.')
-            log.error('Failing nicely, returning an empty response.')
+            log.debug('Failing nicely, returning an empty response.')
             return []
         try:
             cursor = self._conn.cursor()
