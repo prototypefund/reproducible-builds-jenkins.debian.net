@@ -1,7 +1,7 @@
 #!/bin/bash
 # vim: set noexpandtab:
 
-# Copyright © 2015-2016 Holger Levsen <holger@layer-acht.org>
+# Copyright © 2015-2018 Holger Levsen <holger@layer-acht.org>
 #           ©      2018 Mattia Rizzolo <mattia@debian.org>
 # released under the GPLv=2
 
@@ -46,6 +46,7 @@ for ARCH in ${ARCHS} ; do
 	# Debian Reproducible Builds node network but are using for reproducible builds
 	# tests of other projects…
 	REPRODUCIBLE_NODES="jenkins"
+
 	for NODE in $BUILD_NODES ; do
 		REPRODUCIBLE_NODES="$REPRODUCIBLE_NODES $NODE"
 		if [ "$NODE" = "profitbricks-build2-i386.debian.net" ] ; then
@@ -68,7 +69,15 @@ for ARCH in ${ARCHS} ; do
 				armhf) 		JENKINS_NODENAME=$(echo $NODE | cut -d "-" -f1) ;;
 			esac
 		fi
-		write_page "<tr><td>$JENKINS_NODENAME</td>"
+		write_page "<tr><td>$JENKINS_NODENAME"
+		# mark offline nodes
+		if [ -f "$JENKINS_OFFLINE_LIST" ]; then
+			if grep -q "$NODE" "$JENKINS_OFFLINE_LIST"; then
+				write_page " is offline</td><td colspan=\"11\"></td>"
+				continue
+			fi
+		fi
+		write_page "</td>"
 		# health check
 		URL="https://jenkins.debian.net/view/reproducible/view/Node_maintenance/job/reproducible_node_health_check_${ARCH}_${JENKINS_NODENAME}"
 		BADGE="$URL/badge/icon"

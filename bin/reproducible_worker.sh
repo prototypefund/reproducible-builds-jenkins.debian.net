@@ -1,7 +1,7 @@
 #!/bin/bash
 # vim: set noexpandtab:
 
-# Copyright © 2017 Holger Levsen (holger@layer-acht.org)
+# Copyright © 2017-2018 Holger Levsen (holger@layer-acht.org)
 #           © 2018 Mattia Rizolo <mattia@debian.org>
 # released under the GPLv=2
 
@@ -57,7 +57,6 @@ while true ; do
 		echo "The lockfile $LOCKFILE is present, thus stopping this"
 		break
 	fi
-	JENKINS_OFFLINE_LIST="/var/lib/jenkins/offline_nodes"
 	if [ -f "$JENKINS_OFFLINE_LIST" ]; then
 		for n in "$NODE1" "$NODE2"; do
 			if grep -q "$n" "$JENKINS_OFFLINE_LIST"; then
