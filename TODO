@@ -19,8 +19,8 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 == meeting agenda for jenkins-qa meetings
 
 * where: on #debian-qa on irc.oftc.net
-* schedule: every 4th Wednesday of each month, at 18 UTC 
-* next meeting: see below, at old meetings :)
+* schedule: currently none
+* next meeting: no idea
 
 === reoccuring agenda
 
@@ -44,7 +44,6 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 * 2017-04-26: http://meetbot.debian.net/debian-qa/2017/debian-qa.2017-04-26-18.14.html
 * 2017-08-21: http://meetbot.debian.net/debian-qa/2017/debian-qa.2017-08-23-18.30.html
 * 2017-09-27: http://meetbot.debian.net/debian-qa/2017/debian-qa.2017-09-27-17.58.html
-* next: 2017-10-25 18 UTC
 
 == General ToDo
 
@@ -110,13 +109,9 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 
 * See https://wiki.debian.org/ReproducibleBuilds/TestsToDo for the tests.reproducible-builds.org related ToDo list.
 
-=== General system maintenance
-
-* dsa-check-packages points to /bin/true on hosts running in the future, as they otherwise keep spitting errors
-
 === Debian reproducible builds
 
-* make reproducible_build.sh rock solid again and get rid off "set -x # # to debug diffoscoppe/schroot problems"
+* get rid off "set -x # # to debug diffoscoppe/schroot problems"
 ** add check if package to be build has been blacklisted since scheduling and abort
 ** on SIGTERM, also cleanup on remote build nodes there! (via ssh &)
 ** check rbuild logs for "DIFFOSCOPE='E: Failed to change to directory /tmp: Permission denied' and deal with those
