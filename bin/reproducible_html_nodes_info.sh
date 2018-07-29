@@ -73,7 +73,7 @@ for ARCH in ${ARCHS} ; do
 		# mark offline nodes
 		if [ -f "$JENKINS_OFFLINE_LIST" ]; then
 			if grep -q "$NODE" "$JENKINS_OFFLINE_LIST"; then
-				write_page " is offline</td><td colspan=\"11\"></td>"
+				write_page '</td><td colspan="11" style="text-align: center;"><span style="font-style: italic;">offline</span></td>'
 				continue
 			fi
 		fi
