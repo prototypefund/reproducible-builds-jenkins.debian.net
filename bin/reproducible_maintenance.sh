@@ -202,7 +202,10 @@ if [ "$HOSTNAME" = "$MAINNODE" ] ; then
 			echo
 			echo "Old logfiles cleaned in /var/lib/jenkins/userContent/reproducible/debian/build_service/"
 			echo -n "$OLDSTUFF"
-			find /var/lib/jenkins/userContent/reproducible/debian/build_service/ -maxdepth 2 -regex '.*/[0-9]+' -type d -mtime +0 -exec rm -rf --one-file-system {} \; || true
+			# we make sure to actually only delete console.log.gz older than a day
+			# other stuff we only delete after two days (in case a build is running more than 24h...)
+			find /var/lib/jenkins/userContent/reproducible/debian/build_service/ -maxdepth 2 -regex '.*/[0-9]+' -type d -mtime +0 -name console.log.gz -exec rm -rf --one-file-system {} \; || true
+			find /var/lib/jenkins/userContent/reproducible/debian/build_service/ -maxdepth 2 -regex '.*/[0-9]+' -type d -mtime +1 -exec rm -rf --one-file-system {} \; || true
 			echo
 		fi
 	fi
