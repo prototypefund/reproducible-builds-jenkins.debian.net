@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Copyright © 2017 Holger Levsen (holger@layer-acht.org)
+# Copyright © 2017-2018 Holger Levsen (holger@layer-acht.org)
 # released under the GPLv=2
 
 set -e
@@ -29,8 +29,8 @@ if [ ! -d $DIR ] ; then
 	echo "$DIR does not exist."
 	#echo "Wanted $TARGET but $DIR does not exist."
 	exit 0
-elif [ ! -f $FILE ] ; then
-	echo "$FILE does not exist."
+elif [ ! -f $FILE ] && [ ! -f $FILE.gz ] ; then
+	echo "Neither $FILE nor FILE.gz exists."
 	#echo "Wanted $TARGET but $FILE does not exist."
 	exit 0
 fi
@@ -43,18 +43,26 @@ let NEW_BUILD=$BUILD+1
 #
 # if this ain't the latest build, just cat it's logfile
 #
-if [ -e $DIR/$NEW_BUILD/console.log ] ; then
-	cat $FILE
+if [ -e $DIR/$NEW_BUILD/console.log.gz ] ; then
+	zcat $FILE
 #
 # if the worker ain't running, just cat the logfile
 #
 elif [ ! -z "$(ps fax|grep -v grep|grep 'reproducible_worker $WORKER.sh ')" ] ; then
-	cat $FILE
+	if [ -f $FILE.gz ] ; then
+		cat $FILE
+	else
+		zcat $FILE.gz
+	fi
 #
 # FIXME: we should really just convert 'latest' into a number here and use the tail below… 
 #
 elif [ "$BUILD" = "latest" ] ; then
-	cat $FILE
+	if [ -f $FILE.gz ] ; then
+		cat $FILE
+	else
+		zcat $FILE.gz
+	fi
 else
 	#
 	# else, we tail the logfile and kill the tail process, once the next build
