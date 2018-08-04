@@ -301,6 +301,14 @@ update_pkg_set_specific() {
 				convert_from_deb822_into_source_packages_only
 			fi
 			;;
+		CIP)
+			# installed by the Core Infrastructure Plattform
+			# one day we might get a proper data provider from them...
+			# (so far it was send via email)
+			cat /srv/jenkins/bin/reproducible_installed_by_CIP > $TMPFILE
+			packages_list_to_deb822
+			convert_from_deb822_into_source_packages_only
+			;;
 		debian-edu)
 			# Debian Edu
 			# all recommends of the education-* packages

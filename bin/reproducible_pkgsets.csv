@@ -15,6 +15,8 @@ desktop,mate
 desktop,mate_build-depends
 desktop,xfce
 desktop,xfce_build-depends
+Debian distribution,CIP
+Debian distribution,CIP_build-depends
 Debian distribution,debian-edu
 Debian distribution,debian-edu_build-depends
 Debian distribution,freedombox
