@@ -153,7 +153,7 @@ for target in * ; do
 	done
 	cd ..
 done
-GOOD_PERCENT_IMAGES=$(echo "scale=1 ; ($GOOD_IMAGES*100/$ALL_IMAGES)" | bc)
+GOOD_PERCENT_IMAGES=$(echo "scale=1 ; ($GOOD_IMAGES*100/$ALL_IMAGES)" | bc | grep -qs . || echo 0.00)
 # run diffoscope on the packages
 GOOD_PACKAGES=0
 ALL_PACKAGES=0
@@ -200,7 +200,7 @@ echo "       </table>" >> "$DBD_HTML"
 echo "       <table><tr><th>Reproducible packages</th></tr>" >> "$DBD_HTML"
 cat "$DBD_GOOD_PKGS_HTML" >> "$DBD_HTML"
 echo "       </table>" >> "$DBD_HTML"
-GOOD_PERCENT_PACKAGES=$(echo "scale=1 ; ($GOOD_PACKAGES*100/$ALL_PACKAGES)" | bc)
+GOOD_PERCENT_PACKAGES=$(echo "scale=1 ; ($GOOD_PACKAGES*100/$ALL_PACKAGES)" | bc | grep -qs . || echo 0.00)
 # are we there yet?
 if [ "$GOOD_PERCENT_IMAGES" = "100.0" ] || [ "$GOOD_PERCENT_PACKAGES" = "100.0" ]; then
 	MAGIC_SIGN="!"
