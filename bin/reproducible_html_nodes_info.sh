@@ -39,6 +39,9 @@ for ARCH in ${ARCHS} ; do
 			write_page "<th>pbuilder setup $SUITE</th>"
 		done
 		for SUITE in ${SUITES} ; do
+			if [ "$SUITE" == "experimental" ]; then
+				continue
+			fi
 			write_page "<th>schroot setup $SUITE</th>"
 		done
 	write_page "</tr>"
@@ -116,6 +119,9 @@ for ARCH in ${ARCHS} ; do
 		done
 		# diffoscope schroot setup
 		for SUITE in ${SUITES} ; do
+			if [ "$SUITE" == "experimental" ]; then
+				continue
+			fi
 			URL="https://jenkins.debian.net/view/reproducible/view/Debian_setup_${ARCH}/job/reproducible_setup_schroot_${SUITE}_diffoscope_${ARCH}_${JENKINS_NODENAME}"
 			BADGE="$URL/badge/icon"
 			case $JENKINS_NODENAME in
@@ -127,9 +133,7 @@ for ARCH in ${ARCHS} ; do
 					fi
 					;;
 				jenkins)
-					if [ "$SUITE" != "experimental" ]; then
-						write_page "<td><a href='$URL'><img src='$BADGE' /></a></td>"
-					fi
+					write_page "<td><a href='$URL'><img src='$BADGE' /></a></td>"
 					;;
 				*) write_page "<td></td>" ;;
 			esac
