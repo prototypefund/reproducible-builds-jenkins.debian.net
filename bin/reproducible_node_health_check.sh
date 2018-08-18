@@ -156,6 +156,7 @@ fi
 #
 echo "$(date -u) - checking whether all services are running fine..."
 if ! systemctl is-system-running > /dev/null; then
+    systemctl status|head -5
     echo "Warning: systemd is reporting errors:"
     systemctl list-units --state=error,failed
     DIRTY=true
