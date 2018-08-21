@@ -2,5 +2,3 @@
 # No builds will be dispatched to those nodes, and the nodes will be marked
 # as offline in the jenkins UI.
 
-#ff2a-armhf-rb.debian.net
-#opi2a-armhf-rb.debian.net
