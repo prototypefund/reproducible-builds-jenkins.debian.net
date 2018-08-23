@@ -222,7 +222,10 @@ for i in "${HOSTS[@]}" ; do
 done
 echo
 
-JENKINS_OFFLINE_LIST="$(basename $0)/jenkins-home/offline_nodes"
+JENKINS_OFFLINE_LIST="$(dirname $0)/jenkins-home/offline_nodes"
+echo
+echo $JENKINS_OFFLINE_LIST
+echo
 OFFLINE=""
 PROBLEMS=""
 for i in "${HOSTS[@]}" ; do
@@ -239,18 +242,23 @@ for i in "${HOSTS[@]}" ; do
 		rm $LOG.$i $LOG.$i.done > /dev/null
 	else
 		echo "Problems on $i: $TAIL"
+		KNOWN_OFFLINE=false
 		if [ -f "$JENKINS_OFFLINE_LIST" ]; then
 			if grep -q "$i" "$JENKINS_OFFLINE_LIST"; then
+				KNOWN_OFFLINE=true
 				if [ -z "$OFFLINE" ] ; then
 					OFFLINE=" $i"
 				else
 					OFFLINE=" $i\n$OFFLINE"
 				fi
 			fi
-		elif [ -z "$PROBLEMS" ] ; then
-			PROBLEMS=" $i"
-		else
-			PROBLEMS=" $i\n$PROBLEMS"
+		fi
+		if ! $KNOWN_OFFLINE ; then
+			if [ -z "$PROBLEMS" ] ; then
+				PROBLEMS=" $i"
+			else
+				PROBLEMS=" $i\n$PROBLEMS"
+			fi
 		fi
 		get_arch_color $i
 		xterm -class deploy-jenkins -bg $BG -fa 'DejaVuSansMono' -fs 10 -e "less +G $LOG.$i ; rm $LOG.$i $LOG.$i.done" &
