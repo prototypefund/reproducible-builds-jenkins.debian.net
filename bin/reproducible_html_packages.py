@@ -12,6 +12,7 @@
 
 import os
 import errno
+import urllib
 import pystache
 import apt_pkg
 apt_pkg.init_system()
@@ -256,6 +257,7 @@ def gen_suitearch_section(package, current_suite, current_arch):
             dbd_page_uri = dbd_links.get('dbd_page_uri', '')
             suites.append({
                 'package': package.name,
+                'package_quote_plus': urllib.parse.quote_plus(package.name),
                 'status': status.value.name,
                 'version': version,
                 'build_date': build_date,
