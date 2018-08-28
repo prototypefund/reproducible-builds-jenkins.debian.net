@@ -1,7 +1,7 @@
 #!/bin/bash
 # vim: set noexpandtab:
 
-# Copyright 2014-2017 Holger Levsen <holger@layer-acht.org>
+# Copyright 2014-2018 Holger Levsen <holger@layer-acht.org>
 #         © 2018      Mattia Rizzolo <mattia@mapreri.org>
 # released under the GPLv=2
 
@@ -114,9 +114,9 @@ else
 			jenkins|jenkins-test-vm|profitbricks-build*)
 				export MIRROR=http://cdn-fastly.deb.debian.org/debian ;;
 			bbx15|cb3*|cbxi4*|wbq0|odxu4*|odu3*|odc*|ff*|ff4*|opi2*|jt?1*|p64*)
-				export MIRROR=http://deb.debian.org/debian ;;
+				export MIRROR=http://cdn-fastly.deb.debian.org/debian ;;
 			codethink*)
-				export MIRROR=http://deb.debian.org/debian ;;
+				export MIRROR=http://cdn-fastly.deb.debian.org/debian ;;
 			spectrum)
 				export MIRROR=none ;;
 			*)
