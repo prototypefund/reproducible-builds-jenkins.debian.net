@@ -18,6 +18,8 @@ TARGET_DIR=/srv/reproducible-results/node-information/
 mkdir -p $TARGET_DIR
 TMPFILE_SRC=$(mktemp)
 TMPFILE_NODE=$(mktemp)
+# remove old node entries which are older than two weeks
+find $TARGET_DIR/ -type f -mtime +14 -exec rm -v {} \;
 
 #
 # build static webpages
