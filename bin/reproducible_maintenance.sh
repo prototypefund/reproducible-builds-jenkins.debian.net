@@ -475,11 +475,11 @@ fi
 
 # remove artifacts older than a day
 echo "$(date -u) - Checking for artifacts older than a day."
-ARTIFACTS=$(find $DEBIAN_BASE/artifacts/* -maxdepth 1 -type d -mtime +1 -exec ls -lad {} \; 2>/dev/null|| true)
+ARTIFACTS=$(find $DEBIAN_BASE/artifacts/r00t-me/* -maxdepth 1 -type d -mtime +1 -exec ls -lad {} \; 2>/dev/null|| true)
 if [ ! -z "$ARTIFACTS" ] ; then
 	echo
 	echo "Removed old artifacts:"
-	find $DEBIAN_BASE/artifacts/* -maxdepth 1 -type d -mtime +1 -exec rm -rv {} \;
+	find $DEBIAN_BASE/artifacts/r00t-me/* -maxdepth 1 -type d -mtime +1 -exec rm -rv {} \;
 	echo
 fi
 
