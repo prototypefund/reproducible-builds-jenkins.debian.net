@@ -21,7 +21,7 @@
         {{/current_suitearch}}
         {{#current_suitearch}}
         {{version}} in <a href="/debian/{{suite}}/{{arch}}/" title="Go to: summary of all tests for {{arch}}/{{suite}}" target="_parent">{{suite}}</a>
-        <a href="/cgi-bin/schedule?suite={{suite}}&architecture={{arch}}&pkg={{package}}" target="_parent" title="Schedule a new build">♻</a>
+        <a href="/cgi-bin/schedule?suite={{suite}}&architecture={{arch}}&pkg={{package_quote_plus}}" target="_parent" title="Schedule a new build">♻</a>
         {{/current_suitearch}}
         {{#dbd_page_uri}}{{^current_suitearch}}
           <a href="{{dbd_page_uri}}" class="diff-link" title="Show: formatted diffoscope results">
