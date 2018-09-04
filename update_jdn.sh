@@ -346,10 +346,13 @@ if [ -f /etc/debian_version ] ; then
 				libvirt-daemon
 				libvirt-daemon-system
 				mercurial
+				python3-babel
+				python3-defusedxml
 				python3-libvirt
 				python3-mwclient/stretch-backports
 				python3-qrcode
 				python3-ruamel.yaml
+				python3-setuptools
 				python3-vagrant
 				qemu-kvm
 				subversion
