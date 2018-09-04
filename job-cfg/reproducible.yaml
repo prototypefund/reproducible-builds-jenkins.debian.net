@@ -661,7 +661,7 @@
                     my_description: 'Setup a build environment for F-Droid.'
                     my_timed: '42 0 * * 1'
                     my_hname: 'profitbricks7'
-                    my_recipients: 'jenkins+reproducible-builds qa-jenkins-scm@lists.alioth.debian.org hans@guardianproject.info michael.poehn@fsfe.org'
+                    my_recipients: 'jenkins+reproducible-builds qa-jenkins-scm@lists.alioth.debian.org hans@guardianproject.info michael.poehn@fsfe.org bubu@bubu1.eu'
                     my_blocker: '^reproducible.*fdroid.*'
             my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
 
