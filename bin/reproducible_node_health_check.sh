@@ -159,6 +159,7 @@ if ! systemctl is-system-running > /dev/null; then
     systemctl status|head -5
     echo "Warning: systemd is reporting errors:"
     systemctl list-units --state=error,failed
+    echo "Manual cleanup needed. If only old sessions are gone, use 'systemctl reset-failed' to cleanup state. Else probably some services actually need a restart."
     DIRTY=true
 fi
 
