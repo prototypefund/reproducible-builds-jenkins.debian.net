@@ -30,8 +30,6 @@ ARCH=amd64
 SUITE=unstable
 echo "$(date -u) - starting to write $PAGE page."
 write_page_header $VIEW "Nodes health overview"
-DISCLAIMER="<p>This page is still under development. Please provide feedback, which other information (be it from munin or elsewhere) should be displayed and how this page should be split further, eg, the graphs could all be on another page and/or we should split this page into four for the four architectures being tested…</p>"
-write_page "$DISCLAIMER"
 write_page "<p style=\"clear:both;\">"
 for ARCH in ${ARCHS} ; do
 	write_page "<h3>$ARCH nodes</h3>"
@@ -155,7 +153,6 @@ for TYPE in daily weekly ; do
 	SUITE=unstable
 	echo "$(date -u) - starting to write $PAGE page."
 	write_page_header $VIEW "Nodes $TYPE graphs"
-	write_page "$DISCLAIMER"
 	write_page "<p style=\"clear:both;\">"
 	for ARCH in ${ARCHS} ; do
 		write_page "<h3>$ARCH nodes</h3>"
