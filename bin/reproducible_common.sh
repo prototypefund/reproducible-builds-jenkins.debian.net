@@ -478,7 +478,7 @@ write_variation_table() {
 				write_page "$(cat /srv/reproducible-results/node-information/*$a* | grep KERNEL | cut -d '=' -f2- | sort -u | tr '\n' '\0' | xargs -0 -n1 echo '<br />&nbsp;&nbsp;')"
 			done
 			write_page "</td>"
-			write_page "<td>(on amd64 systematically varied, on i386 as well and also with 32 and 64 bit kernel variation, while on armhf not systematically)<br />"
+			write_page "<td>on amd64 systematically varied, on armhf not systematically, on i386 and arm64 not at all<br />"
 			for a in ${ARCHS} ; do
 				write_page "<br />on $a one of:"
 				write_page "$(cat /srv/reproducible-results/node-information/*$a* | grep KERNEL | cut -d '=' -f2- | sort -u | tr '\n' '\0' | xargs -0 -n1 echo '<br />&nbsp;&nbsp;')"
