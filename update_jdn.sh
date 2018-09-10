@@ -475,7 +475,7 @@ if [ -f /etc/debian_version ] ; then
 		elif [ "$HOSTNAME" = "profitbricks-build6-i386" ] || [ "$HOSTNAME" = "profitbricks-build16-i386" ] \
 			|| [ "$HOSTNAME" = "profitbricks-build2-i386" ] || [ "$HOSTNAME" = "profitbricks-build12-i386" ] ; then
 			# we dont vary the kernel on i386 atm, see #875990 + #876035
-			$UP2DATE || sudo apt-get install linux-image-amd64
+			$UP2DATE || sudo apt-get install linux-image-amd64:amd64
 		fi
 		# only needed on the main nodes
 		if [ "$HOSTNAME" = "jenkins-test-vm" ] ; then
