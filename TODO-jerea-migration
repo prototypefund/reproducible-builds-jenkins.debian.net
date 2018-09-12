@@ -1,0 +1,20 @@
+some ad-hoc notes which should be moved elsewhere or deleted
+------------------------------------------------------------
+
+* /var/lib/jenkins/init.groovy has been manually deployed
+* plain http login should work by going to
+  https://jenkins.debian.org/http-auth-jenkins/ but currently it doesn't.
+  auth should be configured in /srv/jenkins.debian.org/etc/htdigest (NOTE:
+  passwords here have NOTHING to do with the ones in jenkins itself).  Currently
+  this is disabled by renaming the htdigest file
+* jjb authenticate itself using an API token, which can be reset by going to
+  https://jenkins.debian.org/user/jenkins-job-builder/configure and hitting
+  "Change API token".  To get the API token run the following groovy script:
+    import jenkins.security.*
+    User u = User.get("jenkins-job-builder")
+    ApiTokenProperty t = u.getProperty(ApiTokenProperty.class)
+    def token = t.getApiTokenInsecure()
+    println("token is $token")
+* run the script via manage → script console; aka https://jenkins.debian.org/script
+* jjb configuration is kept in /srv/jenkins.debian.org/etc/jjb.ini, so to run it:
+    sudo -u jenkins-adm jenkins-jobs --conf ~jenkins/etc/jjb.ini …
