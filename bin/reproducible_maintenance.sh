@@ -60,12 +60,26 @@ set -e
 #
 # delete old temp directories
 #
-echo "$(date -u) - Deleting temp directories, older than 3 days."
+echo "$(date -u) - Deleting temp directories in $REP_RESULTS/rbuild-debian, older than 3 days."
 OLDSTUFF=$(find $REP_RESULTS/rbuild-debian -maxdepth 1 -type d -mtime +2 -name "tmp.*" -exec ls -lad {} \; || true)
 if [ ! -z "$OLDSTUFF" ] ; then
 	echo
 	echo "Old temp directories found in $REP_RESULTS/rbuild-debian"
 	find $REP_RESULTS/rbuild-debian -maxdepth 1 -type d -mtime +2 -name "tmp.*" -exec rm -rv {} \; || true
+	echo "These old directories have been deleted."
+	echo
+	DIRTY=true
+fi
+
+#
+# delete old temp directories in /tmp (probably only useful on profitbricks3+4)
+#
+echo "$(date -u) - Deleting temporary directories in /tmp, older than 3 days."
+OLDSTUFF=$(find /tmp -maxdepth 1 -type d -mtime +2 -name "tmp.*" -o -name "Test*" -o -name "usession-release*" -o -name "*test*" -exec ls -lad {} \; || true)
+if [ ! -z "$OLDSTUFF" ] ; then
+	echo
+	echo "Old temp directories found in /tmp"
+	find /tmp -maxdepth 1 -type d -mtime +2 -name "tmp.*" -o -name "Test*" -o -name "usession-release*" -o -name "*test*" -exec rm -rv {} \; || true
 	echo "These old directories have been deleted."
 	echo
 	DIRTY=true
