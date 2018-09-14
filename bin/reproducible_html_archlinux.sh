@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Copyright 2014-2017 Holger Levsen <holger@layer-acht.org>
+# Copyright 2014-2018 Holger Levsen <holger@layer-acht.org>
 #                2015 anthraxx <levente@leventepolyak.net>
 # released under the GPLv=2
 
@@ -127,6 +127,9 @@ create_pkg_state_and_html() {
 			elif [ ! -z "$(grep 'The requested URL returned error: 404' $ARCHLINUX_PKG_PATH/build1.log $ARCHLINUX_PKG_PATH/build2.log 2>/dev/null)" ] ; then
 				echo 404_3 > $ARCHLINUX_PKG_PATH/pkg.state
 				EXTRA_REASON="with 404 - file not found"
+			elif [ ! -z "$(egrep '==> ERROR: Failed to source .*PKGBUILD' $ARCHLINUX_PKG_PATH/build1.log $ARCHLINUX_PKG_PATH/build2.log 2>/dev/null)" ] ; then
+				echo 404_A > $ARCHLINUX_PKG_PATH/pkg.state
+				EXTRA_REASON="unclear why"
 			fi
 			echo "       <img src=\"/userContent/static/weather-severe-alert.png\" alt=\"404 icon\" /> $REASON $EXTRA_REASON" >> $HTML_BUFFER
 		elif [ ! -z "$(egrep '==> ERROR: (install file .* does not exist or is not a regular file|The download program wget is not installed)' $ARCHLINUX_PKG_PATH/build1.log 2>/dev/null)" ] ; then
@@ -141,9 +144,6 @@ create_pkg_state_and_html() {
 		elif [ ! -z "$(egrep 'makepkg was killed by timeout after' $ARCHLINUX_PKG_PATH/build1.log $ARCHLINUX_PKG_PATH/build2.log 2>/dev/null)" ] ; then
 			echo FTBFS_3 > $ARCHLINUX_PKG_PATH/pkg.state
 			echo "       <img src=\"/userContent/static/weather-storm.png\" alt=\"ftbfs icon\" /> failed to build, killed by timeout" >> $HTML_BUFFER
-		elif [ ! -z "$(egrep '==> ERROR: Failed to source .*PKGBUILD' $ARCHLINUX_PKG_PATH/build1.log $ARCHLINUX_PKG_PATH/build2.log 2>/dev/null)" ] ; then
-			echo FTBFS_4 > $ARCHLINUX_PKG_PATH/pkg.state
-			echo "       <img src=\"/userContent/static/weather-storm.png\" alt=\"ftbfs icon\" /> failed to source PKGBUILD" >> $HTML_BUFFER
 		else
 			echo "       probably failed to build from source, please investigate" >> $HTML_BUFFER
 			echo UNKNOWN > $ARCHLINUX_PKG_PATH/pkg.state
@@ -218,9 +218,9 @@ create_pkg_state_and_html() {
 echo "$(date -u) - starting to analyse build results."
 DATE=$(date -u +'%Y-%m-%d')
 YESTERDAY=$(date '+%Y-%m-%d' -d "-1 day")
-MEMBERS_FTBFS="0 1 2 3 4"
+MEMBERS_FTBFS="0 1 2 3"
 MEMBERS_DEPWAIT="0 1"
-MEMBERS_404="0 1 2 3 4 5 6 7 8 9"
+MEMBERS_404="0 1 2 3 4 5 6 7 8 9 A"
 MEMBERS_FTBR="0 1 2"
 HTML_BUFFER=$(mktemp -t archlinuxrb-html-XXXXXXXX)
 HTML_REPOSTATS=$(mktemp -t archlinuxrb-html-XXXXXXXX)
