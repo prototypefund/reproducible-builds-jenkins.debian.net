@@ -127,7 +127,7 @@ create_pkg_state_and_html() {
 			elif [ ! -z "$(grep 'The requested URL returned error: 404' $ARCHLINUX_PKG_PATH/build1.log $ARCHLINUX_PKG_PATH/build2.log 2>/dev/null)" ] ; then
 				echo 404_3 > $ARCHLINUX_PKG_PATH/pkg.state
 				EXTRA_REASON="with 404 - file not found"
-			elif [ ! -z "$(egrep '==> ERROR: Failed to source .*PKGBUILD' $ARCHLINUX_PKG_PATH/build1.log $ARCHLINUX_PKG_PATH/build2.log 2>/dev/null)" ] ; then
+			elif [ ! -z "$(egrep 'Failed to source PKGBUILD.*PKGBUILD' $ARCHLINUX_PKG_PATH/build1.log $ARCHLINUX_PKG_PATH/build2.log 2>/dev/null)" ] ; then
 				echo 404_A > $ARCHLINUX_PKG_PATH/pkg.state
 				EXTRA_REASON="unclear why"
 			fi
