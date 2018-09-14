@@ -183,7 +183,6 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 ==== reproducible Debian arm64
 
 * vary DEB_BUILD_OPTS? (NUM_CPU)
-* make systems send mail
 
 ==== reproducible Debian installation
 
