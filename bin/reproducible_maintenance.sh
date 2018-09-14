@@ -75,11 +75,11 @@ fi
 # delete old temp directories in /tmp (probably only useful on profitbricks3+4)
 #
 echo "$(date -u) - Deleting temporary directories in /tmp, older than 3 days."
-OLDSTUFF=$(find /tmp -maxdepth 1 -type d -mtime +2 -name "tmp.*" -o -name "Test*" -o -name "usession-release*" -o -name "*test*" -exec ls -lad {} \; || true)
+OLDSTUFF=$(find /tmp -maxdepth 1 -type d -mtime +2 -regextype egrep -regex '/tmp/(tmp.*|Test.*|usession-release.*|.*test.*)' -exec ls -lad {} \; || true)
 if [ ! -z "$OLDSTUFF" ] ; then
 	echo
 	echo "Old temp directories found in /tmp"
-	find /tmp -maxdepth 1 -type d -mtime +2 -name "tmp.*" -o -name "Test*" -o -name "usession-release*" -o -name "*test*" -exec rm -rv {} \; || true
+	find /tmp -maxdepth 1 -type d -mtime +2 -regextype egrep -regex '/tmp/(tmp.*|Test.*|usession-release.*|.*test.*)' -exec rm -rv {} \; || true
 	echo "These old directories have been deleted."
 	echo
 	DIRTY=true
