@@ -183,7 +183,6 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 ==== reproducible Debian arm64
 
 * vary DEB_BUILD_OPTS? (NUM_CPU)
-* squid is not used, we copy a /etc/squid3/squid3.conf but ubuntu uses /etc/squid/squid.conf
 * make systems send mail
 
 ==== reproducible Debian installation
