@@ -96,7 +96,7 @@ create_pkg_state_and_html() {
 		elif [ ! -z "$(egrep '^error: unknown package: ' $ARCHLINUX_PKG_PATH/build1.log $ARCHLINUX_PKG_PATH/build2.log 2>/dev/null)" ] ; then
 			echo 404_0 > $ARCHLINUX_PKG_PATH/pkg.state
 			echo "       <img src=\"/userContent/static/weather-severe-alert.png\" alt=\"404 icon\" /> unknown package" >> $HTML_BUFFER
-		elif [ ! -z "$(egrep '==> ERROR: (Failure while downloading|One or more PGP signatures could not be verified|One or more files did not pass the validity check|Integrity checks \(.*\) differ in size from the source array|Failure while branching|Failure while creating working copy)' $ARCHLINUX_PKG_PATH/build1.log $ARCHLINUX_PKG_PATH/build2.log 2>/dev/null)" ] ; then
+		elif [ ! -z "$(egrep '==> ERROR: (Failure while downloading|One or more PGP signatures could not be verified|One or more files did not pass the validity check|Integrity checks \(.*\) differ in size from the source array|Failure while branching|Failure while creating working copy|Failed to source PKGBUILD.*PKGBUILD)' $ARCHLINUX_PKG_PATH/build1.log $ARCHLINUX_PKG_PATH/build2.log 2>/dev/null)" ] ; then
 			REASON="download failed"
 			EXTRA_REASON=""
 			echo 404_0 > $ARCHLINUX_PKG_PATH/pkg.state
@@ -127,9 +127,9 @@ create_pkg_state_and_html() {
 			elif [ ! -z "$(grep 'The requested URL returned error: 404' $ARCHLINUX_PKG_PATH/build1.log $ARCHLINUX_PKG_PATH/build2.log 2>/dev/null)" ] ; then
 				echo 404_3 > $ARCHLINUX_PKG_PATH/pkg.state
 				EXTRA_REASON="with 404 - file not found"
-			elif [ ! -z "$(egrep 'Failed to source PKGBUILD.*PKGBUILD' $ARCHLINUX_PKG_PATH/build1.log $ARCHLINUX_PKG_PATH/build2.log 2>/dev/null)" ] ; then
+			elif [ ! -z "$(egrep 'fatal: the remote end hung up unexpectedly' $ARCHLINUX_PKG_PATH/build1.log $ARCHLINUX_PKG_PATH/build2.log 2>/dev/null)" ] ; then
 				echo 404_A > $ARCHLINUX_PKG_PATH/pkg.state
-				EXTRA_REASON="unclear why"
+				EXTRA_REASON="could not clone git repository"
 			fi
 			echo "       <img src=\"/userContent/static/weather-severe-alert.png\" alt=\"404 icon\" /> $REASON $EXTRA_REASON" >> $HTML_BUFFER
 		elif [ ! -z "$(egrep '==> ERROR: (install file .* does not exist or is not a regular file|The download program wget is not installed)' $ARCHLINUX_PKG_PATH/build1.log 2>/dev/null)" ] ; then
