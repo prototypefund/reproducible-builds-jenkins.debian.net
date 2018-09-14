@@ -97,8 +97,8 @@ if [ "$(ip link | sed -n '/LOOPBACK\|NOARP/!s/.* mtu \([0-9]*\) .*/\1/p' | sort 
 	ip link
 	echo "$(date -u) - network interfaces MTU != 1500 - this is wrong.  => please \`sudo ifconfig eth0 mtu 1500\`"
 	# should probably turn this into a warning if this becomes to annoying
-	irc_message debian-reproducible "$HOSTNAME has wrong MTU, please tell the jenkins admins to fix this.  (sudo ifconfig eth0 mtu 1500)"
-	exit 1
+	echo "Warning: $HOSTNAME has wrong MTU, please tell the jenkins admins to fix this.  (sudo ifconfig eth0 mtu 1500)"
+	DIRTY=true
 fi
 
 #
