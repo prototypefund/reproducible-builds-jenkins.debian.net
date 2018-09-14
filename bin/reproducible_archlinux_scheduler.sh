@@ -76,13 +76,13 @@ update_archlinux_repositories() {
 	schroot --end-session -c $SESSION
 	echo "$(date -u) - the following packages are known to us with higher versions than the repo because we build trunk:"
 	cat $OLDER
-	rm -f $OLDER
 	# schedule up to $MAX packages we already know about
 	# (only if less than $THRESHOLD packages are currently scheduled)
 	old=""
 	local MAX=350
 	local THRESHOLD=450
 	if [ $(find $BASE/archlinux/ -name pkg.needs_build | wc -l ) -le $THRESHOLD ] ; then
+		rm -f $OLDER
 		local BLACKLIST="/($(echo $ARCHLINUX_BLACKLISTED | sed "s# #|#g"))/"
 		# reschedule
 	        for i in $( ( for REPO in $ARCHLINUX_REPOS ; do
