@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Copyright 2015-2017 Holger Levsen <holger@layer-acht.org>
+# Copyright 2015-2018 Holger Levsen <holger@layer-acht.org>
 # released under the GPLv=2
 
 DEBUG=false
@@ -76,25 +76,25 @@ update_archlinux_repositories() {
 	schroot --end-session -c $SESSION
 	echo "$(date -u) - the following packages are known to us with higher versions than the repo because we build trunk:"
 	cat $OLDER
+	rm -f $OLDER
 	# schedule up to $MAX packages we already know about
 	# (only if less than $THRESHOLD packages are currently scheduled)
-	# FIXME: this doesnt reschedule packages without build1.log, 
-	# though there shouldnt be any.
 	old=""
 	local MAX=350
 	local THRESHOLD=450
 	if [ $(find $BASE/archlinux/ -name pkg.needs_build | wc -l ) -le $THRESHOLD ] ; then
 		local BLACKLIST="/($(echo $ARCHLINUX_BLACKLISTED | sed "s# #|#g"))/"
 		# reschedule
-		find $BASE/archlinux/ -name build1.log -type f -printf '%T+ %p\n' | sort | egrep -v "$BLACKLIST" | head -n $MAX| cut -d " " -f2 | sed -s 's#build1.log$#pkg.needs_build#g' | xargs -r touch
-		# explain, for debugging…
-		find $BASE/archlinux/ -name build1.log -type f -printf '%T+ %p\n' | sort | egrep -v "$BLACKLIST" | head -n $MAX| cut -d "/" -f8-9 | sort > $OLDER
+	        for i in $( ( for REPO in $ARCHLINUX_REPOS ; do
+			find $BASE/archlinux/$REPO -type d -wholename "$BASE/archlinux/$REPO/*" -printf '%T+ %p\n' | egrep -v "$BLACKLIST"
+		done ) | sort | head -n $MAX| cut -d " " -f2 ) ; do
+			touch $i/pkg.needs_build
+			echo "$(basename $(dirname $i))/$(basename $i)" >> $OLDER
+		done
 		if [ -s $OLDER ] ; then
 			old=" $(cat $OLDER | wc -l) old ones"
 			echo "$(date -u) - Old, previously tested packages rescheduled: "
-			for REPO in $ARCHLINUX_REPOS ; do
-				grep ^$REPO $OLDER | sed "s#^#  #g"
-			done
+			cat $OLDER
 		fi
 	fi
 	rm $OLDER
