@@ -493,7 +493,7 @@ ARTIFACTS=$(find $DEBIAN_BASE/artifacts/r00t-me/* -maxdepth 1 -type d -mtime +1 
 if [ ! -z "$ARTIFACTS" ] ; then
 	echo
 	echo "Removed old artifacts:"
-	find $DEBIAN_BASE/artifacts/r00t-me/* -maxdepth 1 -type d -mtime +1 -exec rm -rv {} \;
+	find $DEBIAN_BASE/artifacts/r00t-me/* -maxdepth 1 -type d -mtime +1 -exec rm -rv {} \; || true
 	echo
 fi
 
