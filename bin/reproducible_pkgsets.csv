@@ -36,6 +36,7 @@ maintenance team,maint_debian-python
 maintenance team,maint_debian-qa
 maintenance team,maint_debian-science
 maintenance team,maint_debian-x
+maintenance team,maint_pkg-android-tools-devel
 maintenance team,maint_pkg-fonts-devel
 maintenance team,maint_pkg-games-devel
 maintenance team,maint_pkg-golang-maintainers

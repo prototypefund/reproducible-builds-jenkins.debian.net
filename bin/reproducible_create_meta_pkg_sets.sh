@@ -415,6 +415,10 @@ update_pkg_set_specific() {
 			# debian-x@l.d.o maintainers
 			grep-dctrl -sPackage -n -FMaintainer,Uploaders debian-x@lists.debian.org $SOURCES > $TMPFILE
 			;;
+		maint_pkg-android-tools-maintainers)
+			# Android Tools Team
+			grep-dctrl -sPackage -n -FMaintainer,Uploaders android-tools-devel@lists.alioth.debian.org $SOURCES > $TMPFILE
+			;;
 		maint_pkg-fonts-devel)
 			# pkg-fonts-devel
 			grep-dctrl -sPackage -n -FMaintainer,Uploaders pkg-fonts-devel@lists.alioth.debian.org $SOURCES > $TMPFILE
