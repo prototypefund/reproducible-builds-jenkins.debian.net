@@ -33,6 +33,25 @@ update_archlinux_repositories() {
 	TOTAL=$(cat ${ARCHLINUX_PKGS}_full_pkgbase_list | wc -l)
 	echo "$(date -u ) - $TOTAL Arch Linux packages are known in total to us."
 
+	# remove packages which are gone (only when run between 21:00 and 23:59)
+	if [ $(date +'%H') -gt 21 ] ; then
+		REMOVED=0
+		REMOVE_LIST=""
+		for REPO in $ARCHLINUX_REPOS ; do
+			echo "$(date -u ) - Dropping removed packages from repository '$REPO':"
+			for i in $(find $BASE/archlinux/$REPO -type d -wholename "$BASE/archlinux/$REPO/*" | sort) ; do
+				PKG=$(basename $i)
+				if ! grep -q "$REPO $PKG" ${ARCHLINUX_PKGS}_full_pkgbase_list > /dev/null ; then
+					let REMOVED=$REMOVED+1
+					echo "DEBUG: $REPO/$PKG seems to have been removed in the Archlinux repos, should delete $BASE/archlinux/$REPO/$PKG as well."
+					REMOVE_LIST="$REMOVE_LIST $REPO/$PKG"
+				fi
+			done
+		done
+		echo "$(date -u ) - would have deleted $REMOVED packages: $REMOVE_LIST"
+	fi
+
+	# schedule packages
 	for REPO in $ARCHLINUX_REPOS ; do
 		TMPPKGLIST=$(mktemp -t archlinuxrb-scheduler-XXXXXXXX)
 		echo "$(date -u ) - updating list of available packages in repository '$REPO'."
