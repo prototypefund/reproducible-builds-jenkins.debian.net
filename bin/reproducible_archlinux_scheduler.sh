@@ -140,7 +140,7 @@ update_archlinux_repositories() {
 	fi
 	echo "$(date -u ) - scheduled $new/$updated packages$old."
 	rm $NEW $UPDATED > /dev/null
-	echo "$(date -u) - Done updating Arch Linux repositories, currently $TOTAL packages scheduled."
+	echo "$(date -u) - Done updating Arch Linux repositories, currently $TOTAL packages known."
 }
 
 update_archlinux_repositories
