@@ -173,6 +173,10 @@ case $HOSTNAME in
 		TMPFSSIZE=40
 		TMPSIZE=8
 		;;
+	profitbricks-build3-amd64|profitbricks-build4-amd64)
+		TMPFSSIZE=200
+		TMPSIZE=30
+		;;
 	profitbricks-build*)
 		TMPFSSIZE=200
 		TMPSIZE=15
