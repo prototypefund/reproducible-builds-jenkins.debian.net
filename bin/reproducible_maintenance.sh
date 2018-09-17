@@ -65,7 +65,7 @@ OLDSTUFF=$(find $REP_RESULTS/rbuild-debian -maxdepth 1 -type d -mtime +2 -name "
 if [ ! -z "$OLDSTUFF" ] ; then
 	echo
 	echo "Old temp directories found in $REP_RESULTS/rbuild-debian"
-	find $REP_RESULTS/rbuild-debian -maxdepth 1 -type d -mtime +2 -name "tmp.*" -exec rm -rv {} \; || true
+	find $REP_RESULTS/rbuild-debian -maxdepth 1 -type d -mtime +2 -name "tmp.*" -exec rm -rv --one-file-system {} \; || true
 	echo "These old directories have been deleted."
 	echo
 	DIRTY=true
@@ -79,7 +79,7 @@ OLDSTUFF=$(find /tmp -maxdepth 1 -type d -mtime +2 -regextype egrep -regex '/tmp
 if [ ! -z "$OLDSTUFF" ] ; then
 	echo
 	echo "Old temp directories found in /tmp"
-	find /tmp -maxdepth 1 -type d -mtime +2 -regextype egrep -regex '/tmp/(tmp.*|Test.*|usession-release.*|.*test.*)' -exec rm -rv {} \; || true
+	find /tmp -maxdepth 1 -type d -mtime +2 -regextype egrep -regex '/tmp/(tmp.*|Test.*|usession-release.*|.*test.*)' -exec rm -rv --one-file-system {} \; || true
 	echo "These old directories have been deleted."
 	echo
 	DIRTY=true
@@ -493,7 +493,7 @@ ARTIFACTS=$(find $DEBIAN_BASE/artifacts/r00t-me/* -maxdepth 1 -type d -mtime +1 
 if [ ! -z "$ARTIFACTS" ] ; then
 	echo
 	echo "Removed old artifacts:"
-	find $DEBIAN_BASE/artifacts/r00t-me/* -maxdepth 1 -type d -mtime +1 -exec rm -rv {} \; || true
+	find $DEBIAN_BASE/artifacts/r00t-me/* -maxdepth 1 -type d -mtime +1 -exec rm -rv --one-file-system {} \; || true
 	echo
 fi
 
