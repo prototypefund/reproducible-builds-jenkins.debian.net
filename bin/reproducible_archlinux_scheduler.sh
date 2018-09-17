@@ -114,7 +114,7 @@ update_archlinux_repositories() {
 		if [ -s $OLDER ] ; then
 			old=" $(cat $OLDER | wc -l) old ones"
 			echo "$(date -u) - Old, previously tested packages rescheduled: "
-			cat $OLDER
+			cat $OLDER | sort
 		fi
 	fi
 	rm $OLDER
