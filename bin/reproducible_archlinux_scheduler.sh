@@ -43,12 +43,13 @@ update_archlinux_repositories() {
 				PKG=$(basename $i)
 				if ! grep -q "$REPO $PKG" ${ARCHLINUX_PKGS}_full_pkgbase_list > /dev/null ; then
 					let REMOVED=$REMOVED+1
-					echo "DEBUG: $REPO/$PKG seems to have been removed in the Archlinux repos, should delete $BASE/archlinux/$REPO/$PKG as well."
 					REMOVE_LIST="$REMOVE_LIST $REPO/$PKG"
+					rm -r --one-file-system $BASE/archlinux/$REPO/$PKG
+				        echo "$REPO/$PKG removed as it's gone from the Archlinux repositories."
 				fi
 			done
 		done
-		echo "$(date -u ) - would have deleted $REMOVED packages: $REMOVE_LIST"
+		echo "$(date -u ) - deleted $REMOVED packages: $REMOVE_LIST"
 	fi
 
 	# schedule packages
