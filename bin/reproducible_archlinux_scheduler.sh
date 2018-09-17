@@ -138,9 +138,12 @@ update_archlinux_repositories() {
 		if [ -n "$old" ] && ( [ $new -ne 0 ] || [ $updated -ne 0 ] ) ; then
 			old=", plus$old"
 		fi
-		irc_message archlinux-reproducible "${message}$old, for $total scheduled out of $TOTAL."
+		MESSAGE="${message}$old, for $total scheduled out of $TOTAL."
+		irc_message archlinux-reproducible "$MESSAGE"
+		echo "$(date -u ) - $MESSAGE"
+	else
+		echo "$(date -u ) - didn't schedule any packages."
 	fi
-	echo "$(date -u ) - scheduled $new/$updated packages$old."
 	rm $NEW $UPDATED > /dev/null
 	echo "$(date -u) - Done updating Arch Linux repositories, currently $TOTAL packages known."
 }
