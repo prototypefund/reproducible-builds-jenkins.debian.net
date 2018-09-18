@@ -156,7 +156,11 @@ create_pkg_state_and_html() {
 		local STATE=GOOD
 		local SOME_GOOD=false
 		for ARTIFACT in $(cd $ARCHLINUX_PKG_PATH/ ; ls *.pkg.tar.xz.html) ; do
-			if [ ! -z "$(grep 'build reproducible in our test framework' $ARCHLINUX_PKG_PATH/$ARTIFACT)" ] ; then
+			if [ -z "$(echo $ARTIFACT | grep $VERSION)" ] ; then
+				echo "deleting $ARTIFACT as version is not $VERSION"
+				rm -f $ARTIFACT
+				continue
+			elif [ ! -z "$(grep 'build reproducible in our test framework' $ARCHLINUX_PKG_PATH/$ARTIFACT)" ] ; then
 				SOME_GOOD=true
 				echo "       <img src=\"/userContent/static/weather-clear.png\" alt=\"reproducible icon\" /> <a href=\"/archlinux/$REPOSITORY/$PKG/$ARTIFACT\">${ARTIFACT:0:-5}</a> is reproducible in our current test framework<br />" >> $HTML_BUFFER
 			else

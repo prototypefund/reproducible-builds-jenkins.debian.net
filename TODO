@@ -309,9 +309,6 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 
 ==== reproducible Arch Linux
 
-* bugs:
-** double versions, eg community/kodi
-
 * use pacman's error code, see FIXME in _html_.sh
 
 * setup_archlinux_schroot job:
