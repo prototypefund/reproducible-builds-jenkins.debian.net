@@ -474,7 +474,9 @@ if [ -f /etc/debian_version ] ; then
 		fi
 		# for varying kernels:
 		# - we use bpo kernels on pb-build5+15 (and the default amd64 kernel on pb-build6+16-i386)
-		if [ "$HOSTNAME" = "profitbricks-build5-amd64" ] || [ "$HOSTNAME" = "profitbricks-build15-amd64" ] ; then
+		# - we also use the bpo kernel on pb-build4 (but not pb-build3)
+		if [ "$HOSTNAME" = "profitbricks-build5-amd64" ] || [ "$HOSTNAME" = "profitbricks-build15-amd64" ] \
+			|| [ "$HOSTNAME" = "profitbricks-build4-amd64" ] ; then
 			$UP2DATE || sudo apt-get install -t stretch-backports linux-image-amd64
 		elif [ "$HOSTNAME" = "profitbricks-build6-i386" ] || [ "$HOSTNAME" = "profitbricks-build16-i386" ] \
 			|| [ "$HOSTNAME" = "profitbricks-build2-i386" ] || [ "$HOSTNAME" = "profitbricks-build12-i386" ] ; then

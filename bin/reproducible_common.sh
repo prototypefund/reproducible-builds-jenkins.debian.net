@@ -487,7 +487,8 @@ write_variation_table() {
 		elif [ "$1" != "Arch Linux" ]  ; then
 			write_page "<tr><td>kernel version, modified using /usr/bin/linux64 --uname-2.6</td><td>$(uname -sr)</td><td>$(/usr/bin/linux64 --uname-2.6 uname -sr)</td></tr>"
 		else
-			write_page "<tr><td>kernel version</td><td colspan=\"2\"> is not yet varied between rebuilds of $1.</td></tr>"
+			# FIXME: collect information about arch build nodes in /srv/reproducible-results/node-information/ and include this here
+			write_page "<tr><td>kernel version</td><td colspan=\"2\"> is varied between rebuilds of $1.</td></tr>"
 		fi
 		write_page "<tr><td>umask</td><td>0022<td>0002</td><tr>"
 	else
