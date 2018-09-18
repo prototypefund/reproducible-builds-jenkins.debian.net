@@ -309,11 +309,12 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 
 ==== reproducible Arch Linux
 
+* bugs:
+** double versions, eg community/kodi
+
 * setup_archlinux_schroot job:
 ** needs to be made idempotent (currently it removes the schroot at the beginning of the job, instead of creating it elsewhere and replacing it on success at the job end…)
 ** use schroot tarballs (gzipped), moves are atomic then
-* things to be done before enabling more builders:
-** build in /srv/workspace instead of /tmp (once this has been done reduce /tmp size back to 15G)
 * only disable cert checking on the node running in the future
 * compare the just built pkg.tar.xz with the one available on the arch mirrors. *then* one can truely say "X% of the Arch Linux packages are reproducible and could bit by bit be reproduced in the real world."
 * maintenance job:
@@ -329,8 +330,15 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 ** include link to debian note if it exists
 ** create page for untested packages?
 
-* build.sh
+* use db
+* then fix build.sh:
 ** build2.log doesnt get deleted if build1 fails
+
+* test against real archlinux pkgs:
+** https://github.com/Foxboron/devtools-repro
+
+* things to be done before enabling more builders:
+** build in /srv/workspace instead of /tmp (once this has been done reduce /tmp size back to 15G)
 
 ==== reproducible fdroid
 
