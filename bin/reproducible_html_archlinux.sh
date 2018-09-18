@@ -83,6 +83,7 @@ create_pkg_state_and_html() {
 		# this horrible if elif elif elif elif...  monster is needed because
 		# https://lists.archlinux.org/pipermail/pacman-dev/2017-September/022156.html
 	        # has not yet been merged yet...
+		# FIXME: this has been merged, see http://jlk.fjfi.cvut.cz/arch/manpages/man/makepkg
 
 		if $blacklisted ; then
 				echo BLACKLISTED > $ARCHLINUX_PKG_PATH/pkg.state

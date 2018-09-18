@@ -312,6 +312,8 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 * bugs:
 ** double versions, eg community/kodi
 
+* use pacman's error code, see FIXME in _html_.sh
+
 * setup_archlinux_schroot job:
 ** needs to be made idempotent (currently it removes the schroot at the beginning of the job, instead of creating it elsewhere and replacing it on success at the job end…)
 ** use schroot tarballs (gzipped), moves are atomic then
