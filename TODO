@@ -320,14 +320,6 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 * maintenance job:
 ** check for archlinux schroot sessions which should not be there and delete them. complain if that fails.
 
-* scheduler
-** could be improved with a queue in a directory:
-*** /scheduled/pkg(s) - mv || exit 0
-*** loop to schedule untested packages
-*** loop to schedule tested packages with higher versions (compare for = first)
-
-* move html to build.sh in a function
-
 * html
 ** disable html + builder jobs
 ** then rename all diffoscope html files to diffoscope_results.html
