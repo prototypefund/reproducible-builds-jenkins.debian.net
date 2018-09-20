@@ -332,6 +332,7 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 * use db
 * then fix build.sh:
 ** build2.log doesnt get deleted if build1 fails
+** -> rename build2.log to $pkg_$version_build2.log
 
 * test against real archlinux pkgs:
 ** https://github.com/Foxboron/devtools-repro
