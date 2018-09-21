@@ -79,7 +79,9 @@ update_archlinux_repositories() {
 				PKG=$pkgbase
 				SUITE="archlinux_$repo"
 				ARCH="x86_64"
+				echo "SELECT version FROM sources WHERE name='$PKG' AND suite='$SUITE' AND architecture='$ARCH';"
 				VERSION=$(query_db "SELECT version FROM sources WHERE name='$PKG' AND suite='$SUITE' AND architecture='$ARCH';")
+				echo "Result: VERSION=$VERSION"
 				DATE="$(date -u +'%Y-%m-%d %H:%M')"
 				if [ -z "$VERSION" ] ; then
 					# new package, add to db and schedule
