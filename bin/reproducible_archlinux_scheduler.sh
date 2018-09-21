@@ -14,14 +14,20 @@ set -e
 
 update_archlinux_repositories() {
 	echo "$(date -u) - Updating Arch Linux repositories, currently $(find $BASE/archlinux/ -name pkg.needs_build | wc -l ) packages scheduled."
+	#
+	# init
+	#
 	UPDATED=$(mktemp -t archlinuxrb-scheduler-XXXXXXXX)
 	NEW=$(mktemp -t archlinuxrb-scheduler-XXXXXXXX)
 	OLDER=$(mktemp -t archlinuxrb-scheduler-XXXXXXXX)
 	local SESSION="archlinux-scheduler-$RANDOM"
 	schroot --begin-session --session-name=$SESSION -c jenkins-reproducible-archlinux
 	schroot --run-session -c $SESSION --directory /var/tmp -- sudo pacman -Syu --noconfirm
+
+	#
 	# Get a list of unique package bases.  Non-split packages don't have a pkgbase set
 	# so we need to use the pkgname for them instead.
+	#
 	schroot --run-session -c $SESSION --directory /var/tmp -- expac -S '%r %e %n %v' | \
 		while read repo pkgbase pkgname version; do
 			if [[ "$pkgbase" = "(null)" ]]; then
@@ -33,7 +39,9 @@ update_archlinux_repositories() {
 	TOTAL=$(cat ${ARCHLINUX_PKGS}_full_pkgbase_list | wc -l)
 	echo "$(date -u ) - $TOTAL Arch Linux packages are known in total to us."
 
+	#
 	# remove packages which are gone (only when run between 21:00 and 23:59)
+	#
 	if [ $(date +'%H') -gt 21 ] ; then
 		REMOVED=0
 		REMOVE_LIST=""
@@ -55,8 +63,10 @@ update_archlinux_repositories() {
 			irc_message archlinux-reproducible "$MESSAGE"
 		fi
 	fi
-
+	
+	#
 	# schedule packages
+	#
 	for REPO in $ARCHLINUX_REPOS ; do
 		TMPPKGLIST=$(mktemp -t archlinuxrb-scheduler-XXXXXXXX)
 		echo "$(date -u ) - updating list of available packages in repository '$REPO'."
@@ -100,8 +110,12 @@ update_archlinux_repositories() {
 	schroot --end-session -c $SESSION
 	echo "$(date -u) - the following packages are known to us with higher versions than the repo because we build trunk:"
 	cat $OLDER
+	echo
+
+	#
 	# schedule up to $MAX packages we already know about
 	# (only if less than $THRESHOLD packages are currently scheduled)
+	#
 	old=""
 	local MAX=350
 	local THRESHOLD=450
@@ -124,6 +138,11 @@ update_archlinux_repositories() {
 		fi
 	fi
 	rm $OLDER
+	echo
+
+	#
+	# output stats
+	#
 	total=$(find $BASE/archlinux/ -name pkg.needs_build | wc -l )
 	rm "$ARCHLINUX_PKGS"_full_pkgbase_list
 	new=$(cat $NEW | wc -l 2>/dev/null|| true)
