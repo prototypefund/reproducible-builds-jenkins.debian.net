@@ -84,8 +84,10 @@ update_archlinux_repositories() {
 				echo "Result: VERSION=$VERSION"
 				DATE="$(date -u +'%Y-%m-%d %H:%M')"
 				if [ -z "$VERSION" ] ; then
-					# new package, add to db and schedule
-					echo "INSERT into sources (name, version, suite, architecture) VALUES ('$PKG', '$VERSION', '$SUITE', '$ARCH');"
+					echo "UPDATE sources SET version = '$version' WHERE name = '$PKG' AND suite = '$SUITE' AND architecture='$ARCH';"
+					query_db "UPDATE sources SET version = '$version' WHERE name = '$PKG' AND suite = '$SUITE' AND architecture='$ARCH';"
+	# new package, add to db and schedule
+					#echo "INSERT into sources (name, version, suite, architecture) VALUES ('$PKG', '$VERSION', '$SUITE', '$ARCH');"
 					#query_db "INSERT into sources (name, version, suite, architecture) VALUES ('$PKG', '$VERSION', '$SUITE', '$ARCH');"
 					#PKGID=$(query_db "SELECT id FROM sources WHERE name='$PKG' AND suite='$SUITE' AND architecture='$ARCH';")
 					#FIXME: enable next line once the db has been initially populated
