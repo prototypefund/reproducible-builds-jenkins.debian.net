@@ -75,6 +75,7 @@ update_archlinux_repositories() {
 				#
 				# db based scheduler
 				#
+				echo "Processing $repo $pkgbase $version"
 				PKG=$pkgbase
 				SUITE="archlinux_$repo"
 				ARCH="x86_64"
@@ -82,6 +83,7 @@ update_archlinux_repositories() {
 				DATE="$(date -u +'%Y-%m-%d %H:%M')"
 				if [ -z "$VERSION" ] ; then
 					# new package, add to db and schedule
+					echo "INSERT into sources (name, version, suite, architecture) VALUES ('$PKG', '$VERSION', '$SUITE', '$ARCH');"
 					query_db "INSERT into sources (name, version, suite, architecture) VALUES ('$PKG', '$VERSION', '$SUITE', '$ARCH');"
 					PKGID=$(query_db "SELECT id FROM sources WHERE name='$PKG' AND suite='$SUITE' AND architecture='$ARCH';")
 					#FIXME: enable next line once the db has been initially populated
@@ -92,8 +94,10 @@ update_archlinux_repositories() {
 						# known package but with new version, update db and schedule
 						echo $REPO/$pkgbase >> $UPDATED
 						echo "$(date -u ) - we know $REPO/$pkgbase $VERSION, but repo has $version, so rescheduling... "
+						echo "UPDATE sources SET version = '$version' WHERE name = '$PKG' AND suite = '$SUITE' AND architecture='$ARCH';"
 						query_db "UPDATE sources SET version = '$version' WHERE name = '$PKG' AND suite = '$SUITE' AND architecture='$ARCH';"
 						PKGID=$(query_db "SELECT id FROM sources WHERE name='$PKG' AND suite='$SUITE' AND architecture='$ARCH';")
+						echo "INSERT INTO schedule (package_id, date_scheduled) VALUES ('$PKGID', '$DATE');"
 						query_db "INSERT INTO schedule (package_id, date_scheduled) VALUES ('$PKGID', '$DATE');"
 
 					elif [ "$VERCMP" = "-1" ] ; then
