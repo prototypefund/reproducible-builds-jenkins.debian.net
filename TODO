@@ -330,7 +330,14 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 ** create page for untested packages?
 
 * use db
-* then fix build.sh:
+* use debian tables with suite=archlinux and arch=x86_64 
+** extend scheduler.sh to add packages to db and schedule them in db
+** make build.sh read & write db
+** make build respect pacman exit code
+** create new job to recreate all pkg pages
+** call pkg html function after each build
+
+* fix build.sh:
 ** build2.log doesnt get deleted if build1 fails
 ** -> rename build2.log to $pkg_$version_build2.log
 
