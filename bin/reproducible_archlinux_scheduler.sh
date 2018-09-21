@@ -50,8 +50,10 @@ update_archlinux_repositories() {
 			done
 		done
 		MESSAGE="deleted $REMOVED packages: $REMOVE_LIST"
-		irc_message archlinux-reproducible "$MESSAGE"
 		echo "$(date -u ) - $MESSAGE"
+		if [ $REMOVED -ne 0 ] ; then
+			irc_message archlinux-reproducible "$MESSAGE"
+		fi
 	fi
 
 	# schedule packages
