@@ -330,12 +330,18 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 ** create page for untested packages?
 
 * use db
-* use debian tables with suite=archlinux and arch=x86_64 
+** use debian tables with suite=archlinux_core etc and arch=x86_64 
+** problem: we currently have more (detailed) stati in archlinux
 ** extend scheduler.sh to add packages to db and schedule them in db
+*** enable FIXME line once the db has been initially populated
+*** actually schedule old packages once queue is empty
+*** also delete unknown packages from db
+*** check/make sure that updated packages are only scheduled once
 ** make build.sh read & write db
 ** make build respect pacman exit code
 ** create new job to recreate all pkg pages
 ** call pkg html function after each build
+** cleanup now useless code from scheduler
 
 * fix build.sh:
 ** build2.log doesnt get deleted if build1 fails

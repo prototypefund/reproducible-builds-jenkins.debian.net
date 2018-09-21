@@ -72,6 +72,41 @@ update_archlinux_repositories() {
 		echo "$(date -u ) - updating list of available packages in repository '$REPO'."
 		grep "^$REPO" "$ARCHLINUX_PKGS"_full_pkgbase_list | \
 			while read repo pkgbase version; do
+				#
+				# db based scheduler
+				#
+				PKG=$pkgbase
+				SUITE="archlinux_$repo"
+				ARCH="x86_64"
+				VERSION=$(query_db "SELECT version FROM sources WHERE name='$PKG' AND suite='$SUITE' AND architecture='$ARCH';")
+				DATE="$(date -u +'%Y-%m-%d %H:%M')"
+				if [ -z "$VERSION" ] ; then
+					# new package, add to db and schedule
+					query_db "INSERT into sources (name, version, suite, architecture) VALUES ('$PKG', '$VERSION', '$SUITE', '$ARCH');"
+					PKGID=$(query_db "SELECT id FROM sources WHERE name='$PKG' AND suite='$SUITE' AND architecture='$ARCH';")
+					#FIXME: enable next line once the db has been initially populated
+					# query_db "INSERT INTO schedule (package_id, date_scheduled) VALUES ('$PKGID', '$DATE');"
+				elif [ "$VERSION" != "$version" ] ; then
+					VERCMP="$(schroot --run-session -c $SESSION --directory /var/tmp -- vercmp $version $VERSION || true)"
+					if [ "$VERCMP" = "1" ] ; then
+						# known package but with new version, update db and schedule
+						echo $REPO/$pkgbase >> $UPDATED
+						echo "$(date -u ) - we know $REPO/$pkgbase $VERSION, but repo has $version, so rescheduling... "
+						query_db "UPDATE sources SET version = '$version' WHERE name = '$PKG' AND suite = '$SUITE' AND architecture='$ARCH';"
+						PKGID=$(query_db "SELECT id FROM sources WHERE name='$PKG' AND suite='$SUITE' AND architecture='$ARCH';")
+						query_db "INSERT INTO schedule (package_id, date_scheduled) VALUES ('$PKGID', '$DATE');"
+
+					elif [ "$VERCMP" = "-1" ] ; then
+						# our version is higher than what's in the repo because we build trunk
+						echo "$REPO/$pkgbase $VERSION > $version" >> $OLDER
+					else
+						echo "$(date -u ) - This should never happen: we know about $pkgbase $VERSION, but repo has $version. \$VERCMP=$VERCMP"
+					fi
+				fi
+
+				#
+				# old scheduling to be deleted once the db is used
+				#
 				if [ ! -d $BASE/archlinux/$REPO/$pkgbase ] ; then
 					# schedule (all) entirely new packages
 					echo $REPO/$pkgbase >> $NEW
