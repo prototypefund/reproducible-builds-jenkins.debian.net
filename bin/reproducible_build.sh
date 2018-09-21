@@ -20,28 +20,6 @@ common_init "$@"
 
 set -e
 
-log_info () {
-	_log "I:" "$@"
-}
-
-log_error () {
-	_log "E:" "$@"
-}
-
-log_warning () {
-	_log "W:" "$@"
-}
-
-log_file () {
-	cat $@ | tee -a $RBUILDLOG
-}
-
-_log () {
-	local prefix="$1"
-	shift 1
-	echo -e "$(date -u)  $prefix $*" | tee -a $RBUILDLOG
-}
-
 exit_early_if_debian_is_broken() {
 	# debian is fine, thanks
 	if false && [ "$ARCH" = "armhf" ] ; then
@@ -61,19 +39,6 @@ create_results_dirs() {
 	mkdir -vp $DEBIAN_BASE/logdiffs/${SUITE}/${ARCH}
 	mkdir -vp $DEBIAN_BASE/rbuild/${SUITE}/${ARCH}
 	mkdir -vp $DEBIAN_BASE/buildinfo/${SUITE}/${ARCH}
-}
-
-handle_race_condition() {
-	local RESULT=$(query_db "SELECT job FROM schedule WHERE package_id='$SRCPKGID'")
-	local msg="Package ${SRCPACKAGE} (id=$SRCPKGID) in ${SUITE} on ${ARCH} is probably already building at $RESULT, while this is $BUILD_URL.\n"
-	log_warning "$msg"
-	printf "$(date -u) - $msg" >> /var/log/jenkins/reproducible-race-conditions.log
-	log_warning "Terminating this build quickly and nicely..."
-	if [ $SAVE_ARTIFACTS -eq 1 ] ; then
-		SAVE_ARTIFACTS=0
-		if [ ! -z "$NOTIFY" ] ; then NOTIFY="failure" ; fi
-	fi
-	exit 0
 }
 
 save_artifacts() {

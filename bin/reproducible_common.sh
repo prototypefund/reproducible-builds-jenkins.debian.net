@@ -114,6 +114,29 @@ if $DEBUG ; then
 	set -x
 fi
 
+# some cmomon logging functions
+log_info () {
+	_log "I:" "$@"
+}
+
+log_error () {
+	_log "E:" "$@"
+}
+
+log_warning () {
+	_log "W:" "$@"
+}
+
+log_file () {
+	cat $@ | tee -a $RBUILDLOG
+}
+
+_log () {
+	local prefix="$1"
+	shift 1
+	echo -e "$(date -u)  $prefix $*" | tee -a $RBUILDLOG
+}
+
 # sleep 1-23 secs to randomize start times
 delay_start() {
 	/bin/sleep $(echo "scale=1 ; $(shuf -i 1-230 -n 1)/10" | bc )
@@ -662,6 +685,19 @@ cleanup_pkg_files() {
 	rm -vf $DEBIAN_BASE/dbdtxt/${SUITE}/${ARCH}/${SRCPACKAGE}_*.diffoscope.txt{,.gz}
 	rm -vf $DEBIAN_BASE/buildinfo/${SUITE}/${ARCH}/${SRCPACKAGE}_*.buildinfo
 	rm -vf $DEBIAN_BASE/logdiffs/${SUITE}/${ARCH}/${SRCPACKAGE}_*.diff{,.gz}
+}
+
+handle_race_condition() {
+	local RESULT=$(query_db "SELECT job FROM schedule WHERE package_id='$SRCPKGID'")
+	local msg="Package ${SRCPACKAGE} (id=$SRCPKGID) in ${SUITE} on ${ARCH} is probably already building at $RESULT, while this is $BUILD_URL.\n"
+	log_warning "$msg"
+	printf "$(date -u) - $msg" >> /var/log/jenkins/reproducible-race-conditions.log
+	log_warning "Terminating this build quickly and nicely..."
+	if [ $SAVE_ARTIFACTS -eq 1 ] ; then
+		SAVE_ARTIFACTS=0
+		if [ ! -z "$NOTIFY" ] ; then NOTIFY="failure" ; fi
+	fi
+	exit 0
 }
 
 #
