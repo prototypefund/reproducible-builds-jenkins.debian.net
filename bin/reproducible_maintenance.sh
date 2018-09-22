@@ -244,6 +244,8 @@ case $HOSTNAME in
 		RESULT=$?
 		if [ $RESULT -eq 1 ] ; then
 			echo "Warning: failed to update Arch Linux schroot."
+			echo "Let's see if /var/lib/pacman/db.lck exists in the schroot."
+			schroot --directory /tmp -c source:jenkins-reproducible-archlinux -u root -- ls /var/lib/pacman/db.lck
 			DIRTY=true
 		else
 			echo "$(date -u) - updating Arch Linux schroot done."
