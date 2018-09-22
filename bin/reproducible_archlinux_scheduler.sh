@@ -76,13 +76,11 @@ update_archlinux_repositories() {
 				#
 				# db based scheduler
 				#
-				echo -n "."
 				PKG=$pkgbase
 				SUITE="archlinux_$repo"
 				ARCH="x86_64"
 				VERSION=$(query_db "SELECT version FROM sources WHERE name='$PKG' AND suite='$SUITE' AND architecture='$ARCH';" || query_db "SELECT version FROM sources WHERE name='$PKG' AND suite='$SUITE' AND architecture='$ARCH';")
 				if [ -z "$VERSION" ] ; then
-					echo
 					# new package, add to db and schedule
 					echo "new package found: $repo/$pkgbase $version "
 					echo " INSERT into sources (name, version, suite, architecture) VALUES ('$PKG', '$VERSION', '$SUITE', '$ARCH');"
@@ -90,7 +88,6 @@ update_archlinux_repositories() {
 					PKGID=$(query_db "SELECT id FROM sources WHERE name='$PKG' AND suite='$SUITE' AND architecture='$ARCH';")
 					query_db "INSERT INTO schedule (package_id, date_scheduled) VALUES ('$PKGID', '$DATE');"
 				elif [ "$VERSION" != "$version" ] ; then
-					echo
 					VERCMP="$(schroot --run-session -c $SESSION --directory /var/tmp -- vercmp $version $VERSION || true)"
 					if [ "$VERCMP" = "1" ] ; then
 						# known package but with new version, update db and schedule
@@ -118,7 +115,7 @@ update_archlinux_repositories() {
 				if [ ! -d $BASE/archlinux/$REPO/$pkgbase ] ; then
 					# schedule (all) entirely new packages
 					echo $REPO/$pkgbase >> $NEW
-					echo "$(date -u ) - scheduling new package $REPO/$pkgbase... "
+					#echo "$(date -u ) - scheduling new package $REPO/$pkgbase... "
 					mkdir -p $BASE/archlinux/$REPO/$pkgbase
 					touch $BASE/archlinux/$REPO/$pkgbase/pkg.needs_build
 				elif [ ! -f $BASE/archlinux/$REPO/$pkgbase/pkg.needs_build ] ; then
@@ -129,7 +126,7 @@ update_archlinux_repositories() {
 							if [ "$VERCMP" = "1" ] ; then
 								# schedule packages where an updated version is availble
 								echo $REPO/$pkgbase >> $UPDATED
-								echo "$(date -u ) - we know $REPO/$pkgbase $VERSION, but repo has $version, so rescheduling... "
+								#echo "$(date -u ) - we know $REPO/$pkgbase $VERSION, but repo has $version, so rescheduling... "
 								touch $BASE/archlinux/$REPO/$pkgbase/pkg.needs_build
 							elif [ "$VERCMP" = "-1" ] ; then
 								echo "$REPO/$pkgbase $VERSION > $version" >> $OLDER
@@ -138,17 +135,17 @@ update_archlinux_repositories() {
 							fi
 						fi
 					else
-						echo "$(date -u ) - scheduling new package $REPO/$pkgbase... though this is strange and should not really happen…"
+						#echo "$(date -u ) - scheduling new package $REPO/$pkgbase... though this is strange and should not really happen…"
 						touch $BASE/archlinux/$REPO/$pkgbase/pkg.needs_build
 					fi
 				fi
 				printf '%s %s\n' "$pkgbase" "$version" >> $TMPPKGLIST
 			done
 		mv $TMPPKGLIST "$ARCHLINUX_PKGS"_"$REPO"
-		echo "$(date -u ) - $(cat ${ARCHLINUX_PKGS}_$REPO | wc -l) packages in repository '$REPO' are known to us."
+		#echo "$(date -u ) - $(cat ${ARCHLINUX_PKGS}_$REPO | wc -l) packages in repository '$REPO' are known to us."
 		new=$(grep -c ^$REPO $NEW || true)
 		updated=$(grep -c ^$REPO $UPDATED || true)
-		echo "$(date -u ) - scheduled $new/$updated packages in repository '$REPO'."
+		#echo "$(date -u ) - scheduled $new/$updated packages in repository '$REPO'."
 	done
 	schroot --end-session -c $SESSION
 	echo "$(date -u) - the following packages are known to us with higher versions than the repo because we build trunk:"
