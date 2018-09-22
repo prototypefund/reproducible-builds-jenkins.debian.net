@@ -76,20 +76,21 @@ update_archlinux_repositories() {
 				#
 				# db based scheduler
 				#
+				echo -n "."
 				PKG=$pkgbase
 				SUITE="archlinux_$repo"
 				ARCH="x86_64"
 				VERSION=$(query_db "SELECT version FROM sources WHERE name='$PKG' AND suite='$SUITE' AND architecture='$ARCH';" || query_db "SELECT version FROM sources WHERE name='$PKG' AND suite='$SUITE' AND architecture='$ARCH';")
-				echo "- result: VERSION=$VERSION"
 				if [ -z "$VERSION" ] ; then
+					echo
 					# new package, add to db and schedule
 					echo "new package found: $repo/$pkgbase $version "
 					echo " INSERT into sources (name, version, suite, architecture) VALUES ('$PKG', '$VERSION', '$SUITE', '$ARCH');"
 					query_db "INSERT into sources (name, version, suite, architecture) VALUES ('$PKG', '$VERSION', '$SUITE', '$ARCH');"
-					#PKGID=$(query_db "SELECT id FROM sources WHERE name='$PKG' AND suite='$SUITE' AND architecture='$ARCH';")
-					#FIXME: enable next line once the db has been initially populated
-					# query_db "INSERT INTO schedule (package_id, date_scheduled) VALUES ('$PKGID', '$DATE');"
+					PKGID=$(query_db "SELECT id FROM sources WHERE name='$PKG' AND suite='$SUITE' AND architecture='$ARCH';")
+					query_db "INSERT INTO schedule (package_id, date_scheduled) VALUES ('$PKGID', '$DATE');"
 				elif [ "$VERSION" != "$version" ] ; then
+					echo
 					VERCMP="$(schroot --run-session -c $SESSION --directory /var/tmp -- vercmp $version $VERSION || true)"
 					if [ "$VERCMP" = "1" ] ; then
 						# known package but with new version, update db and schedule
