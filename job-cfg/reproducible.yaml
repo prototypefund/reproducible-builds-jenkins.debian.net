@@ -519,7 +519,7 @@
                     my_shellext: ".py"
                 - 'html_nodes_info':
                     my_description: 'Collect various information from build nodes used for reproducible builds and generate static HTML pages with various information about nodes.'
-                    my_timed: '0 0 * * *'
+                    my_timed: '15 0,2,4,6,8,10,12,14,16,18,20,22 * * *'
                 - 'create_meta_pkg_sets':
                     my_description: 'Create meta package sets for later consumption when generating HTML stats.'
                     my_timed: '0 6 * * H/3'
