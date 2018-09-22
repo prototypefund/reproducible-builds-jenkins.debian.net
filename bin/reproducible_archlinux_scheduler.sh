@@ -23,6 +23,7 @@ update_archlinux_repositories() {
 	local SESSION="archlinux-scheduler-$RANDOM"
 	schroot --begin-session --session-name=$SESSION -c jenkins-reproducible-archlinux
 	schroot --run-session -c $SESSION --directory /var/tmp -- sudo pacman -Syu --noconfirm
+	local BLACKLIST="/($(echo $ARCHLINUX_BLACKLISTED | sed "s# #|#g"))/"
 
 	#
 	# Get a list of unique package bases.  Non-split packages don't have a pkgbase set
@@ -90,15 +91,18 @@ update_archlinux_repositories() {
 				elif [ "$VERSION" != "$version" ] ; then
 					VERCMP="$(schroot --run-session -c $SESSION --directory /var/tmp -- vercmp $version $VERSION || true)"
 					if [ "$VERCMP" = "1" ] ; then
-						# known package but with new version, update db and schedule
+						# known package with new version, so update db and schedule
 						echo $REPO/$pkgbase >> $UPDATED
 						echo "$REPO/$pkgbase $VERSION is known in the database, but repo has $version which is newer, so rescheduling... "
 						echo " UPDATE sources SET version = '$version' WHERE name = '$PKG' AND suite = '$SUITE' AND architecture='$ARCH';"
 						query_db "UPDATE sources SET version = '$version' WHERE name = '$PKG' AND suite = '$SUITE' AND architecture='$ARCH';"
-						PKGID=$(query_db "SELECT id FROM sources WHERE name='$PKG' AND suite='$SUITE' AND architecture='$ARCH';")
-						echo " INSERT INTO schedule (package_id, date_scheduled) VALUES ('$PKGID', '$DATE');"
-						query_db "INSERT INTO schedule (package_id, date_scheduled) VALUES ('$PKGID', '$DATE');"
-
+						if [ -z $(echo $PKG | egrep -v "$BLACKLIST") ] ; then
+							echo "$PKG is blacklisted, so not scheduling it."
+						else
+							PKGID=$(query_db "SELECT id FROM sources WHERE name='$PKG' AND suite='$SUITE' AND architecture='$ARCH';")
+							echo " INSERT INTO schedule (package_id, date_scheduled) VALUES ('$PKGID', '$DATE');"
+							query_db "INSERT INTO schedule (package_id, date_scheduled) VALUES ('$PKGID', '$DATE');"
+						fi
 					elif [ "$VERCMP" = "-1" ] ; then
 						# our version is higher than what's in the repo because we build trunk
 						echo "$REPO/$pkgbase $VERSION in db is higher than $version in repo because we build trunk."
@@ -161,7 +165,6 @@ update_archlinux_repositories() {
 	local THRESHOLD=450
 	if [ $(find $BASE/archlinux/ -name pkg.needs_build | wc -l ) -le $THRESHOLD ] ; then
 		rm -f $OLDER
-		local BLACKLIST="/($(echo $ARCHLINUX_BLACKLISTED | sed "s# #|#g"))/"
 		# reschedule
 	        for i in $( ( for REPO in $ARCHLINUX_REPOS ; do
 			find $BASE/archlinux/$REPO -type d -wholename "$BASE/archlinux/$REPO/*" -printf '%T+ %p\n' | egrep -v "$BLACKLIST"

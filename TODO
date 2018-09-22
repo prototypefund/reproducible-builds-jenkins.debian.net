@@ -332,10 +332,9 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 * use db
 ** problem: we currently have more (detailed) stati in archlinux
 ** extend scheduler.sh:
-*** actually schedule old packages once queue is empty
-*** also delete unknown packages from db
-*** check/make sure that updated packages are only scheduled once
-*** dont schedule blacklisted packages
+*** actually schedule old packages once queue is empty (except blacklisted packages)
+*** also delete unknown packages from db: sources and schedule, later results as well
+*** check/make sure that packages which are newer in trunk than repo are only scheduled once
 ** make build.sh read & write db
 *** delete all pkg.needs_build files on disk
 *** drop all occurrances of pkg.needs_build from the code
