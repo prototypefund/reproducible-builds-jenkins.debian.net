@@ -76,16 +76,14 @@ update_archlinux_repositories() {
 				#
 				# db based scheduler
 				#
-				echo -n "Processing $repo $pkgbase $version "
 				PKG=$pkgbase
 				SUITE="archlinux_$repo"
 				ARCH="x86_64"
-				#echo "SELECT version FROM sources WHERE name='$PKG' AND suite='$SUITE' AND architecture='$ARCH';"
 				VERSION=$(query_db "SELECT version FROM sources WHERE name='$PKG' AND suite='$SUITE' AND architecture='$ARCH';" || query_db "SELECT version FROM sources WHERE name='$PKG' AND suite='$SUITE' AND architecture='$ARCH';")
 				echo "- result: VERSION=$VERSION"
 				if [ -z "$VERSION" ] ; then
 					# new package, add to db and schedule
-					echo " new package found."
+					echo "new package found: $repo/$pkgbase $version "
 					echo " INSERT into sources (name, version, suite, architecture) VALUES ('$PKG', '$VERSION', '$SUITE', '$ARCH');"
 					query_db "INSERT into sources (name, version, suite, architecture) VALUES ('$PKG', '$VERSION', '$SUITE', '$ARCH');"
 					#PKGID=$(query_db "SELECT id FROM sources WHERE name='$PKG' AND suite='$SUITE' AND architecture='$ARCH';")
@@ -96,7 +94,7 @@ update_archlinux_repositories() {
 					if [ "$VERCMP" = "1" ] ; then
 						# known package but with new version, update db and schedule
 						echo $REPO/$pkgbase >> $UPDATED
-						echo " we know $REPO/$pkgbase $VERSION, but repo has $version which is newer, so rescheduling... "
+						echo "$REPO/$pkgbase $VERSION is known in the database, but repo has $version which is newer, so rescheduling... "
 						echo " UPDATE sources SET version = '$version' WHERE name = '$PKG' AND suite = '$SUITE' AND architecture='$ARCH';"
 						query_db "UPDATE sources SET version = '$version' WHERE name = '$PKG' AND suite = '$SUITE' AND architecture='$ARCH';"
 						PKGID=$(query_db "SELECT id FROM sources WHERE name='$PKG' AND suite='$SUITE' AND architecture='$ARCH';")
@@ -105,14 +103,12 @@ update_archlinux_repositories() {
 
 					elif [ "$VERCMP" = "-1" ] ; then
 						# our version is higher than what's in the repo because we build trunk
-						echo " our version is higher than what's in the repo because we build trunk."
+						echo "$REPO/$pkgbase $VERSION in db is higher than $version in repo because we build trunk."
 						echo "$REPO/$pkgbase $VERSION > $version" >> $OLDER
 					else
 						echo " Boom boom boom boom boom."
 						echo " This should never happen: we know about $pkgbase $VERSION, but repo has $version. \$VERCMP=$VERCMP"
 					fi
-				else
-					echo "Found $PKG from $SUITE with $VERSION, good."
 				fi
 
 				#
