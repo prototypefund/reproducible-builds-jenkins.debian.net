@@ -70,8 +70,8 @@ update_archlinux_repositories() {
 	for REPO in $ARCHLINUX_REPOS ; do
 		TMPPKGLIST=$(mktemp -t archlinuxrb-scheduler-XXXXXXXX)
 		echo "$(date -u ) - updating list of available packages in repository '$REPO'."
+		DATE="$(date -u +'%Y-%m-%d %H:%M')"
 		grep "^$REPO" "$ARCHLINUX_PKGS"_full_pkgbase_list | \
-			DATE="$(date -u +'%Y-%m-%d %H:%M')"
 			while read repo pkgbase version; do
 				#
 				# db based scheduler
@@ -84,11 +84,10 @@ update_archlinux_repositories() {
 				VERSION=$(query_db "SELECT version FROM sources WHERE name='$PKG' AND suite='$SUITE' AND architecture='$ARCH';" || query_db "SELECT version FROM sources WHERE name='$PKG' AND suite='$SUITE' AND architecture='$ARCH';")
 				echo "- result: VERSION=$VERSION"
 				if [ -z "$VERSION" ] ; then
-					echo "UPDATE sources SET version = '$version' WHERE name = '$PKG' AND suite = '$SUITE' AND architecture='$ARCH';"
-					query_db "UPDATE sources SET version = '$version' WHERE name = '$PKG' AND suite = '$SUITE' AND architecture='$ARCH';"
-	# new package, add to db and schedule
-					#echo "INSERT into sources (name, version, suite, architecture) VALUES ('$PKG', '$VERSION', '$SUITE', '$ARCH');"
-					#query_db "INSERT into sources (name, version, suite, architecture) VALUES ('$PKG', '$VERSION', '$SUITE', '$ARCH');"
+					# new package, add to db and schedule
+					echo " new package found."
+					echo " INSERT into sources (name, version, suite, architecture) VALUES ('$PKG', '$VERSION', '$SUITE', '$ARCH');"
+					query_db "INSERT into sources (name, version, suite, architecture) VALUES ('$PKG', '$VERSION', '$SUITE', '$ARCH');"
 					#PKGID=$(query_db "SELECT id FROM sources WHERE name='$PKG' AND suite='$SUITE' AND architecture='$ARCH';")
 					#FIXME: enable next line once the db has been initially populated
 					# query_db "INSERT INTO schedule (package_id, date_scheduled) VALUES ('$PKGID', '$DATE');"
@@ -97,18 +96,20 @@ update_archlinux_repositories() {
 					if [ "$VERCMP" = "1" ] ; then
 						# known package but with new version, update db and schedule
 						echo $REPO/$pkgbase >> $UPDATED
-						echo "$(date -u ) - we know $REPO/$pkgbase $VERSION, but repo has $version, so rescheduling... "
-						echo "UPDATE sources SET version = '$version' WHERE name = '$PKG' AND suite = '$SUITE' AND architecture='$ARCH';"
+						echo " we know $REPO/$pkgbase $VERSION, but repo has $version which is newer, so rescheduling... "
+						echo " UPDATE sources SET version = '$version' WHERE name = '$PKG' AND suite = '$SUITE' AND architecture='$ARCH';"
 						query_db "UPDATE sources SET version = '$version' WHERE name = '$PKG' AND suite = '$SUITE' AND architecture='$ARCH';"
 						PKGID=$(query_db "SELECT id FROM sources WHERE name='$PKG' AND suite='$SUITE' AND architecture='$ARCH';")
-						echo "INSERT INTO schedule (package_id, date_scheduled) VALUES ('$PKGID', '$DATE');"
+						echo " INSERT INTO schedule (package_id, date_scheduled) VALUES ('$PKGID', '$DATE');"
 						query_db "INSERT INTO schedule (package_id, date_scheduled) VALUES ('$PKGID', '$DATE');"
 
 					elif [ "$VERCMP" = "-1" ] ; then
 						# our version is higher than what's in the repo because we build trunk
+						echo " our version is higher than what's in the repo because we build trunk."
 						echo "$REPO/$pkgbase $VERSION > $version" >> $OLDER
 					else
-						echo "$(date -u ) - This should never happen: we know about $pkgbase $VERSION, but repo has $version. \$VERCMP=$VERCMP"
+						echo " Boom boom boom boom boom."
+						echo " This should never happen: we know about $pkgbase $VERSION, but repo has $version. \$VERCMP=$VERCMP"
 					fi
 				else
 					echo "Found $PKG from $SUITE with $VERSION, good."
