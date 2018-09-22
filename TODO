@@ -337,13 +337,11 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 **** call pkg html function after each build
 *** create index pages
 *** create new archlinux.html - keep the old one til this works
-
-** cleanup now useless code from scheduler
 ** create json
 
 * fix build.sh:
 ** build2.log doesnt get deleted if build1 fails
-** -> rename build2.log to $pkg_$version_build2.log
+** -> rename build2.log to $version_build2.log (dont include package name...)
 
 * test against real archlinux pkgs:
 ** https://github.com/Foxboron/devtools-repro

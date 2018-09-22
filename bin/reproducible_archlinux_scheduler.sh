@@ -13,23 +13,28 @@ common_init "$@"
 set -e
 
 update_archlinux_repositories() {
-	local total=$(query_db "SELECT count(*) FROM sources AS s JOIN schedule AS sch ON s.id=sch.package_id WHERE s.architecture='x86_64' and sch.date_build_started is NULL;")
-	echo "$(date -u) - Updating Arch Linux repositories, currently $total packages scheduled."
 	#
 	# init
 	#
-	UPDATED=$(mktemp -t archlinuxrb-scheduler-XXXXXXXX)
-	NEW=$(mktemp -t archlinuxrb-scheduler-XXXXXXXX)
-	KNOWN=$(mktemp -t archlinuxrb-scheduler-XXXXXXXX)
+	local UPDATED=$(mktemp -t archlinuxrb-scheduler-XXXXXXXX)
+	local NEW=$(mktemp -t archlinuxrb-scheduler-XXXXXXXX)
+	local KNOWN=$(mktemp -t archlinuxrb-scheduler-XXXXXXXX)
+	local BLACKLIST="/($(echo $ARCHLINUX_BLACKLISTED | sed "s# #|#g"))/"
+	local TOTAL=$(cat ${ARCHLINUX_PKGS}_* | wc -l)
+	echo "$(date -u ) - $TOTAL Arch Linux packages were previously known to Arch Linux."
+	query_db "select suite, name, version FROM sources WHERE architecture='$ARCH';" > $KNOWN
+	echo "$(date -u ) - $(cat $KNOWN | wc -l) Arch Linux packages are known in our database."
+	# init session
 	local SESSION="archlinux-scheduler-$RANDOM"
 	schroot --begin-session --session-name=$SESSION -c jenkins-reproducible-archlinux
+	echo "$(date -u ) - updating pacman's knowledge of Arch Linux repositories (by running pacman -Syu --noconform')."
 	schroot --run-session -c $SESSION --directory /var/tmp -- sudo pacman -Syu --noconfirm
-	local BLACKLIST="/($(echo $ARCHLINUX_BLACKLISTED | sed "s# #|#g"))/"
 
 	#
 	# Get a list of unique package bases.  Non-split packages don't have a pkgbase set
 	# so we need to use the pkgname for them instead.
 	#
+	echo "$(date -u ) - exporting pacman's knowledge of Arch Linux repositories to the filesystem (by running 'expac -S...')."
 	schroot --run-session -c $SESSION --directory /var/tmp -- expac -S '%r %e %n %v' | \
 		while read repo pkgbase pkgname version; do
 			if [[ "$pkgbase" = "(null)" ]]; then
@@ -39,7 +44,9 @@ update_archlinux_repositories() {
 			fi
 		done | sort -u -R > "$ARCHLINUX_PKGS"_full_pkgbase_list
 	TOTAL=$(cat ${ARCHLINUX_PKGS}_full_pkgbase_list | wc -l)
-	echo "$(date -u ) - $TOTAL Arch Linux packages are known in total to us."
+	echo "$(date -u ) - $TOTAL Arch Linux packages are now known to Arch Linux."
+	local total=$(query_db "SELECT count(*) FROM sources AS s JOIN schedule AS sch ON s.id=sch.package_id WHERE s.architecture='x86_64' and sch.date_build_started is NULL;")
+	echo "$(date -u) - updating Arch Linux repositories, currently $total packages scheduled."
 
 	#
 	# remove packages which are gone (only when run between 21:00 and 23:59)
@@ -50,15 +57,18 @@ update_archlinux_repositories() {
 		REMOVED=0
 		REMOVE_LIST=""
 		for REPO in $ARCHLINUX_REPOS ; do
-			echo "$(date -u ) - Dropping removed packages from repository '$REPO':"
+			echo "$(date -u ) - dropping removed packages from filesystem in repository '$REPO':"
 			for i in $(find $BASE/archlinux/$REPO -type d -wholename "$BASE/archlinux/$REPO/*" | sort) ; do
 				PKG=$(basename $i)
 				if ! grep -q "$REPO $PKG" ${ARCHLINUX_PKGS}_full_pkgbase_list > /dev/null ; then
 					let REMOVED=$REMOVED+1
 					REMOVE_LIST="$REMOVE_LIST $REPO/$PKG"
 					rm -r --one-file-system $BASE/archlinux/$REPO/$PKG
-					# FIXME: we actually need to drop them from the db now...
 				        echo "$REPO/$PKG removed as it's gone from the Archlinux repositories."
+					# FIXME: we actually need to drop them from the db now...
+					# from results
+					# from scheduled
+					# from sources
 				fi
 			done
 		done
@@ -72,11 +82,10 @@ update_archlinux_repositories() {
 	#
 	# schedule packages
 	#
-	query_db "select suite, name, version FROM sources WHERE architecture='$ARCH';" > $KNOWN
 
 	for REPO in $ARCHLINUX_REPOS ; do
 		TMPPKGLIST=$(mktemp -t archlinuxrb-scheduler-XXXXXXXX)
-		echo "$(date -u ) - updating list of available packages in repository '$REPO'."
+		echo "$(date -u ) - updating database with available packages in repository '$REPO'."
 		DATE="$(date -u +'%Y-%m-%d %H:%M')"
 		grep "^$REPO" "$ARCHLINUX_PKGS"_full_pkgbase_list | \
 			while read repo pkgbase version; do
@@ -95,7 +104,7 @@ update_archlinux_repositories() {
 					if [ "$VERCMP" = "1" ] ; then
 						# known package with new version, so update db and schedule
 						echo $REPO/$pkgbase >> $UPDATED
-						echo "$REPO/$pkgbase $VERSION is known in the database, but repo has $version which is newer, so rescheduling... "
+						echo "$REPO/$pkgbase $VERSION is known in the database, but repo now has $version which is newer, so rescheduling... "
 						query_db "UPDATE sources SET version = '$version' WHERE name = '$PKG' AND suite = '$SUITE' AND architecture='$ARCH';"
 						if [ -z $(echo $PKG | egrep -v "$BLACKLIST") ] ; then
 							echo "$PKG is blacklisted, so not scheduling it."
@@ -166,7 +175,7 @@ update_archlinux_repositories() {
 		#echo "$(date -u ) - didn't schedule any packages."
 	fi
 	rm $NEW $UPDATED $KNOWN > /dev/null
-	echo "$(date -u) - Done updating Arch Linux repositories, currently $TOTAL packages known."
+	echo "$(date -u) - done updating Arch Linux repositories and scheduling, $TOTAL packages known and $total packages scheduled."
 }
 
 ARCH="x86_64"
