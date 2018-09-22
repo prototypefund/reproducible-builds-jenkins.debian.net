@@ -80,6 +80,7 @@ update_archlinux_repositories() {
 				PKG=$pkgbase
 				SUITE="archlinux_$repo"
 				ARCH="x86_64"
+				# FIXME: doing the next line 8000 times is grossly inefficient and should be replaced by one single query
 				VERSION=$(query_db "SELECT version FROM sources WHERE name='$PKG' AND suite='$SUITE' AND architecture='$ARCH';" || query_db "SELECT version FROM sources WHERE name='$PKG' AND suite='$SUITE' AND architecture='$ARCH';")
 				if [ -z "$VERSION" ] ; then
 					# new package, add to db and schedule
