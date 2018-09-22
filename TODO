@@ -319,16 +319,6 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 * maintenance job:
 ** check for archlinux schroot sessions which should not be there and delete them. complain if that fails.
 
-* html
-** disable html + builder jobs
-** then rename all diffoscope html files to diffoscope_results.html
-** then rename all good pkg html files to index.html
-** if ! -f pkg.state || ! -f index.html... recreate
-** create index.html for all ftbr pkgs
-** create index.html for all other pkgs
-** include link to debian note if it exists
-** create page for untested packages?
-
 * use db
 ** problem: we currently have more (detailed) stati in archlinux
 ** extend scheduler.sh:
@@ -341,10 +331,19 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 *** check/make sure that packages which are newer in trunk than repo are only scheduled once
 ** make build.sh
 *** write db
+**** write temp script to populate db with known date: pkg.state, pkg.build_date. stop builders and html job when running this
+**** save state details on fs until we know better / the answer to the problem above
 *** do not share /var/log/jenkins/reproducible-race-conditions.log with debian
 *** make build respect pacman exit code
-** create new job to recreate all pkg pages
-** call pkg html function after each build
+** html
+*** disable all current html creation
+*** leave all files, delete them (much) later
+*** recreate them newly as index.html
+**** create new job to recreate all pkg pages
+**** call pkg html function after each build
+*** create index pages
+*** create new archlinux.html - keep the old one til this works
+
 ** cleanup now useless code from scheduler
 ** create json
 
