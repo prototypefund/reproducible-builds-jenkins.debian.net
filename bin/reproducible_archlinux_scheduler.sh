@@ -13,7 +13,7 @@ common_init "$@"
 set -e
 
 update_archlinux_repositories() {
-	local total= $(query_db "SELECT count(*) FROM sources AS s JOIN schedule AS sch ON s.id=sch.package_id WHERE s.architecture='x86_64' and sch.date_build_started is NULL;")
+	local total=$(query_db "SELECT count(*) FROM sources AS s JOIN schedule AS sch ON s.id=sch.package_id WHERE s.architecture='x86_64' and sch.date_build_started is NULL;")
 	echo "$(date -u) - Updating Arch Linux repositories, currently $total packages scheduled."
 	#
 	# init
@@ -142,7 +142,7 @@ update_archlinux_repositories() {
 	#
 	# output stats
 	#
-	total= $(query_db "SELECT count(*) FROM sources AS s JOIN schedule AS sch ON s.id=sch.package_id WHERE s.architecture='x86_64' and sch.date_build_started is NULL;")
+	total=$(query_db "SELECT count(*) FROM sources AS s JOIN schedule AS sch ON s.id=sch.package_id WHERE s.architecture='x86_64' and sch.date_build_started is NULL;")
 	rm "$ARCHLINUX_PKGS"_full_pkgbase_list
 	new=$(cat $NEW | wc -l 2>/dev/null|| true)
 	updated=$(cat $UPDATED 2>/dev/null| wc -l || true)
