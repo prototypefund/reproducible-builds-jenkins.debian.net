@@ -341,13 +341,8 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 *** check/make sure that packages which are newer in trunk than repo are only scheduled once
 ** make build.sh
 *** write db
-*** delete all pkg.needs_build files on disk
-*** drop all occurrances of pkg.needs_build from the code
-*** really share /var/log/jenkins/reproducible-stale-builds.log
- with debian?
-*** same for /var/log/jenkins/reproducible-race-conditions.log
-**** i think we want to split those... (into debian and archlinux ones)
-** make build respect pacman exit code
+*** do not share /var/log/jenkins/reproducible-race-conditions.log with debian
+*** make build respect pacman exit code
 ** create new job to recreate all pkg pages
 ** call pkg html function after each build
 ** cleanup now useless code from scheduler

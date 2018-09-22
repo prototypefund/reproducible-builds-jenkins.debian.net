@@ -58,9 +58,7 @@ create_pkg_state_and_html() {
 				blacklisted=true
 			fi
 		done
-		if ! $blacklisted && [ -f $ARCHLINUX_PKG_PATH/pkg.needs_build ] ; then
-			echo "$(date -u )   - ok, $PKG from '$REPOSITORY' needs build, this should go away by itself."
-		elif ! $blacklisted ; then
+		if ! $blacklisted ; then
 			echo "$(date -u )   - cannot determine state of $PKG from '$REPOSITORY', please check $ARCHLINUX_PKG_PATH yourself."
 		fi
 	fi

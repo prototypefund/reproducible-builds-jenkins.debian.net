@@ -13,7 +13,8 @@ common_init "$@"
 set -e
 
 update_archlinux_repositories() {
-	echo "$(date -u) - Updating Arch Linux repositories, currently $(find $BASE/archlinux/ -name pkg.needs_build | wc -l ) packages scheduled."
+	local total= $(query_db "SELECT count(*) FROM sources AS s JOIN schedule AS sch ON s.id=sch.package_id WHERE s.architecture='x86_64' and sch.date_build_started is NULL;")
+	echo "$(date -u) - Updating Arch Linux repositories, currently $total packages scheduled."
 	#
 	# init
 	#
@@ -88,7 +89,6 @@ update_archlinux_repositories() {
 				if [ -z "$VERSION" ] ; then
 					# new package, add to db and schedule
 					echo "new package found: $repo/$pkgbase $version "
-					echo " INSERT into sources (name, version, suite, architecture) VALUES ('$PKG', '$version', '$SUITE', '$ARCH');"
 					query_db "INSERT into sources (name, version, suite, architecture) VALUES ('$PKG', '$version', '$SUITE', '$ARCH');"
 					PKGID=$(query_db "SELECT id FROM sources WHERE name='$PKG' AND suite='$SUITE' AND architecture='$ARCH';")
 					query_db "INSERT INTO schedule (package_id, date_scheduled) VALUES ('$PKGID', '$DATE');"
@@ -142,7 +142,7 @@ update_archlinux_repositories() {
 	#
 	# output stats
 	#
-	total=$(find $BASE/archlinux/ -name pkg.needs_build | wc -l )
+	total= $(query_db "SELECT count(*) FROM sources AS s JOIN schedule AS sch ON s.id=sch.package_id WHERE s.architecture='x86_64' and sch.date_build_started is NULL;")
 	rm "$ARCHLINUX_PKGS"_full_pkgbase_list
 	new=$(cat $NEW | wc -l 2>/dev/null|| true)
 	updated=$(cat $UPDATED 2>/dev/null| wc -l || true)
