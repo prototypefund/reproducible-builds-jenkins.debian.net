@@ -309,8 +309,6 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 
 ==== reproducible Arch Linux
 
-* use pacman's error code, see FIXME in _html_.sh
-
 * setup_archlinux_schroot job:
 ** needs to be made idempotent (currently it removes the schroot at the beginning of the job, instead of creating it elsewhere and replacing it on success at the job end…)
 ** use schroot tarballs (gzipped), moves are atomic then
@@ -320,21 +318,17 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 ** check for archlinux schroot sessions which should not be there and delete them. complain if that fails.
 
 * use db
-** problem: we currently have more (detailed) stati in archlinux
 ** extend scheduler.sh:
-*** stop checking making 8000 queries instead of 1...
-*** comparing versions is also unneeded: if its not empty it must be higher (due to repo constraints)
-*** actually schedule old packages once queue is empty (except blacklisted packages)
+*** comparing versions is probably needed: if its not empty it must be higher (due to repo constraints), but it can be even higher than in the repo, because we build trunk
 **** at first reschedule packages which never have been build (according to the db)
-**** once there are no more left, reschedule based on last build_date
 *** also delete unknown packages from db: sources and schedule, later results as well
 *** check/make sure that packages which are newer in trunk than repo are only scheduled once
+*** fix irc notification
 ** make build.sh
 *** write db
-**** write temp script to populate db with known date: pkg.state, pkg.build_date. stop builders and html job when running this
-**** save state details on fs until we know better / the answer to the problem above
+**** write temp script to populate results table with known data: pkg.state, pkg.build_date. stop builders and html job when running this
 *** do not share /var/log/jenkins/reproducible-race-conditions.log with debian
-*** make build respect pacman exit code
+*** make build respect pacman exit code, see FIXME in _html_.sh
 ** html
 *** disable all current html creation
 *** leave all files, delete them (much) later

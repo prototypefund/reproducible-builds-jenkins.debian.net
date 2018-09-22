@@ -20,7 +20,7 @@ update_archlinux_repositories() {
 	#
 	UPDATED=$(mktemp -t archlinuxrb-scheduler-XXXXXXXX)
 	NEW=$(mktemp -t archlinuxrb-scheduler-XXXXXXXX)
-	OLDER=$(mktemp -t archlinuxrb-scheduler-XXXXXXXX)
+	KNOWN=$(mktemp -t archlinuxrb-scheduler-XXXXXXXX)
 	local SESSION="archlinux-scheduler-$RANDOM"
 	schroot --begin-session --session-name=$SESSION -c jenkins-reproducible-archlinux
 	schroot --run-session -c $SESSION --directory /var/tmp -- sudo pacman -Syu --noconfirm
@@ -72,21 +72,19 @@ update_archlinux_repositories() {
 	#
 	# schedule packages
 	#
+	query_db "select suite, name, version FROM sources WHERE architecture='$ARCH';" > $KNOWN
+
 	for REPO in $ARCHLINUX_REPOS ; do
 		TMPPKGLIST=$(mktemp -t archlinuxrb-scheduler-XXXXXXXX)
 		echo "$(date -u ) - updating list of available packages in repository '$REPO'."
 		DATE="$(date -u +'%Y-%m-%d %H:%M')"
 		grep "^$REPO" "$ARCHLINUX_PKGS"_full_pkgbase_list | \
 			while read repo pkgbase version; do
-				#
-				# db based scheduler
-				#
 				PKG=$pkgbase
 				SUITE="archlinux_$repo"
-				ARCH="x86_64"
-				# FIXME: doing the next line 8000 times is grossly inefficient and should be replaced by one single query
-				VERSION=$(query_db "SELECT version FROM sources WHERE name='$PKG' AND suite='$SUITE' AND architecture='$ARCH';" || query_db "SELECT version FROM sources WHERE name='$PKG' AND suite='$SUITE' AND architecture='$ARCH';")
-				if [ -z "$VERSION" ] ; then
+				PKG_IN_DB=$(grep "^archlinux_$repo|$pkgbase|" $KNOWN | head -1) # FIXME: why oh why is head -1 needed here?
+				VERSION=$(echo ${PKG_IN_DB} | cut -d "|" -f3)
+			        if [ -z "${PKG_IN_DB}" ] ; then
 					# new package, add to db and schedule
 					echo "new package found: $repo/$pkgbase $version "
 					query_db "INSERT into sources (name, version, suite, architecture) VALUES ('$PKG', '$version', '$SUITE', '$ARCH');"
@@ -98,37 +96,38 @@ update_archlinux_repositories() {
 						# known package with new version, so update db and schedule
 						echo $REPO/$pkgbase >> $UPDATED
 						echo "$REPO/$pkgbase $VERSION is known in the database, but repo has $version which is newer, so rescheduling... "
-						echo " UPDATE sources SET version = '$version' WHERE name = '$PKG' AND suite = '$SUITE' AND architecture='$ARCH';"
 						query_db "UPDATE sources SET version = '$version' WHERE name = '$PKG' AND suite = '$SUITE' AND architecture='$ARCH';"
 						if [ -z $(echo $PKG | egrep -v "$BLACKLIST") ] ; then
 							echo "$PKG is blacklisted, so not scheduling it."
 						else
 							PKGID=$(query_db "SELECT id FROM sources WHERE name='$PKG' AND suite='$SUITE' AND architecture='$ARCH';")
-							echo " INSERT INTO schedule (package_id, date_scheduled) VALUES ('$PKGID', '$DATE');"
-							query_db "INSERT INTO schedule (package_id, date_scheduled) VALUES ('$PKGID', '$DATE');"
+							echo " SELECT FROM schedule WHERE package_id = '$PKGID';"
+							SCHEDULED=$(query_db "SELECT FROM schedule WHERE package_id = '$PKGID';")
+							if [ -z "$SCHEDULED" ] ; then
+								echo " INSERT INTO schedule (package_id, date_scheduled) VALUES ('$PKGID', '$DATE');"
+								query_db "INSERT INTO schedule (package_id, date_scheduled) VALUES ('$PKGID', '$DATE');" ||true
+							else
+								" $PKG (package_id: $PKG_ID) already scheduled, not scheduling again."
+							fi
 						fi
 					elif [ "$VERCMP" = "-1" ] ; then
 						# our version is higher than what's in the repo because we build trunk
 						echo "$REPO/$pkgbase $VERSION in db is higher than $version in repo because we build trunk."
-						echo "$REPO/$pkgbase $VERSION > $version" >> $OLDER
 					else
 						echo " Boom boom boom boom boom."
-						echo " This should never happen: we know about $pkgbase $VERSION, but repo has $version. \$VERCMP=$VERCMP"
+						echo " This should never happen: we know about $pkgbase with $VERSION, but repo has $version. VERCMP=$VERCMP"
+						echo " PKG_IN_DB=${PKG_IN_DB}"
 					fi
 				fi
 
 				printf '%s %s\n' "$pkgbase" "$version" >> $TMPPKGLIST
 			done
 		mv $TMPPKGLIST "$ARCHLINUX_PKGS"_"$REPO"
-		#FIXME: echo "$(date -u ) - $(cat ${ARCHLINUX_PKGS}_$REPO | wc -l) packages in repository '$REPO' are known to us."
-		new=$(grep -c ^$REPO $NEW || true)
-		updated=$(grep -c ^$REPO $UPDATED || true)
+		#new=$(grep -c ^$REPO $NEW || true)
+		#updated=$(grep -c ^$REPO $UPDATED || true)
 		#FIXME echo "$(date -u ) - scheduled $new/$updated packages in repository '$REPO'."
 	done
 	schroot --end-session -c $SESSION
-	echo "$(date -u) - the following packages are known to us with higher versions than the repo because we build trunk:"
-	cat $OLDER
-	echo
 
 	#
 	# schedule up to $MAX packages we already know about
@@ -161,15 +160,16 @@ update_archlinux_repositories() {
 			old=", plus$old"
 		fi
 		MESSAGE="${message}$old, for $total scheduled out of $TOTAL."
-		irc_message archlinux-reproducible "$MESSAGE"
-		echo "$(date -u ) - $MESSAGE"
-	else
-		echo "$(date -u ) - didn't schedule any packages."
+		#FIXME irc_message archlinux-reproducible "$MESSAGE"
+		#echo "$(date -u ) - $MESSAGE"
+	#else
+		#echo "$(date -u ) - didn't schedule any packages."
 	fi
-	rm $NEW $UPDATED > /dev/null
+	rm $NEW $UPDATED $KNOWN > /dev/null
 	echo "$(date -u) - Done updating Arch Linux repositories, currently $TOTAL packages known."
 }
 
+ARCH="x86_64"
 update_archlinux_repositories
 
 # vim: set sw=0 noet :
