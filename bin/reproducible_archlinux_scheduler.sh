@@ -43,7 +43,9 @@ update_archlinux_repositories() {
 	#
 	# remove packages which are gone (only when run between 21:00 and 23:59)
 	#
-	if [ $(date +'%H') -gt 21 ] ; then
+	#if [ $(date +'%H') -gt 21 ] ; then
+	#FIXME: the next lines actually disables this code block...
+	if [ $(date +'%H') -gt 25 ] ; then
 		REMOVED=0
 		REMOVE_LIST=""
 		for REPO in $ARCHLINUX_REPOS ; do
@@ -54,6 +56,7 @@ update_archlinux_repositories() {
 					let REMOVED=$REMOVED+1
 					REMOVE_LIST="$REMOVE_LIST $REPO/$PKG"
 					rm -r --one-file-system $BASE/archlinux/$REPO/$PKG
+					# FIXME: we actually need to drop them from the db now...
 				        echo "$REPO/$PKG removed as it's gone from the Archlinux repositories."
 				fi
 			done
@@ -114,43 +117,13 @@ update_archlinux_repositories() {
 					fi
 				fi
 
-				#
-				# old scheduling to be deleted once the db is used
-				#
-				if [ ! -d $BASE/archlinux/$REPO/$pkgbase ] ; then
-					# schedule (all) entirely new packages
-					echo $REPO/$pkgbase >> $NEW
-					#echo "$(date -u ) - scheduling new package $REPO/$pkgbase... "
-					mkdir -p $BASE/archlinux/$REPO/$pkgbase
-					touch $BASE/archlinux/$REPO/$pkgbase/pkg.needs_build
-				elif [ ! -f $BASE/archlinux/$REPO/$pkgbase/pkg.needs_build ] ; then
-					if [ -f $BASE/archlinux/$REPO/$pkgbase/pkg.version ] ; then
-						VERSION=$(cat $BASE/archlinux/$REPO/$pkgbase/pkg.version 2>/dev/null)
-						if [ "$VERSION" != "$version" ] ; then
-							VERCMP="$(schroot --run-session -c $SESSION --directory /var/tmp -- vercmp $version $VERSION || true)"
-							if [ "$VERCMP" = "1" ] ; then
-								# schedule packages where an updated version is availble
-								echo $REPO/$pkgbase >> $UPDATED
-								#echo "$(date -u ) - we know $REPO/$pkgbase $VERSION, but repo has $version, so rescheduling... "
-								touch $BASE/archlinux/$REPO/$pkgbase/pkg.needs_build
-							elif [ "$VERCMP" = "-1" ] ; then
-								echo "$REPO/$pkgbase $VERSION > $version" >> $OLDER
-							else
-								echo "$(date -u ) - This should never happen: we know about $pkgbase $VERSION, but repo has $version. \$VERCMP=$VERCMP"
-							fi
-						fi
-					else
-						#echo "$(date -u ) - scheduling new package $REPO/$pkgbase... though this is strange and should not really happen…"
-						touch $BASE/archlinux/$REPO/$pkgbase/pkg.needs_build
-					fi
-				fi
 				printf '%s %s\n' "$pkgbase" "$version" >> $TMPPKGLIST
 			done
 		mv $TMPPKGLIST "$ARCHLINUX_PKGS"_"$REPO"
-		#echo "$(date -u ) - $(cat ${ARCHLINUX_PKGS}_$REPO | wc -l) packages in repository '$REPO' are known to us."
+		#FIXME: echo "$(date -u ) - $(cat ${ARCHLINUX_PKGS}_$REPO | wc -l) packages in repository '$REPO' are known to us."
 		new=$(grep -c ^$REPO $NEW || true)
 		updated=$(grep -c ^$REPO $UPDATED || true)
-		#echo "$(date -u ) - scheduled $new/$updated packages in repository '$REPO'."
+		#FIXME echo "$(date -u ) - scheduled $new/$updated packages in repository '$REPO'."
 	done
 	schroot --end-session -c $SESSION
 	echo "$(date -u) - the following packages are known to us with higher versions than the repo because we build trunk:"
@@ -164,25 +137,7 @@ update_archlinux_repositories() {
 	old=""
 	local MAX=350
 	local THRESHOLD=450
-	if [ $(find $BASE/archlinux/ -name pkg.needs_build | wc -l ) -le $THRESHOLD ] ; then
-		rm -f $OLDER
-		# reschedule
-	        for i in $( ( for REPO in $ARCHLINUX_REPOS ; do
-			find $BASE/archlinux/$REPO -type d -wholename "$BASE/archlinux/$REPO/*" -printf '%T+ %p\n' | egrep -v "$BLACKLIST"
-		done ) | sort | head -n $MAX| cut -d " " -f2 ) ; do
-			touch $i/pkg.needs_build
-			echo "$(basename $(dirname $i))/$(basename $i)" >> $OLDER
-		done
-		if [ -s $OLDER ] ; then
-			old=" $(cat $OLDER | wc -l) old ones"
-			echo "$(date -u) - Old, previously tested packages rescheduled: "
-			for REPO in $ARCHLINUX_REPOS ; do
-				grep $REPO/ $OLDER | sort
-			done
-		fi
-	fi
-	rm $OLDER
-	echo
+	#FIXME add actual code here :)
 
 	#
 	# output stats

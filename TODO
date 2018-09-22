@@ -333,6 +333,7 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 ** problem: we currently have more (detailed) stati in archlinux
 ** extend scheduler.sh:
 *** stop checking making 8000 queries instead of 1...
+*** comparing versions is also unneeded: if its not empty it must be higher (due to repo constraints)
 *** actually schedule old packages once queue is empty (except blacklisted packages)
 **** at first reschedule packages which never have been build (according to the db)
 **** once there are no more left, reschedule based on last build_date
