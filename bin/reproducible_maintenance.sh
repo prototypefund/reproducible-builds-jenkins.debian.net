@@ -111,6 +111,52 @@ if [ $? -ne 0 ] ; then
 	exit 1
 fi
 
+if [ "$HOSTNAME" = "$MAINNODE" ] ; then
+	#
+	# find nodes with problems and temporarily turn them offline
+	#
+	echo "$(date -u) - Looking for unhealthy nodes."
+	cd ~/jobs
+	for i in reproducible_node_health_check_* ; do
+		NODE_ALIAS=$(echo $i | cut -d '_' -f6)
+		NODE_ARCH=$(echo $i | cut -d '_' -f5)
+		case $NODE_ARCH in
+			amd64)	NODE="profitbricks-build${NODE_ALIAS#profitbricks}-amd64.debian.net" ;;
+			i386)	NODE="profitbricks-build${NODE_ALIAS#profitbricks}-i386.debian.net" ;;
+			arm64)	NODE="codethink-sled${NODE_ALIAS#codethink}-arm64.debian.net" ;;
+			armhf)	NODE="${NODE_ALIAS}-armhf-rb.debian.net" ;;
+		esac
+		if [ "$NODE" == "jenkins" ] ; then
+			echo 'Skipping jenkins...'
+			continue
+		fi
+		cd $i/builds
+		LAST=$(ls -rt1 | tail -1)
+		GOOD=$(basename $(readlink -f lastStableBuild))
+		if [ "$LAST" == "$GOOD" ] ; then
+			DIFF=0
+		else
+			let DIFF=$LAST-$GOOD || DIFF=-1
+		fi
+		if [ $DIFF -eq -1 ] ; then
+			echo "Problems analysing $i build logs, ignoring $NODE."
+		elif [ $DIFF -gt 16 ] ; then
+			echo -n "$i jobs has issues since more than 4h"
+			if grep -q $NODE ~/offline_nodes >/dev/null 2>&1 ; then
+				echo " and $NODE already marked as offline, good."
+			else
+				echo $NODE >> ~/offline_nodes
+				echo " so $NODE has (temporarily) been marked as offline now."
+				irc_message reproducible-builds "$NODE has health problems and has temporarily been marked as offline. To make this permanent, edit jenkins-home/offline_nodes in git."
+
+			fi
+		else
+			echo "$NODE is doing fine, good."
+		fi
+		cd ../..
+	done
+fi
+
 echo "$(date -u) - updating the schroots and pbuilder now..."
 # use host architecture (only)
 ARCH=$(dpkg --print-architecture)
