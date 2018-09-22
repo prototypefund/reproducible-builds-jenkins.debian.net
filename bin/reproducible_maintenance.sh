@@ -107,8 +107,8 @@ fi
 echo "$(date -u) - testing whether the proxy works..."
 curl http://www.debian.org > /dev/null
 if [ $? -ne 0 ] ; then
-	echo "Warning: curl http://www.debian.org failed, probably the proxy is down for $HOSTNAME…"
-	DIRTY=true
+	echo "Error: curl http://www.debian.org failed, probably the proxy is down for $HOSTNAME"
+	exit 1
 fi
 
 echo "$(date -u) - updating the schroots and pbuilder now..."
