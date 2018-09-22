@@ -239,7 +239,7 @@ write_page_header() {
 			class=''
 		fi
 		uri="/debian/${s}/index_suite_${ARCH}_stats.html"
-		if [ $comma == 1 ] ; then
+		if [ $comma = 1 ] ; then
 			suite_links+=", {\"s\": \"${s}\", \"class\": \"$class\", \"uri\": \"$uri\"}"
 		else
 			suite_links+="{\"s\": \"${s}\", \"class\": \"$class\", \"uri\": \"$uri\"}"
@@ -258,7 +258,7 @@ write_page_header() {
 			class=''
 		fi
 		uri="/debian/$SUITE/index_suite_${a}_stats.html"
-		if [ $comma == 1 ] ; then
+		if [ $comma = 1 ] ; then
 			arch_links+=", {\"a\": \"${a}\", \"class\": \"$class\", \"uri\": \"$uri\"}"
 		else
 			arch_links+="{\"a\": \"${a}\", \"class\": \"$class\", \"uri\": \"$uri\"}"

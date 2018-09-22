@@ -126,14 +126,14 @@ if [ "$HOSTNAME" = "$MAINNODE" ] ; then
 			arm64)	NODE="codethink-sled${NODE_ALIAS#codethink}-arm64.debian.net" ;;
 			armhf)	NODE="${NODE_ALIAS}-armhf-rb.debian.net" ;;
 		esac
-		if [ "$NODE" == "jenkins" ] ; then
+		if [ "$NODE" = "jenkins" ] ; then
 			echo 'Skipping jenkins...'
 			continue
 		fi
 		cd $i/builds
 		LAST=$(ls -rt1 | tail -1)
 		GOOD=$(basename $(readlink -f lastStableBuild))
-		if [ "$LAST" == "$GOOD" ] ; then
+		if [ "$LAST" = "$GOOD" ] ; then
 			DIFF=0
 		else
 			let DIFF=$LAST-$GOOD || DIFF=-1
