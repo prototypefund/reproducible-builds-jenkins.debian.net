@@ -80,7 +80,7 @@ update_archlinux_repositories() {
 				SUITE="archlinux_$repo"
 				ARCH="x86_64"
 				echo "SELECT version FROM sources WHERE name='$PKG' AND suite='$SUITE' AND architecture='$ARCH';"
-				VERSION=$(query_db "SELECT version FROM sources WHERE name='$PKG' AND suite='$SUITE' AND architecture='$ARCH';")
+				VERSION=$(query_db "SELECT version FROM sources WHERE name='$PKG' AND suite='$SUITE' AND architecture='$ARCH';" || query_db "SELECT version FROM sources WHERE name='$PKG' AND suite='$SUITE' AND architecture='$ARCH';")
 				echo "Result: VERSION=$VERSION"
 				DATE="$(date -u +'%Y-%m-%d %H:%M')"
 				if [ -z "$VERSION" ] ; then
@@ -110,6 +110,8 @@ update_archlinux_repositories() {
 					else
 						echo "$(date -u ) - This should never happen: we know about $pkgbase $VERSION, but repo has $version. \$VERCMP=$VERCMP"
 					fi
+				else
+					echo "Found $PKG from $SUITE with $VERSION, good."
 				fi
 
 				#
