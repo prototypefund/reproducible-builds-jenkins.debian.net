@@ -339,7 +339,8 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 **** once there are no more left, reschedule based on last build_date
 *** also delete unknown packages from db: sources and schedule, later results as well
 *** check/make sure that packages which are newer in trunk than repo are only scheduled once
-** make build.sh read & write db
+** make build.sh
+*** write db
 *** delete all pkg.needs_build files on disk
 *** drop all occurrances of pkg.needs_build from the code
 *** really share /var/log/jenkins/reproducible-stale-builds.log

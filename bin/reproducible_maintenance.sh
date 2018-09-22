@@ -563,6 +563,7 @@ if [ "$HOSTNAME" = "$MAINNODE" ] && [ $(date -u +%H) -eq 0 ]  ; then
 	files_to_mail=(
 		/var/log/jenkins/reproducible-builder-errors.log
 		/var/log/jenkins/reproducible-stale-builds.log
+		/var/log/jenkins/reproducible-archlinux-stale-builds.log
 		/var/log/jenkins/reproducible-race-conditions.log
 		/var/log/jenkins/reproducible-diskspace-issues.log
 		/var/log/jenkins/reproducible-remote-error.log

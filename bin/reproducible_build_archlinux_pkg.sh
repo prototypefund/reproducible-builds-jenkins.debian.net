@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Copyright 2015-2017 Holger Levsen <holger@layer-acht.org>
+# Copyright 2015-2018 Holger Levsen <holger@layer-acht.org>
 #                2017 kpcyrd <git@rxv.cc>
 # released under the GPLv=2
 
@@ -42,72 +42,52 @@ handle_remote_error() {
 
 choose_package() {
 	echo "$(date -u ) - choosing package to be build."
-	local REPO
-	local PKG
-	for REPO in $(echo $ARCHLINUX_REPOS | sed -s "s# #\n#g" | sort -R | xargs echo ); do
-		# try to find packages which have been triggered
-		for PKG in $(cat ${ARCHLINUX_PKGS}_$REPO | cut -d ' ' -f1 | sort -R | xargs echo ) ; do
-			# ignore blacklisted packages (should be noted in the web pages later)
-			for i in $ARCHLINUX_BLACKLISTED ; do
-				if [ "$PKG" = "$i" ] ; then
-					continue
-				fi
-			done
-			# if triggered...
-			if [ -f $BASE/archlinux/$REPO/$PKG/pkg.needs_build ] ; then
-				REPOSITORY=$REPO
-				SRCPACKAGE=$PKG
-				# break out of the loop (and then out of the next loop too...)
-				break
-			fi
-		done
-		if [ ! -z "$SRCPACKAGE" ] ; then
-			break
-		fi
-	done
-	if [ -z "$SRCPACKAGE" ] ; then
-		for REPO in $(echo $ARCHLINUX_REPOS | sed -s "s# #\n#g" | sort -R | xargs echo ); do
-			# trz to find packages which never been built before
-			for PKG in $(cat ${ARCHLINUX_PKGS}_$REPO | cut -d ' ' -f1 | sort -R | xargs echo ) ; do
-				# ignore blacklisted packages (should be noted in the web pages later)
-				for i in $ARCHLINUX_BLACKLISTED ; do
-					if [ "$PKG" = "$i" ] ; then
-						continue
-					fi
-				done
-				# if new...
-				if [ ! -d $BASE/archlinux/$REPO/$PKG ] ; then
-					REPOSITORY=$REPO
-					SRCPACKAGE=$PKG
-					# break out of the loop (and then out of the next loop too...)
-					break
-				fi
-			done
-			# again, if we broke out of the previous loop we have choosen a package
-			if [ ! -z "$SRCPACKAGE" ] ; then
-				break
-			fi
-		done
-	fi
-	if [ -z $SRCPACKAGE ] ; then
-		echo "$(date -u ) - no package found to be build, sleeping 3h."
-		for i in $(seq 1 6) ; do
-			sleep 30m
-			echo "$(date -u ) - still sleeping..."
-		done
-		echo "$(date -u ) - exiting cleanly now."
+	ARCH="x86_64"
+	local RESULT=$(query_db "
+		SELECT s.suite, s.id, s.name, s.version
+		FROM schedule AS sch JOIN sources AS s ON sch.package_id=s.id
+		WHERE sch.date_build_started is NULL
+		AND s.architecture='$ARCH'
+		ORDER BY date_scheduled LIMIT 5"|sort -R|head -1)
+	if [ -z "$RESULT" ] ; then
+		echo "No packages scheduled, sleeping 30m."
+		sleep 30m
 		exit 0
 	fi
-	mkdir -p $BASE/archlinux/$REPOSITORY/$SRCPACKAGE
-	# very simple locking…
-	if [ -f $BASE/archlinux/$REPO/$SRCPACKAGE/pkg.needs_build ] ; then
-		rm $BASE/archlinux/$REPO/$SRCPACKAGE/pkg.needs_build
-		# prevent the package from being scheduled again while its already building (which can take several hours...)
-		touch $BASE/archlinux/$REPO/$SRCPACKAGE/build1.log
-	else
-		echo "$(date -u ) - $BASE/archlinux/$REPO/$SRCPACKAGE/pkg.needs_build does not exist?!?"
-		exit 1
+	SUITE=$(echo $RESULT|cut -d "|" -f1)
+	REPOSITORY=$(echo $SUITE | cut -d "_" -f2)
+	SRCPKGID=$(echo $RESULT|cut -d "|" -f2)
+	SRCPACKAGE=$(echo $RESULT|cut -d "|" -f3)
+	VERSION=$(echo $RESULT|cut -d "|" -f4)
+	# remove previous build attempts which didnt finish correctly:
+	JOB_PREFIX="${JOB_NAME#reproducible_builder_}/"
+	BAD_BUILDS=$(mktemp --tmpdir=$TMPDIR)
+	query_db "SELECT package_id, date_build_started, job FROM schedule WHERE job LIKE '${JOB_PREFIX}%'" > $BAD_BUILDS
+	if [ -s "$BAD_BUILDS" ] ; then
+		local STALELOG=/var/log/jenkins/reproducible-archlinux-stale-builds.log
+		# reproducible-archlinux-stale-builds.log is mailed once a day by reproducible_maintenance.sh
+		echo -n "$(date -u) - stale builds found, cleaning db from these: " | tee -a $STALELOG
+		cat $BAD_BUILDS | tee -a $STALELOG
+		query_db "UPDATE schedule SET date_build_started = NULL, job = NULL WHERE job LIKE '${JOB_PREFIX}%'"
 	fi
+	rm -f $BAD_BUILDS
+	# mark build attempt, first test if none else marked a build attempt recently
+	echo "ok, let's check if $SRCPACKAGE is building anywhere yet…"
+	RESULT=$(query_db "SELECT date_build_started FROM schedule WHERE package_id='$SRCPKGID'")
+	if [ -z "$RESULT" ] ; then
+		echo "ok, $SRCPACKAGE is not building anywhere…"
+		# try to update the schedule with our build attempt, then check no else did it, if so, abort
+		query_db "UPDATE schedule SET date_build_started='$DATE', job='$JOB' WHERE package_id='$SRCPKGID' AND date_build_started IS NULL"
+		RESULT=$(query_db "SELECT date_build_started FROM schedule WHERE package_id='$SRCPKGID' AND date_build_started='$DATE' AND job='$JOB'")
+		if [ -z "$RESULT" ] ; then
+			echo "hm, seems $SRCPACKAGE is building somewhere… failed to update the schedule table with our build ($SRCPKGID, $DATE, $JOB)."
+			handle_race_condition
+		fi
+	else
+		echo "hm, seems $SRCPACKAGE is building somewhere… schedule table now listed it as building somewhere else."
+		handle_race_condition
+	fi
+
 	echo "$(date -u ) - building package $SRCPACKAGE from '$REPOSITORY' now..."
 }
 
@@ -370,6 +350,7 @@ REPOSITORY=""
 SRCPACKAGE=""
 VERSION=""
 choose_package
+mkdir -p $BASE/archlinux/$REPOSITORY/$SRCPACKAGE
 # build package twice
 mkdir b1 b2
 # currently there are two Arch Linux build nodes… let's keep things simple
@@ -384,8 +365,18 @@ else
 	NODE1=$N2
 	NODE2=$N1
 fi
+echo "============================================================================="
+echo "Initialising reproducibly build of ${SRCPACKAGE} in ${REPOSITORY} on ${ARCH} now."
+echo "1st build will be done on $NODE1."
+echo "2nd build will be done on $NODE2."
+echo "============================================================================="
+#
+# do 1st build
+#
 remote_build 1 ${NODE1}
+#
 # only do the 2nd build if the 1st produced results
+#
 if [ ! -z "$(ls $TMPDIR/b1/$SRCPACKAGE/*.pkg.tar.xz 2>/dev/null|| true)" ] ; then
 	remote_build 2 ${NODE2}
 	cd $TMPDIR/b1/$SRCPACKAGE
