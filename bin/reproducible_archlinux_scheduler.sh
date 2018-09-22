@@ -71,18 +71,18 @@ update_archlinux_repositories() {
 		TMPPKGLIST=$(mktemp -t archlinuxrb-scheduler-XXXXXXXX)
 		echo "$(date -u ) - updating list of available packages in repository '$REPO'."
 		grep "^$REPO" "$ARCHLINUX_PKGS"_full_pkgbase_list | \
+			DATE="$(date -u +'%Y-%m-%d %H:%M')"
 			while read repo pkgbase version; do
 				#
 				# db based scheduler
 				#
-				echo "Processing $repo $pkgbase $version"
+				echo -n "Processing $repo $pkgbase $version "
 				PKG=$pkgbase
 				SUITE="archlinux_$repo"
 				ARCH="x86_64"
 				#echo "SELECT version FROM sources WHERE name='$PKG' AND suite='$SUITE' AND architecture='$ARCH';"
 				VERSION=$(query_db "SELECT version FROM sources WHERE name='$PKG' AND suite='$SUITE' AND architecture='$ARCH';" || query_db "SELECT version FROM sources WHERE name='$PKG' AND suite='$SUITE' AND architecture='$ARCH';")
-				echo "Result: VERSION=$VERSION"
-				DATE="$(date -u +'%Y-%m-%d %H:%M')"
+				echo "- result: VERSION=$VERSION"
 				if [ -z "$VERSION" ] ; then
 					echo "UPDATE sources SET version = '$version' WHERE name = '$PKG' AND suite = '$SUITE' AND architecture='$ARCH';"
 					query_db "UPDATE sources SET version = '$version' WHERE name = '$PKG' AND suite = '$SUITE' AND architecture='$ARCH';"
