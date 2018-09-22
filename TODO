@@ -334,6 +334,8 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 ** extend scheduler.sh:
 *** stop checking making 8000 queries instead of 1...
 *** actually schedule old packages once queue is empty (except blacklisted packages)
+**** at first reschedule packages which never have been build (according to the db)
+**** once there are no more left, reschedule based on last build_date
 *** also delete unknown packages from db: sources and schedule, later results as well
 *** check/make sure that packages which are newer in trunk than repo are only scheduled once
 ** make build.sh read & write db
