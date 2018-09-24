@@ -44,7 +44,6 @@ update_pkg_in_db() {
 	local ARCHLINUX_PKG_PATH=$ARCHBASE/$REPOSITORY/$SRCPACKAGE
 	cd "$ARCHLINUX_PKG_PATH"
 	BUILD_DURATION="$(cat pkg.build_duration)"
-	BUILD_DATE="$(find . -name pkg.build_duration -printf '%TY-%Tm-%Td %TH:%TM\n')"
 	BUILD_STATE=$(cat pkg.state)
 	BUILD_VERSION="$(cat pkg.version)"
 	SUITE="archlinux_$REPOSITORY"
@@ -54,11 +53,13 @@ update_pkg_in_db() {
 		exit 1
 	fi
 	QUERY="INSERT into results (package_id, version, status, build_date, build_duration, node1, node2, job)
-		VALUES ('${SRCPKGID}', '$BUILD_VERSION', '$BUILD_STATE', '$BUILD_DATE', '$BUILD_DURATION', 'pb3 or pb4', 'pb3 or pb4', 'unknown');"
+		VALUES ('${SRCPKGID}', '$BUILD_VERSION', '$BUILD_STATE', '$DATE', '$BUILD_DURATION', '$NODE1', '$NODE2', '$BUILD_URL')
+		ON CONFLICT (package_id)
+		DO UPDATE SET version='$BUILD_VERSION', status='$BUILD_STATE', build_date='$DATE_DATE', build_duration='$BUILD_DURATION', node1='$NODE1', node2='$NODE2', job='$BUILD_URL' WHERE results.package_id='$SRCPKGID'";
         echo "$QUERY"
 	query_db "$QUERY"
         QUERY="INSERT INTO stats_build (name, version, suite, architecture, status, build_date, build_duration, node1, node2, job) 
-		VALUES ('$SRCPACKAGE', '$VERSION', '$SUITE', '$ARCH', '$STATUS', '$DATE', '$DURATION', '$NODE1', '$NODE2', '$JOB');"
+		VALUES ('$SRCPACKAGE', '$BUILD_VERSION', '$SUITE', '$ARCH', '$BUILD_STATE', '$DATE', '$BUILD_DURATION', '$NODE1', '$NODE2', '$BUILD_URL');"
         echo "$QUERY"
 	query_db "$QUERY"
         # unmark build since it's properly finished
@@ -208,8 +209,7 @@ create_pkg_html() {
 		esac
 	fi
 	echo "      </td>" >> $HTML_BUFFER
-	local BUILD_DATE="$(date -u --date=@$(stat -c %Y $ARCHLINUX_PKG_PATH/build1.log) +'%F %R %Z')"
-	echo "      <td>$BUILD_DATE" >> $HTML_BUFFER
+	echo "      <td>$DATE" >> $HTML_BUFFER
 	local DURATION=$(cat $ARCHLINUX_PKG_PATH/pkg.build_duration 2>/dev/null || true)
 	if [ -n "$DURATION" ]; then
 		local HOUR=$(echo "$DURATION/3600"|bc)

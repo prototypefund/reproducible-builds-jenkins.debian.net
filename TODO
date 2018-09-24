@@ -339,6 +339,7 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 ** create json
 ** debian uses a table removed_packages, should this be used here too?
 ** debian uses a table manual_scheduler to limit the amount of packages someone can schedule per day...
+** should breakages job look for archlinux breakages?
 
 * fix build.sh:
 ** build2.log doesnt get deleted if build1 fails
