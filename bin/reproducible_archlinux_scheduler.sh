@@ -80,9 +80,9 @@ update_archlinux_repositories() {
 						BUILD_STATE=$(cat pkg.state)
 						BUILD_VERSION="$(cat pkg.version)"
 						SUITE="archlinux_$REPO"
-						PKGID=$(query_db "SELECT id FROM sources WHERE name='$PKG' AND suite='$SUITE' AND architecture='$ARCH';")
+						PKG_ID=$(query_db "SELECT id FROM sources WHERE name='$PKG' AND suite='$SUITE' AND architecture='$ARCH';")
 						QUERY="INSERT into results (package_id, version, status, build_date, build_duration, node1, node2, job) VALUES
-						('$PKG_ID', '$BUILD_VERSION', '$BUILD_STATE', '$BUILD_DATE', '$BUILD_DURATION', 'pb3 or pb4', 'pb3 or pb4', 'unknown');"
+						('${PKG_ID}', '$BUILD_VERSION', '$BUILD_STATE', '$BUILD_DATE', '$BUILD_DURATION', 'pb3 or pb4', 'pb3 or pb4', 'unknown');"
 							echo "$QUERY"
 						query_db "$QUERY"
 						rm pkg.build_duration pkg.state pkg.version
@@ -120,8 +120,8 @@ update_archlinux_repositories() {
 					# new package, add to db and schedule
 					echo "new package found: $repo/$pkgbase $version "
 					query_db "INSERT into sources (name, version, suite, architecture) VALUES ('$PKG', '$version', '$SUITE', '$ARCH');"
-					PKGID=$(query_db "SELECT id FROM sources WHERE name='$PKG' AND suite='$SUITE' AND architecture='$ARCH';")
-					query_db "INSERT INTO schedule (package_id, date_scheduled) VALUES ('$PKGID', '$DATE');"
+					PKG_ID=$(query_db "SELECT id FROM sources WHERE name='$PKG' AND suite='$SUITE' AND architecture='$ARCH';")
+					query_db "INSERT INTO schedule (package_id, date_scheduled) VALUES ('${PKG_ID}', '$DATE');"
 				elif [ "$VERSION" != "$version" ] ; then
 					VERCMP="$(schroot --run-session -c $SESSION --directory /var/tmp -- vercmp $version $VERSION || true)"
 					if [ "$VERCMP" = "1" ] ; then
@@ -132,14 +132,14 @@ update_archlinux_repositories() {
 						if [ -z $(echo $PKG | egrep -v "$BLACKLIST") ] ; then
 							echo "$PKG is blacklisted, so not scheduling it."
 						else
-							PKGID=$(query_db "SELECT id FROM sources WHERE name='$PKG' AND suite='$SUITE' AND architecture='$ARCH';")
-							echo " SELECT FROM schedule WHERE package_id = '$PKGID';"
-							SCHEDULED=$(query_db "SELECT FROM schedule WHERE package_id = '$PKGID';")
+							PKG_ID=$(query_db "SELECT id FROM sources WHERE name='$PKG' AND suite='$SUITE' AND architecture='$ARCH';")
+							echo " SELECT FROM schedule WHERE package_id = '${PKG_ID}';"
+							SCHEDULED=$(query_db "SELECT FROM schedule WHERE package_id = '${PKG_ID}';")
 							if [ -z "$SCHEDULED" ] ; then
-								echo " INSERT INTO schedule (package_id, date_scheduled) VALUES ('$PKGID', '$DATE');"
-								query_db "INSERT INTO schedule (package_id, date_scheduled) VALUES ('$PKGID', '$DATE');" ||true
+								echo " INSERT INTO schedule (package_id, date_scheduled) VALUES ('${PKG_ID}', '$DATE');"
+								query_db "INSERT INTO schedule (package_id, date_scheduled) VALUES ('${PKG_ID}', '$DATE');" ||true
 							else
-								" $PKG (package_id: $PKG_ID) already scheduled, not scheduling again."
+								" $PKG (package_id: ${PKG_ID}) already scheduled, not scheduling again."
 							fi
 						fi
 					elif [ "$VERCMP" = "-1" ] ; then
