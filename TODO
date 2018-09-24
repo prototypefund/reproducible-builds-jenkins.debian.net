@@ -335,6 +335,7 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 **** create new job to recreate all pkg pages
 *** create index pages
 *** create new archlinux.html - keep the old one til this works
+*** job needs to be triggered every hour
 ** create json
 ** debian uses a table removed_packages, should this be used here too?
 ** debian uses a table manual_scheduler to limit the amount of packages someone can schedule per day...
