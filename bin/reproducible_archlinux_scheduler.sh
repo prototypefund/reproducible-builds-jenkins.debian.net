@@ -92,8 +92,6 @@ update_archlinux_repositories() {
 						rm pkg.build_duration pkg.state pkg.version
 					elif [ -f pkg.build_duration ] || [ -f pkg.state ] || [ -f pkg.version ] ; then
 						echo "$REPO/$PKG: one or more of pkg.build_duration, pkg.state and pkg.version does not exist, ignoring."
-					else
-						echo "$REPO/$PKG has been added to the db (or never been build), ignoring."
 					fi
 					cd -
 				fi
