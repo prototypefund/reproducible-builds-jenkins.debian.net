@@ -317,7 +317,7 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 * maintenance job:
 ** check for archlinux schroot sessions which should not be there and delete them. complain if that fails.
 
-* use db
+* use db - see https://tests.reproducible-builds.org/reproducibledb.html
 ** extend scheduler.sh:
 *** comparing versions is probably needed: if its not empty it must be higher (due to repo constraints), but it can be even higher than in the repo, because we build trunk
 **** at first reschedule packages which never have been build (according to the db)
@@ -326,7 +326,6 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 *** fix irc notification
 ** make build.sh
 *** write db
-**** write temp script to populate results table with known data: pkg.state, pkg.build_date. stop builders and html job when running this
 *** we share /var/log/jenkins/reproducible-race-conditions.log with debian, is that ok? (else fix maintenance job and handle_race_condition())
 *** make build respect pacman exit code, see FIXME in _html_.sh
 ** html

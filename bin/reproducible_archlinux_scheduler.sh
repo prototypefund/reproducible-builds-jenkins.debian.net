@@ -53,7 +53,7 @@ update_archlinux_repositories() {
 	#
 	#if [ $(date +'%H') -gt 21 ] ; then
 	#FIXME: the next lines actually disables this code block...
-	if [ $(date +'%H') -gt 25 ] ; then
+	#if [ $(date +'%H') -gt 25 ] ; then
 		REMOVED=0
 		REMOVE_LIST=""
 		for REPO in $ARCHLINUX_REPOS ; do
@@ -69,6 +69,28 @@ update_archlinux_repositories() {
 					# from results
 					# from scheduled
 					# from sources
+				else
+					#
+					# temporary code to move archlinux results from fs to db
+					#
+					cd $BASE/archlinux/$REPO/$PKG
+					if [ -f pkg.build_duration ] && [ -f pkg.state ] && [ -f pkg.version ] ; then
+						BUILD_DURATION="$(cat pkg.build_duration)"
+						BUILD_DATE="$(find . -name pkg.build_duration -printf '%TY-%Tm-%Td %TH:%TM\n')"
+						BUILD_STATE=$(cat pkg.state)
+						BUILD_VERSION="$(cat pkg.version)"
+						PKGID=$(query_db "SELECT id FROM sources WHERE name='$PKG' AND suite='$SUITE' AND architecture='$ARCH';")
+						QUERY="INSERT into results (package_id, version, status, build_date, build_duration, node1, node2, job
+						('$PKG_ID', '$BUILD_VERSION', '$BUILD_STATE', '$BUILD_DATE', '$BUILD_DURATION', 'pb3 or pb4', 'pb3 or pb4', 'unknown');"
+							echo "$QUERY"
+						query_db "$QUERY"
+						rm pkg.build_duration pkg.state pkg.version
+					elif [ -f pkg.build_duration ] || [ -f pkg.state ] || [ -f pkg.version ] ; then
+						echo "$REPO/$PKG: one or more of pkg.build_duration, pkg.state and pkg.version does not exist, ignoring."
+					else
+						echo "$REPO/$PKG has been added to the db (or never been build), ignoring."
+					fi
+					cd -
 				fi
 			done
 		done
@@ -77,7 +99,7 @@ update_archlinux_repositories() {
 		if [ $REMOVED -ne 0 ] ; then
 			irc_message archlinux-reproducible "$MESSAGE"
 		fi
-	fi
+	#fi
 	
 	#
 	# schedule packages
