@@ -327,10 +327,10 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 ** make build.sh
 *** write db
 **** write temp script to populate results table with known data: pkg.state, pkg.build_date. stop builders and html job when running this
-*** do not share /var/log/jenkins/reproducible-race-conditions.log with debian
+*** we share /var/log/jenkins/reproducible-race-conditions.log with debian, is that ok? (else fix maintenance job and handle_race_condition())
 *** make build respect pacman exit code, see FIXME in _html_.sh
 ** html
-*** disable all current html creation
+*** disable (and then drop) all current html creation
 *** leave all files, delete them (much) later
 *** recreate them newly as index.html
 **** create new job to recreate all pkg pages
