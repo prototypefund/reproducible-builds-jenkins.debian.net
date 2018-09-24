@@ -71,6 +71,8 @@ update_pkg_in_db() {
 
 create_pkg_html() {
 	local ARCHLINUX_PKG_PATH=$ARCHBASE/$REPOSITORY/$SRCPACKAGE
+	local HTML_BUFFER=$(mktemp -t archlinuxrb-html-XXXXXXXX)
+
 	local blacklisted=false
 
 	# clear files from previous builds
@@ -544,6 +546,7 @@ delay_start # randomize start times
 REPOSITORY=""
 SRCPACKAGE=""
 VERSION=""
+SIZE=""
 choose_package
 mkdir -p $BASE/archlinux/$REPOSITORY/$SRCPACKAGE
 # build package twice
