@@ -81,7 +81,7 @@ update_archlinux_repositories() {
 						BUILD_VERSION="$(cat pkg.version)"
 						SUITE="archlinux_$REPO"
 						PKGID=$(query_db "SELECT id FROM sources WHERE name='$PKG' AND suite='$SUITE' AND architecture='$ARCH';")
-						QUERY="INSERT into results (package_id, version, status, build_date, build_duration, node1, node2, job
+						QUERY="INSERT into results (package_id, version, status, build_date, build_duration, node1, node2, job) VALUES
 						('$PKG_ID', '$BUILD_VERSION', '$BUILD_STATE', '$BUILD_DATE', '$BUILD_DURATION', 'pb3 or pb4', 'pb3 or pb4', 'unknown');"
 							echo "$QUERY"
 						query_db "$QUERY"
