@@ -642,8 +642,8 @@ fi
 echo "$(date -u) - $REPRODUCIBLE_URL/archlinux/$REPOSITORY/$SRCPACKAGE/ updated."
 # force update of HTML snipplet in reproducible_html_archlinux.sh
 [ ! -f $BASE/archlinux/$REPOSITORY/$SRCPACKAGE/pkg.state ] || rm $BASE/archlinux/$REPOSITORY/$SRCPACKAGE/pkg.state
-update_pkg_in_db
 create_pkg_html
+update_pkg_in_db
 
 cd
 cleanup_all
