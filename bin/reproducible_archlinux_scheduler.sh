@@ -110,13 +110,13 @@ update_archlinux_repositories() {
 							echo "$PKG is blacklisted, so not scheduling it."
 						else
 							PKG_ID=$(query_db "SELECT id FROM sources WHERE name='$PKG' AND suite='$SUITE' AND architecture='$ARCH';")
-							echo " SELECT FROM schedule WHERE package_id = '${PKG_ID}';"
-							SCHEDULED=$(query_db "SELECT FROM schedule WHERE package_id = '${PKG_ID}';")
+							echo " SELECT * FROM schedule WHERE package_id = '${PKG_ID}';"
+							SCHEDULED=$(query_db "SELECT * FROM schedule WHERE package_id = '${PKG_ID}';")
 							if [ -z "$SCHEDULED" ] ; then
 								echo " INSERT INTO schedule (package_id, date_scheduled) VALUES ('${PKG_ID}', '$DATE');"
 								query_db "INSERT INTO schedule (package_id, date_scheduled) VALUES ('${PKG_ID}', '$DATE');" ||true
 							else
-								" $PKG (package_id: ${PKG_ID}) already scheduled, not scheduling again."
+								echo " $PKG (package_id: ${PKG_ID}) already scheduled, not scheduling again."
 							fi
 						fi
 					elif [ "$VERCMP" = "-1" ] ; then
