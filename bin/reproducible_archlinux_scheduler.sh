@@ -69,17 +69,6 @@ update_archlinux_repositories() {
 					# from results
 					# from scheduled
 					# from sources
-				else
-					#
-					# temporary code to move archlinux results from fs to db
-					#
-					cd $BASE/archlinux/$REPO/$PKG
-					if [ -f pkg.build_duration ] && [ -f pkg.state ] && [ -f pkg.version ] ; then
-						SUITE="archlinux_$REPO"
-						rm pkg.build_duration pkg.state pkg.version
-					elif [ -f pkg.build_duration ] || [ -f pkg.state ] || [ -f pkg.version ] ; then
-						echo "$REPO/$PKG: one or more of pkg.build_duration, pkg.state and pkg.version does not exist, ignoring."
-					fi
 				fi
 			done
 		done
