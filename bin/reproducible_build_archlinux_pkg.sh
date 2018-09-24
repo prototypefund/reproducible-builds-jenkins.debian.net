@@ -40,6 +40,213 @@ handle_remote_error() {
 	exit 0
 }
 
+create_pkg_state_and_html() {
+	local ARCHLINUX_PKG_PATH=$ARCHBASE/$REPOSITORY/$PKG
+	local REPO=$1
+	local PKG=$2
+	local blacklisted=false
+	local VERSION="undetermined"
+
+	if [ -z "$(cd $ARCHLINUX_PKG_PATH ; ls)" ] ; then
+		# directory exists but is empty: package is building…
+		echo "$(date -u )   - ignoring $PKG from '$REPOSITORY' which is building in $ARCHLINUX_PKG_PATH since $(date -u --date=@$(stat -c %Y $ARCHLINUX_PKG_PATH) +'%F %R %Z')"
+		return
+	fi
+
+	# clear files from previous builds
+	pushd "$ARCHLINUX_PKG_PATH"
+	for file in build1.log build2.log build1.version build2.version *BUILDINFO.txt *.html; do
+		if [ -f $file ] && [ pkg.build_duration -nt $file ] ; then
+			rm $file
+			echo "$ARCHLINUX_PKG_PATH/$file older than $ARCHLINUX_PKG_PATH/pkg.build_duration, thus deleting it."
+		fi
+	done
+	popd
+
+	if [ -f $ARCHLINUX_PKG_PATH/pkg.version ] ; then
+		VERSION=$(cat $ARCHLINUX_PKG_PATH/pkg.version)
+	elif [ -f $ARCHLINUX_PKG_PATH/build1.version ] ; then
+		VERSION=$(cat $ARCHLINUX_PKG_PATH/build1.version)
+		if [ -f $ARCHLINUX_PKG_PATH/build2.log ] ; then
+			if [ ! -f $ARCHLINUX_PKG_PATH/build2.version ] ; then
+				echo "$(date -u )   - $ARCHLINUX_PKG_PATH/build2.version does not exist, so the 2nd build fails. This happens."
+			elif ! diff -q $ARCHLINUX_PKG_PATH/build1.version $ARCHLINUX_PKG_PATH/build2.version ; then
+				echo "$(date -u )   - $ARCHLINUX_PKG_PATH/build1.version and $ARCHLINUX_PKG_PATH/build2.version differ, this should not happen. Please tell h01ger."
+				VERSION="$VERSION or $(cat $ARCHLINUX_PKG_PATH/build2.version)"
+			fi
+		fi
+	elif [ $(ls $ARCHLINUX_PKG_PATH/*.pkg.tar.xz.html 2>/dev/null | wc -l) -eq 1 ] ; then
+	# only determine version if there is exactly one artifact...
+	# else it's too error prone and in future the version will
+	# be determined during build anyway...
+		ARTIFACT="$(ls $ARCHLINUX_PKG_PATH/*.pkg.tar.xz.html 2>/dev/null)"
+		VERSION=$( basename $ARTIFACT | sed -s "s#$PKG-##" | sed -E -s "s#-(x86_64|any).pkg.tar.xz.html##" )
+	else
+		for i in $ARCHLINUX_BLACKLISTED ; do
+			if [ "$PKG" = "$i" ] ; then
+				blacklisted=true
+			fi
+		done
+		if ! $blacklisted ; then
+			echo "$(date -u )   - cannot determine state of $PKG from '$REPOSITORY', please check $ARCHLINUX_PKG_PATH yourself."
+		fi
+	fi
+	if [ "$VERSION" != "undetermined" ] || $blacklisted ; then
+		echo $VERSION > $ARCHLINUX_PKG_PATH/pkg.version
+	fi
+	echo "     <tr>" >> $HTML_BUFFER
+	echo "      <td>$REPOSITORY</td>" >> $HTML_BUFFER
+	echo "      <td>$PKG</td>" >> $HTML_BUFFER
+	echo "      <td>$VERSION</td>" >> $HTML_BUFFER
+	echo "      <td>" >> $HTML_BUFFER
+	#
+	#
+	if [ -z "$(cd $ARCHLINUX_PKG_PATH/ ; ls *.pkg.tar.xz.html 2>/dev/null)" ] ; then
+		for i in $ARCHLINUX_BLACKLISTED ; do
+			if [ "$PKG" = "$i" ] ; then
+				blacklisted=true
+			fi
+		done
+		# this horrible if elif elif elif elif...  monster is needed because
+		# https://lists.archlinux.org/pipermail/pacman-dev/2017-September/022156.html
+	        # has not yet been merged yet...
+		# FIXME: this has been merged, see http://jlk.fjfi.cvut.cz/arch/manpages/man/makepkg
+
+		if $blacklisted ; then
+				echo BLACKLISTED > $ARCHLINUX_PKG_PATH/pkg.state
+				echo "       <img src=\"/userContent/static/error.png\" alt=\"blacklisted icon\" /> blacklisted" >> $HTML_BUFFER
+		elif [ ! -z "$(egrep '^error: failed to prepare transaction \(conflicting dependencies\)' $ARCHLINUX_PKG_PATH/build1.log $ARCHLINUX_PKG_PATH/build2.log 2>/dev/null)" ] ; then
+			echo DEPWAIT_= > $ARCHLINUX_PKG_PATH/pkg.state
+			echo "       <img src=\"/userContent/static/weather-snow.png\" alt=\"depwait icon\" /> could not resolve dependencies as there are conflicts" >> $HTML_BUFFER
+		elif [ ! -z "$(egrep '==> ERROR: (Could not resolve all dependencies|.pacman. failed to install missing dependencies)' $ARCHLINUX_PKG_PATH/build1.log $ARCHLINUX_PKG_PATH/build2.log 2>/dev/null)" ] ; then
+			echo DEPWAIT_1 > $ARCHLINUX_PKG_PATH/pkg.state
+			echo "       <img src=\"/userContent/static/weather-snow.png\" alt=\"depwait icon\" /> could not resolve dependencies" >> $HTML_BUFFER
+		elif [ ! -z "$(egrep '^error: unknown package: ' $ARCHLINUX_PKG_PATH/build1.log $ARCHLINUX_PKG_PATH/build2.log 2>/dev/null)" ] ; then
+			echo 404_0 > $ARCHLINUX_PKG_PATH/pkg.state
+			echo "       <img src=\"/userContent/static/weather-severe-alert.png\" alt=\"404 icon\" /> unknown package" >> $HTML_BUFFER
+		elif [ ! -z "$(egrep '(==> ERROR: Failure while downloading|==> ERROR: One or more PGP signatures could not be verified|==> ERROR: One or more files did not pass the validity check|==> ERROR: Integrity checks \(.*\) differ in size from the source array|==> ERROR: Failure while branching|==> ERROR: Failure while creating working copy|Failed to source PKGBUILD.*PKGBUILD)' $ARCHLINUX_PKG_PATH/build1.log $ARCHLINUX_PKG_PATH/build2.log 2>/dev/null)" ] ; then
+			REASON="download failed"
+			EXTRA_REASON=""
+			echo 404_0 > $ARCHLINUX_PKG_PATH/pkg.state
+			if [ ! -z "$(grep 'FAILED (unknown public key' $ARCHLINUX_PKG_PATH/build1.log $ARCHLINUX_PKG_PATH/build2.log 2>/dev/null)" ] ; then
+				echo 404_6 > $ARCHLINUX_PKG_PATH/pkg.state
+				EXTRA_REASON="to verify source with PGP due to unknown public key"
+			elif [ ! -z "$(grep 'The requested URL returned error: 403' $ARCHLINUX_PKG_PATH/build1.log $ARCHLINUX_PKG_PATH/build2.log 2>/dev/null)" ] ; then
+				echo 404_2 > $ARCHLINUX_PKG_PATH/pkg.state
+				EXTRA_REASON="with 403 - forbidden"
+			elif [ ! -z "$(grep 'The requested URL returned error: 500' $ARCHLINUX_PKG_PATH/build1.log $ARCHLINUX_PKG_PATH/build2.log 2>/dev/null)" ] ; then
+				echo 404_4 > $ARCHLINUX_PKG_PATH/pkg.state
+				EXTRA_REASON="with 500 - internal server error"
+			elif [ ! -z "$(grep 'The requested URL returned error: 503' $ARCHLINUX_PKG_PATH/build1.log $ARCHLINUX_PKG_PATH/build2.log 2>/dev/null)" ] ; then
+				echo 404_5 > $ARCHLINUX_PKG_PATH/pkg.state
+				EXTRA_REASON="with 503 - service unavailable"
+			elif [ ! -z "$(egrep '==> ERROR: One or more PGP signatures could not be verified' $ARCHLINUX_PKG_PATH/build1.log $ARCHLINUX_PKG_PATH/build2.log 2>/dev/null)" ] ; then
+				echo 404_7 > $ARCHLINUX_PKG_PATH/pkg.state
+				EXTRA_REASON="to verify source with PGP signatures"
+			elif [ ! -z "$(egrep '(SSL certificate problem: unable to get local issuer certificate|^bzr: ERROR: .SSL: CERTIFICATE_VERIFY_FAILED)' $ARCHLINUX_PKG_PATH/build1.log $ARCHLINUX_PKG_PATH/build2.log 2>/dev/null)" ] ; then
+				echo 404_1 > $ARCHLINUX_PKG_PATH/pkg.state
+				EXTRA_REASON="with SSL problem"
+			elif [ ! -z "$(egrep '==> ERROR: One or more files did not pass the validity check' $ARCHLINUX_PKG_PATH/build1.log $ARCHLINUX_PKG_PATH/build2.log 2>/dev/null)" ] ; then
+				echo 404_8 > $ARCHLINUX_PKG_PATH/pkg.state
+				REASON="downloaded ok but failed to verify source"
+			elif [ ! -z "$(egrep '==> ERROR: Integrity checks \(.*\) differ in size from the source array' $ARCHLINUX_PKG_PATH/build1.log $ARCHLINUX_PKG_PATH/build2.log 2>/dev/null)" ] ; then
+				echo 404_9 > $ARCHLINUX_PKG_PATH/pkg.state
+				REASON="Integrity checks differ in size from the source array"
+			elif [ ! -z "$(grep 'The requested URL returned error: 404' $ARCHLINUX_PKG_PATH/build1.log $ARCHLINUX_PKG_PATH/build2.log 2>/dev/null)" ] ; then
+				echo 404_3 > $ARCHLINUX_PKG_PATH/pkg.state
+				EXTRA_REASON="with 404 - file not found"
+			elif [ ! -z "$(egrep 'fatal: the remote end hung up unexpectedly' $ARCHLINUX_PKG_PATH/build1.log $ARCHLINUX_PKG_PATH/build2.log 2>/dev/null)" ] ; then
+				echo 404_A > $ARCHLINUX_PKG_PATH/pkg.state
+				EXTRA_REASON="could not clone git repository"
+			fi
+			echo "       <img src=\"/userContent/static/weather-severe-alert.png\" alt=\"404 icon\" /> $REASON $EXTRA_REASON" >> $HTML_BUFFER
+		elif [ ! -z "$(egrep '==> ERROR: (install file .* does not exist or is not a regular file|The download program wget is not installed)' $ARCHLINUX_PKG_PATH/build1.log 2>/dev/null)" ] ; then
+			echo FTBFS_0 > $ARCHLINUX_PKG_PATH/pkg.state
+			echo "       <img src=\"/userContent/static/weather-storm.png\" alt=\"ftbfs icon\" /> failed to build, requirements not met" >> $HTML_BUFFER
+		elif [ ! -z "$(egrep '==> ERROR: A failure occurred in check' $ARCHLINUX_PKG_PATH/build1.log $ARCHLINUX_PKG_PATH/build2.log 2>/dev/null)" ] ; then
+			echo FTBFS_1 > $ARCHLINUX_PKG_PATH/pkg.state
+			echo "       <img src=\"/userContent/static/weather-storm.png\" alt=\"ftbfs icon\" /> failed to build while running tests" >> $HTML_BUFFER
+		elif [ ! -z "$(egrep '==> ERROR: (An unknown error has occurred|A failure occurred in (build|package|prepare))' $ARCHLINUX_PKG_PATH/build1.log $ARCHLINUX_PKG_PATH/build2.log 2>/dev/null)" ] ; then
+			echo FTBFS_2 > $ARCHLINUX_PKG_PATH/pkg.state
+			echo "       <img src=\"/userContent/static/weather-storm.png\" alt=\"ftbfs icon\" /> failed to build" >> $HTML_BUFFER
+		elif [ ! -z "$(egrep 'makepkg was killed by timeout after' $ARCHLINUX_PKG_PATH/build1.log $ARCHLINUX_PKG_PATH/build2.log 2>/dev/null)" ] ; then
+			echo FTBFS_3 > $ARCHLINUX_PKG_PATH/pkg.state
+			echo "       <img src=\"/userContent/static/weather-storm.png\" alt=\"ftbfs icon\" /> failed to build, killed by timeout" >> $HTML_BUFFER
+		elif [ ! -z "$(egrep '==> ERROR: .* contains invalid characters:' $ARCHLINUX_PKG_PATH/build1.log $ARCHLINUX_PKG_PATH/build2.log 2>/dev/null)" ] ; then
+			echo FTBFS_4 > $ARCHLINUX_PKG_PATH/pkg.state
+			echo "       <img src=\"/userContent/static/weather-storm.png\" alt=\"ftbfs icon\" /> failed to build, pkg relations contain invalid characters" >> $HTML_BUFFER
+		else
+			echo "       probably failed to build from source, please investigate" >> $HTML_BUFFER
+			echo UNKNOWN > $ARCHLINUX_PKG_PATH/pkg.state
+		fi
+	else
+		local STATE=GOOD
+		local SOME_GOOD=false
+		for ARTIFACT in $(cd $ARCHLINUX_PKG_PATH/ ; ls *.pkg.tar.xz.html) ; do
+			if [ -z "$(echo $ARTIFACT | grep $VERSION)" ] ; then
+				echo "deleting $ARTIFACT as version is not $VERSION"
+				rm -f $ARTIFACT
+				continue
+			elif [ ! -z "$(grep 'build reproducible in our test framework' $ARCHLINUX_PKG_PATH/$ARTIFACT)" ] ; then
+				SOME_GOOD=true
+				echo "       <img src=\"/userContent/static/weather-clear.png\" alt=\"reproducible icon\" /> <a href=\"/archlinux/$REPOSITORY/$PKG/$ARTIFACT\">${ARTIFACT:0:-5}</a> is reproducible in our current test framework<br />" >> $HTML_BUFFER
+			else
+				# change $STATE unless we have found .buildinfo differences already...
+				if [ "$STATE" != "FTBR_0" ] ; then
+					STATE=FTBR_1
+				fi
+				# this shouldnt happen, but (for now) it does, so lets mark them…
+				EXTRA_REASON=""
+				if [ ! -z "$(grep 'class="source">.BUILDINFO' $ARCHLINUX_PKG_PATH/$ARTIFACT)" ] ; then
+					STATE=FTBR_0
+					EXTRA_REASON=" with variations in .BUILDINFO"
+				fi
+				echo "       <img src=\"/userContent/static/weather-showers-scattered.png\" alt=\"unreproducible icon\" /> <a href=\"/archlinux/$REPOSITORY/$PKG/$ARTIFACT\">${ARTIFACT:0:-5}</a> is unreproducible$EXTRA_REASON<br />" >> $HTML_BUFFER
+			fi
+		done
+		# we only count source packages…
+		case $STATE in
+			GOOD)		echo GOOD > $ARCHLINUX_PKG_PATH/pkg.state	;;
+			FTBR_0)		echo FTBR_0 > $ARCHLINUX_PKG_PATH/pkg.state	;;
+			FTBR_1)		if $SOME_GOOD ; then
+						echo FTBR_1 > $ARCHLINUX_PKG_PATH/pkg.state
+					else
+						echo FTBR_2 > $ARCHLINUX_PKG_PATH/pkg.state
+					fi
+					;;
+			*)		;;
+		esac
+	fi
+	echo "      </td>" >> $HTML_BUFFER
+	local BUILD_DATE="$(date -u --date=@$(stat -c %Y $ARCHLINUX_PKG_PATH/build1.log) +'%F %R %Z')"
+	echo "      <td>$BUILD_DATE" >> $HTML_BUFFER
+	local DURATION=$(cat $ARCHLINUX_PKG_PATH/pkg.build_duration 2>/dev/null || true)
+	if [ -n "$DURATION" ]; then
+		local HOUR=$(echo "$DURATION/3600"|bc)
+		local MIN=$(echo "($DURATION-$HOUR*3600)/60"|bc)
+		local SEC=$(echo "$DURATION-$HOUR*3600-$MIN*60"|bc)
+		BUILD_DURATION="<br />${HOUR}h:${MIN}m:${SEC}s"
+	else
+		BUILD_DURATION=" "
+	fi
+	echo "       $BUILD_DURATION</td>" >> $HTML_BUFFER
+
+	echo "      <td>" >> $HTML_BUFFER
+	for LOG in build1.log build2.log ; do
+		if [ -f $ARCHLINUX_PKG_PATH/$LOG ] ; then
+			if [ "$LOG" = "build2.log" ] ; then
+				echo "       <br />" >> $HTML_BUFFER
+			fi
+			get_filesize $ARCHLINUX_PKG_PATH/$LOG
+			echo "       <a href=\"/archlinux/$REPOSITORY/$PKG/$LOG\">$LOG</a> ($SIZE)" >> $HTML_BUFFER
+		fi
+	done
+	echo "      </td>" >> $HTML_BUFFER
+	echo "     </tr>" >> $HTML_BUFFER
+	mv $HTML_BUFFER $ARCHLINUX_PKG_PATH/pkg.html
+	chmod 644 $ARCHLINUX_PKG_PATH/pkg.html
+}
+
 choose_package() {
 	echo "$(date -u ) - choosing package to be build."
 	ARCH="x86_64"
@@ -447,6 +654,7 @@ fi
 echo "$(date -u) - $REPRODUCIBLE_URL/archlinux/$REPOSITORY/$SRCPACKAGE/ updated."
 # force update of HTML snipplet in reproducible_html_archlinux.sh
 [ ! -f $BASE/archlinux/$REPOSITORY/$SRCPACKAGE/pkg.state ] || rm $BASE/archlinux/$REPOSITORY/$SRCPACKAGE/pkg.state
+create_pkg_state_and_html $REPOSITORY $PKG
 
 cd
 cleanup_all
