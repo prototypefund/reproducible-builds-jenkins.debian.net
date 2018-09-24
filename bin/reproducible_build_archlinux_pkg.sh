@@ -41,21 +41,20 @@ handle_remote_error() {
 }
 
 update_pkg_in_db() {
-	local ARCHLINUX_PKG_PATH=$ARCHBASE/$REPOSITORY/$PKG
-	local REPO=$1
-	local PKG=$2
+	local ARCHLINUX_PKG_PATH=$ARCHBASE/$REPOSITORY/$SRCPACKAGE
+	cd "$ARCHLINUX_PKG_PATH"
 	BUILD_DURATION="$(cat pkg.build_duration)"
 	BUILD_DATE="$(find . -name pkg.build_duration -printf '%TY-%Tm-%Td %TH:%TM\n')"
 	BUILD_STATE=$(cat pkg.state)
 	BUILD_VERSION="$(cat pkg.version)"
-	SUITE="archlinux_$REPO"
-	PKG_ID=$(query_db "SELECT id FROM sources WHERE name='$PKG' AND suite='$SUITE' AND architecture='$ARCH';")
-	if [ -z "${PKG_ID}" ] ; then
-	        echo "${PKG_ID} empty, ignoring $REPO/$PKG, failing hard."
+	SUITE="archlinux_$REPOSITORY"
+	local SRCPKGID=$(query_db "SELECT id FROM sources WHERE name='$SRCPACKAGE' AND suite='$SUITE' AND architecture='$ARCH';")
+	if [ -z "${SRCPKGID}" ] ; then
+	        echo "${SRCPKGID} empty, ignoring $REPOSITORY/$SRCPACKAGE, failing hard."
 		exit 1
 	fi
 	QUERY="INSERT into results (package_id, version, status, build_date, build_duration, node1, node2, job)
-		VALUES ('${PKG_ID}', '$BUILD_VERSION', '$BUILD_STATE', '$BUILD_DATE', '$BUILD_DURATION', 'pb3 or pb4', 'pb3 or pb4', 'unknown');"
+		VALUES ('${SRCPKGID}', '$BUILD_VERSION', '$BUILD_STATE', '$BUILD_DATE', '$BUILD_DURATION', 'pb3 or pb4', 'pb3 or pb4', 'unknown');"
         echo "$QUERY"
 	query_db "$QUERY"
         QUERY="INSERT INTO stats_build (name, version, suite, architecture, status, build_date, build_duration, node1, node2, job) 
@@ -63,7 +62,7 @@ update_pkg_in_db() {
         echo "$QUERY"
 	query_db "$QUERY"
         # unmark build since it's properly finished
-        QUERY="DELETE FROM schedule WHERE package_id='$SRCPKGID';"
+        QUERY="DELETE FROM schedule WHERE package_id='${SRCPKGID}';"
         echo "$QUERY"
 	query_db "$QUERY"
 	rm pkg.build_duration pkg.state pkg.version
@@ -71,31 +70,28 @@ update_pkg_in_db() {
 }
 
 create_pkg_html() {
-	local ARCHLINUX_PKG_PATH=$ARCHBASE/$REPOSITORY/$PKG
-	local REPO=$1
-	local PKG=$2
+	local ARCHLINUX_PKG_PATH=$ARCHBASE/$REPOSITORY/$SRCPACKAGE
 	local blacklisted=false
 
 	# clear files from previous builds
-	pushd "$ARCHLINUX_PKG_PATH"
+	cd "$ARCHLINUX_PKG_PATH"
 	for file in build1.log build2.log build1.version build2.version *BUILDINFO.txt *.html; do
 		if [ -f $file ] && [ pkg.build_duration -nt $file ] ; then
 			rm $file
 			echo "$ARCHLINUX_PKG_PATH/$file older than $ARCHLINUX_PKG_PATH/pkg.build_duration, thus deleting it."
 		fi
 	done
-	popd
 
 	echo "     <tr>" >> $HTML_BUFFER
 	echo "      <td>$REPOSITORY</td>" >> $HTML_BUFFER
-	echo "      <td>$PKG</td>" >> $HTML_BUFFER
+	echo "      <td>$SRCPACKAGE</td>" >> $HTML_BUFFER
 	echo "      <td>$VERSION</td>" >> $HTML_BUFFER
 	echo "      <td>" >> $HTML_BUFFER
 	#
 	#
 	if [ -z "$(cd $ARCHLINUX_PKG_PATH/ ; ls *.pkg.tar.xz.html 2>/dev/null)" ] ; then
 		for i in $ARCHLINUX_BLACKLISTED ; do
-			if [ "$PKG" = "$i" ] ; then
+			if [ "$SRCPACKAGE" = "$i" ] ; then
 				blacklisted=true
 			fi
 		done
@@ -181,7 +177,7 @@ create_pkg_html() {
 				continue
 			elif [ ! -z "$(grep 'build reproducible in our test framework' $ARCHLINUX_PKG_PATH/$ARTIFACT)" ] ; then
 				SOME_GOOD=true
-				echo "       <img src=\"/userContent/static/weather-clear.png\" alt=\"reproducible icon\" /> <a href=\"/archlinux/$REPOSITORY/$PKG/$ARTIFACT\">${ARTIFACT:0:-5}</a> is reproducible in our current test framework<br />" >> $HTML_BUFFER
+				echo "       <img src=\"/userContent/static/weather-clear.png\" alt=\"reproducible icon\" /> <a href=\"/archlinux/$REPOSITORY/$SRCPACKAGE/$ARTIFACT\">${ARTIFACT:0:-5}</a> is reproducible in our current test framework<br />" >> $HTML_BUFFER
 			else
 				# change $STATE unless we have found .buildinfo differences already...
 				if [ "$STATE" != "FTBR_0" ] ; then
@@ -193,7 +189,7 @@ create_pkg_html() {
 					STATE=FTBR_0
 					EXTRA_REASON=" with variations in .BUILDINFO"
 				fi
-				echo "       <img src=\"/userContent/static/weather-showers-scattered.png\" alt=\"unreproducible icon\" /> <a href=\"/archlinux/$REPOSITORY/$PKG/$ARTIFACT\">${ARTIFACT:0:-5}</a> is unreproducible$EXTRA_REASON<br />" >> $HTML_BUFFER
+				echo "       <img src=\"/userContent/static/weather-showers-scattered.png\" alt=\"unreproducible icon\" /> <a href=\"/archlinux/$REPOSITORY/$SRCPACKAGE/$ARTIFACT\">${ARTIFACT:0:-5}</a> is unreproducible$EXTRA_REASON<br />" >> $HTML_BUFFER
 			fi
 		done
 		# we only count source packages…
@@ -230,7 +226,7 @@ create_pkg_html() {
 				echo "       <br />" >> $HTML_BUFFER
 			fi
 			get_filesize $ARCHLINUX_PKG_PATH/$LOG
-			echo "       <a href=\"/archlinux/$REPOSITORY/$PKG/$LOG\">$LOG</a> ($SIZE)" >> $HTML_BUFFER
+			echo "       <a href=\"/archlinux/$REPOSITORY/$SRCPACKAGE/$LOG\">$LOG</a> ($SIZE)" >> $HTML_BUFFER
 		fi
 	done
 	echo "      </td>" >> $HTML_BUFFER
@@ -255,7 +251,7 @@ choose_package() {
 	fi
 	SUITE=$(echo $RESULT|cut -d "|" -f1)
 	REPOSITORY=$(echo $SUITE | cut -d "_" -f2)
-	SRCPKGID=$(echo $RESULT|cut -d "|" -f2)
+	local SRCPKGID=$(echo $RESULT|cut -d "|" -f2)
 	SRCPACKAGE=$(echo $RESULT|cut -d "|" -f3)
 	VERSION=$(echo $RESULT|cut -d "|" -f4)
 	# remove previous build attempts which didnt finish correctly:
@@ -646,8 +642,8 @@ fi
 echo "$(date -u) - $REPRODUCIBLE_URL/archlinux/$REPOSITORY/$SRCPACKAGE/ updated."
 # force update of HTML snipplet in reproducible_html_archlinux.sh
 [ ! -f $BASE/archlinux/$REPOSITORY/$SRCPACKAGE/pkg.state ] || rm $BASE/archlinux/$REPOSITORY/$SRCPACKAGE/pkg.state
-update_pkg_in_db $REPOSITORY $PKG
-create_pkg_html $REPOSITORY $PKG
+update_pkg_in_db
+create_pkg_html
 
 cd
 cleanup_all
