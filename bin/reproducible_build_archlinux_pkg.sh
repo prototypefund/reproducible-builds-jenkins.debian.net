@@ -40,18 +40,41 @@ handle_remote_error() {
 	exit 0
 }
 
-create_pkg_state_and_html() {
+update_pkg_in_db() {
+	local ARCHLINUX_PKG_PATH=$ARCHBASE/$REPOSITORY/$PKG
+	local REPO=$1
+	local PKG=$2
+	BUILD_DURATION="$(cat pkg.build_duration)"
+	BUILD_DATE="$(find . -name pkg.build_duration -printf '%TY-%Tm-%Td %TH:%TM\n')"
+	BUILD_STATE=$(cat pkg.state)
+	BUILD_VERSION="$(cat pkg.version)"
+	SUITE="archlinux_$REPO"
+	PKG_ID=$(query_db "SELECT id FROM sources WHERE name='$PKG' AND suite='$SUITE' AND architecture='$ARCH';")
+	if [ -z "${PKG_ID}" ] ; then
+	        echo "${PKG_ID} empty, ignoring $REPO/$PKG, failing hard."
+		exit 1
+	fi
+	QUERY="INSERT into results (package_id, version, status, build_date, build_duration, node1, node2, job)
+		VALUES ('${PKG_ID}', '$BUILD_VERSION', '$BUILD_STATE', '$BUILD_DATE', '$BUILD_DURATION', 'pb3 or pb4', 'pb3 or pb4', 'unknown');"
+        echo "$QUERY"
+	query_db "$QUERY"
+        QUERY="INSERT INTO stats_build (name, version, suite, architecture, status, build_date, build_duration, node1, node2, job) 
+		VALUES ('$SRCPACKAGE', '$VERSION', '$SUITE', '$ARCH', '$STATUS', '$DATE', '$DURATION', '$NODE1', '$NODE2', '$JOB');"
+        echo "$QUERY"
+	query_db "$QUERY"
+        # unmark build since it's properly finished
+        QUERY="DELETE FROM schedule WHERE package_id='$SRCPKGID';"
+        echo "$QUERY"
+	query_db "$QUERY"
+	rm pkg.build_duration pkg.state pkg.version
+
+}
+
+create_pkg_html() {
 	local ARCHLINUX_PKG_PATH=$ARCHBASE/$REPOSITORY/$PKG
 	local REPO=$1
 	local PKG=$2
 	local blacklisted=false
-	local VERSION="undetermined"
-
-	if [ -z "$(cd $ARCHLINUX_PKG_PATH ; ls)" ] ; then
-		# directory exists but is empty: package is building…
-		echo "$(date -u )   - ignoring $PKG from '$REPOSITORY' which is building in $ARCHLINUX_PKG_PATH since $(date -u --date=@$(stat -c %Y $ARCHLINUX_PKG_PATH) +'%F %R %Z')"
-		return
-	fi
 
 	# clear files from previous builds
 	pushd "$ARCHLINUX_PKG_PATH"
@@ -63,37 +86,6 @@ create_pkg_state_and_html() {
 	done
 	popd
 
-	if [ -f $ARCHLINUX_PKG_PATH/pkg.version ] ; then
-		VERSION=$(cat $ARCHLINUX_PKG_PATH/pkg.version)
-	elif [ -f $ARCHLINUX_PKG_PATH/build1.version ] ; then
-		VERSION=$(cat $ARCHLINUX_PKG_PATH/build1.version)
-		if [ -f $ARCHLINUX_PKG_PATH/build2.log ] ; then
-			if [ ! -f $ARCHLINUX_PKG_PATH/build2.version ] ; then
-				echo "$(date -u )   - $ARCHLINUX_PKG_PATH/build2.version does not exist, so the 2nd build fails. This happens."
-			elif ! diff -q $ARCHLINUX_PKG_PATH/build1.version $ARCHLINUX_PKG_PATH/build2.version ; then
-				echo "$(date -u )   - $ARCHLINUX_PKG_PATH/build1.version and $ARCHLINUX_PKG_PATH/build2.version differ, this should not happen. Please tell h01ger."
-				VERSION="$VERSION or $(cat $ARCHLINUX_PKG_PATH/build2.version)"
-			fi
-		fi
-	elif [ $(ls $ARCHLINUX_PKG_PATH/*.pkg.tar.xz.html 2>/dev/null | wc -l) -eq 1 ] ; then
-	# only determine version if there is exactly one artifact...
-	# else it's too error prone and in future the version will
-	# be determined during build anyway...
-		ARTIFACT="$(ls $ARCHLINUX_PKG_PATH/*.pkg.tar.xz.html 2>/dev/null)"
-		VERSION=$( basename $ARTIFACT | sed -s "s#$PKG-##" | sed -E -s "s#-(x86_64|any).pkg.tar.xz.html##" )
-	else
-		for i in $ARCHLINUX_BLACKLISTED ; do
-			if [ "$PKG" = "$i" ] ; then
-				blacklisted=true
-			fi
-		done
-		if ! $blacklisted ; then
-			echo "$(date -u )   - cannot determine state of $PKG from '$REPOSITORY', please check $ARCHLINUX_PKG_PATH yourself."
-		fi
-	fi
-	if [ "$VERSION" != "undetermined" ] || $blacklisted ; then
-		echo $VERSION > $ARCHLINUX_PKG_PATH/pkg.version
-	fi
 	echo "     <tr>" >> $HTML_BUFFER
 	echo "      <td>$REPOSITORY</td>" >> $HTML_BUFFER
 	echo "      <td>$PKG</td>" >> $HTML_BUFFER
@@ -654,7 +646,8 @@ fi
 echo "$(date -u) - $REPRODUCIBLE_URL/archlinux/$REPOSITORY/$SRCPACKAGE/ updated."
 # force update of HTML snipplet in reproducible_html_archlinux.sh
 [ ! -f $BASE/archlinux/$REPOSITORY/$SRCPACKAGE/pkg.state ] || rm $BASE/archlinux/$REPOSITORY/$SRCPACKAGE/pkg.state
-create_pkg_state_and_html $REPOSITORY $PKG
+update_pkg_in_db $REPOSITORY $PKG
+create_pkg_html $REPOSITORY $PKG
 
 cd
 cleanup_all
