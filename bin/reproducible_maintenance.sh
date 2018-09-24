@@ -320,7 +320,7 @@ fi
 # find very old schroots
 echo "$(date -u) - Detecting schroots older than 1 month"
 # the reproducible-archlinux schroot is ignored because its ment to be long living
-OLDSTUFF=$(find /schroots/ -mindepth 1 -maxdepth 1 -mtime +30 -exec ls -lad {} \; | grep -v reproducible-archlinux)
+OLDSTUFF=$(find /schroots/ -mindepth 1 -maxdepth 1 -mtime +30 -exec ls -lad {} \; | grep -v reproducible-archlinux | true)
 if [ ! -z "$OLDSTUFF" ]; then
 	echo
 	echo "Warning: schroots older than 1 month found in /schroot:"
