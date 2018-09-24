@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 #
 # Copyright © 2015-2018 Mattia Rizzolo <mattia@mapreri.org>
-# Copyright © 2016-2017 Holger Levsen <holger@layer-acht.org>
+# Copyright © 2016-2018 Holger Levsen <holger@layer-acht.org>
 #
 # Licensed under GPL-2
 #
@@ -98,6 +98,7 @@ def lack_rbuild():
     query = '''SELECT s.name, r.version, s.suite, s.architecture
                FROM sources AS s JOIN results AS r ON r.package_id=s.id
                WHERE r.status NOT IN ('blacklisted', '')
+               AND s.architecture != 'x86_64'
                ORDER BY s.name ASC, s.suite DESC, s.architecture ASC'''
     results = query_db(query)
     for pkg, version, suite, arch in results:
@@ -117,6 +118,7 @@ def lack_buildinfo():
                FROM sources AS s JOIN results AS r ON r.package_id=s.id
                WHERE r.status NOT IN
                 ('blacklisted', 'NFU', 'FTBFS', 'timeout', 'depwait', 'E404')
+               AND s.architecture != 'x86_64'
                ORDER BY s.name ASC, s.suite DESC, s.architecture ASC'''
     results = query_db(query)
     for pkg, version, suite, arch in results:
