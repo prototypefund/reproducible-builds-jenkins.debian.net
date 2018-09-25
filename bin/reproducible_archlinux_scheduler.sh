@@ -52,9 +52,7 @@ update_archlinux_repositories() {
 	#
 	# remove packages which are gone (only when run between 21:00 and 23:59)
 	#
-	#if [ $(date +'%H') -gt 21 ] ; then
-	#FIXME: the next lines actually disables this code block...
-	if [ $(date +'%H') -gt 25 ] ; then
+	if [ $(date +'%H') -gt 21 ] ; then
 		REMOVED=0
 		REMOVE_LIST=""
 		for REPO in $ARCHLINUX_REPOS ; do
@@ -65,16 +63,18 @@ update_archlinux_repositories() {
 					let REMOVED=$REMOVED+1
 					REMOVE_LIST="$REMOVE_LIST $REPO/$PKG"
 					rm -r --one-file-system $BASE/archlinux/$REPO/$PKG
-				        echo "$REPO/$PKG removed as it's gone from the Archlinux repositories."
-					# FIXME: we actually need to drop them from the db now...
-					# from results
-					# from scheduled
-					# from sources
+					echo "$(date -u) - $REPO/$PKG removed as it's gone from the Archlinux repositories."
+					SUITE="archlinux_$repo"
+					PKG_ID=$(query_db "SELECT id FROM sources WHERE name='$PKG' AND suite='$SUITE' AND architecture='$ARCH';")
+					query_db "DELETE FROM results WHERE package_id='${PKG_ID}';"
+					query_db "DELETE FROM schedule WHERE package_id='${PKG_ID}';"
+					query_db "DELETE FROM sources WHERE id='${PKG_ID}';"
+					echo "$(date -u) - $SUITE $PKG removed from database."
 				fi
 			done
 		done
 		MESSAGE="deleted $REMOVED packages: $REMOVE_LIST"
-		echo "$(date -u ) - $MESSAGE"
+		echo -n "$(date -u ) - "
 		if [ $REMOVED -ne 0 ] ; then
 			irc_message archlinux-reproducible "$MESSAGE"
 		fi
