@@ -37,15 +37,16 @@ HEIGHT=960
 for REPOSITORY in $ARCHLINUX_REPOS ; do
 	echo "$(date -u) - starting to analyse build results for '$REPOSITORY'."
 	# prepare stats per repository
-	TOTAL=$(cat ${ARCHLINUX_PKGS}_$REPOSITORY | wc -l)
-	TESTED=$(cat $ARCHBASE/$REPOSITORY/*/pkg.state | grep -c ^ || true )
-	NR_GOOD=$(cat $ARCHBASE/$REPOSITORY/*/pkg.state | grep -c GOOD || true )
-	NR_FTBR=$(cat $ARCHBASE/$REPOSITORY/*/pkg.state | grep -c FTBR || true )
-	NR_FTBFS=$(cat $ARCHBASE/$REPOSITORY/*/pkg.state | grep -c FTBFS || true )
-	NR_DEPWAIT=$(cat $ARCHBASE/$REPOSITORY/*/pkg.state | grep -c DEPWAIT || true )
-	NR_404=$(cat $ARCHBASE/$REPOSITORY/*/pkg.state | grep -c 404 || true )
-	NR_BLACKLISTED=$(cat $ARCHBASE/$REPOSITORY/*/pkg.state | grep -c BLACKLISTED || true )
-	NR_UNKNOWN=$(cat $ARCHBASE/$REPOSITORY/*/pkg.state | grep -c UNKNOWN || true )
+	SUITE="archlinux_$REPOSITORY"
+	TOTAL=$(query_db "SELECT count(*) FROM sources AS s WHERE s.architecture='x86_64' AND s.suite='$SUITE';")
+	TESTED=$(query_db "SELECT count(*) FROM sources AS s JOIN results AS r ON s.id=r.package_id WHERE s.architecture='x86_64' AND s.suite='$SUITE';")
+	NR_GOOD=$(query_db "SELECT count(*) FROM sources AS s JOIN results AS r ON s.id=r.package_id WHERE s.architecture='x86_64' AND s.suite='$SUITE' AND r.status='GOOD';")
+	NR_FTBR=$(query_db "SELECT count(*) FROM sources AS s JOIN results AS r ON s.id=r.package_id WHERE s.architecture='x86_64' AND s.suite='$SUITE' AND r.status LIKE 'FTBR_%';")
+	NR_FTBFS=$(query_db "SELECT count(*) FROM sources AS s JOIN results AS r ON s.id=r.package_id WHERE s.architecture='x86_64' AND s.suite='$SUITE' AND r.status LIKE 'FTBFS_%';")
+	NR_DEPWAIT=$(query_db "SELECT count(*) FROM sources AS s JOIN results AS r ON s.id=r.package_id WHERE s.architecture='x86_64' AND s.suite='$SUITE' AND r.status LIKE 'DEPWAIT_%';")
+	NR_404=$(query_db "SELECT count(*) FROM sources AS s JOIN results AS r ON s.id=r.package_id WHERE s.architecture='x86_64' AND s.suite='$SUITE' AND r.status LIKE '404_%';")
+	NR_BLACKLISTED=$(query_db "SELECT count(*) FROM sources AS s JOIN results AS r ON s.id=r.package_id WHERE s.architecture='x86_64' AND s.suite='$SUITE' AND r.status='BLACKLISTED';")
+	NR_UNKNOWN=$(query_db "SELECT count(*) FROM sources AS s JOIN results AS r ON s.id=r.package_id WHERE s.architecture='x86_64' AND s.suite='$SUITE' AND r.status='404';")
 	PERCENT_TOTAL=$(echo "scale=1 ; ($TESTED*100/$TOTAL)" | bc)
 	if [ $(echo $PERCENT_TOTAL/1|bc) -lt 99 ] ; then
 		NR_TESTED="$TESTED <span style=\"font-size:0.8em;\">(tested $PERCENT_TOTAL% of $TOTAL)</span>"
@@ -129,6 +130,8 @@ if [ ! -f $IMAGE ] || [ $ARCHBASE/archlinux.csv -nt $IMAGE ] ; then
 	irc_message archlinux-reproducible "Daily graphs on $REPRODUCIBLE_URL/archlinux/ updated, $(echo "scale=1 ; ($ARCHLINUX_NR_GOOD*100/$ARCHLINUX_TESTED)" | bc)% reproducible packages in our current test framework."
 fi
 
+exit 0
+
 #
 # write out the actual webpage
 #
@@ -177,8 +180,5 @@ write_page "    </table>"
 write_page "</div></div>"
 write_page_footer 'Arch Linux'
 echo "$(date -u) - enjoy $REPRODUCIBLE_URL/archlinux/$PAGE"
-
-echo "$(date -u) - Sleeping 5min now to prevent immediate restart of this job…"
-sleep 5m
 
 # vim: set sw=0 noet :
