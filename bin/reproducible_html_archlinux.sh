@@ -62,7 +62,7 @@ repostats(){
 			NR_TESTED=$TESTED
 		fi
 		echo "     <tr>" >> $HTML_REPOSTATS
-		echo "      <td>$REPOSITORY</td><td>$NR_TESTED</td>" >> $HTML_REPOSTATS
+		echo "      <td><a href='/archlinux/$REPOSITORY.html'>$REPOSITORY</a></td><td>$NR_TESTED</td>" >> $HTML_REPOSTATS
 		for i in $NR_GOOD $NR_FTBR $NR_FTBFS $NR_DEPWAIT $NR_404 $NR_BLACKLISTED $NR_UNKNOWN ; do
 			PERCENT_i=$(echo "scale=1 ; ($i*100/$TESTED)" | bc)
 			if [ "$PERCENT_i" != "0" ] || [ "$i" != "0" ] ; then
@@ -165,6 +165,19 @@ archlinux_page_footer(){
 	publish_page archlinux
 }
 
+archlinux_page_repostats(){
+	write_page "    <table><tr><th>repository</th><th>all source packages</th>"
+	write_page "     <th><a href='/archlinux/state_GOOD.html'>reproducible packages</a></th>"
+	write_page "     <th><a href='/archlinux/state_FTBR.html'>unreproducible packages</a></th>"
+	write_page "     <th><a href='/archlinux/state_FTBFS.html'>packages failing to build</a></th>"
+	write_page "     <th><a href='/archlinux/state_DEPWAIT.html'>packages in depwait state</a></th>"
+	write_page "     <th><a href='/archlinux/state_404.html'>packages download problems</a></th>"
+	write_page "     <th><a href='/archlinux/state_BLACKLISTED.html'>blacklisted</a></th>"
+	write_page "     <th><a href='/archlinux/state_UNKNOWN.html'>unknown state</a></th></tr>"
+	cat $HTML_REPOSTATS >> $PAGE
+	write_page "    </table>"
+}
+
 single_main_page(){
 	#
 	# write out the actual webpage
@@ -172,9 +185,7 @@ single_main_page(){
 	PAGE=archlinux.html
 	archlinux_page_header
 	write_page_intro 'Arch Linux'
-	write_page "    <table><tr><th>repository</th><th>all source packages</th><th>reproducible packages</th><th>unreproducible packages</th><th>packages failing to build</th><th>packages in depwait state</th><th>packages download problems</th><th>blacklisted</th><th>unknown state</th></tr>"
-	cat $HTML_REPOSTATS >> $PAGE
-	write_page "    </table>"
+	archlinux_page_repostats
 	# include graphs
 	write_page '<p style="clear:both;">'
 	for REPOSITORY in $ARCHLINUX_REPOS ; do
@@ -188,9 +199,11 @@ single_main_page(){
 
 repository_pages(){
 	for REPOSITORY in $ARCHLINUX_REPOS ; do
-		PAGE=archlinux_$REPOSITORY.html
+		PAGE=$REPOSITORY.html
 		echo "$(date -u) - starting to write page for $REPOSITORY'."
 		archlinux_page_header
+		archlinux_page_repostats
+		write_page "<h2>Packages in repository $REPOSITORY</h2>"
 		write_page "    <table><tr><th>repository</th><th>source package</th><th>version</th><th>test result</th><th>test date<br />test duration</th><th>1st build log<br />2nd build log</th></tr>"
 		SUITE="archlinux_$REPOSITORY"
 		REPO_PKGS=$(query_db "SELECT s.name FROM sources AS s JOIN results AS r ON s.id=r.package_id WHERE s.architecture='x86_64' AND s.suite='$SUITE' ORDER BY r.status")
@@ -204,9 +217,11 @@ repository_pages(){
 
 state_pages(){
 	for STATE in FTBFS FTBR DEPWAIT 404 GOOD BLACKLISTED UNKNOWN ; do
-		PAGE=archlinux_state_$STATE.html
+		PAGE=state_$STATE.html
 		echo "$(date -u) - starting to write page for state $STATE'."
 		archlinux_page_header
+		archlinux_page_repostats
+		write_page "<h2>Packages in $STATE state</h2>"
 		write_page "    <table><tr><th>repository</th><th>source package</th><th>version</th><th>test result</th><th>test date<br />test duration</th><th>1st build log<br />2nd build log</th></tr>"
 		for REPOSITORY in $ARCHLINUX_REPOS ; do
 			SUITE="archlinux_$REPOSITORY"
