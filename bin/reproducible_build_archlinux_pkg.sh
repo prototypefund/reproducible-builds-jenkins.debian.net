@@ -55,7 +55,7 @@ update_pkg_in_db() {
 	QUERY="INSERT into results (package_id, version, status, build_date, build_duration, node1, node2, job)
 		VALUES ('${SRCPKGID}', '$BUILD_VERSION', '$BUILD_STATE', '$DATE', '$BUILD_DURATION', '$NODE1', '$NODE2', '$BUILD_URL')
 		ON CONFLICT (package_id)
-		DO UPDATE SET version='$BUILD_VERSION', status='$BUILD_STATE', build_date='$DATE_DATE', build_duration='$BUILD_DURATION', node1='$NODE1', node2='$NODE2', job='$BUILD_URL' WHERE results.package_id='$SRCPKGID'";
+		DO UPDATE SET version='$BUILD_VERSION', status='$BUILD_STATE', build_date='$DATE', build_duration='$BUILD_DURATION', node1='$NODE1', node2='$NODE2', job='$BUILD_URL' WHERE results.package_id='$SRCPKGID'";
         echo "$QUERY"
 	query_db "$QUERY"
         QUERY="INSERT INTO stats_build (name, version, suite, architecture, status, build_date, build_duration, node1, node2, job) 

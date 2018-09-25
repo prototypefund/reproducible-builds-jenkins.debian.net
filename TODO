@@ -325,7 +325,6 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 *** check/make sure that packages which are newer in trunk than repo are only scheduled once
 *** fix irc notification
 ** make _archlinux_build.sh
-*** write db
 *** refactor and reuse unregister_build from _build.sh
 *** we share /var/log/jenkins/reproducible-race-conditions.log with debian, is that ok? (else fix maintenance job and handle_race_condition())
 *** make build respect pacman exit code, see FIXME in _html_.sh
