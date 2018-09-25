@@ -18,11 +18,12 @@ update_archlinux_repositories() {
 	#
 	local UPDATED=$(mktemp -t archlinuxrb-scheduler-XXXXXXXX)
 	local NEW=$(mktemp -t archlinuxrb-scheduler-XXXXXXXX)
+	local OLD=$(mktemp -t archlinuxrb-scheduler-XXXXXXXX)
 	local KNOWN=$(mktemp -t archlinuxrb-scheduler-XXXXXXXX)
 	local BLACKLIST="/($(echo $ARCHLINUX_BLACKLISTED | sed "s# #|#g"))/"
 	local TOTAL=$(cat ${ARCHLINUX_PKGS}_* | wc -l)
 	echo "$(date -u ) - $TOTAL Arch Linux packages were previously known to Arch Linux."
-	query_db "select suite, name, version FROM sources WHERE architecture='$ARCH';" > $KNOWN
+	query_db "SELECT suite, name, version FROM sources WHERE architecture='$ARCH';" > $KNOWN
 	echo "$(date -u ) - $(cat $KNOWN | wc -l) Arch Linux packages are known in our database."
 	# init session
 	local SESSION="archlinux-scheduler-$RANDOM"
@@ -45,15 +46,15 @@ update_archlinux_repositories() {
 		done | sort -u -R > "$ARCHLINUX_PKGS"_full_pkgbase_list
 	TOTAL=$(cat ${ARCHLINUX_PKGS}_full_pkgbase_list | wc -l)
 	echo "$(date -u ) - $TOTAL Arch Linux packages are now known to Arch Linux."
-	local total_begin=$(query_db "SELECT count(*) FROM sources AS s JOIN schedule AS sch ON s.id=sch.package_id WHERE s.architecture='x86_64' and sch.date_build_started is NULL;")
-	echo "$(date -u) - updating Arch Linux repositories, currently $total_end packages scheduled."
+	local total=$(query_db "SELECT count(*) FROM sources AS s JOIN schedule AS sch ON s.id=sch.package_id WHERE s.architecture='x86_64' AND sch.date_build_started IS NULL;")
+	echo "$(date -u) - updating Arch Linux repositories, currently $total packages scheduled."
 
 	#
 	# remove packages which are gone (only when run between 21:00 and 23:59)
 	#
 	#if [ $(date +'%H') -gt 21 ] ; then
 	#FIXME: the next lines actually disables this code block...
-	#if [ $(date +'%H') -gt 25 ] ; then
+	if [ $(date +'%H') -gt 25 ] ; then
 		REMOVED=0
 		REMOVE_LIST=""
 		for REPO in $ARCHLINUX_REPOS ; do
@@ -77,7 +78,7 @@ update_archlinux_repositories() {
 		if [ $REMOVED -ne 0 ] ; then
 			irc_message archlinux-reproducible "$MESSAGE"
 		fi
-	#fi
+	fi
 	
 	#
 	# schedule packages
@@ -95,6 +96,7 @@ update_archlinux_repositories() {
 				VERSION=$(echo ${PKG_IN_DB} | cut -d "|" -f3)
 			        if [ -z "${PKG_IN_DB}" ] ; then
 					# new package, add to db and schedule
+					echo $REPO/$pkgbase >> $NEW
 					echo "new package found: $repo/$pkgbase $version "
 					query_db "INSERT into sources (name, version, suite, architecture) VALUES ('$PKG', '$version', '$SUITE', '$ARCH');"
 					PKG_ID=$(query_db "SELECT id FROM sources WHERE name='$PKG' AND suite='$SUITE' AND architecture='$ARCH';")
@@ -132,9 +134,9 @@ update_archlinux_repositories() {
 				printf '%s %s\n' "$pkgbase" "$version" >> $TMPPKGLIST
 			done
 		mv $TMPPKGLIST "$ARCHLINUX_PKGS"_"$REPO"
-		#new=$(grep -c ^$REPO $NEW || true)
-		#updated=$(grep -c ^$REPO $UPDATED || true)
-		#FIXME echo "$(date -u ) - scheduled $new/$updated packages in repository '$REPO'."
+		new=$(grep -c ^$REPO $NEW || true)
+		updated=$(grep -c ^$REPO $UPDATED || true)
+		echo "$(date -u ) - scheduled $new/$updated packages in repository '$REPO'."
 	done
 	schroot --end-session -c $SESSION
 
@@ -142,18 +144,42 @@ update_archlinux_repositories() {
 	# schedule up to $MAX packages we already know about
 	# (only if less than $THRESHOLD packages are currently scheduled)
 	#
+	echo "$(date -u ) - should we schedule old packages?"
 	old=""
 	local MAX=350
 	local THRESHOLD=450
-	#FIXME add actual code here :)
+	local MINDATE=$(date -u +"%Y-%m-%d %H:%M" -d "14 days ago")
+	local SCHDATE=$(date -u +"%Y-%m-%d %H:%M" -d "7 days")
+	local CURRENT=$(query_db "SELECT count(*) FROM sources AS s JOIN schedule AS sch ON s.id=sch.package_id WHERE s.architecture='x86_64' AND sch.date_build_started IS NULL;")
+	if [ $CURRENT -le $THRESHOLD ] ; then
+		echo "$(date -u ) - scheduling $MAX old packages."
+		QUERY="SELECT s.id, s.name, max(r.build_date) max_date
+			FROM sources AS s JOIN results AS r ON s.id = r.package_id
+			WHERE s.architecture='x86_64'
+			AND r.status != 'blacklisted'
+			AND r.build_date < '$MINDATE'
+			AND s.id NOT IN (SELECT schedule.package_id FROM schedule)
+			GROUP BY s.id, s.name
+			ORDER BY max_date
+			LIMIT $MAX;"
+		OLD=$(query_db "$QUERY")
+		for PKG_ID in $(cut -d '|' -f1 $OLD) ; do
+			QUERY="INSERT INTO schedule (package_id, date_scheduled) VALUES ('${PKG_ID}', '$SCHDATE');"
+			query_db "$QUERY_DB"
+		done
+		echo "$(date -u ) - done scheduling $MAX old packages."
+	else
+		echo "$(date -u ) - $CURRENT packages already scheduled, not scheduling more."
+	fi
 
 	#
 	# output stats
 	#
-	total=$(query_db "SELECT count(*) FROM sources AS s JOIN schedule AS sch ON s.id=sch.package_id WHERE s.architecture='x86_64' and sch.date_build_started is NULL;")
 	rm "$ARCHLINUX_PKGS"_full_pkgbase_list
+	total=$(query_db "SELECT count(*) FROM sources AS s JOIN schedule AS sch ON s.id=sch.package_id WHERE s.architecture='x86_64' AND sch.date_build_started IS NULL;")
 	new=$(cat $NEW | wc -l 2>/dev/null|| true)
 	updated=$(cat $UPDATED 2>/dev/null| wc -l || true)
+	old=$(cat $OLD | wc -l 2>/dev/null|| true)
 	if [ $new -ne 0 ] || [ $updated -ne 0 ] || [ -n "$old" ] ; then
 		message="scheduled"
 		if [ $new -ne 0 ] ; then
@@ -165,20 +191,18 @@ update_archlinux_repositories() {
 		if [ $updated -ne 0 ] ; then
 			message="$message $updated packages with newer versions"
 		fi
-		if [ -n "$old" ] && ( [ $new -ne 0 ] || [ $updated -ne 0 ] ) ; then
-			old=", plus$old"
-		fi
-		MESSAGE="${message}$old, for $total scheduled out of $TOTAL."
-		#FIXME irc_message archlinux-reproducible "$MESSAGE"
-		#echo "$(date -u ) - $MESSAGE"
-	#else
-		#echo "$(date -u ) - didn't schedule any packages."
+		if [ $old -ne 0 ] && ( [ $new -ne 0 ] || [ $updated -ne 0 ] ) ; then
+			old=", plus $old already tested ones"
+		elif [ $old -ne 0 ] ; then
+			old="$old already tested packages"
 	fi
-	rm $NEW $UPDATED $KNOWN > /dev/null
-	local total_end=$(query_db "SELECT count(*) FROM sources AS s JOIN schedule AS sch ON s.id=sch.package_id WHERE s.architecture='x86_64' and sch.date_build_started is NULL;")
-	local total
-	let total=${total_end}-${total_begin}
-	echo "$(date -u) - done updating Arch Linux repositories and scheduling, $TOTAL packages known and $total packages scheduled in this run, for ${total_end} packages scheduled in total."
+		MESSAGE="${message}$old, for $total scheduled out of $TOTAL."
+		echo -n "$(date -u ) - "
+		irc_message archlinux-reproducible "$MESSAGE"
+	else
+		echo "$(date -u ) - didn't schedule any packages."
+	fi
+	rm -f $NEW $UPDATED $OLD $KNOWN > /dev/null
 }
 
 ARCH="x86_64"

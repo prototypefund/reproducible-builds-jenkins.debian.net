@@ -320,10 +320,8 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 * use db - see https://tests.reproducible-builds.org/reproducibledb.html
 ** extend scheduler.sh:
 *** comparing versions is probably needed: if its not empty it must be higher (due to repo constraints), but it can be even higher than in the repo, because we build trunk
-**** at first reschedule packages which never have been build (according to the db)
-*** also delete unknown packages from db: sources and schedule, later results as well
+*** also delete unknown packages from db: sources and schedule and results as well
 *** check/make sure that packages which are newer in trunk than repo are only scheduled once
-*** fix irc notification
 ** make _archlinux_build.sh
 *** refactor and reuse unregister_build from _build.sh
 *** we share /var/log/jenkins/reproducible-race-conditions.log with debian, is that ok? (else fix maintenance job and handle_race_condition())
