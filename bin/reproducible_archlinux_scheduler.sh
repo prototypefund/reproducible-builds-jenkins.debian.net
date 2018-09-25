@@ -195,7 +195,9 @@ update_archlinux_repositories() {
 			old=", plus $old already tested ones"
 		elif [ $old -ne 0 ] ; then
 			old="$old already tested packages"
-	fi
+		else
+			old=""
+		fi
 		MESSAGE="${message}$old, for $total scheduled out of $TOTAL."
 		echo -n "$(date -u ) - "
 		irc_message archlinux-reproducible "$MESSAGE"
