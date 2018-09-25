@@ -2,7 +2,7 @@
 # vim: set noexpandtab:
 
 # Copyright (c) 2009, 2010, 2012, 2015 Peter Palfrader
-#               2015-2017 Holger Levsen
+#               2015-2018 Holger Levsen
 #               2017-2018 Mattia Rizzolo <mattia@debian.org>
 #
 # Permission is hereby granted, free of charge, to any person obtaining
@@ -77,7 +77,7 @@ elif [[ "$1" =~ ^chroot-installation_.*maintenance$ ]]; then
 	shift ; exec /srv/jenkins/bin/maintenance.sh $@ ; croak "Exec failed"
 elif [[ "$1" =~ ^chroot-installation_.* ]]; then
 	shift ; exec /srv/jenkins/bin/chroot-installation.sh $@ ; croak "Exec failed"
-elif [ "$*" = "reproducible_html_nodes_info" ] ; then
+elif [ "$*" = "reproducible_nodes_info" ] ; then
 	exec /srv/jenkins/bin/reproducible_info.sh ; croak "Exec failed";
 elif [ "$1" = "/srv/jenkins/bin/reproducible_build.sh" ] && ( [ "$2" = "1" ] || [ "$2" = "2" ] ) ; then
 	exec /srv/jenkins/bin/reproducible_build.sh "$2" "$3" "$4" "$5" "$6" ; croak "Exec failed";
