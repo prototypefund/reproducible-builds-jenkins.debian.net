@@ -232,13 +232,13 @@ build_job_health_page() {
 			SHORTNAME="$(echo $JOB \
 				| sed 's#archlinux_##' \
 				| sed 's#builder_fedora#builder#' \
-				| sed 's#x86_64##' \
+				| sed 's#_x86_64##' \
 				| sed 's#_from_git_master#_git#' \
 				| sed 's#setup_schroot_##' \
-				| sed 's#setup_mock_fedora##' \
-				| sed 's#setup_#_#' \
+				| sed 's#setup_mock_fedora-##' \
 				| sed 's#create_##' \
-				| sed 's#fdroid_build_#fdroid#' \
+				| sed 's#fdroid_build_##' \
+				| sed 's#html_archlinux#html#' \
 				| sed 's#html_##' \
 				| sed 's#builds_##' \
 				| sed 's#_diffoscope_amd64##' \
