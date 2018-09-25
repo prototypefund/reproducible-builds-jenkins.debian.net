@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Copyright 2014-2016 Holger Levsen <holger@layer-acht.org>
+# Copyright 2014-2018 Holger Levsen <holger@layer-acht.org>
 # released under the GPLv=2
 
 DEBUG=false
@@ -39,6 +39,31 @@ check_pypi() {
 		exit 1
 	fi
 }
+
+check_github_macports() {
+	TMPPORT=$(mktemp -t diffoscope-distribution-XXXXXXXX)
+	# the following two lines are a bit fragile…
+	curl https://raw.githubusercontent.com/macports/macports-ports/master/sysutils/diffoscope/Portfile -o $TMPPORT
+	DIFFOSCOPE_IN_MACPORTS=$(grep ^version $TMPPORT | sed -E 's#version( )+##' )
+	rm -f $TMPPORT > /dev/null
+	echo
+	echo
+	if [ "$DIFFOSCOPE_IN_DEBIAN" = "$DIFFOSCOPE_IN_MACPORTS" ] ; then
+		echo "Yay. diffoscope in Debian has the same version as on MacPorts: $DIFFOSCOPE_IN_DEBIAN"
+	elif dpkg --compare-versions "$DIFFOSCOPE_IN_DEBIAN" gt "$DIFFOSCOPE_IN_MACPORTS" ; then
+		echo "Fail: diffoscope in Debian:   $DIFFOSCOPE_IN_DEBIAN"
+		echo "Fail: diffoscope on MacPorts: $DIFFOSCOPE_IN_MACPORTS"
+		send_irc_warning "It seems diffoscope $DIFFOSCOPE_IN_DEBIAN is not available on MacPorts, which only has $DIFFOSCOPE_IN_MACPORTS."
+		exit 0
+	else
+		echo "diffoscope in Debian: $DIFFOSCOPE_IN_DEBIAN"
+		echo "diffoscope in MacPorts:   $DIFFOSCOPE_IN_MACPORTS"
+		echo
+		echo "Failure is the default action…"
+		exit 1
+	fi
+}
+
 
 check_whohas() {
 	# the following is "broken" (but good enough for now)
@@ -79,10 +104,13 @@ done
 case $1 in
 	PyPI)	check_pypi
 		;;
-	FreeBSD|NetBSD|MacPorts)
+	FreeBSD|NetBSD)
 		DISTRIBUTION=$1
 		check_whohas
 		# missing tests: Arch, Fedora, openSUSE, maybe OpenBSD, Guix…
+		;;
+	MacPorts)
+		check_github_macports
 		;;
 	*)
 		echo "Unsupported distribution."
