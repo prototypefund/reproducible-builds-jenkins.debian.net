@@ -211,14 +211,14 @@ echo "$(date -u) - starting to write $PAGE page."
 write_page_header $VIEW "Job health overview"
 write_page "<p style=\"clear:both;\">"
 cd ~/jobs
-for CATEGORY in $(reproducible_*|grep -v maintenance | grep -v node_health|grep -v setup_pbuilder|grep -v setup_schroot|cut -d _ -f2|sort -u) ; do
+for CATEGORY in $(ls -1d reproducible_*|grep -v maintenance | grep -v node_health|grep -v setup_pbuilder|grep -v setup_schroot|cut -d _ -f2| sort -u) ; do
 	write_page "<h3>reproducible_$CATEGORY jobs</h3>"
 	write_page "<table><tr>"
-	for JOB in $(ls -1d reproducible_$CATEGORY* |grep -v maintenance | grep -v node_health|grep -v setup_pbuilder|grep -v setup_schroot) ; do
+	for JOB in $(ls -1d reproducible_$CATEGORY* |grep -v maintenance | grep -v node_health|grep -v setup_pbuilder|grep -v setup_schroot | sort) ; do
 		write_page "<th>$JOB</th>"
 	done
 	write_page "</tr><tr>"
-	for JOB in $(ls -1d reproducible_$CATEGORY* |grep -v maintenance | grep -v node_health|grep -v setup_pbuilder|grep -v setup_schroot) ; do
+	for JOB in $(ls -1d reproducible_$CATEGORY* |grep -v maintenance | grep -v node_health|grep -v setup_pbuilder|grep -v setup_schroot | sort) ; do
 		URL="https://jenkins.debian.net/job/$JOB"
 		BADGE="$URL/badge/icon"
 		write_page "<td><a href='$URL'><img src='$BADGE' /></a></td>"
