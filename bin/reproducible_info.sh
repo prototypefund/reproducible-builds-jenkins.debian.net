@@ -3,6 +3,7 @@
 # Copyright 2015-2016 Holger Levsen <holger@layer-acht.org>
 # released under the GPLv=2
 
+DEBUG=false
 set -e
 # common code defining BUILD_ENV_VARS
 . /srv/jenkins/bin/reproducible_common.sh
