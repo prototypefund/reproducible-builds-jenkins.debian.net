@@ -34,6 +34,7 @@ ARCHLINUX_NR_BLACKLISTED=0
 ARCHLINUX_NR_UNKNOWN=0
 WIDTH=1920
 HEIGHT=960
+PAGE=''
 
 repostats(){
 	#
@@ -137,7 +138,6 @@ repostats(){
 }
 
 archlinux_page_header(){
-	local PAGE=$1
 	echo "$(date -u) - starting to build $PAGE"
 	cat > $PAGE <<- EOF
 	<!DOCTYPE html>
@@ -160,8 +160,7 @@ archlinux_page_header(){
 	write_variation_table 'Arch Linux'
 }
 
-archlinux_page_header(){
-	local PAGE=$1
+archlinux_page_footer(){
 	write_page "</div></div>"
 	write_page_footer 'Arch Linux'
 	echo "$(date -u) - enjoy $REPRODUCIBLE_URL/archlinux/$PAGE"
@@ -185,19 +184,27 @@ single_main_page(){
 	done
 	write_page '</p><p style="clear:both;"><center>'
 	write_page "<a href=\"/archlinux/archlinux.png\"><img src=\"/archlinux/archlinux.png\" alt=\"total Arch Linux stats\"></a></p>"
-	archlinux_page_header $PAGE
+	archlinux_page_footer $PAGE
 }
 
 repository_pages(){
-	# packages table header
-	write_page "    <table><tr><th>repository</th><th>source package</th><th>version</th><th>test result</th><th>test date<br />test duration</th><th>1st build log<br />2nd build log</th></tr>"
-	# output all HTML snipplets
-	for i in UNKNOWN $(for j in $MEMBERS_404 ; do echo 404_$j ; done) BLACKLISTED $(for j in $MEMBERS_DEPWAIT ; do echo DEPWAIT_$j ; done) $(for j in $MEMBERS_FTBFS ; do echo FTBFS_$j ; done) $(for j in $MEMBERS_FTBR ; do echo FTBR_$j ; done) GOOD ; do
-		for REPOSITORY in $ARCHLINUX_REPOS ; do
-			grep -l $i $REPOSITORY/*/pkg.state | sort -u | sed -s 's#\.state$#.html#g' | xargs -r cat >> $PAGE 2>/dev/null || true
+	for REPOSITORY in $ARCHLINUX_REPOS ; do
+		cd $ARCHBASE
+		PAGE=archlinux_$REPOSITORY.html
+		echo "$(date -u) - starting to write page for $REPOSITORY'."
+		archlinux_page_header $PAGE
+		# prepare stats per repository
+		SUITE="archlinux_$REPOSITORY"
+		REPO_PKGS=$(query_db "SELECT s.name FROM sources AS s JOIN results AS r ON s.id=r.package_id WHERE s.architecture='x86_64' AND s.suite='$SUITE' ORDER BY r.status")
+		# packages table header
+		write_page "    <table><tr><th>repository</th><th>source package</th><th>version</th><th>test result</th><th>test date<br />test duration</th><th>1st build log<br />2nd build log</th></tr>"
+		# output all HTML snipplets
+		for PKG in $REPO_PKGS ; do
+			cat $REPOSITORY/$PKG/pkg.html >> $PAGE 2>/dev/null || true
 		done
+		write_page "    </table>"
+		archlinux_page_footer $PAGE
 	done
-	write_page "    </table>"
 }
 
 
