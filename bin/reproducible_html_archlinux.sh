@@ -158,7 +158,13 @@ archlinux_page_header(){
 	EOF
 	write_page_intro 'Arch Linux'
 	write_variation_table 'Arch Linux'
-	write_page "    <table><tr><th>repository</th><th>all source packages</th><th>reproducible packages</th><th>unreproducible packages</th><th>packages failing to build</th><th>packages in depwait state</th><th>packages download problems</th><th>blacklisted</th><th>unknown state</th></tr>"
+}
+
+archlinux_page_header(){
+	local PAGE=$1
+	write_page "</div></div>"
+	write_page_footer 'Arch Linux'
+	echo "$(date -u) - enjoy $REPRODUCIBLE_URL/archlinux/$PAGE"
 }
 
 single_main_page(){
@@ -168,6 +174,7 @@ single_main_page(){
 	cd $ARCHBASE
 	PAGE=archlinux.html
 	archlinux_page_header $PAGE
+	write_page "    <table><tr><th>repository</th><th>all source packages</th><th>reproducible packages</th><th>unreproducible packages</th><th>packages failing to build</th><th>packages in depwait state</th><th>packages download problems</th><th>blacklisted</th><th>unknown state</th></tr>"
 	cat $HTML_REPOSTATS >> $PAGE
 	rm $HTML_REPOSTATS > /dev/null
 	write_page "    </table>"
@@ -178,6 +185,10 @@ single_main_page(){
 	done
 	write_page '</p><p style="clear:both;"><center>'
 	write_page "<a href=\"/archlinux/archlinux.png\"><img src=\"/archlinux/archlinux.png\" alt=\"total Arch Linux stats\"></a></p>"
+	archlinux_page_header $PAGE
+}
+
+repository_pages(){
 	# packages table header
 	write_page "    <table><tr><th>repository</th><th>source package</th><th>version</th><th>test result</th><th>test date<br />test duration</th><th>1st build log<br />2nd build log</th></tr>"
 	# output all HTML snipplets
@@ -187,13 +198,6 @@ single_main_page(){
 		done
 	done
 	write_page "    </table>"
-	write_page "</div></div>"
-	write_page_footer 'Arch Linux'
-	echo "$(date -u) - enjoy $REPRODUCIBLE_URL/archlinux/$PAGE"
-}
-
-repository_pages(){
-	echo
 }
 
 
