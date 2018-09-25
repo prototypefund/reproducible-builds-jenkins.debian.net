@@ -178,9 +178,12 @@
     <li {{#performance}}class='active'{{/performance}}>
       <a href="/debian/index_performance.html">Performance stats</a>
     </li>
-    <li><ul>Nodes health
+    <li><ul>Health monitoring
       <li {{#nodes_health}}class='active'{{/nodes_health}}>
-        <a href="/debian/index_nodes_health.html">overview</a>
+        <a href="/debian/index_nodes_health.html">node overview</a>
+      </li>
+      <li {{#job_health}}class='active'{{/job_health}}>
+        <a href="/debian/index_job_health.html">job overview</a>
       </li>
       <li {{#nodes_daily_graphs}}class='active'{{/nodes_daily_graphs}}>
         <a href="/debian/index_nodes_daily_graphs.html">daily graphs</a>

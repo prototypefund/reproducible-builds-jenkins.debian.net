@@ -222,6 +222,7 @@ write_page_header() {
 		|| [ "$1" = "suite_arch_stats" ] \
 		|| [ "$1" = "bugs" ] \
 		|| [ "$1" = "nodes_health" ] \
+		|| [ "$1" = "job_health" ] \
 		|| [ "$1" = "nodes_weekly_graphs" ] \
 		|| [ "$1" = "nodes_daily_graphs" ] ; then
 		displayed_page="\"$1\": \"true\""

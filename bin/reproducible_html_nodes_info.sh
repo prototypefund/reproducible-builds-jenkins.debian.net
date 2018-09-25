@@ -15,7 +15,7 @@ common_init "$@"
 . /srv/jenkins/bin/reproducible_common.sh
 
 #
-# build static webpages
+# build node health page
 #
 VIEW=nodes_health
 PAGE=index_${VIEW}.html
@@ -139,6 +139,9 @@ write_page "</p>"
 write_page_footer
 publish_page debian
 
+#
+# munin nodes daily/weekly pages
+#
 for TYPE in daily weekly ; do
 	VIEW=nodes_${TYPE}_graphs
 	PAGE=index_${VIEW}.html
@@ -196,4 +199,34 @@ for TYPE in daily weekly ; do
 	write_page_footer
 	publish_page debian
 done
+
+#
+# job health page
+#
+VIEW=job_health
+PAGE=index_${VIEW}.html
+ARCH=amd64
+SUITE=unstable
+echo "$(date -u) - starting to write $PAGE page."
+write_page_header $VIEW "Job health overview"
+write_page "<p style=\"clear:both;\">"
+cd ~/jobs
+for CATEGORY in $(reproducible_*|grep -v maintenance | grep -v node_health|grep -v setup_pbuilder|grep -v setup_schroot|cut -d _ -f2|sort -u) ; do
+	write_page "<h3>reproducible_$CATEGORY jobs</h3>"
+	write_page "<table><tr>"
+	for JOB in $(ls -1d reproducible_$CATEGORY* |grep -v maintenance | grep -v node_health|grep -v setup_pbuilder|grep -v setup_schroot) ; do
+		write_page "<th>$JOB</th>"
+	done
+	write_page "</tr><tr>"
+	for JOB in $(ls -1d reproducible_$CATEGORY* |grep -v maintenance | grep -v node_health|grep -v setup_pbuilder|grep -v setup_schroot) ; do
+		URL="https://jenkins.debian.net/job/$JOB"
+		BADGE="$URL/badge/icon"
+		write_page "<td><a href='$URL'><img src='$BADGE' /></a></td>"
+	done
+	write_page "</tr>"
+done
+write_page "</table>"
+write_page "</p>"
+write_page_footer
+publish_page debian
 
