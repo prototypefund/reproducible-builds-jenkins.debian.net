@@ -107,7 +107,7 @@ create_pkg_html() {
 				echo BLACKLISTED > $ARCHLINUX_PKG_PATH/pkg.state
 				echo "       <img src=\"/userContent/static/error.png\" alt=\"blacklisted icon\" /> blacklisted" >> $HTML_BUFFER
 		elif [ ! -z "$(egrep '^error: failed to prepare transaction \(conflicting dependencies\)' $ARCHLINUX_PKG_PATH/build1.log $ARCHLINUX_PKG_PATH/build2.log 2>/dev/null)" ] ; then
-			echo DEPWAIT_= > $ARCHLINUX_PKG_PATH/pkg.state
+			echo DEPWAIT_0 > $ARCHLINUX_PKG_PATH/pkg.state
 			echo "       <img src=\"/userContent/static/weather-snow.png\" alt=\"depwait icon\" /> could not resolve dependencies as there are conflicts" >> $HTML_BUFFER
 		elif [ ! -z "$(egrep '==> ERROR: (Could not resolve all dependencies|.pacman. failed to install missing dependencies)' $ARCHLINUX_PKG_PATH/build1.log $ARCHLINUX_PKG_PATH/build2.log 2>/dev/null)" ] ; then
 			echo DEPWAIT_1 > $ARCHLINUX_PKG_PATH/pkg.state
