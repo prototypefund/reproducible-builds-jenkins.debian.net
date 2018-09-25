@@ -136,12 +136,8 @@ repostats(){
 	fi
 }
 
-single_main_page(){
-	#
-	# write out the actual webpage
-	#
-	cd $ARCHBASE
-	PAGE=archlinux.html
+archlinux_page_header(){
+	local PAGE=$1
 	echo "$(date -u) - starting to build $PAGE"
 	cat > $PAGE <<- EOF
 	<!DOCTYPE html>
@@ -163,6 +159,15 @@ single_main_page(){
 	write_page_intro 'Arch Linux'
 	write_variation_table 'Arch Linux'
 	write_page "    <table><tr><th>repository</th><th>all source packages</th><th>reproducible packages</th><th>unreproducible packages</th><th>packages failing to build</th><th>packages in depwait state</th><th>packages download problems</th><th>blacklisted</th><th>unknown state</th></tr>"
+}
+
+single_main_page(){
+	#
+	# write out the actual webpage
+	#
+	cd $ARCHBASE
+	PAGE=archlinux.html
+	archlinux_page_header $PAGE
 	cat $HTML_REPOSTATS >> $PAGE
 	rm $HTML_REPOSTATS > /dev/null
 	write_page "    </table>"
@@ -187,8 +192,13 @@ single_main_page(){
 	echo "$(date -u) - enjoy $REPRODUCIBLE_URL/archlinux/$PAGE"
 }
 
-repostats
-#single_main_page
+repository_pages(){
+	echo
+}
 
+
+repostats
+single_main_page
+repository_pages
 
 # vim: set sw=0 noet :
