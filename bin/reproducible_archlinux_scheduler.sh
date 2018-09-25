@@ -45,8 +45,8 @@ update_archlinux_repositories() {
 		done | sort -u -R > "$ARCHLINUX_PKGS"_full_pkgbase_list
 	TOTAL=$(cat ${ARCHLINUX_PKGS}_full_pkgbase_list | wc -l)
 	echo "$(date -u ) - $TOTAL Arch Linux packages are now known to Arch Linux."
-	local total=$(query_db "SELECT count(*) FROM sources AS s JOIN schedule AS sch ON s.id=sch.package_id WHERE s.architecture='x86_64' and sch.date_build_started is NULL;")
-	echo "$(date -u) - updating Arch Linux repositories, currently $total packages scheduled."
+	local total_begin=$(query_db "SELECT count(*) FROM sources AS s JOIN schedule AS sch ON s.id=sch.package_id WHERE s.architecture='x86_64' and sch.date_build_started is NULL;")
+	echo "$(date -u) - updating Arch Linux repositories, currently $total_end packages scheduled."
 
 	#
 	# remove packages which are gone (only when run between 21:00 and 23:59)
@@ -175,7 +175,10 @@ update_archlinux_repositories() {
 		#echo "$(date -u ) - didn't schedule any packages."
 	fi
 	rm $NEW $UPDATED $KNOWN > /dev/null
-	echo "$(date -u) - done updating Arch Linux repositories and scheduling, $TOTAL packages known and $total packages scheduled."
+	local total_end=$(query_db "SELECT count(*) FROM sources AS s JOIN schedule AS sch ON s.id=sch.package_id WHERE s.architecture='x86_64' and sch.date_build_started is NULL;")
+	local total
+	let total=${total_end}-${total_begin}
+	echo "$(date -u) - done updating Arch Linux repositories and scheduling, $TOTAL packages known and $total packages scheduled in this run, for ${total_end} packages scheduled in total."
 }
 
 ARCH="x86_64"
