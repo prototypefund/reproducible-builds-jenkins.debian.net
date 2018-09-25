@@ -180,7 +180,7 @@ update_archlinux_repositories() {
 	new=$(cat $NEW | wc -l 2>/dev/null|| true)
 	updated=$(cat $UPDATED 2>/dev/null| wc -l || true)
 	old=$(cat $OLD | wc -l 2>/dev/null|| true)
-	if [ $new -ne 0 ] || [ $updated -ne 0 ] || [ -n "$old" ] ; then
+	if [ $new -ne 0 ] || [ $updated -ne 0 ] || [ $old -ne 0 ] ; then
 		message="scheduled"
 		if [ $new -ne 0 ] ; then
 			message="$message $new entirely new packages"
