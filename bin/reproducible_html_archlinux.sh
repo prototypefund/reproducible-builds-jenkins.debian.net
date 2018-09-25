@@ -54,8 +54,9 @@ repostats(){
 		NR_DEPWAIT=$(query_db "SELECT count(*) FROM sources AS s JOIN results AS r ON s.id=r.package_id WHERE s.architecture='x86_64' AND s.suite='$SUITE' AND r.status LIKE 'DEPWAIT_%';")
 		NR_404=$(query_db "SELECT count(*) FROM sources AS s JOIN results AS r ON s.id=r.package_id WHERE s.architecture='x86_64' AND s.suite='$SUITE' AND r.status LIKE '404_%';")
 		NR_BLACKLISTED=$(query_db "SELECT count(*) FROM sources AS s JOIN results AS r ON s.id=r.package_id WHERE s.architecture='x86_64' AND s.suite='$SUITE' AND r.status='BLACKLISTED';")
-		NR_UNKNOWN=$(query_db "SELECT count(*) FROM sources AS s JOIN results AS r ON s.id=r.package_id WHERE s.architecture='x86_64' AND s.suite='$SUITE' AND r.status='404';")
-		PERCENT_TOTAL=$(echo "scale=1 ; ($TESTED*100/$TOTAL)" | bc)
+		NR_UNKNOWN=$(query_db "SELECT count(*) FROM sources AS s JOIN results AS r ON s.id=r.package_id WHERE s.architecture='x86_64' AND s.suite='$SUITE' AND r.status LIKE 'UNKNOWN_%';")
+		let NR_UNKNOWN=$NR_UNKNOWN+$(query_db "SELECT count(s.name) FROM sources AS s WHERE s.architecture='x86_64' AND s.id NOT IN (SELECT package_id FROM results)")
+	PERCENT_TOTAL=$(echo "scale=1 ; ($TESTED*100/$TOTAL)" | bc)
 		if [ $(echo $PERCENT_TOTAL/1|bc) -lt 99 ] ; then
 			NR_TESTED="$TESTED <span style=\"font-size:0.8em;\">(tested $PERCENT_TOTAL% of $TOTAL)</span>"
 		else
@@ -226,6 +227,10 @@ state_pages(){
 		for REPOSITORY in $ARCHLINUX_REPOS ; do
 			SUITE="archlinux_$REPOSITORY"
 			STATE_PKGS=$(query_db "SELECT s.name FROM sources AS s JOIN results AS r ON s.id=r.package_id WHERE s.architecture='x86_64' AND s.suite='$SUITE' AND r.status LIKE '$STATE%' ORDER BY s.suite,r.status")
+			for PKG in $STATE_PKGS ; do
+				cat $ARCHBASE/$REPOSITORY/$PKG/pkg.html >> $PAGE 2>/dev/null || true
+			done
+			STATE_PKGS=$(query_db "SELECT s.name FROM sources AS s WHERE s.architecture='x86_64' AND s.id NOT IN (SELECT package_id FROM results)")
 			for PKG in $STATE_PKGS ; do
 				cat $ARCHBASE/$REPOSITORY/$PKG/pkg.html >> $PAGE 2>/dev/null || true
 			done
