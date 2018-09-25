@@ -211,17 +211,43 @@ build_job_health_page() {
 	PAGE=index_${VIEW}.html
 	ARCH=amd64
 	SUITE=unstable
+	FILTER[0]="(builds|spec|lfs)"
+	FILTER[1]="html_(all|break|dash|dd|index|live|node|pkg|repo)"
+	FILTER[2]="le_diffoscope"
+	FILTER[3]="(reprotest|strip-nonderminism|disorderfs)"
+	FILTER[4]="(json|le_scheduler|meta|le_nodes|rsync)"
+	FILTER[5]="archlinux"
+	FILTER[6]="coreboot"
+	FILTER[7]="(openwrt|lede)"
+	FILTER[8]="(le_netbsd|le_freebsd)"
+	FILTER[9]="fdroid"
+	FILTER[10]="fedora"
 	echo "$(date -u) - starting to write $PAGE page."
 	write_page_header $VIEW "Job health overview"
 	write_page "<p style=\"clear:both;\">"
 	write_page "<table>"
-	for CATEGORY in $(cd ~/jobs ; ls -1d reproducible_*|grep -v maintenance | grep -v node_health|grep -v setup_pbuilder|grep -v setup_schroot|cut -d '_' -f2| sort -u) ; do
+	for CATEGORY in $(seq 0 10) ; do
 		write_page "<tr>"
-		for JOB in $(cd ~/jobs ; ls -1d reproducible_$CATEGORY* |grep -v maintenance | grep -v node_health|grep -v setup_pbuilder|grep -v setup_schroot | cut -d '_' -f2- | sort ) ; do
-			write_page "<th>$(echo $JOB | sed 's#_from_git_master#git#')</th>"
+		for JOB in $(cd ~/jobs ; ls -1d reproducible_* | egrep "${FILTER[$CATEGORY]}" | cut -d '_' -f2- | sort ) ; do
+			SHORTNAME="$(echo $JOB \
+				| sed 's#archlinux_##' \
+				| sed 's#builder_fedora#builder#' \
+				| sed 's#x86_64##' \
+				| sed 's#_from_git_master#_git#' \
+				| sed 's#setup_schroot_##' \
+				| sed 's#setup_mock_fedora##' \
+				| sed 's#setup_#_#' \
+				| sed 's#create_##' \
+				| sed 's#fdroid_build_#fdroid#' \
+				| sed 's#html_##' \
+				| sed 's#builds_##' \
+				| sed 's#_diffoscope_amd64##' \
+				| sed 's#_#-#g' \
+				)"
+			write_page "<th>$SHORTNAME</th>"
 		done
 		write_page "</tr><tr>"
-		for JOB in $(cd ~/jobs ; ls -1d reproducible_$CATEGORY* |grep -v maintenance | grep -v node_health|grep -v setup_pbuilder|grep -v setup_schroot | cut -d '_' -f2- | sort) ; do
+		for JOB in $(cd ~/jobs ; ls -1d reproducible_* | egrep "${FILTER[$CATEGORY]}" | cut -d '_' -f2- | sort ) ; do
 			URL="https://jenkins.debian.net/job/reproducible_$JOB"
 			BADGE="$URL/badge/icon"
 			write_page "<td><a href='$URL'><img src='$BADGE' /></a></td>"
