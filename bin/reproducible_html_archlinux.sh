@@ -14,7 +14,7 @@ common_init "$@"
 #
 # analyse results to create the webpage
 #
-echo "$(date -u) - starting to analyse build results."
+echo "$(date -u) - starting."
 DATE=$(date -u +'%Y-%m-%d')
 YESTERDAY=$(date '+%Y-%m-%d' -d "-1 day")
 MEMBERS_FTBFS="0 1 2 3 4"
@@ -156,26 +156,24 @@ archlinux_page_header(){
 	      <div class="page-content">
 	
 	EOF
-	write_page_intro 'Arch Linux'
-	write_variation_table 'Arch Linux'
 }
 
 archlinux_page_footer(){
 	write_page "</div></div>"
 	write_page_footer 'Arch Linux'
 	echo "$(date -u) - enjoy $REPRODUCIBLE_URL/archlinux/$PAGE"
+	publish_page archlinux
 }
 
 single_main_page(){
 	#
 	# write out the actual webpage
 	#
-	cd $ARCHBASE
 	PAGE=archlinux.html
-	archlinux_page_header $PAGE
+	archlinux_page_header
+	write_page_intro 'Arch Linux'
 	write_page "    <table><tr><th>repository</th><th>all source packages</th><th>reproducible packages</th><th>unreproducible packages</th><th>packages failing to build</th><th>packages in depwait state</th><th>packages download problems</th><th>blacklisted</th><th>unknown state</th></tr>"
 	cat $HTML_REPOSTATS >> $PAGE
-	rm $HTML_REPOSTATS > /dev/null
 	write_page "    </table>"
 	# include graphs
 	write_page '<p style="clear:both;">'
@@ -184,32 +182,49 @@ single_main_page(){
 	done
 	write_page '</p><p style="clear:both;"><center>'
 	write_page "<a href=\"/archlinux/archlinux.png\"><img src=\"/archlinux/archlinux.png\" alt=\"total Arch Linux stats\"></a></p>"
-	archlinux_page_footer $PAGE
+	write_variation_table 'Arch Linux'
+	archlinux_page_footer
 }
 
 repository_pages(){
 	for REPOSITORY in $ARCHLINUX_REPOS ; do
-		cd $ARCHBASE
 		PAGE=archlinux_$REPOSITORY.html
 		echo "$(date -u) - starting to write page for $REPOSITORY'."
-		archlinux_page_header $PAGE
-		# prepare stats per repository
+		archlinux_page_header
+		write_page "    <table><tr><th>repository</th><th>source package</th><th>version</th><th>test result</th><th>test date<br />test duration</th><th>1st build log<br />2nd build log</th></tr>"
 		SUITE="archlinux_$REPOSITORY"
 		REPO_PKGS=$(query_db "SELECT s.name FROM sources AS s JOIN results AS r ON s.id=r.package_id WHERE s.architecture='x86_64' AND s.suite='$SUITE' ORDER BY r.status")
-		# packages table header
-		write_page "    <table><tr><th>repository</th><th>source package</th><th>version</th><th>test result</th><th>test date<br />test duration</th><th>1st build log<br />2nd build log</th></tr>"
-		# output all HTML snipplets
 		for PKG in $REPO_PKGS ; do
-			cat $REPOSITORY/$PKG/pkg.html >> $PAGE 2>/dev/null || true
+			cat $ARCHBASE/$REPOSITORY/$PKG/pkg.html >> $PAGE 2>/dev/null || true
 		done
 		write_page "    </table>"
-		archlinux_page_footer $PAGE
+		archlinux_page_footer
 	done
 }
 
+state_pages(){
+	for STATE in FTBFS FTBR DEPWAIT 404 GOOD BLACKLISTED UNKNOWN ; do
+		PAGE=archlinux_state_$STATE.html
+		echo "$(date -u) - starting to write page for state $STATE'."
+		archlinux_page_header
+		write_page "    <table><tr><th>repository</th><th>source package</th><th>version</th><th>test result</th><th>test date<br />test duration</th><th>1st build log<br />2nd build log</th></tr>"
+		for REPOSITORY in $ARCHLINUX_REPOS ; do
+			SUITE="archlinux_$REPOSITORY"
+			STATE_PKGS=$(query_db "SELECT s.name FROM sources AS s JOIN results AS r ON s.id=r.package_id WHERE s.architecture='x86_64' AND s.suite='$SUITE' AND r.status LIKE '$STATE%' ORDER BY s.suite,r.status")
+			for PKG in $STATE_PKGS ; do
+				cat $ARCHBASE/$REPOSITORY/$PKG/pkg.html >> $PAGE 2>/dev/null || true
+			done
+		done
+		write_page "    </table>"
+		archlinux_page_footer
+	done
+}
 
 repostats
 single_main_page
 repository_pages
+state_pages
+rm $HTML_REPOSTATS > /dev/null
+echo "$(date -u) - all done."
 
 # vim: set sw=0 noet :
