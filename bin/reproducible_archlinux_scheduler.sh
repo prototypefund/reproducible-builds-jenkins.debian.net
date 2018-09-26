@@ -163,7 +163,7 @@ update_archlinux_repositories() {
 			ORDER BY max_date
 			LIMIT $MAX;"
 		OLD=$(query_db "$QUERY")
-		for PKG_ID in $(cut -d '|' -f1 $OLD) ; do
+		for PKG_ID in $(echo -n "$OLD" | cut -d '|' -f1) ; do
 			QUERY="INSERT INTO schedule (package_id, date_scheduled) VALUES ('${PKG_ID}', '$SCHDATE');"
 			query_db "$QUERY_DB"
 		done
@@ -179,7 +179,7 @@ update_archlinux_repositories() {
 	total=$(query_db "SELECT count(*) FROM sources AS s JOIN schedule AS sch ON s.id=sch.package_id WHERE s.architecture='x86_64' AND sch.date_build_started IS NULL;")
 	new=$(cat $NEW | wc -l 2>/dev/null|| true)
 	updated=$(cat $UPDATED 2>/dev/null| wc -l || true)
-	old=$(cat $OLD | wc -l 2>/dev/null|| true)
+	old=$(echo -n "$OLD" | wc -l 2>/dev/null|| true)
 	if [ $new -ne 0 ] || [ $updated -ne 0 ] || [ $old -ne 0 ] ; then
 		message="scheduled"
 		if [ $new -ne 0 ] ; then
