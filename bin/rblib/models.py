@@ -230,6 +230,9 @@ class Package:
         self.__dict__ = _Package_cache().get(name)
         self.name = name
 
+    def __str__(self):
+        return "<Package: {}>".format(self.name)
+
     @lazyproperty
     def builds(self):
         self._l_builds = {}
