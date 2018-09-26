@@ -583,7 +583,7 @@ export BUILDUSERNAME=pbuilder1
 export BUILDUSERGECOS="first user,first room,first work-phone,first home-phone,first other"
 # pbuilder sets HOME to the value of BUILD_HOME…
 BUILD_HOME=/nonexistent/first-build
-export DEB_BUILD_OPTIONS="buildinfo=+all parallel=$NUM_CPU"
+export DEB_BUILD_OPTIONS="buildinfo=+all reprodcible=+all parallel=$NUM_CPU"
 export TZ="/usr/share/zoneinfo/Etc/GMT+12"
 export LANG="C"
 unset LC_ALL
@@ -650,7 +650,7 @@ export BUILDUSERNAME=pbuilder2
 export BUILDUSERGECOS="second user,second room,second work-phone,second home-phone,second other"
 # pbuilder sets HOME to the value of BUILD_HOME…
 BUILD_HOME=/nonexistent/second-build
-export DEB_BUILD_OPTIONS="buildinfo=+all parallel=$NUM_CPU"
+export DEB_BUILD_OPTIONS="buildinfo=+all reproducible=+all parallel=$NUM_CPU"
 export TZ="/usr/share/zoneinfo/Etc/GMT-14"
 export LANG="$locale.UTF-8"
 export LC_ALL="$locale.UTF-8"
