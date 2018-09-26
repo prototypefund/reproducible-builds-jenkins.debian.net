@@ -18,7 +18,6 @@ update_archlinux_repositories() {
 	#
 	local UPDATED=$(mktemp -t archlinuxrb-scheduler-XXXXXXXX)
 	local NEW=$(mktemp -t archlinuxrb-scheduler-XXXXXXXX)
-	local OLD=$(mktemp -t archlinuxrb-scheduler-XXXXXXXX)
 	local KNOWN=$(mktemp -t archlinuxrb-scheduler-XXXXXXXX)
 	local BLACKLIST="/($(echo $ARCHLINUX_BLACKLISTED | sed "s# #|#g"))/"
 	local TOTAL=$(cat ${ARCHLINUX_PKGS}_* | wc -l)
@@ -141,15 +140,39 @@ update_archlinux_repositories() {
 	schroot --end-session -c $SESSION
 
 	#
+	# schedule up to $MAX packages in DEPWAIT_ states (which have been tried at least two days ago)
+	#
+	echo "$(date -u ) - should we schedule DEPWAIT_ packages?"
+	local MAX=350
+	local MINDATE=$(date -u +"%Y-%m-%d %H:%M" -d "2 days ago")
+	local SCHDATE=$(date -u +"%Y-%m-%d %H:%M" -d "7 days")
+	QUERY="SELECT s.id FROM sources AS s
+		JOIN results as r on s.id=r.package_id
+		WHERE s.architecture='x86_64'\
+		AND r.status LIKE 'DEPWAIT%'
+		AND r.build_date < '$MINDATE'
+		AND s.id NOT IN (SELECT package_id FROM schedule)
+		LIMIT $MAX;"
+	local DEPWAIT=$(query_db "$QUERY")
+	if [ ! -z "$DEPWAIT" ] ; then
+		for PKG_ID in $DEPWAIT ; do
+			QUERY="INSERT INTO schedule (package_id, date_scheduled) VALUES ('${PKG_ID}', '$SCHDATE');"
+			query_db "$QUERY"
+		done
+		echo "$(date -u ) - done scheduling $(echo -n "$DEPWAIT" | wc -l ) packages in DEPWAIT_ state."
+	else
+		echo "$(date -u ) - no."
+	fi
+
+	#
 	# schedule up to $MAX packages we already know about
 	# (only if less than $THRESHOLD packages are currently scheduled)
 	#
 	echo "$(date -u ) - should we schedule old packages?"
-	old=""
-	local MAX=350
+	MAX=350
 	local THRESHOLD=450
-	local MINDATE=$(date -u +"%Y-%m-%d %H:%M" -d "14 days ago")
-	local SCHDATE=$(date -u +"%Y-%m-%d %H:%M" -d "7 days")
+	MINDATE=$(date -u +"%Y-%m-%d %H:%M" -d "14 days ago")
+	SCHDATE=$(date -u +"%Y-%m-%d %H:%M" -d "7 days")
 	local CURRENT=$(query_db "SELECT count(*) FROM sources AS s JOIN schedule AS sch ON s.id=sch.package_id WHERE s.architecture='x86_64' AND sch.date_build_started IS NULL;")
 	if [ $CURRENT -le $THRESHOLD ] ; then
 		echo "$(date -u ) - scheduling $MAX old packages."
@@ -162,14 +185,14 @@ update_archlinux_repositories() {
 			GROUP BY s.id, s.name
 			ORDER BY max_date
 			LIMIT $MAX;"
-		OLD=$(query_db "$QUERY")
+		local OLD=$(query_db "$QUERY")
 		for PKG_ID in $(echo -n "$OLD" | cut -d '|' -f1) ; do
 			QUERY="INSERT INTO schedule (package_id, date_scheduled) VALUES ('${PKG_ID}', '$SCHDATE');"
 			query_db "$QUERY"
 		done
 		echo "$(date -u ) - done scheduling $MAX old packages."
 	else
-		echo "$(date -u ) - $CURRENT packages already scheduled, not scheduling more."
+		echo "$(date -u ) - no."
 	fi
 
 	#
@@ -180,7 +203,8 @@ update_archlinux_repositories() {
 	new=$(cat $NEW | wc -l 2>/dev/null|| true)
 	updated=$(cat $UPDATED 2>/dev/null| wc -l || true)
 	old=$(echo -n "$OLD" | wc -l 2>/dev/null|| true)
-	if [ $new -ne 0 ] || [ $updated -ne 0 ] || [ $old -ne 0 ] ; then
+	depwait=$(echo -n "$DEPWAIT" | wc -l 2>/dev/null|| true)
+	if [ $new -ne 0 ] || [ $updated -ne 0 ] || [ $old -ne 0 ] || [ $depwait -ne 0 ] ; then
 		message="scheduled"
 		if [ $new -ne 0 ] ; then
 			message="$message $new entirely new packages"
@@ -192,19 +216,26 @@ update_archlinux_repositories() {
 			message="$message $updated packages with newer versions"
 		fi
 		if [ $old -ne 0 ] && ( [ $new -ne 0 ] || [ $updated -ne 0 ] ) ; then
-			old=", plus $old already tested ones"
+			msg_old=", plus $old already tested ones"
 		elif [ $old -ne 0 ] ; then
-			old="$old already tested packages"
+			msg_old="$old already tested packages"
 		else
-			old=""
+			msg_old=""
 		fi
-		MESSAGE="${message}$old, for $total scheduled out of $TOTAL."
+		if [ $depwait -ne 0 ] && ( [ $new -ne 0 ] || [ $updated -ne 0 ] || [ $old -ne 0 ] ) ; then
+			msg_depwait=" and $depwait packages with unresolved dependencies"
+		elif [ $depwait -ne 0 ] ; then
+			msg_depwait="$depwait packages with unresolved dependencies"
+		else
+			msg_dapwait=""
+		fi
+		MESSAGE="${message}${msg_old}${msg_depwait}, for $total scheduled out of $TOTAL."
 		echo -n "$(date -u ) - "
 		irc_message archlinux-reproducible "$MESSAGE"
 	else
 		echo "$(date -u ) - didn't schedule any packages."
 	fi
-	rm -f $NEW $UPDATED $OLD $KNOWN > /dev/null
+	rm -f $NEW $UPDATED $KNOWN > /dev/null
 }
 
 ARCH="x86_64"

@@ -335,7 +335,10 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 ** debian uses a table manual_scheduler to limit the amount of packages someone can schedule per day...
 ** should breakages job look for archlinux breakages?
 
-* to not build trunk, we need to configure asp.
+* rebuilding against the archlinux repos
+** only needs to be done once
+** to not (pacman know about trunk and thus) build trunk, we need to configure asp.
+** wel'll keep building against repo+trunk as we do now (so that archlinux can also benefit from the QA effects)
 
 * fix build.sh:
 ** build2.log doesnt get deleted if build1 fails
