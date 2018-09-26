@@ -304,7 +304,7 @@ def gen_history_page(package, arch=None):
         for r in package.history:
             # make a copy, since we modify in place
             record = dict(r)
-            # XXX - hacky, should be rethought one day
+            # FIXME - hacky, should be rethought one day
             # skip records for suites that are unknown to us (i.e. other distro)
             if record['suite'] not in SUITES:
                 continue
