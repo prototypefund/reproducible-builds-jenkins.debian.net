@@ -34,7 +34,8 @@ ARCHLINUX_NR_BLACKLISTED=0
 ARCHLINUX_NR_UNKNOWN=0
 WIDTH=1920
 HEIGHT=960
-PAGE=''
+PAGE=""
+TITLE=""
 
 repostats(){
 	#
@@ -148,7 +149,7 @@ archlinux_page_header(){
 	<html lang="en-US">
 	  <head>
 	    <meta charset="UTF-8">
-	    <title>Reproducible Arch Linux ?!</title>
+	    <title>$TITLE</title>
 	    <link rel='stylesheet' href='global.css' type='text/css' media='all' />
 	  </head>
 	  <body>
@@ -187,6 +188,7 @@ single_main_page(){
 	# write out the actual webpage
 	#
 	PAGE=archlinux.html
+	TITLE="Reproducible archlinux ?!"
 	archlinux_page_header
 	write_page_intro 'Arch Linux'
 	archlinux_page_repostats
@@ -204,6 +206,7 @@ single_main_page(){
 repository_pages(){
 	for REPOSITORY in $ARCHLINUX_REPOS ; do
 		PAGE=$REPOSITORY.html
+		TITLE="Reproducible archlinux $REPOSITORY ?!"
 		echo "$(date -u) - starting to write page for $REPOSITORY'."
 		archlinux_page_header
 		archlinux_page_repostats
@@ -223,6 +226,7 @@ repository_pages(){
 state_pages(){
 	for STATE in FTBFS FTBR DEPWAIT 404 GOOD BLACKLISTED UNKNOWN ; do
 		PAGE=state_$STATE.html
+		TITLE="Reproducible archlinux, packages in state $STATE"
 		echo "$(date -u) - starting to write page for state $STATE'."
 		archlinux_page_header
 		archlinux_page_repostats
