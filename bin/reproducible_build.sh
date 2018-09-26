@@ -309,14 +309,6 @@ handle_reproducible() {
 	fi
 }
 
-unregister_build() {
-	# unregister this build so it will immeditiatly tried again
-	if [ -n "$SRCPKGID" ] ; then
-		query_db "UPDATE schedule SET date_build_started = NULL, job = NULL WHERE package_id=$SRCPKGID"
-	fi
-	NOTIFY=""
-}
-
 handle_env_changes() {
 	unregister_build
 	MESSAGE="$(date -u ) - ${BUILD_URL}console.log encountered a problem: $1"

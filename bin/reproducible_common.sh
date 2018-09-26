@@ -701,6 +701,14 @@ handle_race_condition() {
 	exit 0
 }
 
+unregister_build() {
+	# unregister this build so it will immeditiatly tried again
+	if [ -n "$SRCPKGID" ] ; then
+		query_db "UPDATE schedule SET date_build_started = NULL, job = NULL WHERE package_id=$SRCPKGID"
+	fi
+	NOTIFY=""
+}
+
 #
 # create the png (and query the db to populate a csv file...)
 #
