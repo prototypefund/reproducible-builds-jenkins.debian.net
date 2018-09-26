@@ -140,26 +140,27 @@ update_archlinux_repositories() {
 	schroot --end-session -c $SESSION
 
 	#
-	# schedule up to $MAX packages in DEPWAIT_ states (which have been tried at least two days ago)
+	# schedule up to $MAX packages in DEPWAIT_ or 404_ states 
+	# (which have been tried at least two days ago)
 	#
-	echo "$(date -u ) - should we schedule DEPWAIT_ packages?"
+	echo "$(date -u ) - should we schedule packages in DEPWAIT_ or 404_ states?"
 	local MAX=350
 	local MINDATE=$(date -u +"%Y-%m-%d %H:%M" -d "2 days ago")
 	local SCHDATE=$(date -u +"%Y-%m-%d %H:%M" -d "7 days")
 	QUERY="SELECT s.id FROM sources AS s
 		JOIN results as r on s.id=r.package_id
 		WHERE s.architecture='x86_64'\
-		AND r.status LIKE 'DEPWAIT%'
+			AND (r.status LIKE 'DEPWAIT%' or r.status LIKE '404%')
 		AND r.build_date < '$MINDATE'
 		AND s.id NOT IN (SELECT package_id FROM schedule)
 		LIMIT $MAX;"
-	local DEPWAIT=$(query_db "$QUERY")
-	if [ ! -z "$DEPWAIT" ] ; then
-		for PKG_ID in $DEPWAIT ; do
+	local DEPWAIT404=$(query_db "$QUERY")
+	if [ ! -z "$DEPWAIT404" ] ; then
+		for PKG_ID in $DEPWAIT404 ; do
 			QUERY="INSERT INTO schedule (package_id, date_scheduled) VALUES ('${PKG_ID}', '$SCHDATE');"
 			query_db "$QUERY"
 		done
-		echo "$(date -u ) - done scheduling $(echo -n "$DEPWAIT" | wc -l ) packages in DEPWAIT_ state."
+		echo "$(date -u ) - done scheduling $(echo -n "$DEPWAIT404" | wc -l ) packages in DEPWAIT_ or 404_ states."
 	else
 		echo "$(date -u ) - no."
 	fi
@@ -203,8 +204,8 @@ update_archlinux_repositories() {
 	new=$(cat $NEW | wc -l 2>/dev/null|| true)
 	updated=$(cat $UPDATED 2>/dev/null| wc -l || true)
 	old=$(echo -n "$OLD" | wc -l 2>/dev/null|| true)
-	depwait=$(echo -n "$DEPWAIT" | wc -l 2>/dev/null|| true)
-	if [ $new -ne 0 ] || [ $updated -ne 0 ] || [ $old -ne 0 ] || [ $depwait -ne 0 ] ; then
+	depwait404=$(echo -n "$DEPWAIT404" | wc -l 2>/dev/null|| true)
+	if [ $new -ne 0 ] || [ $updated -ne 0 ] || [ $old -ne 0 ] || [ $depwait404 -ne 0 ] ; then
 		message="scheduled"
 		if [ $new -ne 0 ] ; then
 			message="$message $new entirely new packages"
@@ -222,14 +223,14 @@ update_archlinux_repositories() {
 		else
 			msg_old=""
 		fi
-		if [ $depwait -ne 0 ] && ( [ $new -ne 0 ] || [ $updated -ne 0 ] || [ $old -ne 0 ] ) ; then
-			msg_depwait=" and $depwait packages with unresolved dependencies"
-		elif [ $depwait -ne 0 ] ; then
-			msg_depwait="$depwait packages with unresolved dependencies"
+		if [ $depwait404 -ne 0 ] && ( [ $new -ne 0 ] || [ $updated -ne 0 ] || [ $old -ne 0 ] ) ; then
+			msg_depwait404=" and $depwait404 packages with unresolved dependencies"
+		elif [ $depwait404 -ne 0 ] ; then
+			msg_depwait404="$depwait404 packages with unresolved dependencies"
 		else
-			msg_dapwait=""
+			msg_depwait404=""
 		fi
-		MESSAGE="${message}${msg_old}${msg_depwait}, for $total scheduled out of $TOTAL."
+		MESSAGE="${message}${msg_old}${msg_depwait404}, for $total scheduled out of $TOTAL."
 		echo -n "$(date -u ) - "
 		irc_message archlinux-reproducible "$MESSAGE"
 	else
