@@ -19,7 +19,7 @@ import sqlalchemy
 apt_pkg.init_system()
 
 from rblib import query_db
-from rblib.confparse import log, args, conf_distro
+from rblib.confparse import log, args
 from rblib.models import Package, Status
 from rblib.utils import strip_epoch, convert_into_hms_string
 from rblib.html import gen_status_link_icon, write_html_page
@@ -304,6 +304,10 @@ def gen_history_page(package, arch=None):
         for r in package.history:
             # make a copy, since we modify in place
             record = dict(r)
+            # XXX - hacky, should be rethought one day
+            # skip records for suites that are unknown to us (i.e. other distro)
+            if record['suite'] not in SUITES:
+                continue
             # skip records for other archs if we care about arch
             if arch and record['architecture'] != arch:
                 continue
@@ -436,7 +440,7 @@ def gen_packages_html(packages, no_clean=False):
 
 def gen_all_rb_pkg_pages(no_clean=False):
     query = 'SELECT DISTINCT name FROM sources WHERE suite = ANY(:s)'
-    rows = query_db(sqlalchemy.text(query), s=conf_distro['suites'].split())
+    rows = query_db(sqlalchemy.text(query), s=SUITES)
     pkgs = [Package(str(i[0]), no_notes=True) for i in rows]
     log.info('Processing all %s package from all suites/architectures',
              len(pkgs))
