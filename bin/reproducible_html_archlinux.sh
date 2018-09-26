@@ -55,8 +55,11 @@ repostats(){
 		NR_404=$(query_db "SELECT count(*) FROM sources AS s JOIN results AS r ON s.id=r.package_id WHERE s.architecture='x86_64' AND s.suite='$SUITE' AND r.status LIKE '404_%';")
 		NR_BLACKLISTED=$(query_db "SELECT count(*) FROM sources AS s JOIN results AS r ON s.id=r.package_id WHERE s.architecture='x86_64' AND s.suite='$SUITE' AND r.status='BLACKLISTED';")
 		NR_UNKNOWN=$(query_db "SELECT count(*) FROM sources AS s JOIN results AS r ON s.id=r.package_id WHERE s.architecture='x86_64' AND s.suite='$SUITE' AND r.status LIKE 'UNKNOWN_%';")
-		let NR_UNKNOWN=$NR_UNKNOWN+$(query_db "SELECT count(s.name) FROM sources AS s WHERE s.architecture='x86_64' AND s.id NOT IN (SELECT package_id FROM results)")
-	PERCENT_TOTAL=$(echo "scale=1 ; ($TESTED*100/$TOTAL)" | bc)
+		NR_UNTESTED=$(query_db "SELECT count(s.name) FROM sources AS s WHERE s.architecture='x86_64' AND s.suite='$SUITE' AND s.id NOT IN (SELECT package_id FROM results)")
+		if [ $NR_UNTESTED -ne 0 ] ; then
+			let NR_UNKNOWN=$NR_UNKNOWN+$NR_UNTESTED
+		fi
+		PERCENT_TOTAL=$(echo "scale=1 ; ($TESTED*100/$TOTAL)" | bc)
 		if [ $(echo $PERCENT_TOTAL/1|bc) -lt 99 ] ; then
 			NR_TESTED="$TESTED <span style=\"font-size:0.8em;\">(tested $PERCENT_TOTAL% of $TOTAL)</span>"
 		else
@@ -204,9 +207,10 @@ repository_pages(){
 		echo "$(date -u) - starting to write page for $REPOSITORY'."
 		archlinux_page_header
 		archlinux_page_repostats
-		write_page "<h2>Packages in repository $REPOSITORY</h2>"
-		write_page "    <table><tr><th>repository</th><th>source package</th><th>version</th><th>test result</th><th>test date<br />test duration</th><th>1st build log<br />2nd build log</th></tr>"
 		SUITE="archlinux_$REPOSITORY"
+		TESTED=$(query_db "SELECT count(*) FROM sources AS s JOIN results AS r ON s.id=r.package_id WHERE s.architecture='x86_64' AND s.suite='$SUITE';")
+		write_page "<h2>$TESTED packages in repository $REPOSITORY</h2>"
+		write_page "    <table><tr><th>repository</th><th>source package</th><th>version</th><th>test result</th><th>test date<br />test duration</th><th>1st build log<br />2nd build log</th></tr>"
 		REPO_PKGS=$(query_db "SELECT s.name FROM sources AS s JOIN results AS r ON s.id=r.package_id WHERE s.architecture='x86_64' AND s.suite='$SUITE' ORDER BY r.status")
 		for PKG in $REPO_PKGS ; do
 			cat $ARCHBASE/$REPOSITORY/$PKG/pkg.html >> $PAGE 2>/dev/null || true
@@ -222,7 +226,14 @@ state_pages(){
 		echo "$(date -u) - starting to write page for state $STATE'."
 		archlinux_page_header
 		archlinux_page_repostats
-		write_page "<h2>Packages in $STATE state</h2>"
+		TESTED=$(query_db "SELECT count(*) FROM sources AS s JOIN results AS r ON s.id=r.package_id WHERE s.architecture='x86_64' AND r.status LIKE '$STATE%';")
+		if [ "$STATE" = "UNKNOWN" ] ; then
+			UNTESTED=$(query_db "SELECT count(s.name) FROM sources AS s WHERE s.architecture='x86_64' AND s.id NOT IN (SELECT package_id FROM results)")
+			if [ $UNTESTED -ne 0 ] ; then
+				let TESTED=$TESTED+$UNTESTED
+			fi
+		fi
+		write_page "<h2>$TESTED packages in $STATE state</h2>"
 		write_page "    <table><tr><th>repository</th><th>source package</th><th>version</th><th>test result</th><th>test date<br />test duration</th><th>1st build log<br />2nd build log</th></tr>"
 		for REPOSITORY in $ARCHLINUX_REPOS ; do
 			SUITE="archlinux_$REPOSITORY"
