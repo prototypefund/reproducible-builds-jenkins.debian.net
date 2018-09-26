@@ -241,10 +241,12 @@ state_pages(){
 			for PKG in ${STATE_PKGS} ; do
 				cat $ARCHBASE/$REPOSITORY/$PKG/pkg.html >> $PAGE 2>/dev/null || true
 			done
-			STATE_PKGS=$(query_db "SELECT s.name FROM sources AS s WHERE s.architecture='x86_64' AND s.suite='$SUITE' AND s.id NOT IN (SELECT package_id FROM results)")
-			for PKG in ${STATE_PKGS} ; do
-				cat $ARCHBASE/$REPOSITORY/$PKG/pkg.html >> $PAGE 2>/dev/null || true
-			done
+			if [ "$STATE" = "UNKNOWN" ] ; then
+				STATE_PKGS=$(query_db "SELECT s.name FROM sources AS s WHERE s.architecture='x86_64' AND s.suite='$SUITE' AND s.id NOT IN (SELECT package_id FROM results)")
+				for PKG in ${STATE_PKGS} ; do
+					cat $ARCHBASE/$REPOSITORY/$PKG/pkg.html >> $PAGE 2>/dev/null || true
+				done
+			fi
 		done
 		write_page "    </table>"
 		archlinux_page_footer
