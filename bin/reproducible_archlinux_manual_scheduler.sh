@@ -28,6 +28,8 @@ ARCH=x86_64
 shift
 PACKAGES="$@"
 SUCCESS=""
+ALREADY_SCHEDULED=""
+NOT_EXISTING=""
 for PKG in $PACKAGES ; do
 	echo "Now trying to reschedule $PKG in $SUITE."
 	PKG_ID=$(query_db "SELECT id FROM sources WHERE name='$PKG' AND suite='$SUITE' AND architecture='$ARCH';")
@@ -38,17 +40,30 @@ for PKG in $PACKAGES ; do
 			SUCCESS="$SUCCESS $PKG"
 		else
 			echo " $PKG (package_id: ${PKG_ID}) already scheduled, not scheduling again."
+			ALREADY_SCHEDULED="$ALREADY_SCHEDULED $PKG"
 		fi
 	else
 		echo " $PKG does not exist in $SUITE, ignoring."
+		NOT_EXISTING="$NOT_EXISTING $PKG"
 	fi
 done
 
+echo
 if [ ! -z "$SUCCESS" ] ; then
 	MESSAGE="Manually scheduled these packages in $SUITE:$SUCCESS"
 	echo "$MESSAGE"
 	irc_message archlinux-reproducible "$MESSAGE"
 fi
+if [ ! -z "$ALREADY_SCHEDULED" ] || [ ! -z "$NOT_EXISTING" ] ; then
+	echo
+	if [ ! -z "$ALREADY_SCHEDULED" ] ; then
+		echo "$ALREADY_SCHEDULED were already scheduled..."
+	fi
+	if [ ! -z "$NOT_EXISTING" ] ; then
+		echo "$NOT_EXISTING were not found in $SUITE, so ignored."
+	fi
+fi
+echo
 
 exit 0
 
