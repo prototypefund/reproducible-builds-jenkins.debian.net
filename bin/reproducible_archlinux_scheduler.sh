@@ -116,7 +116,7 @@ update_archlinux_repositories() {
 							SCHEDULED=$(query_db "SELECT * FROM schedule WHERE package_id = '${PKG_ID}';")
 							if [ -z "$SCHEDULED" ] ; then
 								echo " INSERT INTO schedule (package_id, date_scheduled) VALUES ('${PKG_ID}', '$DATE');"
-								query_db "INSERT INTO schedule (package_id, date_scheduled) VALUES ('${PKG_ID}', '$DATE');" ||true
+								query_db "INSERT INTO schedule (package_id, date_scheduled) VALUES ('${PKG_ID}', '$DATE');"
 							else
 								echo " $PKG (package_id: ${PKG_ID}) already scheduled, not scheduling again."
 							fi
