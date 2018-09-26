@@ -156,7 +156,7 @@ archlinux_page_header(){
 		    <div id="logo"></div>
 	    </div>
 	    <div class="content">
-	      <h1>Reproducible Arch Linux?!</h1>
+	      <h1><a href='/archlinux/'>Reproducible Arch Linux</a>?!</h1>
 	      <div class="page-content">
 	
 	EOF
