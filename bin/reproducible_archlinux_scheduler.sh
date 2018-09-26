@@ -165,7 +165,7 @@ update_archlinux_repositories() {
 		OLD=$(query_db "$QUERY")
 		for PKG_ID in $(echo -n "$OLD" | cut -d '|' -f1) ; do
 			QUERY="INSERT INTO schedule (package_id, date_scheduled) VALUES ('${PKG_ID}', '$SCHDATE');"
-			query_db "$QUERY_DB"
+			query_db "$QUERY"
 		done
 		echo "$(date -u ) - done scheduling $MAX old packages."
 	else
