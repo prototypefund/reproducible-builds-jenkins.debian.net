@@ -532,7 +532,7 @@
                     my_shellext: ".py"
                 - 'html_archlinux':
                     my_description: 'Build a simple webpage for Arch Linux reproducibility tests'
-                    my_timed: ''
+                    my_timed: '1 H/2 * * *'
                 - 'archlinux_scheduler':
                     my_description: 'A simple scheduler for for Arch Linux reproducibility tests'
                     my_timed: '0 H/3 * * *'
