@@ -335,6 +335,8 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 ** debian uses a table manual_scheduler to limit the amount of packages someone can schedule per day...
 ** should breakages job look for archlinux breakages?
 
+* to not build trunk, we need to configure asp.
+
 * fix build.sh:
 ** build2.log doesnt get deleted if build1 fails
 ** -> rename build2.log to $version_build2.log (dont include package name...)

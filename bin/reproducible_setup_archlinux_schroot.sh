@@ -8,7 +8,7 @@
 
 #
 # downloads an archlinux bootstrap chroot archive, then turns it into an schroot,
-# then configures pacman and abs
+# then configures pacman.
 #
 
 set -e
