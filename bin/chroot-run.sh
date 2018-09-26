@@ -106,6 +106,11 @@ echo 'Acquire::http::Proxy "$http_proxy";' > /etc/apt/apt.conf.d/80proxy
 echo "deb-src $MIRROR $DISTRO main" >> /etc/apt/sources.list
 echo "${BACKPORTS}" >> /etc/apt/sources.list
 echo "${BACKPORTSSRC}" >> /etc/apt/sources.list
+echo "Preseeding man-db/auto-update to false"
+echo "man-db man-db/auto-update boolean false" | debconf-set-selections
+echo
+echo "Configuring dpkg to not fsync()"
+echo "force-unsafe-io" > /etc/dpkg/dpkg.cfg.d/02speedup
 apt-get update
 EOF
 
