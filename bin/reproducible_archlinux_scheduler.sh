@@ -224,9 +224,9 @@ update_archlinux_repositories() {
 			msg_old=""
 		fi
 		if [ $depwait404 -ne 0 ] && ( [ $new -ne 0 ] || [ $updated -ne 0 ] || [ $old -ne 0 ] ) ; then
-			msg_depwait404=" and $depwait404 packages with unresolved dependencies"
+			msg_depwait404=" and $depwait404 packages with unresolved dependencies or 404 problems"
 		elif [ $depwait404 -ne 0 ] ; then
-			msg_depwait404="$depwait404 packages with unresolved dependencies"
+			msg_depwait404="$depwait404 packages with unresolved dependencies or 404 problems"
 		else
 			msg_depwait404=""
 		fi
