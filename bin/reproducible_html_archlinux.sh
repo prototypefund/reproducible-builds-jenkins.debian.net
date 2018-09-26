@@ -238,11 +238,11 @@ state_pages(){
 		for REPOSITORY in $ARCHLINUX_REPOS ; do
 			SUITE="archlinux_$REPOSITORY"
 			STATE_PKGS=$(query_db "SELECT s.name FROM sources AS s JOIN results AS r ON s.id=r.package_id WHERE s.architecture='x86_64' AND s.suite='$SUITE' AND r.status LIKE '$STATE%' ORDER BY s.suite,r.status")
-			for PKG in $STATE_PKGS ; do
+			for PKG in ${STATE_PKGS} ; do
 				cat $ARCHBASE/$REPOSITORY/$PKG/pkg.html >> $PAGE 2>/dev/null || true
 			done
-			STATE_PKGS=$(query_db "SELECT s.name FROM sources AS s WHERE s.architecture='x86_64' AND s.id NOT IN (SELECT package_id FROM results)")
-			for PKG in $STATE_PKGS ; do
+			STATE_PKGS=$(query_db "SELECT s.name FROM sources AS s WHERE s.architecture='x86_64' AND s.suite='$SUITE' AND s.id NOT IN (SELECT package_id FROM results)")
+			for PKG in ${STATE_PKGS} ; do
 				cat $ARCHBASE/$REPOSITORY/$PKG/pkg.html >> $PAGE 2>/dev/null || true
 			done
 		done
