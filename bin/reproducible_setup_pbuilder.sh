@@ -100,7 +100,7 @@ apt-cache policy
 echo
 dpkg -l
 echo
-for i in \$(dpkg -l |grep ^ii |awk -F' ' '{print \$2}'); do   apt-cache madison "\$i" | head -1 | grep reproducible.alioth.debian.org || true  ; done
+for i in \$(dpkg -l |grep ^ii |awk -F' ' '{print \$2}'); do   apt-cache madison "\$i" | head -1 | grep reproducible-builds.org || true  ; done
 echo
 EOF
 }
@@ -154,7 +154,7 @@ setup_pbuilder() {
 			echo
 			echo "Now let's see whether the correct packages where installed..."
 			for PKG in ${PACKAGES} ; do
-				egrep "http://reproducible.alioth.debian.org/debian(/|) ./ Packages" ${LOG} \
+				egrep "http://tests.reproducible-builds.org/debian/repository/debian(/|) ./ Packages" ${LOG} \
 					| grep -v grep | grep "${PKG} " \
 					|| ( echo ; echo "Package ${PKG} is not installed at all or probably rather not in our version, so removing the chroot and exiting now." ; sudo rm -v /var/cache/pbuilder/${NAME}-new.tgz ; rm $LOG ; exit 1 )
 			done
