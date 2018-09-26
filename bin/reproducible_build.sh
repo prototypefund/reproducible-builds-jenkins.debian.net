@@ -688,14 +688,22 @@ EOF
 }
 
 check_node_is_up() {
-	# this actually tests two things:
+	# this actually tests three things:
+	# - the node is not listed in ~/offline_nodes
 	# - ssh login works
 	# - /tmp is not mounted in read-only mode
 	local NODE=$1
 	local PORT=$2
 	local SLEEPTIME=$3
 	set +e
-	echo "$(date -u) - checking if $NODE is up."
+	echo "$(date -u) - checking ~/offline_nodes if $NODE is marked as down."
+	if grep -q $NODE ~/offline_nodes >/dev/null 2>&1 ; then
+		echo "$(date -u) - $NODE seems to marked as down, sleeping ${SLEEPTIME}min before aborting this job."
+		unregister_build
+		sleep ${SLEEPTIME}.1337m
+		exit 0
+	fi
+	echo "$(date -u) - checking via ssh if $NODE is up."
 	ssh -o "BatchMode = yes" -p $PORT $NODE 'rm -v $(mktemp --tmpdir=/tmp read-only-fs-test-XXXXXX)'
 	RESULT=$?
 	# abort job if host is down
@@ -703,6 +711,7 @@ check_node_is_up() {
 		echo "$(date -u) - $NODE seems to be down, sleeping ${SLEEPTIME}min before aborting this job."
 		unregister_build
 		sleep ${SLEEPTIME}.1337m
+		exit 0
 	fi
 	set -e
 }
