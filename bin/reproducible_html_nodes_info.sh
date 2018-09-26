@@ -215,7 +215,7 @@ build_job_health_page() {
 	FILTER[1]="html_(all|break|dash|dd|index|live|node|pkg|repo)"
 	FILTER[2]="le_diffoscope"
 	FILTER[3]="(reprotest|strip-nonderminism|disorderfs)"
-	FILTER[4]="(json|le_scheduler|meta|le_nodes|rsync)"
+	FILTER[4]="(json|le_scheduler|meta|le_nodes|rsync|notes)"
 	FILTER[5]="archlinux"
 	FILTER[6]="coreboot"
 	FILTER[7]="(openwrt|lede)"
