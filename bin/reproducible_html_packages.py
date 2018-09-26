@@ -15,10 +15,11 @@ import errno
 import urllib
 import pystache
 import apt_pkg
+import sqlalchemy
 apt_pkg.init_system()
 
 from rblib import query_db
-from rblib.confparse import log, args
+from rblib.confparse import log, args, conf_distro
 from rblib.models import Package, Status
 from rblib.utils import strip_epoch, convert_into_hms_string
 from rblib.html import gen_status_link_icon, write_html_page
@@ -434,8 +435,8 @@ def gen_packages_html(packages, no_clean=False):
 
 
 def gen_all_rb_pkg_pages(no_clean=False):
-    query = 'SELECT DISTINCT name FROM sources'
-    rows = query_db(query)
+    query = 'SELECT DISTINCT name FROM sources WHERE suite = ANY(:s)'
+    rows = query_db(sqlalchemy.text(query), s=conf_distro['suites'].split())
     pkgs = [Package(str(i[0]), no_notes=True) for i in rows]
     log.info('Processing all %s package from all suites/architectures',
              len(pkgs))
