@@ -68,12 +68,23 @@ repostats(){
 		fi
 		echo "     <tr>" >> $HTML_REPOSTATS
 		echo "      <td><a href='/archlinux/$REPOSITORY.html'>$REPOSITORY</a></td><td>$NR_TESTED</td>" >> $HTML_REPOSTATS
+		counter=0
 		for i in $NR_GOOD $NR_FTBR $NR_FTBFS $NR_DEPWAIT $NR_404 $NR_BLACKLISTED $NR_UNKNOWN ; do
+			case $counter in
+				0)	STATE=GOOD ;;
+				1)	STATE=FTBR ;;
+				2)	STATE=FTBFS ;;
+				3)	STATE=DEPWAIT ;;
+				4)	STATE=404 ;;
+				5)	STATE=BLACKLISTED ;;
+				6)	STATE=UNKNOWN ;;
+			esac
+			let counter+=1
 			PERCENT_i=$(echo "scale=1 ; ($i*100/$TESTED)" | bc)
 			if [ "$PERCENT_i" != "0" ] || [ "$i" != "0" ] ; then
-				echo "      <td>$i ($PERCENT_i%)</td>" >> $HTML_REPOSTATS
+				echo "      <td><a href='/archlinux/state_${REPOSITORY}_$STATE.html'>$i ($PERCENT_i%)</a></td>" >> $HTML_REPOSTATS
 			else
-				echo "      <td>$i</td>" >> $HTML_REPOSTATS
+				echo "      <td><a href='/archlinux/state_${REPOSITORY}_$STATE.html'>$i</a></td>" >> $HTML_REPOSTATS
 			fi
 		done
 		echo "     </tr>" >> $HTML_REPOSTATS
@@ -232,6 +243,7 @@ state_pages(){
 		archlinux_page_repostats
 		TESTED=$(query_db "SELECT count(*) FROM sources AS s JOIN results AS r ON s.id=r.package_id WHERE s.architecture='x86_64' AND r.status LIKE '$STATE%';")
 		if [ "$STATE" = "UNKNOWN" ] ; then
+			# untested packages are also state UNKNOWN...
 			UNTESTED=$(query_db "SELECT count(s.name) FROM sources AS s WHERE s.architecture='x86_64' AND s.id NOT IN (SELECT package_id FROM results)")
 			if [ $UNTESTED -ne 0 ] ; then
 				let TESTED=$TESTED+$UNTESTED
@@ -246,6 +258,7 @@ state_pages(){
 				cat $ARCHBASE/$REPOSITORY/$PKG/pkg.html >> $PAGE 2>/dev/null || true
 			done
 			if [ "$STATE" = "UNKNOWN" ] ; then
+				# untested packages are also state UNKNOWN...
 				STATE_PKGS=$(query_db "SELECT s.name FROM sources AS s WHERE s.architecture='x86_64' AND s.suite='$SUITE' AND s.id NOT IN (SELECT package_id FROM results) ORDER BY s.name")
 				for PKG in ${STATE_PKGS} ; do
 					cat $ARCHBASE/$REPOSITORY/$PKG/pkg.html >> $PAGE 2>/dev/null || true
@@ -257,10 +270,47 @@ state_pages(){
 	done
 }
 
+repository_state_pages(){
+	for REPOSITORY in $ARCHLINUX_REPOS ; do
+		SUITE="archlinux_$REPOSITORY"
+		for STATE in FTBFS FTBR DEPWAIT 404 GOOD BLACKLISTED UNKNOWN ; do
+			PAGE=state_${REPOSITORY}_$STATE.html
+			TITLE="Reproducible archlinux, packages in $REPOSITORY in state $STATE"
+			echo "$(date -u) - starting to write page for packages in $REPOSITORY in state $STATE'."
+			archlinux_page_header
+			archlinux_page_repostats
+			TESTED=$(query_db "SELECT count(*) FROM sources AS s JOIN results AS r ON s.id=r.package_id WHERE s.architecture='x86_64' AND s.suite='$SUITE' AND r.status LIKE '$STATE%';")
+			if [ "$STATE" = "UNKNOWN" ] ; then
+				# untested packages are also state UNKNOWN...
+				UNTESTED=$(query_db "SELECT count(s.name) FROM sources AS s WHERE s.architecture='x86_64' AND s.suite='$SUITE' AND s.id NOT IN (SELECT package_id FROM results)")
+				if [ $UNTESTED -ne 0 ] ; then
+					let TESTED=$TESTED+$UNTESTED
+				fi
+			fi
+			write_page "<h2>$TESTED packages in $REPOSITORY in $STATE state</h2>"
+			write_page "    <table><tr><th>repository</th><th>source package</th><th>version</th><th>test result</th><th>test date<br />test duration</th><th>1st build log<br />2nd build log</th></tr>"
+			STATE_PKGS=$(query_db "SELECT s.name FROM sources AS s JOIN results AS r ON s.id=r.package_id WHERE s.architecture='x86_64' AND s.suite='$SUITE' AND r.status LIKE '$STATE%' ORDER BY r.status,s.name")
+			for PKG in ${STATE_PKGS} ; do
+				cat $ARCHBASE/$REPOSITORY/$PKG/pkg.html >> $PAGE 2>/dev/null || true
+			done
+			if [ "$STATE" = "UNKNOWN" ] ; then
+				# untested packages are also state UNKNOWN...
+				STATE_PKGS=$(query_db "SELECT s.name FROM sources AS s WHERE s.architecture='x86_64' AND s.suite='$SUITE' AND s.id NOT IN (SELECT package_id FROM results) ORDER BY s.name")
+				for PKG in ${STATE_PKGS} ; do
+					cat $ARCHBASE/$REPOSITORY/$PKG/pkg.html >> $PAGE 2>/dev/null || true
+				done
+			fi
+			write_page "    </table>"
+			archlinux_page_footer
+		done
+	done
+}
+
 repostats
 single_main_page
 repository_pages
 state_pages
+repository_state_pages
 rm $HTML_REPOSTATS > /dev/null
 echo "$(date -u) - all done."
 
