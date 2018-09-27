@@ -323,7 +323,6 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 *** dont delete packages which are building?
 *** check/make sure that packages which are newer in trunk than repo are only scheduled once
 ** make _archlinux_build.sh
-*** refactor and reuse unregister_build from _build.sh
 *** we share /var/log/jenkins/reproducible-race-conditions.log with debian, is that ok? (else fix maintenance job and handle_race_condition())
 *** make build respect pacman exit code, see FIXME in _html_.sh
 ** html
@@ -336,16 +335,13 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 ** should breakages job look for archlinux breakages?
 
 * rebuilding against the archlinux repos
-** only needs to be done once
+** only needs to be done once using https://github.com/Foxboron/devtools-repro
 ** to not (pacman know about trunk and thus) build trunk, we need to configure asp.
-** wel'll keep building against repo+trunk as we do now (so that archlinux can also benefit from the QA effects)
+** we'll keep building against repo+trunk as we do now (so that archlinux can also benefit from the QA effects)
 
 * fix build.sh:
 ** build2.log doesnt get deleted if build1 fails
 ** -> rename build2.log to $version_build2.log (dont include package name...)
-
-* test against real archlinux pkgs:
-** https://github.com/Foxboron/devtools-repro
 
 * things to be done before enabling more builders:
 ** build in /srv/workspace instead of /tmp (once this has been done reduce /tmp size back to 15G)

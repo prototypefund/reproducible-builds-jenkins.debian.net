@@ -456,6 +456,7 @@ remote_build() {
 		SLEEPTIME=$(echo "$BUILDNR*$BUILDNR*5"|bc)
 		echo "$(date -u) - $NODE seems to be down, sleeping ${SLEEPTIME}min before aborting this job."
 		sleep ${SLEEPTIME}m
+		unregister_build
 		cleanup_all
 		exec /srv/jenkins/bin/abort.sh
 	fi
@@ -465,10 +466,12 @@ remote_build() {
 		ssh -o "Batchmode = yes" -p $PORT $FQDN "rm -r $TMPDIR" || true
 		if [ $RESULT -eq 23 ] ; then
 			echo "$(date -u) - remote job could not end schroot session properly and sent error 23 so we could abort silently."
+			unregister_build
 			cleanup_all
 			exec /srv/jenkins/bin/abort.sh
 		elif [ $RESULT -eq 42 ] ; then
 			echo "$($date -u) - sigh, failure after not being able to verify pgp signatures. work to debug why ahead."
+			unregister_build
 			cleanup_all
 			exec /srv/jenkins/bin/abort.sh
 		else
