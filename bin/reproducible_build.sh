@@ -317,15 +317,6 @@ handle_env_changes() {
 	exit 0
 }
 
-handle_remote_error() {
-	unregister_build
-	MESSAGE="${BUILD_URL}console.log got remote error $1"
-	echo "$(date -u ) - $MESSAGE" | tee -a /var/log/jenkins/reproducible-remote-error.log
-	echo "Sleeping 5m before aborting the job."
-	sleep 5m
-	exit 0
-}
-
 handle_enospace() {
 	unregister_build
 	MESSAGE="${BUILD_URL}console.log hit diskspace issues with $SRCPACKAGE on $SUITE/$ARCH on $1, sleeping 60m."
@@ -744,6 +735,7 @@ remote_build() {
 		rsync -e "ssh -o 'BatchMode = yes' -p $PORT" -r $NODE:$TMPDIR/b$BUILDNR $TMPDIR/
 		local RSYNC_RESULT=$?
 		if [ $RSYNC_RESULT -ne 0 ] ; then
+			unregister_build
 			handle_remote_error "when rsyncing remote build #$BUILDNR results from $NODE"
 		fi
 	fi
@@ -767,6 +759,7 @@ remote_build() {
 		0)  # build succcessfully completed
 			;;
 		*)
+			unregister_build
 			handle_remote_error "with exit code $RESULT from $NODE for build #$BUILDNR for ${SRCPACKAGE} on ${SUITE}/${ARCH}"
 			;;
 	esac

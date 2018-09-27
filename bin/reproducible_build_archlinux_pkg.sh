@@ -30,16 +30,6 @@ cleanup_all() {
 	fi
 }
 
-handle_remote_error() {
-	MESSAGE="${BUILD_URL}console got remote error $1"
-	echo "$(date -u ) - $MESSAGE" | tee -a /var/log/jenkins/reproducible-remote-error.log
-	echo "Sleeping 5m before aborting the job."
-	sleep 5m
-	cleanup_all
-	exec /srv/jenkins/bin/abort.sh
-	exit 0
-}
-
 update_pkg_in_db() {
 	local ARCHLINUX_PKG_PATH=$ARCHBASE/$REPOSITORY/$SRCPACKAGE
 	cd "$ARCHLINUX_PKG_PATH"
@@ -457,25 +447,21 @@ remote_build() {
 		echo "$(date -u) - $NODE seems to be down, sleeping ${SLEEPTIME}min before aborting this job."
 		sleep ${SLEEPTIME}m
 		unregister_build
-		cleanup_all
-		exec /srv/jenkins/bin/abort.sh
+		exit 0
 	fi
 	ssh -o "Batchmode = yes" -p $PORT $FQDN /srv/jenkins/bin/reproducible_build_archlinux_pkg.sh $BUILDNR $REPOSITORY ${SRCPACKAGE} ${TMPDIR} ${SOURCE_DATE_EPOCH}
 	RESULT=$?
 	if [ $RESULT -ne 0 ] ; then
 		ssh -o "Batchmode = yes" -p $PORT $FQDN "rm -r $TMPDIR" || true
 		if [ $RESULT -eq 23 ] ; then
-			echo "$(date -u) - remote job could not end schroot session properly and sent error 23 so we could abort silently."
 			unregister_build
-			cleanup_all
-			exec /srv/jenkins/bin/abort.sh
+			handle_remote_error "job on $NODE could not end schroot session properly and sent error 23 so we could abort silently."
 		elif [ $RESULT -eq 42 ] ; then
-			echo "$($date -u) - sigh, failure after not being able to verify pgp signatures. work to debug why ahead."
 			unregister_build
-			cleanup_all
-			exec /srv/jenkins/bin/abort.sh
+			handle_remote_error "job on $NODE after not being able to verify pgp signatures. work to debug why ahead..."
 		else
-			echo "Warning: remote build failed with exit code $RESULT from $NODE for build #$BUILDNR for ${SRCPACKAGE} from $REPOSITORY."
+			unregister_build
+			handle_remote_error "Warning: remote build failed with exit code $RESULT from $NODE for build #$BUILDNR for ${SRCPACKAGE} from $REPOSITORY."
 		fi
 	fi
 	rsync -e "ssh -o 'Batchmode = yes' -p $PORT" -r $FQDN:$TMPDIR/b$BUILDNR $TMPDIR/
@@ -486,8 +472,8 @@ remote_build() {
 		rsync -e "ssh -o 'Batchmode = yes' -p $PORT" -r $FQDN:$TMPDIR/b$BUILDNR $TMPDIR/
 		RESULT=$?
 		if [ $RESULT -ne 0 ] ; then
-			#handle_remote_error "when rsyncing remote build #$BUILDNR results from $NODE"
-			echo "Warning: error rsyncing remote build #$BUILDNR results from $NODE."
+			unregister_build
+			handle_remote_error "when rsyncing remote build #$BUILDNR results from $NODE"
 		fi
 	fi
 	ls -lR $TMPDIR

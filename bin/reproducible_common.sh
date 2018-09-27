@@ -709,6 +709,14 @@ unregister_build() {
 	NOTIFY=""
 }
 
+handle_remote_error() {
+	MESSAGE="${BUILD_URL}console.log got remote error $1"
+	echo "$(date -u ) - $MESSAGE" | tee -a /var/log/jenkins/reproducible-remote-error.log
+	echo "Sleeping 5m before aborting the job."
+	sleep 5m
+	exit 0
+}
+
 #
 # create the png (and query the db to populate a csv file...)
 #

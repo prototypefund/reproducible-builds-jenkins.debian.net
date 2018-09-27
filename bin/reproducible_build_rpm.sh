@@ -26,15 +26,6 @@ cleanup_all() {
 	rm -f $DUMMY > /dev/null || true
 }
 
-handle_remote_error() {
-	MESSAGE="${BUILD_URL}console got remote error $1"
-	echo "$(date -u ) - $MESSAGE" | tee -a /var/log/jenkins/reproducible-remote-error.log
-	echo "Sleeping 5m before aborting the job."
-	sleep 5m
-	exec /srv/jenkins/bin/abort.sh
-	exit 0
-}
-
 update_mock() {
 	echo "$(date -u ) - checking whether to update mock and yum for $RELEASE ($ARCH) on $HOSTNAME."
 	local STAMP="${RPM_STAMPS}-$RELEASE-$ARCH"
