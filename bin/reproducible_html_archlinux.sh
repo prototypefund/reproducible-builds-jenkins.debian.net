@@ -81,7 +81,7 @@ repostats(){
 			NR_TESTED=$TESTED
 		fi
 		echo "     <tr>" >> $HTML_REPOSTATS
-		echo "      <td><a href='/archlinux/$REPOSITORY.html'>$REPOSITORY</a></td><td>$NR_TESTED</td>" >> $HTML_REPOSTATS
+		echo "      <td><a href='/archlinux/$REPOSITORY.html'>$REPOSITORY</a></td><td><a href='/archlinux/$REPOSITORY.html'>$NR_TESTED</a></td>" >> $HTML_REPOSTATS
 		counter=0
 		for i in $NR_GOOD $NR_FTBR $NR_FTBFS $NR_DEPWAIT $NR_404 $NR_BLACKLISTED $NR_UNKNOWN ; do
 			get_state_from_counter $counter
@@ -132,12 +132,15 @@ repostats(){
 	fi
 	echo "     <tr>" >> $HTML_REPOSTATS
 	echo "      <td><b>all combined</b></td><td>$NR_TESTED</td>" >> $HTML_REPOSTATS
+	counter=0
 	for i in $ARCHLINUX_NR_GOOD $ARCHLINUX_NR_FTBR $ARCHLINUX_NR_FTBFS $ARCHLINUX_NR_DEPWAIT $ARCHLINUX_NR_404 $ARCHLINUX_NR_BLACKLISTED $ARCHLINUX_NR_UNKNOWN ; do
+		get_state_from_counter $counter
+		let counter+=1
 		PERCENT_i=$(echo "scale=1 ; ($i*100/$ARCHLINUX_TESTED)" | bc)
 		if [ "$PERCENT_i" != "0" ] || [ "$i" != "0" ] ; then
-			echo "      <td>$i ($PERCENT_i%)</td>" >> $HTML_REPOSTATS
+			echo "      <td><a href='/archlinux/state_$STATE.html'>$i ($PERCENT_i%)</a></td>" >> $HTML_REPOSTATS
 		else
-			echo "      <td>$i</td>" >> $HTML_REPOSTATS
+			echo "      <td><a href='/archlinux/state_$STATE.html'>$i</a></td>" >> $HTML_REPOSTATS
 		fi
 	done
 	echo "     </tr>" >> $HTML_REPOSTATS
