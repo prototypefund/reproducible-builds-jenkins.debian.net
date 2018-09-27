@@ -531,10 +531,10 @@
                     my_timed: '1 H/2 * * *'
                     my_shellext: ".py"
                 - 'html_archlinux':
-                    my_description: 'Build a simple webpage for Arch Linux reproducibility tests'
-                    my_timed: '1 H/2 * * *'
+                    my_description: 'Build webpages for Arch Linux reproducibility tests'
+                    my_timed: '15,45 * * * *'
                 - 'archlinux_scheduler':
-                    my_description: 'A simple scheduler for for Arch Linux reproducibility tests'
+                    my_description: 'Scheduler for for Arch Linux reproducibility tests'
                     my_timed: '0 H/3 * * *'
                 - 'html_fedora-23_x86_64':
                     my_description: 'Build a simple webpage for Fedora 23 reproducibility tests'
