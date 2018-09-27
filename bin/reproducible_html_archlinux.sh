@@ -36,6 +36,20 @@ WIDTH=1920
 HEIGHT=960
 PAGE=""
 TITLE=""
+STATE=""
+
+get_state_from_counter() {
+	local counter=$1
+	case $counter in
+		0)	STATE=GOOD ;;
+		1)	STATE=FTBR ;;
+		2)	STATE=FTBFS ;;
+		3)	STATE=DEPWAIT ;;
+		4)	STATE=404 ;;
+		5)	STATE=BLACKLISTED ;;
+		6)	STATE=UNKNOWN ;;
+	esac
+}
 
 repostats(){
 	#
@@ -70,15 +84,7 @@ repostats(){
 		echo "      <td><a href='/archlinux/$REPOSITORY.html'>$REPOSITORY</a></td><td>$NR_TESTED</td>" >> $HTML_REPOSTATS
 		counter=0
 		for i in $NR_GOOD $NR_FTBR $NR_FTBFS $NR_DEPWAIT $NR_404 $NR_BLACKLISTED $NR_UNKNOWN ; do
-			case $counter in
-				0)	STATE=GOOD ;;
-				1)	STATE=FTBR ;;
-				2)	STATE=FTBFS ;;
-				3)	STATE=DEPWAIT ;;
-				4)	STATE=404 ;;
-				5)	STATE=BLACKLISTED ;;
-				6)	STATE=UNKNOWN ;;
-			esac
+			get_state_from_counter $counter
 			let counter+=1
 			PERCENT_i=$(echo "scale=1 ; ($i*100/$TESTED)" | bc)
 			if [ "$PERCENT_i" != "0" ] || [ "$i" != "0" ] ; then
