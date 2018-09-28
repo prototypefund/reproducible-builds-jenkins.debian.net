@@ -328,7 +328,7 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 *** create new job to recreate all pkg pages
 *** create json
 ** misc:
-*** we share /var/log/jenkins/reproducible-race-conditions.log and reproducible-remote-error.log with debian, is that ok? (else fix maintenance job and handle_race_condition() and handle_remote_error())
+*** nothing to do here: we share /var/log/jenkins/reproducible-race-conditions.log and reproducible-remote-error.log with debian, is ok? should be. (else fix maintenance job and handle_race_condition() and handle_remote_error())
 *** make build.sh respect pacman exit code, see FIXME in _html_.sh
 *** debian uses a table removed_packages, should this be used here too?
 *** debian uses a table manual_scheduler to limit the amount of packages someone can schedule per day...

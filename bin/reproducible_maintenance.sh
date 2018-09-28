@@ -581,7 +581,7 @@ if [ "$HOSTNAME" = "$MAINNODE" ] && [ $(date -u +%H) -eq 0 ]  ; then
 				fi
 				if grep -q https $PROBLEM ; then
 					echo "$(grep -c https $PROBLEM) entries found:"
-					if [ "$(basename $PROBLEM)" != "reproducible-remote-error.log" ]; then
+					if [ "$(basename $PROBLEM)" != "reproducible-remote-error.log" ] && [ "$(basename $PROBLEM)" != "reproducible-race-conditions.log" ] ; then
 						OTHERPROJECTS=""
 					else
 						OTHERPROJECTS="archlinux fedora"
