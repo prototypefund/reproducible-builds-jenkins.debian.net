@@ -960,23 +960,33 @@ find_in_buildlogs() {
 }
 
 include_icon(){
-	local PNG="$1"
-	local TEXT="$2"
-	local ALT=""
-	case $PNG in
-		error)				ALT="blacklisted" ;;
-		weather-snow)			ALT="depwait" ;;
-		weather-severe-alert)		ALT="404" ;;
-		weather-storm)			ALT="ftbfs" ;;
-		weather-clear)			ALT="reproducible" ;;
-		weather-showers-scattered)	ALT="unreproducible" ;;
+	local STATE=$1
+	local TEXT=$2
+	local ALT=${STATE%%_*}
+	local PNG=
+	ALT=${ALT,,}
+	case $STATE in
+		BLACKLISTED)
+			PNG=error;;
+		DEPWAIT_*)
+			PNG=weather-snow;;
+		404_*)
+			PNG=weather-severe-alert;;
+		FTBFS_*)
+			PNG=weather-storm;;
+		FTBR_*)
+			PNG=weather-showers-scattered ALT=unreproducible ;;
+		GOOD)
+			PNG=weather-clear ALT=reproducible ;;
 	esac
 	echo "       <img src=\"/userContent/static/$PNG.png\" alt=\"$ALT icon\" /> $TEXT" >> $HTML_BUFFER
 }
 
 create_pkg_html() {
 	local ARCHLINUX_PKG_PATH=$ARCHBASE/$REPOSITORY/$SRCPACKAGE
-	HTML_BUFFER=$(mktemp -t archlinuxrb-html-XXXXXXXX)
+	local HTML_BUFFER=$(mktemp -t archlinuxrb-html-XXXXXXXX)
+	local buffer_message
+	local STATE
 
 	local blacklisted=false
 
@@ -1007,83 +1017,90 @@ create_pkg_html() {
 	        # has not yet been merged yet...
 		# FIXME: this has been merged, see http://jlk.fjfi.cvut.cz/arch/manpages/man/makepkg
 
+		# check different states and figure out what the page should look like
 		if $blacklisted ; then
-				echo BLACKLISTED > $ARCHLINUX_PKG_PATH/pkg.state
-				include_icon error blacklisted
+			STATE=BLACKLISTED
+			buffer_message='blacklisted'
 		elif find_in_buildlogs '^error: failed to prepare transaction \(conflicting dependencies\)'; then
-			echo DEPWAIT_0 > $ARCHLINUX_PKG_PATH/pkg.state
-			include_icon weather-snow "could not resolve dependencies as there are conflicts"
+			STATE=DEPWAIT_0
+			buffer_message='could not resolve dependencies as there are conflicts'
 		elif find_in_buildlogs '==> ERROR: (Could not resolve all dependencies|.pacman. failed to install missing dependencies)'; then
 			if find_in_buildlogs 'error: failed to init transaction \(unable to lock database\)'; then
-				echo DEPWAIT_2 > $ARCHLINUX_PKG_PATH/pkg.state
-				include_icon weather-snow "pacman could not lock database"
+				STATE=DEPWAIT_2
+				buffer_message='pacman could not lock database'
 			else
-				echo DEPWAIT_1 > $ARCHLINUX_PKG_PATH/pkg.state
-				include_icon weather-snow "could not resolve dependencies"
+				STATE=DEPWAIT_1
+				buffer_message='could not resolve dependencies'
 			fi
 		elif find_in_buildlogs '^error: unknown package: '; then
-			echo 404_0 > $ARCHLINUX_PKG_PATH/pkg.state
-			include_icon weather-severe-alert "unknown package"
+			STATE=404_0
+			buffer_message='unknown package'
 		elif find_in_buildlogs '(==> ERROR: Failure while downloading|==> ERROR: One or more PGP signatures could not be verified|==> ERROR: One or more files did not pass the validity check|==> ERROR: Integrity checks \(.*\) differ in size from the source array|==> ERROR: Failure while branching|==> ERROR: Failure while creating working copy|Failed to source PKGBUILD.*PKGBUILD)'; then
 			REASON="download failed"
 			EXTRA_REASON=""
-			echo 404_0 > $ARCHLINUX_PKG_PATH/pkg.state
+			STATE=404_0
 			if find_in_buildlogs 'FAILED \(unknown public key'; then
-				echo 404_6 > $ARCHLINUX_PKG_PATH/pkg.state
+				STATE=404_6
 				EXTRA_REASON="to verify source with PGP due to unknown public key"
 			elif find_in_buildlogs 'The requested URL returned error: 403'; then
-				echo 404_2 > $ARCHLINUX_PKG_PATH/pkg.state
+				STATE=404_2
 				EXTRA_REASON="with 403 - forbidden"
 			elif find_in_buildlogs 'The requested URL returned error: 500'; then
-				echo 404_4 > $ARCHLINUX_PKG_PATH/pkg.state
+				STATE=404_4
 				EXTRA_REASON="with 500 - internal server error"
 			elif find_in_buildlogs 'The requested URL returned error: 503'; then
-				echo 404_5 > $ARCHLINUX_PKG_PATH/pkg.state
+				STATE=404_5
 				EXTRA_REASON="with 503 - service unavailable"
 			elif find_in_buildlogs '==> ERROR: One or more PGP signatures could not be verified'; then
-				echo 404_7 > $ARCHLINUX_PKG_PATH/pkg.state
+				STATE=404_7
 				EXTRA_REASON="to verify source with PGP signatures"
 			elif find_in_buildlogs '(SSL certificate problem: unable to get local issuer certificate|^bzr: ERROR: .SSL: CERTIFICATE_VERIFY_FAILED)'; then
-				echo 404_1 > $ARCHLINUX_PKG_PATH/pkg.state
+				STATE=404_1
 				EXTRA_REASON="with SSL problem"
 			elif find_in_buildlogs '==> ERROR: One or more files did not pass the validity check'; then
-				echo 404_8 > $ARCHLINUX_PKG_PATH/pkg.state
+				STATE=404_8
 				REASON="downloaded ok but failed to verify source"
 			elif find_in_buildlogs '==> ERROR: Integrity checks \(.*\) differ in size from the source array'; then
-				echo 404_9 > $ARCHLINUX_PKG_PATH/pkg.state
+				STATE=404_9
 				REASON="Integrity checks differ in size from the source array"
 			elif find_in_buildlogs 'The requested URL returned error: 404'; then
-				echo 404_3 > $ARCHLINUX_PKG_PATH/pkg.state
+				STATE=404_3
 				EXTRA_REASON="with 404 - file not found"
 			elif find_in_buildlogs 'fatal: the remote end hung up unexpectedly'; then
-				echo 404_A > $ARCHLINUX_PKG_PATH/pkg.state
+				STATE=404_A
 				EXTRA_REASON="could not clone git repository"
 			elif find_in_buildlogs 'The requested URL returned error: 504'; then
-				echo 404_B > $ARCHLINUX_PKG_PATH/pkg.state
+				STATE=404_B
 				EXTRA_REASON="with 504 - gateway timeout"
 			elif find_in_buildlogs '==> ERROR: Failure while downloading .* git repo'; then
-				echo 404_C > $ARCHLINUX_PKG_PATH/pkg.state
+				STATE=404_C
 				EXTRA_REASON="from git repo"
 			fi
-			include_icon weather-severe-alert "$REASON $EXTRA_REASON"
+			buffer_message="$REASON $EXTRA_REASON"
 		elif find_in_buildlogs '==> ERROR: (install file .* does not exist or is not a regular file|The download program wget is not installed)'; then
-			echo FTBFS_0 > $ARCHLINUX_PKG_PATH/pkg.state
-			include_icon weather-storm "failed to build, requirements not met"
+			STATE=FTBFS_0
+			buffer_message='failed to build, requirements not met'
 		elif find_in_buildlogs '==> ERROR: A failure occurred in check'; then
-			echo FTBFS_1 > $ARCHLINUX_PKG_PATH/pkg.state
-			include_icon weather-storm "failed to build while running tests"
+			STATE=FTBFS_1
+			buffer_message='failed to build while running tests'
 		elif find_in_buildlogs '==> ERROR: (An unknown error has occurred|A failure occurred in (build|package|prepare))'; then
-			echo FTBFS_2 > $ARCHLINUX_PKG_PATH/pkg.state
-			include_icon weather-storm "failed to build"
+			STATE=FTBFS_2
+			buffer_message='failed to build'
 		elif find_in_buildlogs 'makepkg was killed by timeout after'; then
-			echo FTBFS_3 > $ARCHLINUX_PKG_PATH/pkg.state
-			include_icon weather-storm "failed to build, killed by timeout"
+			STATE=FTBFS_3
+			buffer_message='failed to build, killed by timeout'
 		elif find_in_buildlogs '==> ERROR: .* contains invalid characters:'; then
-			echo FTBFS_4 > $ARCHLINUX_PKG_PATH/pkg.state
-			include_icon weather-storm "failed to build, pkg relations contain invalid characters"
+			STATE=FTBFS_4
+			buffer_message='failed to build, pkg relations contain invalid characters'
 		else
-			echo "       probably failed to build from source, please investigate" >> $HTML_BUFFER
-			echo UNKNOWN > $ARCHLINUX_PKG_PATH/pkg.state
+			STATE=UNKNOWN
+			buffer_message='probably failed to build from source, please investigate'
+		fi
+		# print build failures
+		if [[ $STATE = UNKNOWN ]]; then
+			echo "       $buffer_message" >> $HTML_BUFFER
+		else
+			include_icon $STATE "$buffer_message"
 		fi
 	else
 		local STATE=GOOD
@@ -1095,7 +1112,7 @@ create_pkg_html() {
 				continue
 			elif [ ! -z "$(grep 'build reproducible in our test framework' $ARCHLINUX_PKG_PATH/$ARTIFACT)" ] ; then
 				SOME_GOOD=true
-				include_icon weather-clear "<a href=\"/archlinux/$REPOSITORY/$SRCPACKAGE/$ARTIFACT\">${ARTIFACT:0:-5}</a> is reproducible in our current test framework<br />"
+				include_icon $STATE "<a href=\"/archlinux/$REPOSITORY/$SRCPACKAGE/$ARTIFACT\">${ARTIFACT:0:-5}</a> is reproducible in our current test framework<br />"
 			else
 				# change $STATE unless we have found .buildinfo differences already...
 				if [ "$STATE" != "FTBR_0" ] ; then
@@ -1107,21 +1124,13 @@ create_pkg_html() {
 					STATE=FTBR_0
 					EXTRA_REASON=" with variations in .BUILDINFO"
 				fi
-				include_icon weather-showers-scattered "<a href=\"/archlinux/$REPOSITORY/$SRCPACKAGE/$ARTIFACT\">${ARTIFACT:0:-5}</a> is unreproducible$EXTRA_REASON<br />"
+				include_icon $STATE "<a href=\"/archlinux/$REPOSITORY/$SRCPACKAGE/$ARTIFACT\">${ARTIFACT:0:-5}</a> is unreproducible$EXTRA_REASON<br />"
 			fi
 		done
 		# we only count source packages…
-		case $STATE in
-			GOOD)		echo GOOD > $ARCHLINUX_PKG_PATH/pkg.state	;;
-			FTBR_0)		echo FTBR_0 > $ARCHLINUX_PKG_PATH/pkg.state	;;
-			FTBR_1)		if $SOME_GOOD ; then
-						echo FTBR_1 > $ARCHLINUX_PKG_PATH/pkg.state
-					else
-						echo FTBR_2 > $ARCHLINUX_PKG_PATH/pkg.state
-					fi
-					;;
-			*)		;;
-		esac
+		if [[ $STATE = FTBR_1 && $SOME_GOOD = true ]]; then
+			STATE=FTBR_2
+		fi
 	fi
 	echo "      </td>" >> $HTML_BUFFER
 	echo "      <td>$DATE" >> $HTML_BUFFER
@@ -1150,6 +1159,5 @@ create_pkg_html() {
 	echo "     </tr>" >> $HTML_BUFFER
 	mv $HTML_BUFFER $ARCHLINUX_PKG_PATH/pkg.html
 	chmod 644 $ARCHLINUX_PKG_PATH/pkg.html
+	echo $STATE > $ARCHLINUX_PKG_PATH/pkg.state
 }
-
-
