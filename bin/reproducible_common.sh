@@ -776,7 +776,7 @@ create_png_from_table() {
 		# not sure if it's worth to generate the following query...
 		WHERE_EXTRA="AND architecture='$ARCH'"
 
-		# This query becomes much more obnoxious when gaining
+		# This query became much more obnoxious when gaining
 		# compatibility with postgres
 		query_to_csv "SELECT stats.datum,
 			 COALESCE(reproducible_stretch,0) AS reproducible_stretch,
