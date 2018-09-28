@@ -208,13 +208,20 @@ update_archlinux_repositories() {
 	if [ $new -ne 0 ] || [ $updated -ne 0 ] || [ $old -ne 0 ] || [ $depwait404 -ne 0 ] ; then
 		message="scheduled"
 		if [ $new -ne 0 ] ; then
-			message="$message $new entirely new packages"
+			message="$message $new new package"
+			if [ $new -gt 1 ] ;
+			message="${message}s"
+			fi
 		fi
 		if [ $new -ne 0 ] && [ $updated -ne 0 ] ; then
 			message="$message and"
 		fi
 		if [ $updated -ne 0 ] ; then
-			message="$message $updated packages with newer versions"
+			if [ $updated -gt 1 ] ; then
+				message="$message $updated packages with newer versions"
+			else
+				message="$message $updated package with newer version"
+			fi
 		fi
 		if [ $old -ne 0 ] && ( [ $new -ne 0 ] || [ $updated -ne 0 ] ) ; then
 			msg_old=", plus $old already tested ones"
@@ -224,9 +231,9 @@ update_archlinux_repositories() {
 			msg_old=""
 		fi
 		if [ $depwait404 -ne 0 ] && ( [ $new -ne 0 ] || [ $updated -ne 0 ] || [ $old -ne 0 ] ) ; then
-			msg_depwait404=" and $depwait404 packages with unresolved dependencies or 404 problems"
+			msg_depwait404=" and $depwait404 packages with dependency or 404 problems"
 		elif [ $depwait404 -ne 0 ] ; then
-			msg_depwait404=" $depwait404 packages with unresolved dependencies or 404 problems"
+			msg_depwait404=" $depwait404 packages with dependency or 404 problems"
 		else
 			msg_depwait404=""
 		fi
