@@ -60,6 +60,10 @@ update_pkg_in_db() {
 
 }
 
+find_in_buildlogs() {
+    egrep -q "$1" $ARCHLINUX_PKG_PATH/build1.log $ARCHLINUX_PKG_PATH/build2.log 2>/dev/null
+}
+
 create_pkg_html() {
 	local ARCHLINUX_PKG_PATH=$ARCHBASE/$REPOSITORY/$SRCPACKAGE
 	local HTML_BUFFER=$(mktemp -t archlinuxrb-html-XXXXXXXX)
@@ -96,72 +100,72 @@ create_pkg_html() {
 		if $blacklisted ; then
 				echo BLACKLISTED > $ARCHLINUX_PKG_PATH/pkg.state
 				echo "       <img src=\"/userContent/static/error.png\" alt=\"blacklisted icon\" /> blacklisted" >> $HTML_BUFFER
-		elif [ ! -z "$(egrep '^error: failed to prepare transaction \(conflicting dependencies\)' $ARCHLINUX_PKG_PATH/build1.log $ARCHLINUX_PKG_PATH/build2.log 2>/dev/null)" ] ; then
+		elif find_in_buildlogs '^error: failed to prepare transaction \(conflicting dependencies\)'; then
 			echo DEPWAIT_0 > $ARCHLINUX_PKG_PATH/pkg.state
 			echo "       <img src=\"/userContent/static/weather-snow.png\" alt=\"depwait icon\" /> could not resolve dependencies as there are conflicts" >> $HTML_BUFFER
-		elif [ ! -z "$(egrep '==> ERROR: (Could not resolve all dependencies|.pacman. failed to install missing dependencies)' $ARCHLINUX_PKG_PATH/build1.log $ARCHLINUX_PKG_PATH/build2.log 2>/dev/null)" ] ; then
-			if [ ! -z "$(grep 'error: failed to init transaction (unable to lock database)' $ARCHLINUX_PKG_PATH/build1.log $ARCHLINUX_PKG_PATH/build2.log 2>/dev/null)" ] ; then
+		elif find_in_buildlogs '==> ERROR: (Could not resolve all dependencies|.pacman. failed to install missing dependencies)'; then
+			if find_in_buildlogs 'error: failed to init transaction \(unable to lock database\)'; then
 				echo DEPWAIT_2 > $ARCHLINUX_PKG_PATH/pkg.state
 				echo "       <img src=\"/userContent/static/weather-snow.png\" alt=\"depwait icon\" /> pacman could not lock database" >> $HTML_BUFFER
 			else
 				echo DEPWAIT_1 > $ARCHLINUX_PKG_PATH/pkg.state
 				echo "       <img src=\"/userContent/static/weather-snow.png\" alt=\"depwait icon\" /> could not resolve dependencies" >> $HTML_BUFFER
 			fi
-		elif [ ! -z "$(egrep '^error: unknown package: ' $ARCHLINUX_PKG_PATH/build1.log $ARCHLINUX_PKG_PATH/build2.log 2>/dev/null)" ] ; then
+		elif find_in_buildlogs '^error: unknown package: '; then
 			echo 404_0 > $ARCHLINUX_PKG_PATH/pkg.state
 			echo "       <img src=\"/userContent/static/weather-severe-alert.png\" alt=\"404 icon\" /> unknown package" >> $HTML_BUFFER
-		elif [ ! -z "$(egrep '(==> ERROR: Failure while downloading|==> ERROR: One or more PGP signatures could not be verified|==> ERROR: One or more files did not pass the validity check|==> ERROR: Integrity checks \(.*\) differ in size from the source array|==> ERROR: Failure while branching|==> ERROR: Failure while creating working copy|Failed to source PKGBUILD.*PKGBUILD)' $ARCHLINUX_PKG_PATH/build1.log $ARCHLINUX_PKG_PATH/build2.log 2>/dev/null)" ] ; then
+		elif find_in_buildlogs '(==> ERROR: Failure while downloading|==> ERROR: One or more PGP signatures could not be verified|==> ERROR: One or more files did not pass the validity check|==> ERROR: Integrity checks \(.*\) differ in size from the source array|==> ERROR: Failure while branching|==> ERROR: Failure while creating working copy|Failed to source PKGBUILD.*PKGBUILD)'; then
 			REASON="download failed"
 			EXTRA_REASON=""
 			echo 404_0 > $ARCHLINUX_PKG_PATH/pkg.state
-			if [ ! -z "$(grep 'FAILED (unknown public key' $ARCHLINUX_PKG_PATH/build1.log $ARCHLINUX_PKG_PATH/build2.log 2>/dev/null)" ] ; then
+			if find_in_buildlogs 'FAILED \(unknown public key'; then
 				echo 404_6 > $ARCHLINUX_PKG_PATH/pkg.state
 				EXTRA_REASON="to verify source with PGP due to unknown public key"
-			elif [ ! -z "$(grep 'The requested URL returned error: 403' $ARCHLINUX_PKG_PATH/build1.log $ARCHLINUX_PKG_PATH/build2.log 2>/dev/null)" ] ; then
+			elif find_in_buildlogs 'The requested URL returned error: 403'; then
 				echo 404_2 > $ARCHLINUX_PKG_PATH/pkg.state
 				EXTRA_REASON="with 403 - forbidden"
-			elif [ ! -z "$(grep 'The requested URL returned error: 500' $ARCHLINUX_PKG_PATH/build1.log $ARCHLINUX_PKG_PATH/build2.log 2>/dev/null)" ] ; then
+			elif find_in_buildlogs 'The requested URL returned error: 500'; then
 				echo 404_4 > $ARCHLINUX_PKG_PATH/pkg.state
 				EXTRA_REASON="with 500 - internal server error"
-			elif [ ! -z "$(grep 'The requested URL returned error: 503' $ARCHLINUX_PKG_PATH/build1.log $ARCHLINUX_PKG_PATH/build2.log 2>/dev/null)" ] ; then
+			elif find_in_buildlogs 'The requested URL returned error: 503'; then
 				echo 404_5 > $ARCHLINUX_PKG_PATH/pkg.state
 				EXTRA_REASON="with 503 - service unavailable"
-			elif [ ! -z "$(egrep '==> ERROR: One or more PGP signatures could not be verified' $ARCHLINUX_PKG_PATH/build1.log $ARCHLINUX_PKG_PATH/build2.log 2>/dev/null)" ] ; then
+			elif find_in_buildlogs '==> ERROR: One or more PGP signatures could not be verified'; then
 				echo 404_7 > $ARCHLINUX_PKG_PATH/pkg.state
 				EXTRA_REASON="to verify source with PGP signatures"
-			elif [ ! -z "$(egrep '(SSL certificate problem: unable to get local issuer certificate|^bzr: ERROR: .SSL: CERTIFICATE_VERIFY_FAILED)' $ARCHLINUX_PKG_PATH/build1.log $ARCHLINUX_PKG_PATH/build2.log 2>/dev/null)" ] ; then
+			elif find_in_buildlogs '(SSL certificate problem: unable to get local issuer certificate|^bzr: ERROR: .SSL: CERTIFICATE_VERIFY_FAILED)'; then
 				echo 404_1 > $ARCHLINUX_PKG_PATH/pkg.state
 				EXTRA_REASON="with SSL problem"
-			elif [ ! -z "$(egrep '==> ERROR: One or more files did not pass the validity check' $ARCHLINUX_PKG_PATH/build1.log $ARCHLINUX_PKG_PATH/build2.log 2>/dev/null)" ] ; then
+			elif find_in_buildlogs '==> ERROR: One or more files did not pass the validity check'; then
 				echo 404_8 > $ARCHLINUX_PKG_PATH/pkg.state
 				REASON="downloaded ok but failed to verify source"
-			elif [ ! -z "$(egrep '==> ERROR: Integrity checks \(.*\) differ in size from the source array' $ARCHLINUX_PKG_PATH/build1.log $ARCHLINUX_PKG_PATH/build2.log 2>/dev/null)" ] ; then
+			elif find_in_buildlogs '==> ERROR: Integrity checks \(.*\) differ in size from the source array'; then
 				echo 404_9 > $ARCHLINUX_PKG_PATH/pkg.state
 				REASON="Integrity checks differ in size from the source array"
-			elif [ ! -z "$(grep 'The requested URL returned error: 404' $ARCHLINUX_PKG_PATH/build1.log $ARCHLINUX_PKG_PATH/build2.log 2>/dev/null)" ] ; then
+			elif find_in_buildlogs 'The requested URL returned error: 404'; then
 				echo 404_3 > $ARCHLINUX_PKG_PATH/pkg.state
 				EXTRA_REASON="with 404 - file not found"
-			elif [ ! -z "$(egrep 'fatal: the remote end hung up unexpectedly' $ARCHLINUX_PKG_PATH/build1.log $ARCHLINUX_PKG_PATH/build2.log 2>/dev/null)" ] ; then
+			elif find_in_buildlogs 'fatal: the remote end hung up unexpectedly'; then
 				echo 404_A > $ARCHLINUX_PKG_PATH/pkg.state
 				EXTRA_REASON="could not clone git repository"
-			elif [ ! -z "$(grep 'The requested URL returned error: 504' $ARCHLINUX_PKG_PATH/build1.log $ARCHLINUX_PKG_PATH/build2.log 2>/dev/null)" ] ; then
+			elif find_in_buildlogs 'The requested URL returned error: 504'; then
 				echo 404_B > $ARCHLINUX_PKG_PATH/pkg.state
 				EXTRA_REASON="with 504 - gateway timeout"
 			fi
 			echo "       <img src=\"/userContent/static/weather-severe-alert.png\" alt=\"404 icon\" /> $REASON $EXTRA_REASON" >> $HTML_BUFFER
-		elif [ ! -z "$(egrep '==> ERROR: (install file .* does not exist or is not a regular file|The download program wget is not installed)' $ARCHLINUX_PKG_PATH/build1.log 2>/dev/null)" ] ; then
+		elif find_in_buildlogs '==> ERROR: (install file .* does not exist or is not a regular file|The download program wget is not installed)'; then
 			echo FTBFS_0 > $ARCHLINUX_PKG_PATH/pkg.state
 			echo "       <img src=\"/userContent/static/weather-storm.png\" alt=\"ftbfs icon\" /> failed to build, requirements not met" >> $HTML_BUFFER
-		elif [ ! -z "$(egrep '==> ERROR: A failure occurred in check' $ARCHLINUX_PKG_PATH/build1.log $ARCHLINUX_PKG_PATH/build2.log 2>/dev/null)" ] ; then
+		elif find_in_buildlogs '==> ERROR: A failure occurred in check'; then
 			echo FTBFS_1 > $ARCHLINUX_PKG_PATH/pkg.state
 			echo "       <img src=\"/userContent/static/weather-storm.png\" alt=\"ftbfs icon\" /> failed to build while running tests" >> $HTML_BUFFER
-		elif [ ! -z "$(egrep '==> ERROR: (An unknown error has occurred|A failure occurred in (build|package|prepare))' $ARCHLINUX_PKG_PATH/build1.log $ARCHLINUX_PKG_PATH/build2.log 2>/dev/null)" ] ; then
+		elif find_in_buildlogs '==> ERROR: (An unknown error has occurred|A failure occurred in (build|package|prepare))'; then
 			echo FTBFS_2 > $ARCHLINUX_PKG_PATH/pkg.state
 			echo "       <img src=\"/userContent/static/weather-storm.png\" alt=\"ftbfs icon\" /> failed to build" >> $HTML_BUFFER
-		elif [ ! -z "$(egrep 'makepkg was killed by timeout after' $ARCHLINUX_PKG_PATH/build1.log $ARCHLINUX_PKG_PATH/build2.log 2>/dev/null)" ] ; then
+		elif find_in_buildlogs 'makepkg was killed by timeout after'; then
 			echo FTBFS_3 > $ARCHLINUX_PKG_PATH/pkg.state
 			echo "       <img src=\"/userContent/static/weather-storm.png\" alt=\"ftbfs icon\" /> failed to build, killed by timeout" >> $HTML_BUFFER
-		elif [ ! -z "$(egrep '==> ERROR: .* contains invalid characters:' $ARCHLINUX_PKG_PATH/build1.log $ARCHLINUX_PKG_PATH/build2.log 2>/dev/null)" ] ; then
+		elif find_in_buildlogs '==> ERROR: .* contains invalid characters:'; then
 			echo FTBFS_4 > $ARCHLINUX_PKG_PATH/pkg.state
 			echo "       <img src=\"/userContent/static/weather-storm.png\" alt=\"ftbfs icon\" /> failed to build, pkg relations contain invalid characters" >> $HTML_BUFFER
 		else
