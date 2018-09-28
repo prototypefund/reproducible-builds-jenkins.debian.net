@@ -50,7 +50,7 @@ done
 
 echo
 if [ ! -z "$SUCCESS" ] ; then
-	MESSAGE="Manually scheduled these packages in $SUITE:$SUCCESS"
+	MESSAGE="Manually scheduled in $SREPOSITORY:$SUCCESS"
 	echo "$MESSAGE"
 	irc_message archlinux-reproducible "$MESSAGE"
 fi
