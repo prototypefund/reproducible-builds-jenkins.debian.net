@@ -139,6 +139,9 @@ create_pkg_html() {
 			elif [ ! -z "$(egrep 'fatal: the remote end hung up unexpectedly' $ARCHLINUX_PKG_PATH/build1.log $ARCHLINUX_PKG_PATH/build2.log 2>/dev/null)" ] ; then
 				echo 404_A > $ARCHLINUX_PKG_PATH/pkg.state
 				EXTRA_REASON="could not clone git repository"
+			elif [ ! -z "$(grep 'The requested URL returned error: 504' $ARCHLINUX_PKG_PATH/build1.log $ARCHLINUX_PKG_PATH/build2.log 2>/dev/null)" ] ; then
+				echo 404_B > $ARCHLINUX_PKG_PATH/pkg.state
+				EXTRA_REASON="with 504 - gateway timeout"
 			fi
 			echo "       <img src=\"/userContent/static/weather-severe-alert.png\" alt=\"404 icon\" /> $REASON $EXTRA_REASON" >> $HTML_BUFFER
 		elif [ ! -z "$(egrep '==> ERROR: (install file .* does not exist or is not a regular file|The download program wget is not installed)' $ARCHLINUX_PKG_PATH/build1.log 2>/dev/null)" ] ; then
