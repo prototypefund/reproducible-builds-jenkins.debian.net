@@ -100,8 +100,13 @@ create_pkg_html() {
 			echo DEPWAIT_0 > $ARCHLINUX_PKG_PATH/pkg.state
 			echo "       <img src=\"/userContent/static/weather-snow.png\" alt=\"depwait icon\" /> could not resolve dependencies as there are conflicts" >> $HTML_BUFFER
 		elif [ ! -z "$(egrep '==> ERROR: (Could not resolve all dependencies|.pacman. failed to install missing dependencies)' $ARCHLINUX_PKG_PATH/build1.log $ARCHLINUX_PKG_PATH/build2.log 2>/dev/null)" ] ; then
-			echo DEPWAIT_1 > $ARCHLINUX_PKG_PATH/pkg.state
-			echo "       <img src=\"/userContent/static/weather-snow.png\" alt=\"depwait icon\" /> could not resolve dependencies" >> $HTML_BUFFER
+			if [ ! -z "$(grep 'error: failed to init transaction (unable to lock database)' $ARCHLINUX_PKG_PATH/build1.log $ARCHLINUX_PKG_PATH/build2.log 2>/dev/null)" ] ; then
+				echo DEPWAIT_2 > $ARCHLINUX_PKG_PATH/pkg.state
+				echo "       <img src=\"/userContent/static/weather-snow.png\" alt=\"depwait icon\" /> pacman could not lock database" >> $HTML_BUFFER
+			else
+				echo DEPWAIT_1 > $ARCHLINUX_PKG_PATH/pkg.state
+				echo "       <img src=\"/userContent/static/weather-snow.png\" alt=\"depwait icon\" /> could not resolve dependencies" >> $HTML_BUFFER
+			fi
 		elif [ ! -z "$(egrep '^error: unknown package: ' $ARCHLINUX_PKG_PATH/build1.log $ARCHLINUX_PKG_PATH/build2.log 2>/dev/null)" ] ; then
 			echo 404_0 > $ARCHLINUX_PKG_PATH/pkg.state
 			echo "       <img src=\"/userContent/static/weather-severe-alert.png\" alt=\"404 icon\" /> unknown package" >> $HTML_BUFFER

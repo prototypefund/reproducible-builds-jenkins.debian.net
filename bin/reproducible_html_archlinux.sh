@@ -18,8 +18,8 @@ echo "$(date -u) - starting."
 DATE=$(date -u +'%Y-%m-%d')
 YESTERDAY=$(date '+%Y-%m-%d' -d "-1 day")
 MEMBERS_FTBFS="0 1 2 3 4"
-MEMBERS_DEPWAIT="0 1"
-MEMBERS_404="0 1 2 3 4 5 6 7 8 9 A"
+MEMBERS_DEPWAIT="0 1 2"
+MEMBERS_404="0 1 2 3 4 5 6 7 8 9 A B"
 MEMBERS_FTBR="0 1 2"
 HTML_BUFFER=$(mktemp -t archlinuxrb-html-XXXXXXXX)
 HTML_REPOSTATS=$(mktemp -t archlinuxrb-html-XXXXXXXX)
