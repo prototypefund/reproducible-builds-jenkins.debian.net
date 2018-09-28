@@ -76,6 +76,11 @@ fixup_shm
 fixup_mtu
 
 #
+# configure iptables to drop incoming UDP packets
+#
+iptables -I INPUT -p udp --dport 111 -j DROP
+
+#
 # put schroots on tmpfs for non debian hosts
 #
 case $(hostname) in
