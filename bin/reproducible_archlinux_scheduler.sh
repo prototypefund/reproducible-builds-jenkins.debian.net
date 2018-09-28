@@ -141,11 +141,11 @@ update_archlinux_repositories() {
 
 	#
 	# schedule up to $MAX packages in DEPWAIT_ or 404_ states 
-	# (which have been tried at least two days ago)
+	# (which have been tried at least 24h ago)
 	#
 	echo "$(date -u ) - should we schedule packages in DEPWAIT_ or 404_ states?"
 	local MAX=350
-	local MINDATE=$(date -u +"%Y-%m-%d %H:%M" -d "2 days ago")
+	local MINDATE=$(date -u +"%Y-%m-%d %H:%M" -d "24 hours ago")
 	local SCHDATE=$(date -u +"%Y-%m-%d %H:%M" -d "7 days")
 	QUERY="SELECT s.id FROM sources AS s
 		JOIN results as r on s.id=r.package_id
