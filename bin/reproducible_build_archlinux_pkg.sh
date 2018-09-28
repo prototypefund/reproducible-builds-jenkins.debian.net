@@ -401,6 +401,9 @@ second_build() {
 	export LC_ALL="fr_CH.UTF-8"
 	umask 0002
 	__END__
+	# create group and user
+	schroot --run-session -c $SESSION --directory "$BUILDDIR" -u root -- groupadd build2
+	schroot --run-session -c $SESSION --directory "$BUILDDIR" -u root -- useradd -g build2 build2
 	# some more output for debugging
 	set -x
 	# remove possible lock in our local session (happens when root maintenance update running while session starts)
@@ -416,7 +419,7 @@ second_build() {
 	echo $VERSION > $TMPDIR/b2/$SRCPACKAGE/build2.version
 	# nicely run makepkg with a timeout of $TIMEOUT hours
 	timeout -k $TIMEOUT.1h ${TIMEOUT}h /usr/bin/ionice -c 3 /usr/bin/nice \
-		schroot --run-session -c $SESSION --directory "$BUILDDIR/$ACTUAL_SRCPACKAGE/trunk" -- bash -l -c "$MAKEPKG_ENV_VARS makepkg $MAKEPKG_OPTIONS 2>&1" | tee -a $LOG
+		schroot --run-session -c $SESSION --directory "$BUILDDIR/$ACTUAL_SRCPACKAGE/trunk" -u root -- su -c "bash -l -c '$MAKEPKG_ENV_VARS makepkg $MAKEPKG_OPTIONS 2>&1'" build2 | tee -a $LOG
 	PRESULT=${PIPESTATUS[0]}
 	if [ $PRESULT -eq 124 ] ; then
 		echo "$(date -u) - makepkg was killed by timeout after ${TIMEOUT}h." | tee -a $LOG
