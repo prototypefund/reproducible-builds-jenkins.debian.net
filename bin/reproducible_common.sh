@@ -486,6 +486,10 @@ write_variation_table() {
 		write_page "<tr><td>user's <a href="https://en.wikipedia.org/wiki/Gecos_field">GECOS</a></td><td>first user,first room,first work-phone,first home-phone,first other</td><td>second user,second room,second work-phone,second home-phone,second other</td></tr>"
 		write_page "<tr><td>env DEB_BUILD_OPTIONS</td><td>DEB_BUILD_OPTIONS=\"parallel=XXX\"<br />&nbsp;&nbsp;XXX on amd64: 16 or 15<br />&nbsp;&nbsp;XXX on i386: 10 or 9<br />&nbsp;&nbsp;XXX on armhf: 8, 4 or 2</td><td>DEB_BUILD_OPTIONS=\"parallel=YYY\"<br />&nbsp;&nbsp;YYY on amd64: 16 or 15 (!= the first build)<br />&nbsp;&nbsp;YYY on i386: 10 or 9 (!= the first build)<br />&nbsp;&nbsp;YYY is the same as XXX on arm64<br />&nbsp;&nbsp;YYY on armhf: 8, 4, or 2 (not varied systematically)</td></tr>"
 		write_page "<tr><td>UTS namespace</td><td><em>shared with the host</em></td><td><em>modified using</em> /usr/bin/unshare --uts</td></tr>"
+	elif [ "$1" = "Arch Linux" ]  ; then
+		write_page "<tr><td>env USER</td><td>jenkins</td><td>build 2</td></tr>"
+		write_page "<tr><td>user/uid</td><td>jenkins/103</td><td>build2/1235</td></tr>"
+		write_page "<tr><td>group/gid</td><td>jenkins/105</td><td>build2/1235</td></tr>"
 	else
 		write_page "<tr><td>env USER</td><td colspan=\"2\"> is not yet varied between rebuilds of $1.</td></tr>"
 		write_page "<tr><td>uid</td><td colspan=\"2\"> is not yet varied between rebuilds of $1.</td></tr>"
