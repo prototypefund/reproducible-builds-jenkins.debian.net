@@ -319,20 +319,19 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 
 * use db - see https://tests.reproducible-builds.org/reproducibledb.html
 ** scheduler.sh:
-*** comparing versions is probably needed: if its not empty it must be higher (due to repo constraints), but it can be even higher than in the repo, because we build trunk
 *** dont delete packages which are building?
-*** check/make sure that packages which are newer in trunk than repo are only scheduled once (they are not scheduled when trunk is updated at all... we need to use asp to find that out)
+*** use asp to update trunk packages?
 ** html:
 *** leave all pkg.html files, delete them (much) later, then check all pkg.* files are gone
 *** recreate them newly as index.html
 *** create new job to recreate all pkg pages
 *** create json
 ** misc:
-*** nothing to do here: we share /var/log/jenkins/reproducible-race-conditions.log and reproducible-remote-error.log with debian, is ok? should be. (else fix maintenance job and handle_race_condition() and handle_remote_error())
 *** make build.sh respect pacman exit code, see FIXME in _html_.sh
+*** comparing versions (in scheduler) is probably needed: if its not empty it must be higher (due to repo constraints), but it can be even higher than in the repo, because we build trunk
 *** debian uses a table removed_packages, should this be used here too?
 *** debian uses a table manual_scheduler to limit the amount of packages someone can schedule per day...
-*** should breakages job look for archlinux breakages?
+*** should breakages job look for archlinux breakages? for which case
 ** using notes.git could be next
 
 * rebuilding against the archlinux repos

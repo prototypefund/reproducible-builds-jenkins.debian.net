@@ -408,6 +408,7 @@ second_build() {
 	# create group and user
 	schroot --run-session -c $SESSION --directory "$BUILDDIR" -u root -- groupadd build2
 	schroot --run-session -c $SESSION --directory "$BUILDDIR" -u root -- useradd -g build2 build2
+	schroot --run-session -c $SESSION --directory "$BUILDDIR" -u root -- chown -R build2:build2 "$BUILDDIR"
 	# some more output for debugging
 	set -x
 	# remove possible lock in our local session (happens when root maintenance update running while session starts)
