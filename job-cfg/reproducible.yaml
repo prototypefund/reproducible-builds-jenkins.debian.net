@@ -22,8 +22,8 @@
     triggers:
       - timed: '{my_timed}'
     logrotate: &logrotate
-      daysToKeep: 90
-      numToKeep: 150
+      daysToKeep: 60
+      numToKeep: 50
       artifactDaysToKeep: -1
       artifactNumToKeep: -1
     builders:
@@ -73,7 +73,7 @@
           timeout: 1560
     logrotate:
       daysToKeep: 3
-      numToKeep: 300
+      numToKeep: 150
       artifactDaysToKeep: -1
       artifactNumToKeep: -1
     publishers:

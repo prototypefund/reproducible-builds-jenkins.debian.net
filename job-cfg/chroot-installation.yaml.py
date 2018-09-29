@@ -247,7 +247,7 @@ data.append(
                         'logrotate': {   'artifactDaysToKeep': -1,
                                          'artifactNumToKeep': -1,
                                          'daysToKeep': 120,
-                                         'numToKeep': 150},
+                                         'numToKeep': 50},
                         'name': 'chroot-installation',
                         'properties': [   {   'sidebar': {   'icon': '/userContent/images/debian-swirl-24x24.png',
                                                              'text': 'About jenkins.debian.net',
