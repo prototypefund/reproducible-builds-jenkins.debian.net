@@ -209,8 +209,8 @@ update_archlinux_repositories() {
 		message="scheduled"
 		if [ $new -ne 0 ] ; then
 			message="$message $new new package"
-			if [ $new -gt 1 ] ;
-			message="${message}s"
+			if [ $new -gt 1 ] ; then
+				message="${message}s"
 			fi
 		fi
 		if [ $new -ne 0 ] && [ $updated -ne 0 ] ; then
