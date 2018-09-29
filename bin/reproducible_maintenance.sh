@@ -117,6 +117,7 @@ if [ "$HOSTNAME" = "$MAINNODE" ] ; then
 	#
 	echo "$(date -u) - Looking for unhealthy nodes."
 	cd ~/jobs
+	SICK=""
 	for i in reproducible_node_health_check_* ; do
 		NODE_ALIAS=$(echo $i | cut -d '_' -f6)
 		NODE_ARCH=$(echo $i | cut -d '_' -f5)
@@ -147,14 +148,21 @@ if [ "$HOSTNAME" = "$MAINNODE" ] ; then
 			else
 				echo $NODE >> ~/offline_nodes
 				echo " so $NODE has (temporarily) been marked as offline now."
-				irc_message reproducible-builds "$NODE has health problems and has temporarily been marked as offline. To make this permanent, edit jenkins-home/offline_nodes in git."
-
+				SICK="$SICK $NODE"
 			fi
 		else
 			echo "$NODE is doing fine, good."
 		fi
 		cd ../..
 	done
+	if [ -n "$SICK" ] ; then
+		if echo "$SICK" | grep -q ' ' 2>/dev/null ; then
+			MESSAGE="$NODE have health problems and have temporarily been marked as offline."
+		else
+			MESSAGE="$NODE has health problems and has temporarily been marked as offline."
+		fi
+		irc_message reproducible-builds "$MESSAGE To make this permanent, edit jenkins-home/offline_nodes in git."
+	fi
 fi
 
 echo "$(date -u) - updating the schroots and pbuilder now..."
