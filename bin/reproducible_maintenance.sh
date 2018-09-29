@@ -157,9 +157,9 @@ if [ "$HOSTNAME" = "$MAINNODE" ] ; then
 	done
 	if [ -n "$SICK" ] ; then
 		if echo "$SICK" | grep -q ' ' 2>/dev/null ; then
-			MESSAGE="$NODE have health problems and have temporarily been marked as offline."
+			MESSAGE="$SICK have health problems and have temporarily been marked as offline."
 		else
-			MESSAGE="$NODE has health problems and has temporarily been marked as offline."
+			MESSAGE="$SICK has health problems and has temporarily been marked as offline."
 		fi
 		irc_message reproducible-builds "$MESSAGE To make this permanent, edit jenkins-home/offline_nodes in git."
 	fi
