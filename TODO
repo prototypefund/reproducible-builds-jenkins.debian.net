@@ -324,6 +324,7 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 ** html:
 *** leave all pkg.html files, delete them (much) later, then check all pkg.* files are gone
 *** recreate them newly as index.html
+**** provide links to debian pages if same package name exist
 *** create new job to recreate all pkg pages
 *** create json
 ** misc:

@@ -37,6 +37,8 @@ HEIGHT=960
 PAGE=""
 TITLE=""
 STATE=""
+REPOSITORY=""
+PKG=""
 
 get_state_from_counter() {
 	local counter=$1
@@ -49,6 +51,15 @@ get_state_from_counter() {
 		5)	STATE=BLACKLISTED ;;
 		6)	STATE=UNKNOWN ;;
 	esac
+}
+
+
+include_pkg_html_in_page(){
+	cat $ARCHBASE/$REPOSITORY/$PKG/pkg.html >> $PAGE 2>/dev/null || true
+}
+
+include_pkg_table_header_in_page(){
+	write_page "    <table><tr><th>repository</th><th>source package</th><th>version</th><th>test result</th><th>test date<br />test duration</th><th>1st build log<br />2nd build log</th></tr>"
 }
 
 repostats(){
@@ -233,10 +244,10 @@ repository_pages(){
 		SUITE="archlinux_$REPOSITORY"
 		TESTED=$(query_db "SELECT count(*) FROM sources AS s JOIN results AS r ON s.id=r.package_id WHERE s.architecture='x86_64' AND s.suite='$SUITE';")
 		write_page "<h2>$TESTED packages in repository $REPOSITORY</h2>"
-		write_page "    <table><tr><th>repository</th><th>source package</th><th>version</th><th>test result</th><th>test date<br />test duration</th><th>1st build log<br />2nd build log</th></tr>"
+		include_pkg_table_header_in_page
 		REPO_PKGS=$(query_db "SELECT s.name FROM sources AS s JOIN results AS r ON s.id=r.package_id WHERE s.architecture='x86_64' AND s.suite='$SUITE' ORDER BY r.status,s.name")
 		for PKG in $REPO_PKGS ; do
-			cat $ARCHBASE/$REPOSITORY/$PKG/pkg.html >> $PAGE 2>/dev/null || true
+			include_pkg_html_in_page
 		done
 		write_page "    </table>"
 		archlinux_page_footer
@@ -259,18 +270,18 @@ state_pages(){
 			fi
 		fi
 		write_page "<h2>$TESTED packages in $STATE state</h2>"
-		write_page "    <table><tr><th>repository</th><th>source package</th><th>version</th><th>test result</th><th>test date<br />test duration</th><th>1st build log<br />2nd build log</th></tr>"
+		include_pkg_table_header_in_page
 		for REPOSITORY in $ARCHLINUX_REPOS ; do
 			SUITE="archlinux_$REPOSITORY"
 			STATE_PKGS=$(query_db "SELECT s.name FROM sources AS s JOIN results AS r ON s.id=r.package_id WHERE s.architecture='x86_64' AND s.suite='$SUITE' AND r.status LIKE '$STATE%' ORDER BY r.status,s.name")
 			for PKG in ${STATE_PKGS} ; do
-				cat $ARCHBASE/$REPOSITORY/$PKG/pkg.html >> $PAGE 2>/dev/null || true
+				include_pkg_html_in_page
 			done
 			if [ "$STATE" = "UNKNOWN" ] ; then
 				# untested packages are also state UNKNOWN...
 				STATE_PKGS=$(query_db "SELECT s.name FROM sources AS s WHERE s.architecture='x86_64' AND s.suite='$SUITE' AND s.id NOT IN (SELECT package_id FROM results) ORDER BY s.name")
 				for PKG in ${STATE_PKGS} ; do
-					cat $ARCHBASE/$REPOSITORY/$PKG/pkg.html >> $PAGE 2>/dev/null || true
+					include_pkg_html_in_page
 				done
 			fi
 		done
@@ -297,16 +308,16 @@ repository_state_pages(){
 				fi
 			fi
 			write_page "<h2>$TESTED packages in $REPOSITORY in $STATE state</h2>"
-			write_page "    <table><tr><th>repository</th><th>source package</th><th>version</th><th>test result</th><th>test date<br />test duration</th><th>1st build log<br />2nd build log</th></tr>"
+			include_pkg_table_header_in_page
 			STATE_PKGS=$(query_db "SELECT s.name FROM sources AS s JOIN results AS r ON s.id=r.package_id WHERE s.architecture='x86_64' AND s.suite='$SUITE' AND r.status LIKE '$STATE%' ORDER BY r.status,s.name")
 			for PKG in ${STATE_PKGS} ; do
-				cat $ARCHBASE/$REPOSITORY/$PKG/pkg.html >> $PAGE 2>/dev/null || true
+				include_pkg_html_in_page
 			done
 			if [ "$STATE" = "UNKNOWN" ] ; then
 				# untested packages are also state UNKNOWN...
 				STATE_PKGS=$(query_db "SELECT s.name FROM sources AS s WHERE s.architecture='x86_64' AND s.suite='$SUITE' AND s.id NOT IN (SELECT package_id FROM results) ORDER BY s.name")
 				for PKG in ${STATE_PKGS} ; do
-					cat $ARCHBASE/$REPOSITORY/$PKG/pkg.html >> $PAGE 2>/dev/null || true
+					include_pkg_html_in_page
 				done
 			fi
 			write_page "    </table>"
