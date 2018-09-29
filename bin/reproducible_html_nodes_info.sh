@@ -143,9 +143,9 @@ build_nodes_health_page() {
 
 build_graph_overview_pages() {
 	#
-	# munin nodes daily/weekly/monthly pages
+	# munin nodes daily/weekly/monthly/yearly pages
 	#
-	for TYPE in daily weekly monthly ; do
+	for TYPE in daily weekly monthly yearly ; do
 		VIEW=nodes_${TYPE}_graphs
 		PAGE=index_${VIEW}.html
 		ARCH=amd64
@@ -190,6 +190,7 @@ build_graph_overview_pages() {
 						daily)		IMG=day.png ;;
 						weekly)		IMG=week.png ;;
 						monthly)	IMG=month.png ;;
+						yearly)		IMG=year.png ;;
 					esac
 					write_page "<img src='https://jenkins.debian.net/munin/debian.net/$NODE/${GRAPH}-${IMG}' width='150' /></a></td>"
 				done
