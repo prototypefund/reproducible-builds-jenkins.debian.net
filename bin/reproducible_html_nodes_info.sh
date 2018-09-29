@@ -187,9 +187,9 @@ build_graph_overview_pages() {
 					fi
 					write_page "<td><a href='https://jenkins.debian.net/munin/debian.net/$NODE/$GRAPH.html'>"
 					case "$TYPE" in
-						daily)	IMG=day.png ;;
-						weekly)	IMG=week.png ;;
-						monthy)	IMG=month.png ;;
+						daily)		IMG=day.png ;;
+						weekly)		IMG=week.png ;;
+						monthly)	IMG=month.png ;;
 					esac
 					write_page "<img src='https://jenkins.debian.net/munin/debian.net/$NODE/${GRAPH}-${IMG}' width='150' /></a></td>"
 				done
