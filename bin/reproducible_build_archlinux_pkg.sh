@@ -64,9 +64,24 @@ find_in_buildlogs() {
     egrep -q "$1" $ARCHLINUX_PKG_PATH/build1.log $ARCHLINUX_PKG_PATH/build2.log 2>/dev/null
 }
 
+include_icon(){
+	local PNG="$1"
+	local TEXT="$2"
+	local ALT=""
+	case $PNG in
+		error)				ALT="blacklisted" ;;
+		weather-snow)			ALT="depwait" ;;
+		weather-severe-alert)		ALT="404" ;;
+		weather-storm)			ALT="ftbfs" ;;
+		weather-clear)			ALT="reproducible" ;;
+		weather-showers-scattered)	ALT="unreproducible" ;;
+	esac
+	echo "       <img src=\"/userContent/static/$PNG.png\" alt=\"$ALT icon\" /> $TEXT" >> $HTML_BUFFER
+}
+
 create_pkg_html() {
 	local ARCHLINUX_PKG_PATH=$ARCHBASE/$REPOSITORY/$SRCPACKAGE
-	local HTML_BUFFER=$(mktemp -t archlinuxrb-html-XXXXXXXX)
+	HTML_BUFFER=$(mktemp -t archlinuxrb-html-XXXXXXXX)
 
 	local blacklisted=false
 
@@ -99,21 +114,21 @@ create_pkg_html() {
 
 		if $blacklisted ; then
 				echo BLACKLISTED > $ARCHLINUX_PKG_PATH/pkg.state
-				echo "       <img src=\"/userContent/static/error.png\" alt=\"blacklisted icon\" /> blacklisted" >> $HTML_BUFFER
+				include_icon error blacklisted
 		elif find_in_buildlogs '^error: failed to prepare transaction \(conflicting dependencies\)'; then
 			echo DEPWAIT_0 > $ARCHLINUX_PKG_PATH/pkg.state
-			echo "       <img src=\"/userContent/static/weather-snow.png\" alt=\"depwait icon\" /> could not resolve dependencies as there are conflicts" >> $HTML_BUFFER
+			include_icon weather-snow "could not resolve dependencies as there are conflicts"
 		elif find_in_buildlogs '==> ERROR: (Could not resolve all dependencies|.pacman. failed to install missing dependencies)'; then
 			if find_in_buildlogs 'error: failed to init transaction \(unable to lock database\)'; then
 				echo DEPWAIT_2 > $ARCHLINUX_PKG_PATH/pkg.state
-				echo "       <img src=\"/userContent/static/weather-snow.png\" alt=\"depwait icon\" /> pacman could not lock database" >> $HTML_BUFFER
+				include_icon weather-snow "pacman could not lock database"
 			else
 				echo DEPWAIT_1 > $ARCHLINUX_PKG_PATH/pkg.state
-				echo "       <img src=\"/userContent/static/weather-snow.png\" alt=\"depwait icon\" /> could not resolve dependencies" >> $HTML_BUFFER
+				include_icon weather-snow "could not resolve dependencies"
 			fi
 		elif find_in_buildlogs '^error: unknown package: '; then
 			echo 404_0 > $ARCHLINUX_PKG_PATH/pkg.state
-			echo "       <img src=\"/userContent/static/weather-severe-alert.png\" alt=\"404 icon\" /> unknown package" >> $HTML_BUFFER
+			include_icon weather-severe-alert "unknown package"
 		elif find_in_buildlogs '(==> ERROR: Failure while downloading|==> ERROR: One or more PGP signatures could not be verified|==> ERROR: One or more files did not pass the validity check|==> ERROR: Integrity checks \(.*\) differ in size from the source array|==> ERROR: Failure while branching|==> ERROR: Failure while creating working copy|Failed to source PKGBUILD.*PKGBUILD)'; then
 			REASON="download failed"
 			EXTRA_REASON=""
@@ -155,22 +170,22 @@ create_pkg_html() {
 				echo 404_C > $ARCHLINUX_PKG_PATH/pkg.state
 				EXTRA_REASON="from git repo"
 			fi
-			echo "       <img src=\"/userContent/static/weather-severe-alert.png\" alt=\"404 icon\" /> $REASON $EXTRA_REASON" >> $HTML_BUFFER
+			include_icon weather-severe-alert "$REASON $EXTRA_REASON"
 		elif find_in_buildlogs '==> ERROR: (install file .* does not exist or is not a regular file|The download program wget is not installed)'; then
 			echo FTBFS_0 > $ARCHLINUX_PKG_PATH/pkg.state
-			echo "       <img src=\"/userContent/static/weather-storm.png\" alt=\"ftbfs icon\" /> failed to build, requirements not met" >> $HTML_BUFFER
+			include_icon weather-storm "failed to build, requirements not met"
 		elif find_in_buildlogs '==> ERROR: A failure occurred in check'; then
 			echo FTBFS_1 > $ARCHLINUX_PKG_PATH/pkg.state
-			echo "       <img src=\"/userContent/static/weather-storm.png\" alt=\"ftbfs icon\" /> failed to build while running tests" >> $HTML_BUFFER
+			include_icon weather-storm "failed to build while running tests"
 		elif find_in_buildlogs '==> ERROR: (An unknown error has occurred|A failure occurred in (build|package|prepare))'; then
 			echo FTBFS_2 > $ARCHLINUX_PKG_PATH/pkg.state
-			echo "       <img src=\"/userContent/static/weather-storm.png\" alt=\"ftbfs icon\" /> failed to build" >> $HTML_BUFFER
+			include_icon weather-storm "failed to build"
 		elif find_in_buildlogs 'makepkg was killed by timeout after'; then
 			echo FTBFS_3 > $ARCHLINUX_PKG_PATH/pkg.state
-			echo "       <img src=\"/userContent/static/weather-storm.png\" alt=\"ftbfs icon\" /> failed to build, killed by timeout" >> $HTML_BUFFER
+			include_icon weather-storm "failed to build, killed by timeout"
 		elif find_in_buildlogs '==> ERROR: .* contains invalid characters:'; then
 			echo FTBFS_4 > $ARCHLINUX_PKG_PATH/pkg.state
-			echo "       <img src=\"/userContent/static/weather-storm.png\" alt=\"ftbfs icon\" /> failed to build, pkg relations contain invalid characters" >> $HTML_BUFFER
+			include_icon weather-storm "failed to build, pkg relations contain invalid characters"
 		else
 			echo "       probably failed to build from source, please investigate" >> $HTML_BUFFER
 			echo UNKNOWN > $ARCHLINUX_PKG_PATH/pkg.state
@@ -185,7 +200,7 @@ create_pkg_html() {
 				continue
 			elif [ ! -z "$(grep 'build reproducible in our test framework' $ARCHLINUX_PKG_PATH/$ARTIFACT)" ] ; then
 				SOME_GOOD=true
-				echo "       <img src=\"/userContent/static/weather-clear.png\" alt=\"reproducible icon\" /> <a href=\"/archlinux/$REPOSITORY/$SRCPACKAGE/$ARTIFACT\">${ARTIFACT:0:-5}</a> is reproducible in our current test framework<br />" >> $HTML_BUFFER
+				include_icon weather-clear "<a href=\"/archlinux/$REPOSITORY/$SRCPACKAGE/$ARTIFACT\">${ARTIFACT:0:-5}</a> is reproducible in our current test framework<br />"
 			else
 				# change $STATE unless we have found .buildinfo differences already...
 				if [ "$STATE" != "FTBR_0" ] ; then
@@ -197,7 +212,7 @@ create_pkg_html() {
 					STATE=FTBR_0
 					EXTRA_REASON=" with variations in .BUILDINFO"
 				fi
-				echo "       <img src=\"/userContent/static/weather-showers-scattered.png\" alt=\"unreproducible icon\" /> <a href=\"/archlinux/$REPOSITORY/$SRCPACKAGE/$ARTIFACT\">${ARTIFACT:0:-5}</a> is unreproducible$EXTRA_REASON<br />" >> $HTML_BUFFER
+				include_icon weather-showers-scattered "<a href=\"/archlinux/$REPOSITORY/$SRCPACKAGE/$ARTIFACT\">${ARTIFACT:0:-5}</a> is unreproducible$EXTRA_REASON<br />"
 			fi
 		done
 		# we only count source packages…
@@ -653,6 +668,7 @@ fi
 echo "$(date -u) - $REPRODUCIBLE_URL/archlinux/$REPOSITORY/$SRCPACKAGE/ updated."
 # force update of HTML snipplet in reproducible_html_archlinux.sh
 [ ! -f $BASE/archlinux/$REPOSITORY/$SRCPACKAGE/pkg.state ] || rm $BASE/archlinux/$REPOSITORY/$SRCPACKAGE/pkg.state
+HTML_BUFFER=''
 create_pkg_html
 update_pkg_in_db
 
