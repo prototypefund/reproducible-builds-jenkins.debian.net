@@ -151,6 +151,9 @@ create_pkg_html() {
 			elif find_in_buildlogs 'The requested URL returned error: 504'; then
 				echo 404_B > $ARCHLINUX_PKG_PATH/pkg.state
 				EXTRA_REASON="with 504 - gateway timeout"
+			elif find_in_buildlogs '==> ERROR: Failure while downloading .* git repo'; then
+				echo 404_C > $ARCHLINUX_PKG_PATH/pkg.state
+				EXTRA_REASON="from git repo"
 			fi
 			echo "       <img src=\"/userContent/static/weather-severe-alert.png\" alt=\"404 icon\" /> $REASON $EXTRA_REASON" >> $HTML_BUFFER
 		elif find_in_buildlogs '==> ERROR: (install file .* does not exist or is not a regular file|The download program wget is not installed)'; then

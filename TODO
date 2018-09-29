@@ -328,6 +328,7 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 *** create new job to recreate all pkg pages
 *** create json
 ** misc:
+*** write into all the stats_ tables
 *** make build.sh respect pacman exit code, see FIXME in _html_.sh
 *** comparing versions (in scheduler) is probably needed: if its not empty it must be higher (due to repo constraints), but it can be even higher than in the repo, because we build trunk
 *** debian uses a table removed_packages, should this be used here too?
