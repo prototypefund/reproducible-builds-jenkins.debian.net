@@ -156,7 +156,9 @@ if [ "$HOSTNAME" = "$MAINNODE" ] ; then
 		cd ../..
 	done
 	if [ -n "$SICK" ] ; then
+		SICK=$(echo "$SICK" | sed 's#.debian.net##g')
 		if echo "$SICK" | grep -q ' ' 2>/dev/null ; then
+			SICK=$(echo "$SICK" | sed 's# # and #g')
 			MESSAGE="$SICK have health problems and have temporarily been marked as offline."
 		else
 			MESSAGE="$SICK has health problems and has temporarily been marked as offline."
