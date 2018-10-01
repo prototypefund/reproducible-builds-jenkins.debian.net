@@ -67,6 +67,12 @@ if [ "${0:0:5}" != "/tmp/" ] ; then
 			abort_if_bug_is_still_open 886676 ;;
 		chroot-installation_buster_install_parl-*)
 			abort_if_bug_is_still_open 886676 ;;
+		chroot-installation_buster_install_design-desktop-animation)
+			# technically these two bugs dont affect design-desktop-animation
+			# but just a depends of it, however I don't think it's likely
+			# design-desktop-animation will enter buster without these two bugs being fixed
+			abort_if_bug_is_still_open 890754
+			abort_if_bug_is_still_open 879034 ;;
 		*) ;;
 	esac
 	# mktemp some place for us...
