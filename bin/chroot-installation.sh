@@ -1,7 +1,7 @@
 #!/bin/bash
 # vim: set noexpandtab:
 
-# Copyright 2012-2017 Holger Levsen <holger@layer-acht.org>
+# Copyright 2012-2018 Holger Levsen <holger@layer-acht.org>
 #           2018      Mattia Rizzolo <mattia@debian.org>
 # released under the GPLv=2
 
@@ -97,6 +97,8 @@ Debug::pkgPackageManager "true";
 APTEOF
 echo "deb-src $MIRROR $1 main" > /etc/apt/sources.list.d/$1-src.list
 apt-get update
+# Preseeding man-db/auto-update to false
+echo "man-db man-db/auto-update boolean false" | debconf-set-selections
 set +x
 EOF
 }
