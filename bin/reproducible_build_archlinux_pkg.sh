@@ -549,7 +549,8 @@ elif [ "$1" = "1" ] || [ "$1" = "2" ] ; then
 
 	# preserve results and delete build directory
 	if [ -n "$(ls /tmp/$SRCPACKAGE-$(basename $TMPDIR)/*/trunk/*.pkg.tar.xz)" ] ; then
-		mv -v /tmp/$SRCPACKAGE-$(basename $TMPDIR)/*/trunk/*.pkg.tar.xz $TMPDIR/b$MODE/$SRCPACKAGE/
+		# copying is enough here, we delete after this if block anyway
+		cp --preserve=timestamps -v /tmp/$SRCPACKAGE-$(basename $TMPDIR)/*/trunk/*.pkg.tar.xz $TMPDIR/b$MODE/$SRCPACKAGE/
 	else
 		echo "$(date -u) - build #$MODE for $SRCPACKAGE on $HOSTNAME didn't build a package!"
 		# debug
