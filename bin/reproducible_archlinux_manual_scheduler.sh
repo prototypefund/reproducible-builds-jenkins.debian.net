@@ -51,6 +51,10 @@ done
 echo
 if [ ! -z "$SUCCESS" ] ; then
 	MESSAGE="Manually scheduled in $REPOSITORY:$SUCCESS"
+	# shorten irc message if longer then 256 characters
+	if [ ${#MESSAGE} -gt 256 ] ; then
+		MESSAGE="${MESSAGE:0:256}✂…"
+	fi
 	echo "$MESSAGE"
 	irc_message archlinux-reproducible "$MESSAGE"
 fi
