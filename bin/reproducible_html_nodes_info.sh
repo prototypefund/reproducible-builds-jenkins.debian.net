@@ -74,7 +74,8 @@ build_nodes_health_page() {
 			write_page "<td><a href='$URL'><img src='$BADGE' /></a></td>"
 			# mark offline nodes
 			JENKINS_OFFLINE_GIT_LIST=~jenkins-adm/jenkins.debian.net/jenkins-home/offline_nodes
-			if [ -f "$JENKINS_OFFLINE_GIT_LIST" ] && grep -q "$NODE" "$JENKINS_OFFLINE_GIT_LIST"; then
+			if [ -f "$JENKINS_OFFLINE_GIT_LIST" ] && grep -q "$NODE" "$JENKINS_OFFLINE_GIT_LIST" \
+			 && ( [ -f "$JENKINS_OFFLINE_LIST" ] && ! grep -q "$NODE" "$JENKINS_OFFLINE_LIST" ) ; then
 				write_page '</td><td colspan="10" style="text-align: center;"><span style="font-style: italic;">temporarily marked offline by jenkins</span></td>'
 				continue
 
