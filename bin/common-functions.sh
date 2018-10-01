@@ -62,11 +62,7 @@ if [ "${0:0:5}" != "/tmp/" ] ; then
 		#	for BLOCKER in 869155 867695 ; do
 		#		abort_if_bug_is_still_open $BLOCKER
 		#	done ;;
-		chroot-installation_sid_install_parl-desktop-eu)
-			abort_if_bug_is_still_open 886676 ;;
-		chroot-installation_sid_install_parl-desktop-world)
-			abort_if_bug_is_still_open 886676 ;;
-		chroot-installation_buster_install_parl-*)
+		chroot-installation_sid_install_parl*|chroot-installation_buster_install_parl-*)
 			abort_if_bug_is_still_open 886676 ;;
 		chroot-installation_buster_install_design*)
 			# technically these two bugs dont affect design-desktop
