@@ -133,7 +133,7 @@ if [ "$HOSTNAME" = "$MAINNODE" ] ; then
 		fi
 		cd $i/builds
 		LAST=$(ls -rt1 | tail -1)
-		GOOD=$(basename $(readlink -f lastStableBuild))
+		GOOD=$(basename $(readlink -f lastSuccessfulBuild))
 		if [ "$LAST" = "$GOOD" ] ; then
 			DIFF=0
 		else
