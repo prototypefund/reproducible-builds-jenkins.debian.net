@@ -12,6 +12,7 @@ common_cleanup() {
 
 abort_if_bug_is_still_open() {
 	local TMPFILE=$(mktemp --tmpdir=/tmp jenkins-bugcheck-XXXXXXX)
+	echo "$(date -u) - checking bug #$1 status."
 	bts status $1 fields:done > $TMPFILE || true
 	# if we get a valid response…
 	if [ ! -z "$(grep done $TMPFILE)" ] ; then
