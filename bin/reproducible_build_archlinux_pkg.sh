@@ -423,10 +423,11 @@ second_build() {
 	export LC_ALL="fr_CH.UTF-8"
 	umask 0002
 	__END__
-	# create group and user
+	# create 'build2' group and user, chown $BUILDIR to them and allow build2 to run pacman as root
 	schroot --run-session -c $SESSION --directory "$BUILDDIR" -u root -- groupadd build2
 	schroot --run-session -c $SESSION --directory "$BUILDDIR" -u root -- useradd -g build2 build2
 	schroot --run-session -c $SESSION --directory "$BUILDDIR" -u root -- chown -R build2:build2 "$BUILDDIR"
+	echo 'build2 ALL= NOPASSWD: /usr/sbin/pacman *' | schroot --run-session -c $SESSION --directory "$BUILDDIR" -u root -- tee -a /etc/sudoers
 	# some more output for debugging
 	set -x
 	# remove possible lock in our local session (happens when root maintenance update running while session starts)
