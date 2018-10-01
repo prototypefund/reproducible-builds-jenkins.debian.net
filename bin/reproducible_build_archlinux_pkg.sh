@@ -633,7 +633,10 @@ if [ ! -z "$(ls $TMPDIR/b1/$SRCPACKAGE/*.pkg.tar.xz 2>/dev/null|| true)" ] ; the
 			ls $TMPDIR/b2/$SRCPACKAGE
 			( echo "<html><body><p>$SRCPACKAGE/$ARTIFACT built in a strange unreproducible way:<br />"
 			ls $TMPDIR/b1/$SRCPACKAGE
+			echo "<br />"
 			ls $TMPDIR/b2/$SRCPACKAGE
+			echo "<br />"
+			echo "Maybe $BUILD_URL has some more information why this happened."
 			echo "</p></body>"
 			) > "$BASE/archlinux/$REPOSITORY/$SRCPACKAGE/$ARTIFACT.html"
 		fi
