@@ -65,10 +65,14 @@ update_archlinux_repositories() {
 					echo "$(date -u) - $REPO/$PKG removed as it's gone from the Archlinux repositories."
 					SUITE="archlinux_$repo"
 					PKG_ID=$(query_db "SELECT id FROM sources WHERE name='$PKG' AND suite='$SUITE' AND architecture='$ARCH';")
-					query_db "DELETE FROM results WHERE package_id='${PKG_ID}';"
-					query_db "DELETE FROM schedule WHERE package_id='${PKG_ID}';"
-					query_db "DELETE FROM sources WHERE id='${PKG_ID}';"
-					echo "$(date -u) - $SUITE $PKG removed from database."
+					if [ -n "${PKG_ID}" ] ; then
+						query_db "DELETE FROM results WHERE package_id='${PKG_ID}';"
+						query_db "DELETE FROM schedule WHERE package_id='${PKG_ID}';"
+						query_db "DELETE FROM sources WHERE id='${PKG_ID}';"
+						echo "$(date -u) - $SUITE $PKG removed from database."
+					else
+						echo "$(date -u) - $SUITE $PKG not found in database."
+					fi
 				fi
 			done
 		done
