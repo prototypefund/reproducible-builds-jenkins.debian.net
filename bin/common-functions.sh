@@ -56,8 +56,15 @@ if [ "${0:0:5}" != "/tmp/" ] ; then
 		echo "Do not run this as root."
 		exit 1
 	fi
+	# - for remote jobs we need to check against $SSH_ORIGINAL_COMMAND
+	# - for local jobs this would be $JOB_NAME
+	if [ -n "$JOB_NAME" ] ; then
+		WHOAREWE=$JOB_NAME
+	else
+		WHOAREWE=${SSH_ORIGINAL_COMMAND}
+	fi
 	# abort certain jobs if we know they will fail due to certain bugs…
-	case $JOB_NAME in
+	case $WHOAREWE in
 		#chroot-installation_*_install_design-desktop-*)
 		#	for BLOCKER in 869155 867695 ; do
 		#		abort_if_bug_is_still_open $BLOCKER
@@ -85,7 +92,7 @@ if [ "${0:0:5}" != "/tmp/" ] ; then
 	chmod +x $TTT
 	echo "===================================================================================="
 	echo
-	echo "$(date -u) - running $0 ($JOB_NAME) on $(hostname) now."
+	echo "$(date -u) - running $0 (for job $WHOAREWE) on $(hostname) now."
 	echo
 	echo "To learn to understand this, git clone https://salsa.debian.org/qa/jenkins.debian.net.git"
 	echo "and then have a look at the files README, INSTALL, CONTRIBUTING and maybe TODO."
