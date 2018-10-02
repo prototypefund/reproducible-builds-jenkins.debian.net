@@ -141,8 +141,8 @@ if [ "$HOSTNAME" = "$MAINNODE" ] ; then
 		fi
 		if [ $DIFF -eq -1 ] ; then
 			echo "Problems analysing $i build logs, ignoring $NODE."
-		elif [ $DIFF -gt 12 ] ; then
-			echo -n "$i jobs has issues since more than 3h"
+		elif [ $DIFF -gt 4 ] ; then
+			echo -n "$i job has issues since more than an hour"
 			if grep -q $NODE ~/offline_nodes >/dev/null 2>&1 ; then
 				echo " and $NODE already marked as offline, good."
 			else
