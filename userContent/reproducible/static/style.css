@@ -39,6 +39,11 @@ img.overview {
 	max-width: 24%;
 }
 
+img.tripleview {
+	max-width: 32%;
+}
+
+
 img.metaoverview {
 	max-width: 5.6%;
 }

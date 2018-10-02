@@ -1,7 +1,7 @@
 #!/bin/bash
 # vim: set noexpandtab:
 
-# Copyright 2014-2017 Holger Levsen <holger@layer-acht.org>
+# Copyright 2014-2018 Holger Levsen <holger@layer-acht.org>
 #         © 2015 Mattia Rizzolo <mattia@mapreri.org>
 # released under the GPLv=2
 
@@ -21,6 +21,7 @@ FORCE_DATE=$(date -u -d "3 days ago" '+%Y-%m-%d')
 DUMMY_FILE=$(mktemp -t reproducible-dashboard-XXXXXXXX)
 touch -d "$(date '+%Y-%m-%d') 00:00 UTC" $DUMMY_FILE
 NOTES_GIT_PATH="/var/lib/jenkins/jobs/reproducible_html_notes/workspace"
+COMMA_VAR=""
 
 # variables related to the stats we update
 FIELDS[0]="datum, reproducible, FTBR, FTBFS, other, untested"
@@ -657,6 +658,15 @@ create_bugs_page() {
 	publish_page debian
 }
 
+
+comma_comma_and(){
+	case $1 in
+		amd64|i386)	COMMA_VAR=", " ;;
+		arm64)		COMMA_VAR=" and " ;;
+		*)		COMMA_VAR="" ;;
+	esac
+}
+
 #
 # create performance page
 #
@@ -682,14 +692,26 @@ create_performance_page() {
 	write_page "</p><p style=\"clear:both;\">"
 	for ARCH in ${ARCHS} ; do
 		for SUITE in $SUITES ; do
-			write_page " <a href=\"/debian/$SUITE/$ARCH/${TABLE[2]}.png\"><img src=\"/debian/$SUITE/$ARCH/${TABLE[2]}.png\" class=\"overview\" alt=\"age of oldest reproducible build result in $SUITE/$ARCH\"></a>"
+			if [ $SUITE = "stretch" ] ; then
+				continue
+			else
+				write_page " <a href=\"/debian/$SUITE/$ARCH/${TABLE[2]}.png\"><img src=\"/debian/$SUITE/$ARCH/${TABLE[2]}.png\" class=\"tripleview\" alt=\"age of oldest reproducible build result in $SUITE/$ARCH\"></a>"
+			fi
 		done
 		write_page "</p><p style=\"clear:both;\">"
 	done
 	# the end
-	write_page "Daily <a href=\"https://jenkins.debian.net/view/reproducible/job/reproducible_html_nodes_info/lastBuild/console\">individual build node performance stats</a> are available as well as oldest results for"
+	write_page "Daily <a href=\"https://jenkins.debian.net/view/reproducible/job/reproducible_html_nodes_info/lastBuild/console\">individual build node performance stats</a> are available as well as oldest results for "
 	for ARCH in ${ARCHS} ; do
-		write_page " <a href=\"/debian/index_${ARCH}_oldies.html\">$ARCH</a>"
+		comma_comma_and ${ARCH}
+		write_page "<a href=\"/debian/index_${ARCH}_oldies.html\">$ARCH</a>$COMMA_VAR"
+	done
+	write_page ".</p>"
+	write_page "<p>And finally there are also graphs about the oldest build in stretch for "
+	SUITE="stretch"
+	for ARCH in ${ARCHS} ; do
+		comma_comma_and ${ARCH}
+		write_page "<a href=\"/debian/$SUITE/$ARCH/${TABLE[2]}.png\">$ARCH</a>$COMMA_VAR"
 	done
 	write_page ".</p>"
 	write_page_footer
