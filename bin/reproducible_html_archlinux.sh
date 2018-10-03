@@ -357,6 +357,7 @@ if [ -z "$1" ] ; then
 	rm $HTML_REPOSTATS > /dev/null
 elif [ -z "$2" ] ; then
 	echo "$(date -u) - $0 needs two params or none, exiting."
+	#FIXME: in future also except all core extra multilib community
 	exit 1
 else
 	REPOSITORY=$1
@@ -365,6 +366,8 @@ else
 		echo "$(date -u) - $ARCHBASE/$REPOSITORY/$SRCPACKAGE does not exist, exiting."
 		exit 1
 	fi
+	HTML_BUFFER=''
+	create_pkg_html
 fi
 echo "$(date -u) - all done."
 
