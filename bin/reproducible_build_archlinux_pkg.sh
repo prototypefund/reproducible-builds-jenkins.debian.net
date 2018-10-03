@@ -265,7 +265,7 @@ choose_package() {
 		FROM schedule AS sch JOIN sources AS s ON sch.package_id=s.id
 		WHERE sch.date_build_started is NULL
 		AND s.architecture='$ARCH'
-		ORDER BY date_scheduled LIMIT 5"|sort -R|head -1)
+		ORDER BY date_scheduled LIMIT 10"|sort -R|head -1)
 	if [ -z "$RESULT" ] ; then
 		echo "No packages scheduled, sleeping 30m."
 		sleep 30m
