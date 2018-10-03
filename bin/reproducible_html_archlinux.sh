@@ -335,7 +335,6 @@ if [ -z "$1" ] ; then
 	MEMBERS_DEPWAIT="0 1 2"
 	MEMBERS_404="0 1 2 3 4 5 6 7 8 9 A B C"
 	MEMBERS_FTBR="0 1 2"
-	HTML_BUFFER=$(mktemp -t archlinuxrb-html-XXXXXXXX)
 	HTML_REPOSTATS=$(mktemp -t archlinuxrb-html-XXXXXXXX)
 	ARCHLINUX_TOTAL=0
 	ARCHLINUX_TESTED=0
