@@ -15,7 +15,7 @@ common_init "$@"
 #
 # reproducible_html_archlinux.sh can be called in two ways:
 # - without params, then it will build all the index and dashboard pages
-# - with exactly two params, $REPOSITORY and $PKG, in which case that packages html page will be created
+# - with exactly two params, $REPOSITORY and $SRCPACKAGE, in which case that packages html page will be created
 #
 
 
@@ -37,7 +37,7 @@ get_state_from_counter() {
 
 
 include_pkg_html_in_page(){
-	cat $ARCHBASE/$REPOSITORY/$PKG/pkg.html >> $PAGE 2>/dev/null || true
+	cat $ARCHBASE/$REPOSITORY/$SRCPACKAGE/pkg.html >> $PAGE 2>/dev/null || true
 }
 
 include_pkg_table_header_in_page(){
@@ -230,7 +230,7 @@ repository_pages(){
 		include_pkg_table_header_in_page
 		REPO_PKGS=$(query_db "SELECT s.name FROM sources AS s JOIN results AS r ON s.id=r.package_id
 				WHERE s.architecture='x86_64' AND s.suite='$SUITE' ORDER BY r.status,s.name")
-		for PKG in $REPO_PKGS ; do
+		for SRCPACKAGE in $REPO_PKGS ; do
 			include_pkg_html_in_page
 		done
 		write_page "    </table>"
@@ -261,14 +261,14 @@ state_pages(){
 			SUITE="archlinux_$REPOSITORY"
 			STATE_PKGS=$(query_db "SELECT s.name FROM sources AS s JOIN results AS r ON s.id=r.package_id
 					WHERE s.architecture='x86_64' AND s.suite='$SUITE' AND r.status LIKE '$STATE%' ORDER BY r.status,s.name")
-			for PKG in ${STATE_PKGS} ; do
+			for SRCPACKAGE in ${STATE_PKGS} ; do
 				include_pkg_html_in_page
 			done
 			if [ "$STATE" = "UNKNOWN" ] ; then
 				# untested packages are also state UNKNOWN...
 				STATE_PKGS=$(query_db "SELECT s.name FROM sources AS s
 					WHERE s.architecture='x86_64' AND s.suite='$SUITE' AND s.id NOT IN (SELECT package_id FROM results) ORDER BY s.name")
-				for PKG in ${STATE_PKGS} ; do
+				for SRCPACKAGE in ${STATE_PKGS} ; do
 					include_pkg_html_in_page
 				done
 			fi
@@ -301,14 +301,14 @@ repository_state_pages(){
 			include_pkg_table_header_in_page
 			STATE_PKGS=$(query_db "SELECT s.name FROM sources AS s JOIN results AS r ON s.id=r.package_id
 					WHERE s.architecture='x86_64' AND s.suite='$SUITE' AND r.status LIKE '$STATE%' ORDER BY r.status,s.name")
-			for PKG in ${STATE_PKGS} ; do
+			for SRCPACKAGE in ${STATE_PKGS} ; do
 				include_pkg_html_in_page
 			done
 			if [ "$STATE" = "UNKNOWN" ] ; then
 				# untested packages are also state UNKNOWN...
 				STATE_PKGS=$(query_db "SELECT s.name FROM sources AS s
 					WHERE s.architecture='x86_64' AND s.suite='$SUITE' AND s.id NOT IN (SELECT package_id FROM results) ORDER BY s.name")
-				for PKG in ${STATE_PKGS} ; do
+				for SRCPACKAGE in ${STATE_PKGS} ; do
 					include_pkg_html_in_page
 				done
 			fi
@@ -328,7 +328,7 @@ PAGE=""
 TITLE=""
 STATE=""
 REPOSITORY=""
-PKG=""
+SRCPACKAGE=""
 
 if [ -z "$1" ] ; then
 	MEMBERS_FTBFS="0 1 2 3 4"
@@ -360,12 +360,11 @@ elif [ -z "$2" ] ; then
 	exit 1
 else
 	REPOSITORY=$1
-	PKG=$2
-	if [ ! -d $ARCHBASE/$REPOSITORY/$PKG ] ; then
-		echo "$(date -u) - $ARCHBASE/$REPOSITORY/$PKG does not exist, exiting."
+	SRCPACKAGE=$2
+	if [ ! -d $ARCHBASE/$REPOSITORY/$SRCPACKAGE ] ; then
+		echo "$(date -u) - $ARCHBASE/$REPOSITORY/$SRCPACKAGE does not exist, exiting."
 		exit 1
 	fi
-
 fi
 echo "$(date -u) - all done."
 
