@@ -11,34 +11,6 @@ common_init "$@"
 # common code
 . /srv/jenkins/bin/reproducible_common.sh
 
-#
-# analyse results to create the webpage
-#
-echo "$(date -u) - starting."
-DATE=$(date -u +'%Y-%m-%d')
-YESTERDAY=$(date '+%Y-%m-%d' -d "-1 day")
-MEMBERS_FTBFS="0 1 2 3 4"
-MEMBERS_DEPWAIT="0 1 2"
-MEMBERS_404="0 1 2 3 4 5 6 7 8 9 A B C"
-MEMBERS_FTBR="0 1 2"
-HTML_BUFFER=$(mktemp -t archlinuxrb-html-XXXXXXXX)
-HTML_REPOSTATS=$(mktemp -t archlinuxrb-html-XXXXXXXX)
-ARCHLINUX_TOTAL=0
-ARCHLINUX_TESTED=0
-ARCHLINUX_NR_FTBFS=0
-ARCHLINUX_NR_FTBR=0
-ARCHLINUX_NR_DEPWAIT=0
-ARCHLINUX_NR_404=0
-ARCHLINUX_NR_GOOD=0
-ARCHLINUX_NR_BLACKLISTED=0
-ARCHLINUX_NR_UNKNOWN=0
-WIDTH=1920
-HEIGHT=960
-PAGE=""
-TITLE=""
-STATE=""
-REPOSITORY=""
-PKG=""
 
 get_state_from_counter() {
 	local counter=$1
@@ -335,6 +307,37 @@ repository_state_pages(){
 		done
 	done
 }
+
+#
+# main
+#
+echo "$(date -u) - starting."
+DATE=$(date -u +'%Y-%m-%d')
+YESTERDAY=$(date '+%Y-%m-%d' -d "-1 day")
+PAGE=""
+TITLE=""
+STATE=""
+REPOSITORY=""
+PKG=""
+
+MEMBERS_FTBFS="0 1 2 3 4"
+MEMBERS_DEPWAIT="0 1 2"
+MEMBERS_404="0 1 2 3 4 5 6 7 8 9 A B C"
+MEMBERS_FTBR="0 1 2"
+HTML_BUFFER=$(mktemp -t archlinuxrb-html-XXXXXXXX)
+HTML_REPOSTATS=$(mktemp -t archlinuxrb-html-XXXXXXXX)
+ARCHLINUX_TOTAL=0
+ARCHLINUX_TESTED=0
+ARCHLINUX_NR_FTBFS=0
+ARCHLINUX_NR_FTBR=0
+ARCHLINUX_NR_DEPWAIT=0
+ARCHLINUX_NR_404=0
+ARCHLINUX_NR_GOOD=0
+ARCHLINUX_NR_BLACKLISTED=0
+ARCHLINUX_NR_UNKNOWN=0
+WIDTH=1920
+HEIGHT=960
+
 
 repostats
 single_main_page
