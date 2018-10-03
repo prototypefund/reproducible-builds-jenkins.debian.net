@@ -319,7 +319,6 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 
 * use db - see https://tests.reproducible-builds.org/reproducibledb.html
 ** scheduler.sh:
-*** dont delete packages which are building?
 *** use asp to update trunk packages?
 ** html:
 *** leave all pkg.html files, delete them (much) later, then check all pkg.* files are gone

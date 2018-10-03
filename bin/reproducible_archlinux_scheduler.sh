@@ -59,6 +59,10 @@ update_archlinux_repositories() {
 			for i in $(find $BASE/archlinux/$REPO -type d -wholename "$BASE/archlinux/$REPO/*" | sort) ; do
 				PKG=$(basename $i)
 				if ! grep -q "$REPO $PKG" ${ARCHLINUX_PKGS}_full_pkgbase_list > /dev/null ; then
+					# we could check here whether a package is currently building,
+					# and if so defer the pkg removal. (but I think this is pointless,
+					# as we are unlikely to kill that build, so meh, let it finish
+					# and fail to update the db, because the package is gone...)
 					let REMOVED=$REMOVED+1
 					REMOVE_LIST="$REMOVE_LIST $REPO/$PKG"
 					rm -r --one-file-system $BASE/archlinux/$REPO/$PKG
