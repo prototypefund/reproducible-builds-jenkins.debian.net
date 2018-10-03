@@ -11,7 +11,17 @@ common_init "$@"
 # common code
 . /srv/jenkins/bin/reproducible_common.sh
 
+#
+#
+# reproducible_html_archlinux.sh can be called in two ways:
+# - without params, then it will build all the index and dashboard pages
+# - with exactly two params, $REPOSITORY and $PKG, in which case that packages html page will be created
+#
 
+
+#
+# helper functions
+#
 get_state_from_counter() {
 	local counter=$1
 	case $counter in
@@ -320,31 +330,44 @@ STATE=""
 REPOSITORY=""
 PKG=""
 
-MEMBERS_FTBFS="0 1 2 3 4"
-MEMBERS_DEPWAIT="0 1 2"
-MEMBERS_404="0 1 2 3 4 5 6 7 8 9 A B C"
-MEMBERS_FTBR="0 1 2"
-HTML_BUFFER=$(mktemp -t archlinuxrb-html-XXXXXXXX)
-HTML_REPOSTATS=$(mktemp -t archlinuxrb-html-XXXXXXXX)
-ARCHLINUX_TOTAL=0
-ARCHLINUX_TESTED=0
-ARCHLINUX_NR_FTBFS=0
-ARCHLINUX_NR_FTBR=0
-ARCHLINUX_NR_DEPWAIT=0
-ARCHLINUX_NR_404=0
-ARCHLINUX_NR_GOOD=0
-ARCHLINUX_NR_BLACKLISTED=0
-ARCHLINUX_NR_UNKNOWN=0
-WIDTH=1920
-HEIGHT=960
+if [ -z "$1" ] ; then
+	MEMBERS_FTBFS="0 1 2 3 4"
+	MEMBERS_DEPWAIT="0 1 2"
+	MEMBERS_404="0 1 2 3 4 5 6 7 8 9 A B C"
+	MEMBERS_FTBR="0 1 2"
+	HTML_BUFFER=$(mktemp -t archlinuxrb-html-XXXXXXXX)
+	HTML_REPOSTATS=$(mktemp -t archlinuxrb-html-XXXXXXXX)
+	ARCHLINUX_TOTAL=0
+	ARCHLINUX_TESTED=0
+	ARCHLINUX_NR_FTBFS=0
+	ARCHLINUX_NR_FTBR=0
+	ARCHLINUX_NR_DEPWAIT=0
+	ARCHLINUX_NR_404=0
+	ARCHLINUX_NR_GOOD=0
+	ARCHLINUX_NR_BLACKLISTED=0
+	ARCHLINUX_NR_UNKNOWN=0
+	WIDTH=1920
+	HEIGHT=960
 
+	repostats
+	single_main_page
+	repository_pages
+	state_pages
+	repository_state_pages
 
-repostats
-single_main_page
-repository_pages
-state_pages
-repository_state_pages
-rm $HTML_REPOSTATS > /dev/null
+	rm $HTML_REPOSTATS > /dev/null
+elif [ -z "$2" ] ; then
+	echo "$(date -u) - $0 needs two params or none, exiting."
+	exit 1
+else
+	REPOSITORY=$1
+	PKG=$2
+	if [ ! -d $ARCHBASE/$REPOSITORY/$PKG ] ; then
+		echo "$(date -u) - $ARCHBASE/$REPOSITORY/$PKG does not exist, exiting."
+		exit 1
+	fi
+
+fi
 echo "$(date -u) - all done."
 
 # vim: set sw=0 noet :
