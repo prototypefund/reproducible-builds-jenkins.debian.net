@@ -342,13 +342,9 @@ write_page_intro() {
 		write_page "        <p><em>Reproducible Coreboot</em> is an effort to apply this to coreboot. Thus each coreboot.rom is build twice (without payloads), with a few variations added and then those two ROMs are compared using <a href=\"https://tracker.debian.org/diffoscope\">diffoscope</a>. Please note that the toolchain is not varied at all as the rebuild happens on exactly the same system. More variations are expected to be seen in the wild.</p>"
 		local PROJECTNAME="$1"
 		local PROJECTURL="https://review.coreboot.org/p/coreboot.git"
-	elif [ "$1" = "OpenWrt" ] || [ "$1" = "LEDE" ]; then
+	elif [ "$1" = "OpenWrt" ] ; then
 		local PROJECTNAME="$1"
-		if [ "$PROJECTNAME" = "OpenWrt" ] ; then
-			local PROJECTURL="https://github.com/openwrt/openwrt.git"
-		else
-			local PROJECTURL="https://git.lede-project.org/?p=source.git;a=summary"
-		fi
+		local PROJECTURL="https://github.com/openwrt/openwrt.git"
 		write_page "        <p><em>Reproducible $PROJECTNAME</em> is an effort to apply this to $PROJECTNAME. Thus each $PROJECTNAME target is build twice, with a few variations added and then the resulting images and packages from the two builds are compared using <a href=\"https://tracker.debian.org/diffoscope\">diffoscope</a>. $PROJECTNAME generates many different types of raw <code>.bin</code> files, and diffoscope does not know how to parse these. Thus the resulting diffoscope output is not nearly as clear as it could be - hopefully this limitation will be overcome eventually, but in the meanwhile the input components (uImage kernel file, rootfs.tar.gz, and/or rootfs squashfs) can be inspected. Also please note that the toolchain is not varied at all as the rebuild happens on exactly the same system. More variations are expected to be seen in the wild.</p>"
 	elif [ "$1" = "NetBSD" ] ; then
 		write_page "        <p><em>Reproducible NetBSD</em> is an effort to apply this to NetBSD. Thus each NetBSD target is build twice, with a few variations added and then the resulting files from the two builds are compared using <a href=\"https://tracker.debian.org/diffoscope\">diffoscope</a>. Please note that the toolchain is not varied at all as the rebuild happens on exactly the same system. More variations are expected to be seen in the wild.</p>"
@@ -443,7 +439,7 @@ write_variation_table() {
 		write_page "</td><td>i-capture-the-hostname</td></tr>"
 		write_page "<tr><td>domainname</td><td>$(hostname -d)</td><td>i-capture-the-domainname</td></tr>"
 	else
-		if [ "$1" = "LEDE" ] || [ "$1" != "Arch Linux" ] || [ "$1" != "OpenWrt" ] ; then
+		if [ "$1" != "Arch Linux" ] || [ "$1" != "OpenWrt" ] ; then
 			write_page "<tr><td>hostname</td><td> profitbricks-build3-amd64 or profitbricks-build4-amd64</td><td>the other one</td></tr>"
 		else
 			write_page "<tr><td>hostname</td><td colspan=\"2\"> is not yet varied between rebuilds of $1.</td></tr>"
