@@ -596,16 +596,12 @@
                     my_timed: '42 1 * * 5'
                     my_lede_config: 'CONFIG_TARGET_x86=y'
                     my_lede_target: 'x86'
-                - 'openwrt':
-                    my_description: 'Rebuild OpenWrt (some targets, some packages) twice (with variations) and investigate regarding reproducibility.'
-                    my_timed: '42 23 * * 2'
-                    my_shell: '/srv/jenkins/bin/reproducible_openwrt.sh master'
             my_description: 'Rebuild LEDE (one target, some packages) twice (with variations) and investigate regarding reproducibility.'
             my_shell: '/srv/jenkins/bin/reproducible_lede.sh master {my_lede_target} {my_lede_config}'
             my_trigger: ''
             my_hname: ''
             my_recipients: 'jenkins+reproducible-builds qa-jenkins-scm@lists.alioth.debian.org lynxis@fe80.eu'
-            my_blocker: '^reproducible_(lede|openwrt).*'
+            my_blocker: '^reproducible_(lede).*'
 
         - '{name}_{otherproject_triggering}':
             otherproject_triggering:

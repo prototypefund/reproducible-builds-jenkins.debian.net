@@ -216,22 +216,18 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 * explain status in plain english
 * use disorderfs for 2nd build
 
-==== reproducible LEDE 
-
-* build path variation
-* use disorderfs for 2nd build
-* html: build variations are wrong
-* html: git commit output includes garbage
-* html: css: add some space on the left side
-* html: css: make it more look like https://lede-project.org/
 
 ==== reproducible OpenWrt
 
 * add credit for logo/artwork
-* build path variation
-* incorporate popular third-party ("external feeds") packages?
 * explain status in plain english
+* build path variation
 * use disorderfs for 2nd build
+* incorporate popular third-party ("external feeds") packages?
+* html: build variations are wrong
+* html: git commit output includes garbage
+* html: css: add some space on the left side
+* html: css: make it more look like https://lede-project.org/
 
 ==== reproducible NetBSD
 

@@ -303,7 +303,7 @@ if [ -f /etc/debian_version ] ; then
 			codethink-sled9*|codethink-sled11*|codethink-sled13*|codethink-sled15*) DEBS="$DEBS ntpdate" ;;
 			*) ;;
 		esac
-		# needed to run coreboot/openwrt/lede/netbsd/fedora jobs
+		# needed to run coreboot/openwrt/netbsd/fedora jobs
 		case $HOSTNAME in
 		profitbricks-build3-amd64|profitbricks-build4-amd64) DEBS="$DEBS
 				bison

@@ -125,8 +125,6 @@ elif [[ "$*" =~ ^reproducible_coreboot ]] ; then
 	exec /srv/jenkins/bin/reproducible_coreboot.sh ; croak "Exec failed";
 elif [[ "$*" =~ ^reproducible_openwrt ]] ; then
 	shift ; exec /srv/jenkins/bin/reproducible_openwrt.sh $@ ; croak "Exec failed";
-elif [[ "$*" =~ ^reproducible_lede ]] ; then
-	shift ; exec /srv/jenkins/bin/reproducible_lede.sh $@ ; croak "Exec failed";
 elif [[ "$*" =~ ^reproducible_netbsd ]] ; then
 	exec /srv/jenkins/bin/reproducible_netbsd.sh ; croak "Exec failed";
 elif [[ "$*" =~ ^reproducible_freebsd ]] ; then

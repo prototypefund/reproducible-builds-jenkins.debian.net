@@ -223,7 +223,7 @@ build_job_health_page() {
 	FILTER[4]="(json|le_scheduler|meta|le_nodes|rsync|notes)"
 	FILTER[5]="archlinux"
 	FILTER[6]="coreboot"
-	FILTER[7]="(openwrt|lede)"
+	FILTER[7]="(openwrt)"
 	FILTER[8]="(le_netbsd|le_freebsd)"
 	FILTER[9]="fdroid"
 	FILTER[10]="fedora"

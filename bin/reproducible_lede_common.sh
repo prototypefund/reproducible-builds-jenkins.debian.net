@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Copyright 2014-2017 Holger Levsen <holger@layer-acht.org>
+# Copyright 2014-2018 Holger Levsen <holger@layer-acht.org>
 #         © 2015 Reiner Herrmann <reiner@reiner-h.de>
 #           2016-2017 Alexander Couzens <lynxis@fe80.eu>
 # released under the GPLv=2
@@ -219,7 +219,7 @@ openwrt_apply_variations() {
 		export LC_ALL="fr_CH.UTF-8"
 		export PATH="/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/i/capture/the/path"
 		export CAPTURE_ENVIRONMENT="I capture the environment"
-		# needs to fix openwrt/lede ;)
+		# needs to fix openwrt ;)
 		# umask 0002
 
 		# use allmost all cores for second build
@@ -238,7 +238,7 @@ openwrt_config() {
 	printf "CONFIG_BUILDBOT=y\n" >> .config
 	printf "CONFIG_CLEAN_IPKG=y\n" >> .config
 	printf "CONFIG_TARGET_ROOTFS_TARGZ=y\n" >> .config
-	printf 'CONFIG_KERNEL_BUILD_USER="lede"\n' >> .config
+	printf 'CONFIG_KERNEL_BUILD_USER="openwrt"\n' >> .config
 	printf 'CONFIG_KERNEL_BUILD_DOMAIN="buildhost"\n' >> .config
 	make defconfig
 }

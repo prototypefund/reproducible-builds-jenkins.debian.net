@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Copyright 2014-2017 Holger Levsen <holger@layer-acht.org>
+# Copyright 2014-2018 Holger Levsen <holger@layer-acht.org>
 #         © 2015 Reiner Herrmann <reiner@reiner-h.de>
 #           2016-2018 Alexander Couzens <lynxis@fe80.eu>
 # released under the GPLv=2
