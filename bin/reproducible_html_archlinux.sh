@@ -183,7 +183,7 @@ archlinux_page_footer(){
 	publish_page archlinux
 }
 
-archlinux_page_repostats(){
+archlinux_repostats_table(){
 	write_page "    <table><tr><th>repository</th><th>all source packages</th>"
 	write_page "     <th><a href='/archlinux/state_GOOD.html'>reproducible packages</a></th>"
 	write_page "     <th><a href='/archlinux/state_FTBR.html'>unreproducible packages</a></th>"
@@ -194,6 +194,7 @@ archlinux_page_repostats(){
 	write_page "     <th><a href='/archlinux/state_UNKNOWN.html'>unknown state</a></th></tr>"
 	cat $HTML_REPOSTATS >> $PAGE
 	write_page "    </table>"
+	write_page "    <p><a href='/archlinux/recent_builds.html'>(recent builds)</a></p>"
 }
 
 single_main_page(){
@@ -204,7 +205,7 @@ single_main_page(){
 	TITLE="Reproducible archlinux ?!"
 	archlinux_page_header
 	write_page_intro 'Arch Linux'
-	archlinux_page_repostats
+	archlinux_repostats_table
 	# include graphs
 	write_page '<p style="clear:both;">'
 	for REPOSITORY in $ARCHLINUX_REPOS ; do
@@ -222,7 +223,7 @@ repository_pages(){
 		TITLE="Reproducible archlinux $REPOSITORY ?!"
 		echo "$(date -u) - starting to write page for $REPOSITORY'."
 		archlinux_page_header
-		archlinux_page_repostats
+		archlinux_repostats_table
 		SUITE="archlinux_$REPOSITORY"
 		TESTED=$(query_db "SELECT count(*) FROM sources AS s JOIN results AS r ON s.id=r.package_id
 				WHERE s.architecture='x86_64' AND s.suite='$SUITE';")
@@ -244,7 +245,7 @@ state_pages(){
 		TITLE="Reproducible archlinux, packages in state $STATE"
 		echo "$(date -u) - starting to write page for state $STATE'."
 		archlinux_page_header
-		archlinux_page_repostats
+		archlinux_repostats_table
 		TESTED=$(query_db "SELECT count(*) FROM sources AS s JOIN results AS r ON s.id=r.package_id
 				WHERE s.architecture='x86_64' AND r.status LIKE '$STATE%';")
 		if [ "$STATE" = "UNKNOWN" ] ; then
@@ -286,7 +287,7 @@ repository_state_pages(){
 			TITLE="Reproducible archlinux, packages in $REPOSITORY in state $STATE"
 			echo "$(date -u) - starting to write page for packages in $REPOSITORY in state $STATE'."
 			archlinux_page_header
-			archlinux_page_repostats
+			archlinux_repostats_table
 			TESTED=$(query_db "SELECT count(*) FROM sources AS s JOIN results AS r ON s.id=r.package_id
 					WHERE s.architecture='x86_64' AND s.suite='$SUITE' AND r.status LIKE '$STATE%';")
 			if [ "$STATE" = "UNKNOWN" ] ; then
@@ -316,6 +317,27 @@ repository_state_pages(){
 			archlinux_page_footer
 		done
 	done
+}
+
+recent_builds(){
+	PAGE=recent_builds.html
+	TITLE="Reproducible archlinux, builds in the last 24h"
+	echo "$(date -u) - starting to write page recent builds."
+	archlinux_page_header
+	archlinux_repostats_table
+	write_page "<h2>Recent builds of Archlinux packages in the last 24h</h2>"
+	include_pkg_table_header_in_page
+	MAXDATE="$(date -u +'%Y-%m-%d %H:%M' -d '24 hours ago')"
+	STATE_PKGS=$(query_db "SELECT s.name FROM sources AS s JOIN results AS r ON s.id=r.package_id
+			WHERE s.architecture='x86_64'
+			AND r.build_date > '$MAXDATE'
+			ORDER BY r.build_date
+			DESC")
+	for SRCPACKAGE in ${STATE_PKGS} ; do
+		include_pkg_html_in_page
+	done
+	write_page "    </table>"
+	archlinux_page_footer
 }
 
 #
@@ -349,6 +371,7 @@ if [ -z "$1" ] ; then
 	HEIGHT=960
 
 	repostats
+	recent_builds
 	single_main_page
 	repository_pages
 	state_pages
