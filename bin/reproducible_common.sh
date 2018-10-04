@@ -564,7 +564,7 @@ publish_page() {
 	fi
 	cp -v $PAGE $BASE/$TARGET
 	rm $PAGE
-	echo "Enjoy $REPRODUCIBLE_URL/$TARGET"
+	echo "$(date -u) - enjoy $REPRODUCIBLE_URL/$TARGET"
 }
 
 gen_package_html() {
