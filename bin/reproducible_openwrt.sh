@@ -56,16 +56,16 @@ master_cleanup_tmpdirs() {
 	# in a success build the logs are saved on a different function
 	if [ "$1" != "success" ] ; then
 		# job failed
-		ssh "$GENERIC_NODE1" "reproducible_$TYPE" node node_save_logs "$TMPBUILDDIR" || true
-		ssh "$GENERIC_NODE2" "reproducible_$TYPE" node node_save_logs "$TMPBUILDDIR" || true
+		ssh "$GENERIC_NODE1" "reproducible_openwrt" node node_save_logs "$TMPBUILDDIR" || true
+		ssh "$GENERIC_NODE2" "reproducible_openwrt" node node_save_logs "$TMPBUILDDIR" || true
 		# save failure logs
 		mkdir -p "$WORKSPACE/results/"
 		rsync -av "$GENERIC_NODE1:$RESULTSDIR/build_logs.tar.xz" "$WORKSPACE/results/build_logs_b1.tar.xz" || true
 		rsync -av "$GENERIC_NODE2:$RESULTSDIR/build_logs.tar.xz" "$WORKSPACE/results/build_logs_b2.tar.xz" || true
 	fi
 
-	ssh "$GENERIC_NODE1" "reproducible_$TYPE" node node_cleanup_tmpdirs "$TMPBUILDDIR" || true
-	ssh "$GENERIC_NODE2" "reproducible_$TYPE" node node_cleanup_tmpdirs "$TMPBUILDDIR" || true
+	ssh "$GENERIC_NODE1" "reproducible_openwrt" node node_cleanup_tmpdirs "$TMPBUILDDIR" || true
+	ssh "$GENERIC_NODE2" "reproducible_openwrt" node node_cleanup_tmpdirs "$TMPBUILDDIR" || true
 
 	cd
 	# (very simple) check we are deleting the right stuff
@@ -140,7 +140,7 @@ node_save_logs() {
 # save the images and packages under $TMPDIR/$RUN
 # run on the master
 save_openwrt_results() {
-	RUN=$1
+	local RUN=$1
 
 	# first save all images and target specific packages
 	pushd bin/targets
@@ -192,7 +192,7 @@ save_openwrt_results() {
 # the subsequent run
 # RUN - b1 or b2. b1 for first run, b2 for the second
 openwrt_apply_variations() {
-	RUN=$1
+	local RUN=$1
 
 	if [ "$RUN" = "b1" ] ; then
 		export TZ="/usr/share/zoneinfo/Etc/GMT+12"
@@ -238,13 +238,11 @@ openwrt_build_toolchain() {
 	ionice -c 3 make $OPTIONS toolchain/install
 }
 
-# TYPE - openwrt or openwrt
 # RUN - b1 or b2. b1 means first run, b2 second
 # TARGET - a target including subtarget. E.g. ar71xx_generic
 openwrt_compile() {
-	local TYPE=$1
-	local RUN=$2
-	local TARGET=$3
+	local RUN=$1
+	local TARGET=$2
 
 	OPTIONS="-j $NUM_CPU IGNORE_ERRORS=ym BUILD_LOG=1"
 
@@ -253,7 +251,7 @@ openwrt_compile() {
 	[ "$RUN" = "b2" ] && RUN="second"
 
 	echo "============================================================================="
-	echo "$(date -u) - Building $TYPE ${OPENWRT_VERSION} ($TARGET) - $RUN build run."
+	echo "$(date -u) - Building OpenWrt ${OPENWRT_VERSION} ($TARGET) - $RUN build run."
 	echo "============================================================================="
 	ionice -c 3 $MAKE $OPTIONS
 }
@@ -290,7 +288,7 @@ EOF
 }
 
 # called by openwrt_two_times
-# ssh $GENERIC_NODE1 reproducible_$TYPE node openwrt_download $TYPE $TARGET $CONFIG $TMPDIR
+# ssh $GENERIC_NODE1 reproducible_openwrt node openwrt_download $TARGET $CONFIG $TMPDIR
 openwrt_download() {
 	local TARGET=$1
 	local CONFIG=$2
@@ -332,7 +330,6 @@ openwrt_download() {
 
 openwrt_get_banner() {
 	local TMPDIR=$1
-	local TYPE=$2
 	cd "$TMPDIR/build/source"
 	echo "===bannerbegin==="
 	find staging_dir/ -name banner | grep etc/banner|head -1| xargs cat /dev/null
@@ -340,17 +337,15 @@ openwrt_get_banner() {
 }
 
 # openwrt_build is run on a remote host
-# TYPE - openwrt or openwrt
 # RUN - b1 or b2. b1 means first run, b2 second
 # TARGET - a target including subtarget. E.g. ar71xx_generic
 # CONFIG - a simple basic .config as string. Use \n to seperate lines
 # TMPPATH - is a unique path generated with mktmp
 openwrt_build() {
-	local TYPE=$1
-	local RUN=$2
-	local TARGET=$3
-	local CONFIG=$4
-	export TMPDIR=$5
+	local RUN=$1
+	local TARGET=$2
+	local CONFIG=$3
+	export TMPDIR=$4
 	export TMPBUILDDIR=$TMPDIR/build/
 
 	mv "$TMPDIR/download" "$TMPBUILDDIR"
@@ -363,10 +358,10 @@ openwrt_build() {
 
 	openwrt_build_toolchain
 	# build images and packages
-	openwrt_compile "$TYPE" "$RUN" "$TARGET"
+	openwrt_compile "$RUN" "$TARGET"
 
 	# save the results
-	[ "$TYPE" = "openwrt" ] && save_openwrt_results "$RUN"
+	save_openwrt_results "$RUN"
 
 	# copy logs
 	node_save_logs "$TMPDIR"
@@ -375,56 +370,54 @@ openwrt_build() {
 # build openwrt/openwrt on two different hosts
 # TARGET a target including subtarget. E.g. ar71xx_generic
 # CONFIG - a simple basic .config as string. Use \n to seperate lines
-# TYPE - openwrt or openwrt
 build_two_times() {
-	TYPE=$1
-	TARGET=$2
-	CONFIG=$3
+	local TARGET=$1
+	local CONFIG=$2
 
 	# create openwrt
-	ssh "$GENERIC_NODE1" "reproducible_$TYPE" node node_create_tmpdirs "$TMPBUILDDIR"
-	ssh "$GENERIC_NODE2" "reproducible_$TYPE" node node_create_tmpdirs "$TMPBUILDDIR"
+	ssh "$GENERIC_NODE1" "reproducible_openwrt" node node_create_tmpdirs "$TMPBUILDDIR"
+	ssh "$GENERIC_NODE2" "reproducible_openwrt" node node_create_tmpdirs "$TMPBUILDDIR"
 	mkdir -p "$TMPBUILDDIR/download/"
 
 	# create results directory saved by jenkins as artifacts
 	mkdir -p "$WORKSPACE/results/"
 
 	# download and prepare openwrt on node b1
-	ssh "$GENERIC_NODE1" "reproducible_$TYPE" node openwrt_download "$TARGET" "$CONFIG" "$TMPBUILDDIR"
+	ssh "$GENERIC_NODE1" "reproducible_openwrt" node openwrt_download "$TARGET" "$CONFIG" "$TMPBUILDDIR"
 
 	echo "== master"
 	ls -la "$TMPBUILDDIR/download/" || true
 	echo "== node1"
-	ssh "$GENERIC_NODE1" "reproducible_$TYPE" node node_debug "$TMPBUILDDIR"
+	ssh "$GENERIC_NODE1" "reproducible_openwrt" node node_debug "$TMPBUILDDIR"
 	echo "== node2"
-	ssh "$GENERIC_NODE2" "reproducible_$TYPE" node node_debug "$TMPBUILDDIR"
+	ssh "$GENERIC_NODE2" "reproducible_openwrt" node node_debug "$TMPBUILDDIR"
 
 	rsync -a "$GENERIC_NODE1:$TMPBUILDDIR/download/" "$TMPBUILDDIR/download/"
 	rsync -a "$TMPBUILDDIR/download/" "$GENERIC_NODE2:$TMPBUILDDIR/download/"
 
 	## first run
-	RUN=b1
-	ssh "$GENERIC_NODE1" "reproducible_$TYPE" node openwrt_build "$TYPE" "$RUN" "$TARGET" "$CONFIG" "$TMPBUILDDIR"
-	ssh "$GENERIC_NODE1" "reproducible_$TYPE" node openwrt_get_banner "$TMPBUILDDIR" "$TYPE" > "$BANNER_HTML"
+	local RUN=b1
+	ssh "$GENERIC_NODE1" "reproducible_openwrt" node openwrt_build "$RUN" "$TARGET" "$CONFIG" "$TMPBUILDDIR"
+	ssh "$GENERIC_NODE1" "reproducible_openwrt" node openwrt_get_banner "$TMPBUILDDIR" > "$BANNER_HTML"
 	# cut away everything before begin and after the end…
 	# (thats noise generated by the way we run this via reproducible_common.sh)
 	cat "$BANNER_HTML" | sed '/===bannerend===/,$d' | tac | sed '/===bannerbegin===/,$d' | tac > "$BANNER_HTML.out"
-    mv "$BANNER_HTML".out "$BANNER_HTML"
+        mv "$BANNER_HTML".out "$BANNER_HTML"
 
 	# rsync back logs and images
 	rsync -av "$GENERIC_NODE1:$TMPBUILDDIR/$RUN/" "$RESULTSDIR/$RUN/"
 	rsync -av "$GENERIC_NODE1:$TMPBUILDDIR/build_logs.tar.xz" "$WORKSPACE/results/build_logs_b1.tar.xz"
 	rsync -av "$GENERIC_NODE1:$TMPBUILDDIR/toolchain.html" "$RESULTSDIR/toolchain.html"
-	ssh "$GENERIC_NODE1" "reproducible_$TYPE" node node_cleanup_tmpdirs "$TMPBUILDDIR"
+	ssh "$GENERIC_NODE1" "reproducible_openwrt" node node_cleanup_tmpdirs "$TMPBUILDDIR"
 
 	## second run
-	RUN=b2
-	ssh "$GENERIC_NODE2" "reproducible_$TYPE" node openwrt_build "$TYPE" "$RUN" "$TARGET" "$CONFIG" "$TMPBUILDDIR"
+	local RUN=b2
+	ssh "$GENERIC_NODE2" "reproducible_openwrt" node openwrt_build "$RUN" "$TARGET" "$CONFIG" "$TMPBUILDDIR"
 
 	# rsync back logs and images
 	rsync -av "$GENERIC_NODE2:$TMPBUILDDIR/$RUN/" "$RESULTSDIR/$RUN/"
 	rsync -av "$GENERIC_NODE2:$TMPBUILDDIR/build_logs.tar.xz" "$WORKSPACE/results/build_logs_b2.tar.xz"
-	ssh "$GENERIC_NODE2" "reproducible_$TYPE" node node_cleanup_tmpdirs "$TMPBUILDDIR"
+	ssh "$GENERIC_NODE2" "reproducible_openwrt" node node_cleanup_tmpdirs "$TMPBUILDDIR"
 }
 
 
@@ -479,7 +472,7 @@ cd "$TMPBUILDDIR"
 mkdir -p "$BASE/openwrt/dbd"
 
 
-build_two_times openwrt "$OPENWRT_TARGET" "$OPENWRT_CONFIG"
+build_two_times "$OPENWRT_TARGET" "$OPENWRT_CONFIG"
 
 #
 # create html about toolchain used
