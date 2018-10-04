@@ -197,10 +197,7 @@ archlinux_repostats_table(){
 	write_page "    <p><a href='/archlinux/recent_builds.html'>(recent builds)</a></p>"
 }
 
-single_main_page(){
-	#
-	# write out the actual webpage
-	#
+dashboard_page(){
 	PAGE=archlinux.html
 	TITLE="Reproducible archlinux ?!"
 	archlinux_page_header
@@ -371,8 +368,8 @@ if [ -z "$1" ] ; then
 	HEIGHT=960
 
 	repostats
+	dashboard_page
 	recent_builds
-	single_main_page
 	repository_pages
 	state_pages
 	repository_state_pages
