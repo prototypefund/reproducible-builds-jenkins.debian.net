@@ -566,7 +566,7 @@ publish_page() {
 	else
 		TARGET=$1/$PAGE
 	fi
-	cp -v $PAGE $BASE/$TARGET
+	echo "$(date -u) - $(cp -v $PAGE $BASE/$TARGET)"
 	rm $PAGE
 	echo "$(date -u) - enjoy $REPRODUCIBLE_URL/$TARGET"
 }

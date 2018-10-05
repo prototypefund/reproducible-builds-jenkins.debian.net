@@ -179,7 +179,6 @@ archlinux_page_header(){
 archlinux_page_footer(){
 	write_page "</div></div>"
 	write_page_footer 'Arch Linux'
-	echo "$(date -u) - enjoy $REPRODUCIBLE_URL/archlinux/$PAGE"
 	publish_page archlinux
 }
 
