@@ -4,6 +4,10 @@
 #         © 2015 Reiner Herrmann <reiner@reiner-h.de>
 #           2016-2018 Alexander Couzens <lynxis@fe80.eu>
 # released under the GPLv=2
+#
+# long live LEDE.
+# This file was previously known and developed as
+# reproducible_lede_common.sh and reproducible_lede.sh
 
 # configuration
 GENERIC_NODE1=profitbricks-build3-amd64.debian.net
