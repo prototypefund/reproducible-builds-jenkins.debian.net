@@ -221,12 +221,19 @@ repository_pages(){
 		archlinux_page_header
 		archlinux_repostats_table
 		SUITE="archlinux_$REPOSITORY"
-		TESTED=$(query_db "SELECT count(*) FROM sources AS s JOIN results AS r ON s.id=r.package_id
-				WHERE s.architecture='x86_64' AND s.suite='$SUITE';")
+		TESTED=$(query_db "SELECT count(*) FROM sources AS s
+					JOIN results AS r
+					ON s.id=r.package_id
+					WHERE s.architecture='x86_64'
+					AND s.suite='$SUITE';")
 		write_page "<h2>$TESTED packages in repository $REPOSITORY</h2>"
 		include_pkg_table_header_in_page
-		REPO_PKGS=$(query_db "SELECT s.name FROM sources AS s JOIN results AS r ON s.id=r.package_id
-				WHERE s.architecture='x86_64' AND s.suite='$SUITE' ORDER BY r.status,s.name")
+		REPO_PKGS=$(query_db "SELECT s.name FROM sources
+				AS s JOIN results AS r
+				ON s.id=r.package_id
+				WHERE s.architecture='x86_64'
+				AND s.suite='$SUITE'
+				ORDER BY r.status,s.name")
 		for SRCPACKAGE in $REPO_PKGS ; do
 			include_pkg_html_in_page
 		done
@@ -241,12 +248,16 @@ state_pages(){
 		TITLE="Reproducible archlinux, packages in state $STATE"
 		archlinux_page_header
 		archlinux_repostats_table
-		TESTED=$(query_db "SELECT count(*) FROM sources AS s JOIN results AS r ON s.id=r.package_id
-				WHERE s.architecture='x86_64' AND r.status LIKE '$STATE%';")
+		TESTED=$(query_db "SELECT count(*) FROM sources AS s
+				JOIN results AS r
+				ON s.id=r.package_id
+				WHERE s.architecture='x86_64'
+				AND r.status LIKE '$STATE%';")
 		if [ "$STATE" = "UNKNOWN" ] ; then
 			# untested packages are also state UNKNOWN...
 			UNTESTED=$(query_db "SELECT count(s.name) FROM sources AS s
-					WHERE s.architecture='x86_64' AND s.id NOT IN (SELECT package_id FROM results)")
+					WHERE s.architecture='x86_64'
+					AND s.id NOT IN (SELECT package_id FROM results)")
 			if [ $UNTESTED -ne 0 ] ; then
 				let TESTED=$TESTED+$UNTESTED
 			fi
@@ -255,15 +266,23 @@ state_pages(){
 		include_pkg_table_header_in_page
 		for REPOSITORY in $ARCHLINUX_REPOS ; do
 			SUITE="archlinux_$REPOSITORY"
-			STATE_PKGS=$(query_db "SELECT s.name FROM sources AS s JOIN results AS r ON s.id=r.package_id
-					WHERE s.architecture='x86_64' AND s.suite='$SUITE' AND r.status LIKE '$STATE%' ORDER BY r.status,s.name")
+			STATE_PKGS=$(query_db "SELECT s.name FROM sources AS s
+					JOIN results AS r
+					ON s.id=r.package_id
+					WHERE s.architecture='x86_64'
+					AND s.suite='$SUITE'
+					AND r.status LIKE '$STATE%'
+					ORDER BY r.status,s.name")
 			for SRCPACKAGE in ${STATE_PKGS} ; do
 				include_pkg_html_in_page
 			done
 			if [ "$STATE" = "UNKNOWN" ] ; then
 				# untested packages are also state UNKNOWN...
 				STATE_PKGS=$(query_db "SELECT s.name FROM sources AS s
-					WHERE s.architecture='x86_64' AND s.suite='$SUITE' AND s.id NOT IN (SELECT package_id FROM results) ORDER BY s.name")
+					WHERE s.architecture='x86_64'
+					AND s.suite='$SUITE'
+					AND s.id NOT IN (SELECT package_id FROM results)
+					ORDER BY s.name")
 				for SRCPACKAGE in ${STATE_PKGS} ; do
 					include_pkg_html_in_page
 				done
@@ -282,27 +301,41 @@ repository_state_pages(){
 			TITLE="Reproducible archlinux, packages in $REPOSITORY in state $STATE"
 			archlinux_page_header
 			archlinux_repostats_table
-			TESTED=$(query_db "SELECT count(*) FROM sources AS s JOIN results AS r ON s.id=r.package_id
-					WHERE s.architecture='x86_64' AND s.suite='$SUITE' AND r.status LIKE '$STATE%';")
+			TESTED=$(query_db "SELECT count(*) FROM sources AS s
+					JOIN results AS r
+					ON s.id=r.package_id
+					WHERE s.architecture='x86_64'
+					AND s.suite='$SUITE'
+					AND r.status LIKE '$STATE%';")
 			if [ "$STATE" = "UNKNOWN" ] ; then
 				# untested packages are also state UNKNOWN...
 				UNTESTED=$(query_db "SELECT count(s.name) FROM sources AS s
-						WHERE s.architecture='x86_64' AND s.suite='$SUITE' AND s.id NOT IN (SELECT package_id FROM results)")
+						WHERE s.architecture='x86_64'
+						AND s.suite='$SUITE'
+						AND s.id NOT IN (SELECT package_id FROM results)")
 				if [ $UNTESTED -ne 0 ] ; then
 					let TESTED=$TESTED+$UNTESTED
 				fi
 			fi
 			write_page "<h2>$TESTED packages in $REPOSITORY in $STATE state</h2>"
 			include_pkg_table_header_in_page
-			STATE_PKGS=$(query_db "SELECT s.name FROM sources AS s JOIN results AS r ON s.id=r.package_id
-					WHERE s.architecture='x86_64' AND s.suite='$SUITE' AND r.status LIKE '$STATE%' ORDER BY r.status,s.name")
+			STATE_PKGS=$(query_db "SELECT s.name FROM sources AS s
+					JOIN results AS r
+					ON s.id=r.package_id
+					WHERE s.architecture='x86_64'
+					AND s.suite='$SUITE'
+					AND r.status LIKE '$STATE%'
+					ORDER BY r.status,s.name")
 			for SRCPACKAGE in ${STATE_PKGS} ; do
 				include_pkg_html_in_page
 			done
 			if [ "$STATE" = "UNKNOWN" ] ; then
 				# untested packages are also state UNKNOWN...
 				STATE_PKGS=$(query_db "SELECT s.name FROM sources AS s
-					WHERE s.architecture='x86_64' AND s.suite='$SUITE' AND s.id NOT IN (SELECT package_id FROM results) ORDER BY s.name")
+					WHERE s.architecture='x86_64'
+					AND s.suite='$SUITE'
+					AND s.id NOT IN (SELECT package_id FROM results)
+					ORDER BY s.name")
 				for SRCPACKAGE in ${STATE_PKGS} ; do
 					include_pkg_html_in_page
 				done
@@ -321,11 +354,13 @@ recent_builds(){
 	write_page "<h2>Recent builds of Archlinux packages in the last 24h</h2>"
 	include_pkg_table_header_in_page
 	MAXDATE="$(date -u +'%Y-%m-%d %H:%M' -d '24 hours ago')"
-	STATE_PKGS=$(query_db "SELECT s.name FROM sources AS s JOIN results AS r ON s.id=r.package_id
-			WHERE s.architecture='x86_64'
-			AND r.build_date > '$MAXDATE'
-			ORDER BY r.build_date
-			DESC")
+	STATE_PKGS=$(query_db "SELECT s.name FROM sources AS s
+				JOIN results AS r
+				ON s.id=r.package_id
+				WHERE s.architecture='x86_64'
+				AND r.build_date > '$MAXDATE'
+				ORDER BY r.build_date
+				DESC")
 	for SRCPACKAGE in ${STATE_PKGS} ; do
 		include_pkg_html_in_page
 	done
