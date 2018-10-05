@@ -8,6 +8,7 @@
 # long live LEDE.
 # This file was previously known and developed as
 # reproducible_lede_common.sh and reproducible_lede.sh
+# (which in turn was based on another variant of reproducible_openwrt.sh)
 
 # configuration
 GENERIC_NODE1=profitbricks-build3-amd64.debian.net
