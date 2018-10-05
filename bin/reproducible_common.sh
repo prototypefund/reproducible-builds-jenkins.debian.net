@@ -513,7 +513,11 @@ write_variation_table() {
 			# FIXME: collect information about arch build nodes in /srv/reproducible-results/node-information/ and include this here
 			write_page "<tr><td>kernel version</td><td colspan=\"2\"> is varied between rebuilds of $1.</td></tr>"
 		fi
-		write_page "<tr><td>umask</td><td>0022<td>0002</td><tr>"
+		if [ "$1" = "OpenWrt" ] ; then
+			write_page "<tr><td>umask</td><td>0022<td>0002</td><tr>"
+		else
+			write_page "<tr><td colspan=\"2\">is always set to 0022 by the OpenWrt build system.</td><tr>"
+		fi
 	else
 		write_page "<tr><td>FreeBSD kernel version</td><td colspan=\"2\"> is not yet varied between rebuilds of $1.</td></tr>"
 		write_page "<tr><td>umask</td><td colspan=\"2\"> is not yet varied between rebuilds of $1.</td><tr>"
