@@ -604,12 +604,8 @@ else
 	MAGIC_SIGN="?"
 fi
 
-#
-#  finally create the webpage
-#
-cd "$RESULTSDIR" ; mkdir openwrt
-PAGE=openwrt/openwrt_$OPENWRT_TARGET.html
-cat > "$PAGE" <<- EOF
+write_openwrt_page_header(){
+	cat > "$PAGE" <<- EOF
 <!DOCTYPE html>
 <html lang="en-US">
   <head>
@@ -622,10 +618,18 @@ cat > "$PAGE" <<- EOF
     <div id="content">
         <pre>
 EOF
-cat "$BANNER_HTML" >> "$PAGE"
-write_page "       </pre>"
-write_page "     </div><div id=\"main-content\">"
-write_page "       <h1>OpenWrt - <em>reproducible</em> wireless freedom$MAGIC_SIGN</h1>"
+	cat "$BANNER_HTML" >> "$PAGE"
+	write_page "       </pre>"
+	write_page "     </div><div id=\"main-content\">"
+	write_page "       <h1>OpenWrt - <em>reproducible</em> wireless freedom$MAGIC_SIGN</h1>"
+}
+
+#
+#  finally create the webpage
+#
+cd "$RESULTSDIR" ; mkdir openwrt
+PAGE=openwrt/openwrt_$OPENWRT_TARGET.html
+write_openwrt_page_header
 write_page_intro OpenWrt
 write_page "       <p>$GOOD_IMAGES ($GOOD_PERCENT_IMAGES%) out of $ALL_IMAGES built images and $GOOD_PACKAGES ($GOOD_PERCENT_PACKAGES%) out of $ALL_PACKAGES built packages were reproducible in our test setup."
 write_page "        These tests were last run on $DATE for version ${OPENWRT_VERSION} using ${DIFFOSCOPE}.</p>"
