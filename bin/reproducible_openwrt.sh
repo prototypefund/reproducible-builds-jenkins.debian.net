@@ -129,6 +129,7 @@ node_save_logs() {
 
 	if [ ! -d "$tmpdir/build/source/logs" ] ; then
 		# we create an empty tar.xz instead of failing
+		mkdir -p $tmpdir
 		touch "$tmpdir/build_logs.tar.xz"
 	else
 		echo "$(date -u) - saving \$tmpdir/build/source in $tmpdir/build_logs.tar.xz"
