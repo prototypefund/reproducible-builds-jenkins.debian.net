@@ -8,7 +8,7 @@
 # configuration
 GENERIC_NODE1=profitbricks-build3-amd64.debian.net
 GENERIC_NODE2=profitbricks-build4-amd64.debian.net
-OPENWRT_GIT_REPO=https://git.openwrt.org/openwrt/staging/lynxis.git
+OPENWRT_GIT_REPO=https://git.openwrt.org/openwrt/openwrt.git
 OPENWRT_GIT_BRANCH=master
 DEBUG=false
 OPENWRT_CONFIG=
