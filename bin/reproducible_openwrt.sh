@@ -37,6 +37,7 @@ node_cleanup_tmpdirs() {
 		echo "Something very strange with \$TMPBUILDDIR=$TMPBUILDDIR exiting instead of doing cleanup."
 		exit 1
 	fi
+	echo "$(date -u) - deleting \$TMPBUILDDIR $TMPBUILDDIR"
 	rm -rf "$TMPBUILDDIR"
 }
 
@@ -130,6 +131,7 @@ node_save_logs() {
 		# we create an empty tar.xz instead of failing
 		touch "$tmpdir/build_logs.tar.xz"
 	else
+		echo "$(date -u) - saving \$tmpdir/build/source in $tmpdir/build_logs.tar.xz"
 		tar cJf "$tmpdir/build_logs.tar.xz" -C "$tmpdir/build/source" ./logs
 	fi
 
