@@ -31,7 +31,7 @@ channels = [
     {'name': 'debian-reproducible-changes', 'id': 'debian-reproducible-changes'},
     {'name': 'debian-ruby', 'id': 'pkg-ruby-extras'},
     {'name': 'reproducible-builds', 'id': 'reproducible-builds'},
-    {'name': 'lede-dev', 'id': 'lede-dev'},
+    {'name': 'openwrt-devel', 'id': 'openwrt-devel'},
     {'name': 'archlinux-reproducible', 'id': 'archlinux-reproducible'},
 ]
 
