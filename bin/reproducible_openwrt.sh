@@ -623,14 +623,29 @@ EOF
 	write_page "     </div><div id=\"main-content\">"
 	write_page "       <h1>OpenWrt - <em>reproducible</em> wireless freedom$MAGIC_SIGN</h1>"
 }
-
 #
-#  finally create the webpage
+#  create landing age
 #
 cd "$RESULTSDIR" ; mkdir openwrt
-PAGE=openwrt/openwrt_$OPENWRT_TARGET.html
+PAGE=openwrt/openwrt.html
 write_openwrt_page_header
 write_page_intro OpenWrt
+write_page "     <p>"
+write_page "     <ul>"
+for i in ar71xx ramips x86 ; do
+	write_page "            <li><a href="openwrt_$i.html">$i</a></li>"
+done
+write_page "     </ul>"
+write_page "     </p>"
+write_page "    </div>"
+write_page_footer OpenWrt
+publish_page
+
+#
+#  finally create the target webpage
+#
+PAGE=openwrt/openwrt_$OPENWRT_TARGET.html
+write_openwrt_page_header
 write_page "       <p>$GOOD_IMAGES ($GOOD_PERCENT_IMAGES%) out of $ALL_IMAGES built images and $GOOD_PACKAGES ($GOOD_PERCENT_PACKAGES%) out of $ALL_PACKAGES built packages were reproducible in our test setup."
 write_page "        These tests were last run on $DATE for version ${OPENWRT_VERSION} using ${DIFFOSCOPE}.</p>"
 write_variation_table OpenWrt
