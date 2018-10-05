@@ -50,7 +50,13 @@ done
 
 echo
 if [ ! -z "$SUCCESS" ] ; then
-	MESSAGE="Manually scheduled in $REPOSITORY:$SUCCESS"
+	AMOUNT=$(echo $SUCCESS | sed 's# #\n#g' | wc -l)
+	if [ $AMOUNT -gt 3 ] ; then
+		MANY=" $AMOUNT packages"
+	else
+		MANY=""
+	fi
+	MESSAGE="Manually scheduled$MANY in $REPOSITORY:$SUCCESS"
 	# shorten irc message if longer then 256 characters
 	if [ ${#MESSAGE} -gt 256 ] ; then
 		MESSAGE="${MESSAGE:0:256}✂…"
