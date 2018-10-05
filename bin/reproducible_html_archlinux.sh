@@ -156,7 +156,7 @@ repostats(){
 }
 
 archlinux_page_header(){
-	echo "$(date -u) - starting to build $PAGE"
+	echo "$(date -u) - starting to write $PAGE"
 	cat > $PAGE <<- EOF
 	<!DOCTYPE html>
 	<html lang="en-US">
@@ -218,7 +218,6 @@ repository_pages(){
 	for REPOSITORY in $ARCHLINUX_REPOS ; do
 		PAGE=$REPOSITORY.html
 		TITLE="Reproducible archlinux $REPOSITORY ?!"
-		echo "$(date -u) - starting to write page for $REPOSITORY'."
 		archlinux_page_header
 		archlinux_repostats_table
 		SUITE="archlinux_$REPOSITORY"
@@ -240,7 +239,6 @@ state_pages(){
 	for STATE in FTBFS FTBR DEPWAIT 404 GOOD BLACKLISTED UNKNOWN ; do
 		PAGE=state_$STATE.html
 		TITLE="Reproducible archlinux, packages in state $STATE"
-		echo "$(date -u) - starting to write page for state $STATE'."
 		archlinux_page_header
 		archlinux_repostats_table
 		TESTED=$(query_db "SELECT count(*) FROM sources AS s JOIN results AS r ON s.id=r.package_id
@@ -282,7 +280,6 @@ repository_state_pages(){
 		for STATE in FTBFS FTBR DEPWAIT 404 GOOD BLACKLISTED UNKNOWN ; do
 			PAGE=state_${REPOSITORY}_$STATE.html
 			TITLE="Reproducible archlinux, packages in $REPOSITORY in state $STATE"
-			echo "$(date -u) - starting to write page for packages in $REPOSITORY in state $STATE'."
 			archlinux_page_header
 			archlinux_repostats_table
 			TESTED=$(query_db "SELECT count(*) FROM sources AS s JOIN results AS r ON s.id=r.package_id
@@ -319,7 +316,6 @@ repository_state_pages(){
 recent_builds(){
 	PAGE=recent_builds.html
 	TITLE="Reproducible archlinux, builds in the last 24h"
-	echo "$(date -u) - starting to write page recent builds."
 	archlinux_page_header
 	archlinux_repostats_table
 	write_page "<h2>Recent builds of Archlinux packages in the last 24h</h2>"
