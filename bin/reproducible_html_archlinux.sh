@@ -193,7 +193,10 @@ archlinux_repostats_table(){
 	write_page "     <th><a href='/archlinux/state_UNKNOWN.html'>unknown state</a></th></tr>"
 	cat $HTML_REPOSTATS >> $PAGE
 	write_page "    </table>"
-	write_page "    <p><a href='/archlinux/recent_builds.html'>(recent builds)</a></p>"
+	write_page "    <p>("
+	write_page "     <a href='/archlinux/recent_builds.html'>recent builds</a>,"
+	write_page "     <a href='/archlinux/scheduled.html'>currently scheduled</a>"
+	write_page "       )</p>"
 }
 
 dashboard_page(){
@@ -345,7 +348,7 @@ repository_state_pages(){
 	done
 }
 
-recent_builds(){
+recent_builds_page(){
 	PAGE=recent_builds.html
 	TITLE="Reproducible archlinux, builds in the last 24h"
 	archlinux_page_header
@@ -363,6 +366,40 @@ recent_builds(){
 	for SRCPACKAGE in ${STATE_PKGS} ; do
 		include_pkg_html_in_page
 	done
+	write_page "    </table>"
+	archlinux_page_footer
+}
+
+currently_scheduled_page(){
+	PAGE=scheduled.html
+	TITLE="Reproducible archlinux, packages currently scheduled"
+	archlinux_page_header
+	archlinux_repostats_table
+	TESTED=$(query_db "SELECT count(*)
+			FROM sources AS s
+			JOIN schedule AS sch
+			ON s.id=sch.package_id
+			WHERE s.architecture='x86_64'
+			AND sch.date_build_started IS NULL")
+	write_page "<h2>Currently $TESTED scheduled builds of Archlinux packages</h2>"
+	write_page "    <table><tr><th>source package</th><th>repository</th><th>version</th><th>scheduled</th></tr>"
+	STATE_PKGS=$(query_db "SELECT s.name, s.suite, s.version, sch.date_scheduled
+			FROM sources AS s
+			JOIN schedule AS sch
+			ON s.id=sch.package_id
+			WHERE s.architecture='x86_64'
+			AND sch.date_build_started IS NULL
+			ORDER BY sch.date_scheduled, s.name")
+	OIFS=$IFS
+	IFS=$'\012'
+	for LINE in ${STATE_PKGS} ; do
+		SRCPACKAGE=$(echo "$LINE" | cut -d "|" -f1)
+		REPOSITORY=$(echo "$LINE" | cut -d "|" -f2 | sed 's#archlinux_##')
+		VERSION=$(echo "$LINE" | cut -d "|" -f3)
+		SCH_DATE=$(echo "$LINE" | cut -d "|" -f4-)
+		write_page "     <tr><td>$SRCPACKAGE</td><td>$REPOSITORY</td><td>$VERSION</td><td>$SCH_DATE</td></tr>"
+	done
+	IFS=$OIFS
 	write_page "    </table>"
 	archlinux_page_footer
 }
@@ -399,7 +436,8 @@ if [ -z "$1" ] ; then
 
 	repostats
 	dashboard_page
-	recent_builds
+	currently_scheduled_page
+	recent_builds_page
 	repository_pages
 	state_pages
 	repository_state_pages
