@@ -1,7 +1,7 @@
 #!/bin/bash
 # vim: set noexpandtab:
 
-# Copyright 2014-2017 Holger Levsen <holger@layer-acht.org>
+# Copyright 2014-2018 Holger Levsen <holger@layer-acht.org>
 #           ©    2018 Mattia Rizzolo <mattia@debian.org>
 # released under the GPLv=2
 
@@ -130,7 +130,7 @@ setup_pbuilder() {
 		pbuilder_http_proxy="--http-proxy $http_proxy"
 	fi
 	# setup base.tgz
-	sudo pbuilder --create $pbuilder_http_proxy --basetgz /var/cache/pbuilder/${NAME}-new.tgz --distribution $SUITE --extrapackages "$EXTRA_PACKAGES"
+	sudo pbuilder --create $pbuilder_http_proxy --basetgz /var/cache/pbuilder/${NAME}-new.tgz --distribution $SUITE --extrapackages "$EXTRA_PACKAGES" --loglevel D
 
 	# customize pbuilder
 	create_customized_tmpfile ${TMPFILE}
