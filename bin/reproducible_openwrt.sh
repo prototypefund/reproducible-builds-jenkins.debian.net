@@ -139,10 +139,6 @@ node_save_logs() {
 	else
 		echo "$(date -u) - saving \$tmpdir/build/source in $tmpdir/build_logs.tar.xz"
 		tar cJf "$tmpdir/build_logs.tar.xz" -C "$tmpdir/build/source" ./logs
-		echo "$(date -u) - $(ls -lh $tmpdir/build_logs.tar.xz)"
-		local result_tar="/srv/reproducible-results/$(echo $BUILD_URL | cut -d '/' -f5- | sed 's#/#_#g')_build_logs.tar.xz"
-		cp $tmpdir/build_logs.tar.xz ${result_tar}
-		echo "$(date -u) - saving \$tmpdir/build_logs.tar.xz in ${result_tar} on $(hostname)"
 	fi
 
 	node_document_environment "$tmpdir"
