@@ -41,6 +41,9 @@
           max-failed-builds: 3
           regular-expression: '{my_naginator_regex}'
     node: '{my_node}'
+    wrappers:
+      - timeout:
+          timeout: '{my_timeout}'
 
 - defaults:
     <<: *DEFAULTS
@@ -262,6 +265,7 @@
     my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
     my_node: '{my_hname}'
     my_naginator_regex: 'dummyshouldneverhappen'
+    my_timeout: '720'
     jobs:
         - '{name}_{my_task}_{my_arch}_{my_hname}':
             my_task:
@@ -278,6 +282,7 @@
                     my_description: 'Do some health checks.'
                     my_timed: 'H/15 * * * *'
                     my_recipients: ''
+                    my_timeout: '15'
             my_shell: '/srv/jenkins/bin/reproducible_node_health_check.sh'
             my_hname:
                 - 'jenkins':        { my_arch: 'amd64' }
@@ -339,6 +344,7 @@
                     my_description: 'Do some health checks'
                     my_timed: 'H/15 * * * *'
                     my_recipients: ''
+                    my_timeout: '15'
             my_hname:
                 - 'bbx15':          { my_arch: 'armhf' }
                 - 'cbxi4a':         { my_arch: 'armhf' }
