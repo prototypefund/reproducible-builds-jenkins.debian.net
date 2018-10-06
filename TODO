@@ -269,10 +269,11 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 
 * system maintenance
 ** upgraded the VM to FreeBSD 11.0
-*** done with: 'freebsd-update upgrade -r 10.2'
+*** done with: 'freebsd-update upgrade -r 10.2' as root in screen
 *** and with:  'freebsd-update upgrade -r 10.3'
 *** and with:  'freebsd-update upgrade -r 11.0'
-*** and with:  'freebsd-update upgrade -r 11.1' in screen, followed by 'pkg-static install pkg ; pkg upgrade'
+*** and with:  'freebsd-update upgrade -r 11.1'
+*** and with:  'freebsd-update upgrade -r 11.2' followed by 'pkg-static install pkg ; pkg upgrade'
 
 * online disk resizing howto: https://www.freebsd.org/doc/handbook/disks-growing.html
 
