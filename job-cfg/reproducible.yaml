@@ -608,6 +608,7 @@
             my_hname: ''
             my_recipients: 'jenkins+reproducible-builds qa-jenkins-scm@lists.alioth.debian.org lynxis@fe80.eu'
             my_blocker: '^reproducible_openwrt.*'
+            my_timeout: '1440'
 
         - '{name}_{otherproject_triggering}':
             otherproject_triggering:
@@ -622,6 +623,7 @@
             my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
             my_hname: 'profitbricks3'
             my_recipients: 'jenkins+reproducible-builds qa-jenkins-scm@lists.alioth.debian.org'
+            my_timeout: '1440'
 
         - '{name}_{otherproject}':
             otherproject:
@@ -659,6 +661,7 @@
                     my_disabled: true
             my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
             my_hname: ''
+            my_timeout: '1440'
 
         - '{name}_{otherproject_blocked}':
             otherproject_blocked:
