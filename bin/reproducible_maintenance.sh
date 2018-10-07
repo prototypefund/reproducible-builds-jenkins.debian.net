@@ -58,6 +58,23 @@ fi
 set -e
 
 #
+# find too large files in /var/log
+#
+echo "$(date -u) - Looking for too large files in /var/log/"
+TOOBIG=$(find /var/log -size +8G -exec ls -lah {} \; 2>/dev/null || true)
+if [ ! -z "$TOOBIG" ] ; then
+	echo
+	echo "$(date -u) - Warning: too large files found in /var/log:"
+	echo "$TOOBIG"
+	echo
+	DIRTY=true
+	if $(find /var/log -size +32G /dev/null 2>&1) ; then
+		echo "$(date -u) - Error, more than 32gb is just wrong..."
+		exit 1
+	fi
+fi
+
+#
 # delete old temp directories
 #
 echo "$(date -u) - Deleting temp directories in $REP_RESULTS/rbuild-debian, older than 3 days."
