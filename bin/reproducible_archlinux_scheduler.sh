@@ -12,6 +12,10 @@ common_init "$@"
 
 set -e
 
+cleanup_all() {
+	schroot --end-session -c $SESSION 2>/dev/null|| true
+}
+
 update_archlinux_repositories() {
 	#
 	# init
@@ -25,7 +29,6 @@ update_archlinux_repositories() {
 	query_db "SELECT suite, name, version FROM sources WHERE architecture='$ARCH';" > $KNOWN
 	echo "$(date -u ) - $(cat $KNOWN | wc -l) Arch Linux packages are known in our database."
 	# init session
-	local SESSION="archlinux-scheduler-$RANDOM"
 	schroot --begin-session --session-name=$SESSION -c jenkins-reproducible-archlinux
 	echo "$(date -u ) - updating pacman's knowledge of Arch Linux repositories (by running pacman -Syu --noconform')."
 	schroot --run-session -c $SESSION --directory /var/tmp -- sudo pacman -Syu --noconfirm
@@ -254,7 +257,10 @@ update_archlinux_repositories() {
 	rm -f $NEW $UPDATED $KNOWN > /dev/null
 }
 
+trap cleanup_all INT TERM EXIT
 ARCH="x86_64"
+SESSION="archlinux-scheduler-$RANDOM"
 update_archlinux_repositories
+trap - INT TERM EXIT
 
 # vim: set sw=0 noet :
