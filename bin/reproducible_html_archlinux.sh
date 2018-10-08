@@ -408,7 +408,6 @@ currently_scheduled_page(){
 # main
 #
 echo "$(date -u) - starting."
-DATE=$(date -u +'%Y-%m-%d')
 YESTERDAY=$(date '+%Y-%m-%d' -d "-1 day")
 PAGE=""
 TITLE=""
