@@ -6,5 +6,5 @@
 
 MAILTO=root
 
-0 1,13 * * * nobody /usr/bin/chronic /usr/local/bin/dsa-check-running-kernel
+0 1 * * * nobody /usr/bin/chronic /usr/local/bin/dsa-check-running-kernel
 2 1,13 * * * nobody /usr/bin/chronic /usr/local/bin/dsa-check-packages
