@@ -153,10 +153,6 @@ schedule_packages() {
 		$@
 }
 
-write_page() {
-	echo "$1" >> $PAGE
-}
-
 set_icon() {
 	# icons taken from tango-icon-theme (0.8.90-5)
 	# licenced under http://creativecommons.org/licenses/publicdomain/

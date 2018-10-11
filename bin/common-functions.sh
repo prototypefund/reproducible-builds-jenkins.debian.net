@@ -209,3 +209,7 @@ publish_changes_to_userContent() {
 		kgb-client --conf /srv/jenkins/kgb/$CHANNEL.conf --relay-msg "$MESSAGE"
 	fi
 }
+
+write_page() {
+	echo "$1" >> $PAGE
+}
