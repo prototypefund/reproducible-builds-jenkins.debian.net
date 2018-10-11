@@ -203,9 +203,11 @@ upgrade2() {
 
 trap cleanup_all INT TERM EXIT
 
+LXQT="lxqt"
 case $1 in
 	jessie)		DISTRO="jessie"
 			SPECIFIC="libreoffice virt-manager mplayer2 chromium"
+			LXQT="" # not present in jessie
 			;;
 	stretch)	DISTRO="stretch"
 			SPECIFIC="libreoffice virt-manager mplayer chromium"
@@ -223,7 +225,7 @@ esac
 bootstrap $DISTRO
 
 if [ "$2" != "" ] ; then
-	FULL_DESKTOP="$SPECIFIC desktop-base gnome kde-plasma-desktop kde-full kde-standard xfce4 lxde lxqt vlc evince iceweasel cups build-essential devscripts wine texlive-full asciidoc vim emacs"
+	FULL_DESKTOP="$SPECIFIC desktop-base gnome kde-plasma-desktop kde-full kde-standard xfce4 lxde $LXQT vlc evince iceweasel cups build-essential devscripts wine texlive-full asciidoc vim emacs"
 	case $2 in
 		none)		;;
 		gnome)		install_packages gnome gnome desktop-base
