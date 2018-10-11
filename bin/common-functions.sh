@@ -77,6 +77,8 @@ if [ "${0:0:5}" != "/tmp/" ] ; then
 			# design-desktop will enter buster without these two bugs being fixed
 			abort_if_bug_is_still_open 890754
 			abort_if_bug_is_still_open 879034 ;;
+		chroot-installation_sid_install_design-desktop-graphics)
+			abort_if_bug_is_still_open 910812 ;;
 		*) ;;
 	esac
 	# mktemp some place for us...
