@@ -152,12 +152,49 @@ general_maintenance() {
 	(df 2>/dev/null || true ) | grep tmpfs > /dev/null || ( echo ; echo "Warning: no tmpfs mounts in use. Please investigate the host system." ; exit 1 )
 }
 
+build_jenkins_job_health_page() {
+	#
+	# job health page
+	#
+	FILTER[0]="self"
+	FILTER[1]="udd"
+	FILTER[2]="lintian"
+	FILTER[3]="piuparts"
+	FILTER[4]="debsums"
+	FILTER[5]="dpkg"
+	FILTER[6]="edu-packages"
+	FILTER[7]="chroot-installation"
+	FILTER[8]="d-i"
+	FILTER[9]="rebootstrap"
+	FILTER[10]="g-i-installation"
+	#FIXME add code to find unfiltered ones
+	echo "$(date -u) - starting to write jenkins_job_health page."
+	write_page "<!DOCTYPE html><html lang=\"en\"><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">"
+	write_page "<title>Jenkins job health</title/></head><body>"
+	for CATEGORY in $(seq 0 10) ; do
+		write_page "<p style=\"clear:both;\">"
+		write_page "<h3>${FILTER[$CATEGORY]}</h3>"
+		for JOB in $(cd ~/jobs ; ls -1d * | grep -v reproducible_ | egrep "^${FILTER[$CATEGORY]}" | sort ) ; do
+			URL="https://jenkins.debian.net/job/$JOB"
+			BADGE="$URL/badge/icon"
+			write_page "<a href='$URL'><img src='$BADGE' /></a> "
+		done
+		write_page "</p>"
+	done
+	write_page "</body></html>"
+	mv $PAGE ~/userContent/jenkins_job_health.html
+	chmod 644 ~/userContent/jenkins_job_health.html
+	echo "$(date -u) - updated https://jenkins.debian.net/userContent/jenkins_job_health.html"
+}
+
 #
 # if $1 is empty, we do general maintenance, else for some subgroup of all jobs
 #
 if [ -z $1 ] ; then
 	general_maintenance
 	compress_old_jenkins_logs
+	PAGE=$(mktemp)
+	build_jenkins_job_health_page
 else
 	case $1 in
 		chroot-installation*)		wait4idle $1
