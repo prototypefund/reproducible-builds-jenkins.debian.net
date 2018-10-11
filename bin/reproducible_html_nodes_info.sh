@@ -47,7 +47,9 @@ build_nodes_health_page() {
 		for NODE in $BUILD_NODES ; do
 			REPRODUCIBLE_NODES="$REPRODUCIBLE_NODES $NODE"
 			if [ "$NODE" = "profitbricks-build2-i386.debian.net" ] ; then
-				REPRODUCIBLE_NODES="$REPRODUCIBLE_NODES profitbricks-build3-amd64.debian.net profitbricks-build4-amd64.debian.net profitbricks-build7-amd64.debian.net"
+				REPRODUCIBLE_NODES="$REPRODUCIBLE_NODES profitbricks-build3-amd64.debian.net profitbricks-build4-amd64.debian.net"
+			elif [ "$NODE" = "profitbricks-build6-i386.debian.net" ] ; then
+				REPRODUCIBLE_NODES="$REPRODUCIBLE_NODES profitbricks-build7-amd64.debian.net profitbricks-build10-amd64.debian.net"
 			fi
 		done
 		for NODE in $REPRODUCIBLE_NODES ; do
