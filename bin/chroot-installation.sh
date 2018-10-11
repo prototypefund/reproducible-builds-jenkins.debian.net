@@ -208,15 +208,19 @@ case $1 in
 	jessie)		DISTRO="jessie"
 			SPECIFIC="libreoffice virt-manager mplayer2 chromium"
 			LXQT="" # not present in jessie
+			FIREFOX="iceweasel"
 			;;
 	stretch)	DISTRO="stretch"
 			SPECIFIC="libreoffice virt-manager mplayer chromium"
+			FIREFOX="iceweasel"
 			;;
 	buster)		DISTRO="buster"
 			SPECIFIC="libreoffice virt-manager mplayer chromium"
+			FIREFOX="firefox"
 			;;
 	sid)		DISTRO="sid"
 			SPECIFIC="libreoffice virt-manager mplayer chromium"
+			FIREFOX="firefox"
 			;;
 	*)		echo "unsupported distro."
 			exit 1
@@ -225,7 +229,7 @@ esac
 bootstrap $DISTRO
 
 if [ "$2" != "" ] ; then
-	FULL_DESKTOP="$SPECIFIC desktop-base gnome kde-plasma-desktop kde-full kde-standard xfce4 lxde $LXQT vlc evince iceweasel cups build-essential devscripts wine texlive-full asciidoc vim emacs"
+	FULL_DESKTOP="$SPECIFIC desktop-base gnome kde-plasma-desktop kde-full kde-standard xfce4 lxde $LXQT vlc evince $FIREFOX cups build-essential devscripts wine texlive-full asciidoc vim emacs"
 	case $2 in
 		none)		;;
 		gnome)		install_packages gnome gnome desktop-base
