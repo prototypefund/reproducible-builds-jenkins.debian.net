@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Copyright 2012-2015 Holger Levsen <holger@layer-acht.org>
+# Copyright 2012-2018 Holger Levsen <holger@layer-acht.org>
 # released under the GPLv=2
 
 DEBUG=false
@@ -138,7 +138,7 @@ general_maintenance() {
 	df -h 2>/dev/null || true
 
 	echo
-	for DIR in /var/cache/apt/archives/ /var/spool/squid3/ /var/cache/pbuilder/build/ /var/lib/jenkins/jobs/ /chroots /schroots ; do
+	for DIR in /var/cache/apt/archives/ /var/spool/squid/ /var/cache/pbuilder/build/ /var/lib/jenkins/jobs/ /chroots /schroots ; do
 		sudo du -shx $DIR 2>/dev/null
 	done
 	JOB_PREFIXES=$(ls -1 /var/lib/jenkins/jobs/|cut -d "_" -f1|sort -f -u)
