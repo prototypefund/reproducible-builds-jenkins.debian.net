@@ -353,9 +353,14 @@ recent_builds_page(){
 	TITLE="Reproducible archlinux, builds in the last 24h"
 	archlinux_page_header
 	archlinux_repostats_table
-	write_page "<h2>Recent builds of Archlinux packages in the last 24h</h2>"
-	include_pkg_table_header_in_page
 	MAXDATE="$(date -u +'%Y-%m-%d %H:%M' -d '24 hours ago')"
+	RECENT=$(query_db "SELECT count(s.name) FROM sources AS s
+				JOIN results AS r
+				ON s.id=r.package_id
+				WHERE s.architecture='x86_64'
+				AND r.build_date > '$MAXDATE'")
+	write_page "<h2>$RECENT builds of Archlinux packages in the last 24h</h2>"
+	include_pkg_table_header_in_page
 	STATE_PKGS=$(query_db "SELECT s.name FROM sources AS s
 				JOIN results AS r
 				ON s.id=r.package_id
