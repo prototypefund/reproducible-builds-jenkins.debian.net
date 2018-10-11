@@ -79,6 +79,8 @@ if [ "${0:0:5}" != "/tmp/" ] ; then
 			abort_if_bug_is_still_open 879034 ;;
 		chroot-installation_sid_install_design-desktop-graphics)
 			abort_if_bug_is_still_open 910812 ;;
+		chroot-installation_stretch_install_education-mathematics_upgrade_to_buster)
+			abort_if_bug_is_still_open 910819 ;;
 		*) ;;
 	esac
 	# mktemp some place for us...
