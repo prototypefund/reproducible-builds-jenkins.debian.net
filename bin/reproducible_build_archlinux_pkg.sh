@@ -245,12 +245,8 @@ second_build() {
 	VERSION="$epoch$pkgver-$pkgrel"
 	echo $VERSION > $TMPDIR/b2/$SRCPACKAGE/build2.version
 	# nicely run makepkg with a timeout of $TIMEOUT hours
-	###temporarily disable building as build2 and build as jenkins user
-	###timeout -k $TIMEOUT.1h ${TIMEOUT}h /usr/bin/ionice -c 3 /usr/bin/nice \
-	###	schroot --run-session -c $SESSION --directory "$BUILDDIR/$ACTUAL_SRCPACKAGE/trunk" -u root -- su -c "bash -l -c '$MAKEPKG_ENV_VARS makepkg $MAKEPKG_OPTIONS 2>&1'" build2 | tee -a $LOG
 	timeout -k $TIMEOUT.1h ${TIMEOUT}h /usr/bin/ionice -c 3 /usr/bin/nice \
-		schroot --run-session -c $SESSION --directory "$BUILDDIR/$ACTUAL_SRCPACKAGE/trunk" -- bash -l -c "$MAKEPKG_ENV_VARS makepkg $MAKEPKG_OPTIONS 2>&1" | tee -a $LOG
-
+		schroot --run-session -c $SESSION --directory "$BUILDDIR/$ACTUAL_SRCPACKAGE/trunk" -u root -- su -c "bash -l -c '$MAKEPKG_ENV_VARS makepkg $MAKEPKG_OPTIONS 2>&1'" build2 | tee -a $LOG
 	PRESULT=${PIPESTATUS[0]}
 	if [ $PRESULT -eq 124 ] ; then
 		echo "$(date -u) - makepkg was killed by timeout after ${TIMEOUT}h." | tee -a $LOG
