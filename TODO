@@ -331,7 +331,7 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 *** debian uses a table removed_packages, should this be used here too?
 *** debian uses a table manual_scheduler to limit the amount of packages someone can schedule per day...
 *** should breakages job look for archlinux breakages? for which cases?
-** using notes.git could be next
+** using notes.git should be next!
 
 * rebuilding against the archlinux repos
 ** only needs to be done once using https://github.com/Foxboron/devtools-repro
