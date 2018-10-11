@@ -154,33 +154,68 @@ general_maintenance() {
 
 build_jenkins_job_health_page() {
 	#
-	# job health page
+	# jenkins job health page
 	#
-	FILTER[0]="self"
+	# FIXME: we should really store the output of "$(cd ~/jobs ; ls -1d *)" and only recreate this page if this file doesn't exist or has changed
+	FILTER[0]="maintenance"
 	FILTER[1]="udd"
 	FILTER[2]="lintian"
 	FILTER[3]="piuparts"
 	FILTER[4]="debsums"
 	FILTER[5]="dpkg"
-	FILTER[6]="edu-packages"
-	FILTER[7]="chroot-installation"
-	FILTER[8]="d-i"
-	FILTER[9]="rebootstrap"
-	FILTER[10]="g-i-installation"
-	#FIXME add code to find unfiltered ones
+	FILTER[6]="transitional"
+	FILTER[7]="edu-packages"
+	FILTER[8]="haskell"
+	FILTER[9]="chroot-installation_sid"
+	FILTER[10]="chroot-installation_buster"
+	FILTER[11]="chroot-installation_stretch"
+	FILTER[12]="chroot-installation_jessie"
+	FILTER[13]="d-i_overview"
+	FILTER[14]="d-i_manual"
+	FILTER[15]="d-i_build"
+	FILTER[16]="d-i_build"
+	FILTER[17]="d-i_pu-build"
+	FILTER[18]="d-i_schroot"
+	FILTER[19]="rebootstrap"
+	FILTER[20]="g-i-installation_debian_"
+	FILTER[21]="g-i-installation_debian-edu_"
+	FILTER[22]="torbrowser-launcher"
+	FILTER[23]="debian-archive-keyring"
+	FILTER[24]="live"
+	numfilters=${#FILTER[@]}
+	let numfilters-=1	# that's what you get when you start counting from 0
 	echo "$(date -u) - starting to write jenkins_job_health page."
 	write_page "<!DOCTYPE html><html lang=\"en\"><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">"
 	write_page "<title>Jenkins job health</title/></head><body>"
-	for CATEGORY in $(seq 0 10) ; do
+	for CATEGORY in $(seq 0 $numfilters) ; do
 		write_page "<p style=\"clear:both;\">"
 		write_page "<h3>${FILTER[$CATEGORY]}</h3>"
-		for JOB in $(cd ~/jobs ; ls -1d * | grep -v reproducible_ | egrep "^${FILTER[$CATEGORY]}" | sort ) ; do
+		for JOB in $(cd ~/jobs ; ls -1d * | grep -v reproducible_ | egrep "${FILTER[$CATEGORY]}" | sort ) ; do
 			URL="https://jenkins.debian.net/job/$JOB"
 			BADGE="$URL/badge/icon"
 			write_page "<a href='$URL'><img src='$BADGE' /></a> "
 		done
 		write_page "</p>"
 	done
+	# find jobs not present in jenkins_job_health.html
+	write_page "<p style=\"clear:both;\">"
+	write_page "<h3>Other jobs</h3>"
+	for JOB in $(cd ~/jobs ; ls -1d * | egrep -v '(reproducible_|lost\+found)' | sort ) ; do
+		found=false
+		for CATEGORY in $(seq 0 $numfilters) ; do
+			if [ -n "$(echo $JOB | egrep ${FILTER[$CATEGORY]} 2>/dev/null|| true )" ] ; then
+				found=true
+				continue
+			fi
+		done
+		if ! $found ; then
+			echo "$(date -u) - job $JOB not present in in existing filters for jenkins_job_health page..."
+			URL="https://jenkins.debian.net/job/$JOB"
+			BADGE="$URL/badge/icon"
+			write_page "<a href='$URL'><img src='$BADGE' /></a> "
+		fi
+	done
+	write_page "</p>"
 	write_page "</body></html>"
 	mv $PAGE ~/userContent/jenkins_job_health.html
 	chmod 644 ~/userContent/jenkins_job_health.html
