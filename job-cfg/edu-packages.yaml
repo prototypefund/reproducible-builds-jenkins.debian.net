@@ -52,7 +52,6 @@
     my_url: 'https://salsa.debian.org/debian-edu/{my_package}'
     my_package:
         - 'debian-edu'
-        - 'debian-edu-archive-keyring'
         - 'debian-edu-artwork'
         - 'debian-edu-config'
         - 'debian-edu-doc'
