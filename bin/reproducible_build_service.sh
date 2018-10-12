@@ -1,7 +1,7 @@
 #!/bin/bash
 # vim: set noexpandtab:
 
-# Copyright © 2017 Holger Levsen (holger@layer-acht.org)
+# Copyright © 2017-2018 Holger Levsen (holger@layer-acht.org)
 # released under the GPLv=2
 
 set -e
@@ -89,30 +89,30 @@ choose_nodes() {
 		arm64_3)	NODE1=codethink-sled9-arm64		NODE2=codethink-sled14-arm64 ;;
 		arm64_4)	NODE1=codethink-sled9-arm64		NODE2=codethink-sled16-arm64 ;;
 		arm64_5)	NODE1=codethink-sled10-arm64	NODE2=codethink-sled9-arm64 ;;
-		#arm64_6)	NODE1=codethink-sled10-arm64	NODE2=codethink-sled11-arm64 ;;
+		arm64_6)	NODE1=codethink-sled10-arm64	NODE2=codethink-sled11-arm64 ;;
 		arm64_7)	NODE1=codethink-sled10-arm64	NODE2=codethink-sled13-arm64 ;;
 		arm64_8)	NODE1=codethink-sled10-arm64	NODE2=codethink-sled15-arm64 ;;
 		arm64_9)	NODE1=codethink-sled11-arm64	NODE2=codethink-sled10-arm64 ;;
-		#arm64_10)	NODE1=codethink-sled11-arm64	NODE2=codethink-sled12-arm64 ;;
+		arm64_10)	NODE1=codethink-sled11-arm64	NODE2=codethink-sled12-arm64 ;;
 		arm64_11)	NODE1=codethink-sled11-arm64	NODE2=codethink-sled14-arm64 ;;
 		arm64_12)	NODE1=codethink-sled11-arm64	NODE2=codethink-sled16-arm64 ;;
 		arm64_13)	NODE1=codethink-sled12-arm64	NODE2=codethink-sled9-arm64 ;;
 		arm64_14)	NODE1=codethink-sled12-arm64	NODE2=codethink-sled11-arm64 ;;
-		#arm64_15)	NODE1=codethink-sled12-arm64	NODE2=codethink-sled13-arm64 ;;
+		arm64_15)	NODE1=codethink-sled12-arm64	NODE2=codethink-sled13-arm64 ;;
 		arm64_16)	NODE1=codethink-sled12-arm64	NODE2=codethink-sled15-arm64 ;;
 		arm64_17)	NODE1=codethink-sled13-arm64	NODE2=codethink-sled10-arm64 ;;
 		arm64_18)	NODE1=codethink-sled13-arm64	NODE2=codethink-sled12-arm64 ;;
-		#arm64_19)	NODE1=codethink-sled13-arm64	NODE2=codethink-sled14-arm64 ;;
+		arm64_19)	NODE1=codethink-sled13-arm64	NODE2=codethink-sled14-arm64 ;;
 		arm64_20)	NODE1=codethink-sled13-arm64	NODE2=codethink-sled16-arm64 ;;
 		arm64_21)	NODE1=codethink-sled14-arm64	NODE2=codethink-sled9-arm64 ;;
 		arm64_22)	NODE1=codethink-sled14-arm64	NODE2=codethink-sled11-arm64 ;;
 		arm64_23)	NODE1=codethink-sled14-arm64	NODE2=codethink-sled13-arm64 ;;
-		#arm64_24)	NODE1=codethink-sled14-arm64	NODE2=codethink-sled15-arm64 ;;
+		arm64_24)	NODE1=codethink-sled14-arm64	NODE2=codethink-sled15-arm64 ;;
 		arm64_25)	NODE1=codethink-sled15-arm64	NODE2=codethink-sled10-arm64 ;;
 		arm64_26)	NODE1=codethink-sled15-arm64	NODE2=codethink-sled12-arm64 ;;
 		arm64_27)	NODE1=codethink-sled15-arm64	NODE2=codethink-sled14-arm64 ;;
-		#arm64_28)	NODE1=codethink-sled15-arm64	NODE2=codethink-sled16-arm64 ;;
-		#arm64_29)	NODE1=codethink-sled16-arm64	NODE2=codethink-sled9-arm64 ;;
+		arm64_28)	NODE1=codethink-sled15-arm64	NODE2=codethink-sled16-arm64 ;;
+		arm64_29)	NODE1=codethink-sled16-arm64	NODE2=codethink-sled9-arm64 ;;
 		arm64_30)	NODE1=codethink-sled16-arm64	NODE2=codethink-sled11-arm64 ;;
 		arm64_31)	NODE1=codethink-sled16-arm64	NODE2=codethink-sled13-arm64 ;;
 		arm64_32)	NODE1=codethink-sled16-arm64	NODE2=codethink-sled15-arm64 ;;
