@@ -215,8 +215,6 @@ build_jenkins_job_health_page() {
 		write_page "</p>"
 	done
 	# find jobs not present in jenkins_job_health.html
-	write_page "<p style=\"clear:both;\">"
-	write_page "<h3>Other jobs</h3>"
 	for JOB in $(cd ~/jobs ; ls -1d * | egrep -v '(reproducible_|lost\+found)' | sort ) ; do
 		found=false
 		for CATEGORY in $(seq 0 $numfilters) ; do
@@ -231,14 +229,21 @@ build_jenkins_job_health_page() {
 			fi
 		done
 		if ! $found ; then
+			if $empty ; then
+				empty=false
+				write_page "<p style=\"clear:both;\">"
+				write_page "<h3>Other jobs</h3>"
+			fi
 			echo "$(date -u) - job $JOB not present in in existing filters for jenkins_job_health page..."
 			URL="https://jenkins.debian.net/job/$JOB"
 			BADGE="$URL/badge/icon"
 			write_page "<a href='$URL'><img src='$BADGE' /></a> "
 		fi
 	done
-	write_page "</p>"
-	write_page "</body></html>"
+	if ! $empty ; then
+		write_page "</p>"
+		write_page "</body></html>"
+	fi
 	mv $PAGE ~/userContent/jenkins_job_health.html
 	chmod 644 ~/userContent/jenkins_job_health.html
 	echo "$(date -u) - updated https://jenkins.debian.net/userContent/jenkins_job_health.html"
