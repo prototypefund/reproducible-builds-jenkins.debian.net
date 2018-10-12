@@ -460,6 +460,8 @@ write_variation_table() {
 	fi
 	if [ "$1" != "FreeBSD" ] && [ "$1" != "Arch Linux" ]  ; then
 		write_page "<tr><td>env PATH</td><td>PATH=\"/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:\"</td><td>PATH=\"/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/i/capture/the/path\"</td></tr>"
+	elif [ "$1" = "Arch Linux" ]  ; then
+		write_page "<tr><td>env PATH</td><td colspan=\"2\">is set to '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin' because that's what <i>makechrootpkg</i> is using</td>"
 	else
 		write_page "<tr><td>env PATH</td><td colspan=\"2\"> is not yet varied between rebuilds of $1.</td></tr>"
 	fi

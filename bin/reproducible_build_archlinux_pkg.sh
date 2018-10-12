@@ -122,7 +122,7 @@ first_build() {
 	local BUILDDIR="/tmp/$SRCPACKAGE-$(basename $TMPDIR)"
 	local LOG=$TMPDIR/b1/$SRCPACKAGE/build1.log
 	local FUTURE_STATE="disabled"
-	local MAKEPKG_ENV_VARS="SOURCE_DATE_EPOCH='$SOURCE_DATE_EPOCH'"
+	local MAKEPKG_ENV_VARS="SOURCE_DATE_EPOCH='$SOURCE_DATE_EPOCH' PATH='/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'"
 	local MAKEPKG_OPTIONS="--syncdeps --noconfirm"
 	if [ "$(hostname -f)" = "profitbricks-build4-amd64" ] ; then
 		FUTURE_STATE="enabled"
@@ -203,7 +203,7 @@ second_build() {
 	local LOG=$TMPDIR/b2/$SRCPACKAGE/build2.log
 	NEW_NUM_CPU=$(echo $NUM_CPU-1|bc)
 	local FUTURE_STATE="disabled"
-	local MAKEPKG_ENV_VARS="SOURCE_DATE_EPOCH='$SOURCE_DATE_EPOCH'"
+	local MAKEPKG_ENV_VARS="SOURCE_DATE_EPOCH='$SOURCE_DATE_EPOCH' PATH='/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'"
 	local MAKEPKG_OPTIONS="--syncdeps --noconfirm"
 	if [ "$(hostname -f)" = "profitbricks-build4-amd64" ] ; then
 		FUTURE_STATE="enabled"
