@@ -425,7 +425,7 @@ if [ ! -z "$(ls $TMPDIR/b1/$SRCPACKAGE/*.pkg.tar.xz 2>/dev/null|| true)" ] ; the
 			) > "$BASE/archlinux/$REPOSITORY/$SRCPACKAGE/$ARTIFACT.html"
 		elif [ -f $TMPDIR/b1/$SRCPACKAGE/$ARTIFACT ] && [ -f $TMPDIR/b2/$SRCPACKAGE/$ARTIFACT ] ; then
 			# run diffoscope on the results
-			TIMEOUT="30m"
+			TIMEOUT="60m"
 			DIFFOSCOPE="$(schroot --directory /tmp -c chroot:jenkins-reproducible-${DBDSUITE}-diffoscope diffoscope -- --version 2>&1)"
 			echo "$(date -u) - Running $DIFFOSCOPE now..."
 			call_diffoscope $SRCPACKAGE $ARTIFACT

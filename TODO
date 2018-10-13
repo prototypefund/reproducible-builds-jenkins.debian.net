@@ -330,7 +330,7 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 *** comparing versions (in scheduler) is probably needed (though it wuld be better if not): if its not empty it must be higher (due to repo constraints), but it can be even higher than in the repo, because we build trunk
 *** debian uses a table removed_packages, should this be used here too?
 *** debian uses a table manual_scheduler to limit the amount of packages someone can schedule per day...
-*** should breakages job look for archlinux breakages? for which cases?
+*** should breakages job look for archlinux breakages? for which cases? a.) grep "was killed after running into timeout after 30m" pkg.html
 ** using notes.git should be next!
 
 * rebuilding against the archlinux repos
