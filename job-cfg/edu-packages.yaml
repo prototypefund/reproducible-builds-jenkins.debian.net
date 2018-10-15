@@ -56,6 +56,8 @@
         - 'debian-edu-config'
         - 'debian-edu-doc'
         - 'debian-edu-install'
+        - 'desktop-profiles':
+           my_url: 'https://salsa.debian.org/debian-edu/upstream/{my_package}'
         - 'sitesummary':
            my_url: 'https://salsa.debian.org/debian-edu/upstream/{my_package}'
         - 'guacamole-client':
