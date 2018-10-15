@@ -40,6 +40,13 @@ pdebuild_package() {
 	#
 	if [ -f /var/cache/pbuilder/base.tgz ] ; then
 		sudo pbuilder --create --http-proxy $http_proxy
+		TMPFILE=$(mktemp)
+		cat >> $TMPFILE <<- EOF
+# Preseeding man-db/auto-update to false
+echo "man-db man-db/auto-update boolean false" | debconf-set-selections
+EOF
+		sudo pbuilder --execute $http_proxy --save-after-exec -- ${TMPFILE}
+		rm ${TMPFILE}
 	else
 		sudo pbuilder --update --http-proxy $http_proxy
 	fi
