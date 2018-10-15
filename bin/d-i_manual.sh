@@ -40,17 +40,23 @@ pdebuild_package() {
 	#
 	# use host apt proxy configuration for pbuilder too
 	if [ ! -z "$http_proxy" ] ; then
-		echo "echo '$(cat /etc/apt/apt.conf.d/80proxy)' > /etc/apt/apt.conf.d/80proxy" >> ${TMPFILE}
 		pbuilder_http_proxy="--http-proxy $http_proxy"
 	fi
-	# setup base.tgz
+	# prepare setting up base.tgz
 	if [ ! -f /var/cache/pbuilder/base.tgz ] ; then
 		sudo pbuilder --create $pbuilder_http_proxy
 		TMPFILE=$(mktemp)
 		cat >> $TMPFILE <<- EOF
 # Preseeding man-db/auto-update to false
 echo "man-db man-db/auto-update boolean false" | debconf-set-selections
+echo "Configuring dpkg to not fsync()"
+echo "force-unsafe-io" > /etc/dpkg/dpkg.cfg.d/02speedup
 EOF
+		# using host apt proxy settings too
+		if [ ! -z "$http_proxy" ] ; then
+			echo "echo '$(cat /etc/apt/apt.conf.d/80proxy)' > /etc/apt/apt.conf.d/80proxy" >> ${TMPFILE}
+		fi
+		#
 		sudo pbuilder --execute $pbuilder_http_proxy --save-after-exec -- ${TMPFILE}
 		rm ${TMPFILE}
 	else
