@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Copyright 2015-2016 Holger Levsen <holger@layer-acht.org>
+# Copyright 2015-2018 Holger Levsen <holger@layer-acht.org>
 # released under the GPLv=2
 
 DEBUG=false
@@ -10,7 +10,7 @@ set -e
 
 # these variables also need to be in bin/reproducible_common.sh where they define $BUILD_ENV_VARS (see right below)
 ARCH=$(dpkg --print-architecture)
-NUM_CPU=$(grep -c '^processor' /proc/cpuinfo)
+NUM_CPU=$(nproc)
 CPU_MODEL=$(cat /proc/cpuinfo |grep "model name"|head -1|cut -d ":" -f2|xargs echo)
 DATETIME=$(date +'%Y-%m-%d %H:%M %Z')
 KERNEL=$(uname -smrv)

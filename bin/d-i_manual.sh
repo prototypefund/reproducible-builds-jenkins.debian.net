@@ -1,7 +1,7 @@
 #!/bin/bash
 # vim: set noexpandtab:
 
-# Copyright 2012,2014 Holger Levsen <holger@layer-acht.org>
+# Copyright 2012-2018 Holger Levsen <holger@layer-acht.org>
 #           © 2018 Mattia Rizzolo <mattia@debian.org>
 # released under the GPLv=2
 
@@ -48,7 +48,7 @@ pdebuild_package() {
 	# build
 	#
 	cd manual
-	NUM_CPU=$(grep -c '^processor' /proc/cpuinfo)
+	NUM_CPU=$(nproc)
 	pdebuild --use-pdebuild-internal --debbuildopts "-j$NUM_CPU" -- --http-proxy $http_proxy
 	#
 	# publish and cleanup

@@ -66,7 +66,7 @@ RPM_BUILD_NODE=profitbricks-build3-amd64
 RPM_PKGS=/srv/reproducible-results/rpm_pkgs
 
 # number of cores to be used
-NUM_CPU=$(grep -c '^processor' /proc/cpuinfo)
+NUM_CPU=$(nproc)
 
 # diffoscope memory limit in kilobytes
 DIFFOSCOPE_VIRT_LIMIT=$((10*1024*1024))

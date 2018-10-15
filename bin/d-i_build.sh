@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Copyright 2012-2016 Holger Levsen <holger@layer-acht.org>
+# Copyright 2012-2018 Holger Levsen <holger@layer-acht.org>
 # 		 2016 Phil Hands <phil@hands.com>
 # released under the GPLv=2
 
@@ -128,7 +128,7 @@ pdebuild_package() {
 	# build (binary packages only, as sometimes we cannot get the upstream tarball...)
 	#
 	SOURCE=$(dpkg-parsechangelog |grep ^Source: | cut -d " " -f2)
-	NUM_CPU=$(grep -c '^processor' /proc/cpuinfo)
+	NUM_CPU=$(nproc)
 	#
 	# if we got a valid TRIGGERING_BRANCH passed in as a parameter from the triggering job
 	# then grab the generated udebs.  FIXME -- we need to work out a way of cleaning up old branches
