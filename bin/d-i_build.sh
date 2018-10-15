@@ -110,19 +110,25 @@ pdebuild_package() {
 	#
 	# prepare build
 	#
+	# use host apt proxy configuration for pbuilder too
+	if [ ! -z "$http_proxy" ] ; then
+		echo "echo '$(cat /etc/apt/apt.conf.d/80proxy)' > /etc/apt/apt.conf.d/80proxy" >> ${TMPFILE}
+		pbuilder_http_proxy="--http-proxy $http_proxy"
+	fi
+	# setup base.tgz
 	if [ ! -f /var/cache/pbuilder/base.tgz ] ; then
-		sudo pbuilder --create --http-proxy $http_proxy
+		sudo pbuilder --create $pbuilder_http_proxy
 		TMPFILE=$(mktemp)
 		cat >> $TMPFILE <<- EOF
 # Preseeding man-db/auto-update to false
 echo "man-db man-db/auto-update boolean false" | debconf-set-selections
 EOF
-		sudo pbuilder --execute $http_proxy --save-after-exec -- ${TMPFILE}
+		sudo pbuilder --execute $pbuilder_http_proxy --save-after-exec -- ${TMPFILE}
 		rm ${TMPFILE}
 	else
 		ls -la /var/cache/pbuilder/base.tgz
 		file /var/cache/pbuilder/base.tgz
-		sudo pbuilder --update --http-proxy $http_proxy || ( sudo rm /var/cache/pbuilder/base.tgz ; sudo pbuilder --create )
+		sudo pbuilder --update $pbuilder_http_proxy || ( sudo rm /var/cache/pbuilder/base.tgz ; sudo pbuilder --create $pbuilder_http_proxy)
 	fi
 	#
 	# 3.0 quilt is not happy without an upstream tarball
