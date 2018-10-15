@@ -49,7 +49,7 @@ pdebuild_package() {
 	#
 	cd manual
 	NUM_CPU=$(nproc)
-	pdebuild --use-pdebuild-internal --debbuildopts "-j$NUM_CPU" -- --http-proxy $http_proxy
+	pdebuild --use-pdebuild-internal --debbuildopts "-J$NUM_CPU" -- --http-proxy $http_proxy
 	#
 	# publish and cleanup
 	#

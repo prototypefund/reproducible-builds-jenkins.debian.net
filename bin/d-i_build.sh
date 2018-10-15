@@ -136,7 +136,7 @@ pdebuild_package() {
 	if udeb_dir=$(replace_origin_pu "/srv/udebs/" $TRIGGERING_BRANCH) ; then
 		cp $udeb_dir/*.udeb build/localudebs
 	fi
-	pdebuild --use-pdebuild-internal --debbuildopts "-j$NUM_CPU -b" --buildresult ${RESULT_DIR} -- --http-proxy $http_proxy
+	pdebuild --use-pdebuild-internal --debbuildopts "-J$NUM_CPU -b" --buildresult ${RESULT_DIR} -- --http-proxy $http_proxy
 	# cleanup
 	echo
 	cat ${RESULT_DIR}/${SOURCE}_*changes
