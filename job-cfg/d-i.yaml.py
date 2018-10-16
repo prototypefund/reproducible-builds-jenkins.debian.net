@@ -422,7 +422,7 @@ data.append(
         'name': '{name}_manual_html_group',
         'jobs': ['{name}_manual_{lang}_html'],
         'lang': [l for l in langs if list(l.keys())[0] in non_po_langs],
-        'trg': 'H/15 * * * *',
+        'trg': 'H/15 18 * * *',
         'fmt': 'html',
         'popath': ''}})
 
@@ -441,7 +441,7 @@ data.append(
         'name': '{name}_manual_html_po2xml_group',
         'jobs': ['{name}_manual_{lang}_html_po2xml'],
         'lang': [l for l in langs if list(l.keys())[0] not in non_po_langs],
-        'trg': 'H/30 * * * *',
+        'trg': 'H/30 17 * * *',
         'fmt': 'html',
         'popath': '/po'}})
 
@@ -463,7 +463,7 @@ data.append(
         'act': 'build',
         'branchdesc': 'master branch',
         'branch': 'origin/master',
-        'trg': 'H/1 H/1 * * *',
+        'trg': 'H/1 19 * * *',
         'pkg': pkgs}})
 
 data.append(
