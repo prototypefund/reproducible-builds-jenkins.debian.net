@@ -216,11 +216,11 @@ case $1 in
 			;;
 	buster)		DISTRO="buster"
 			SPECIFIC="libreoffice virt-manager mplayer chromium"
-			FIREFOX="firefox"
+			FIREFOX="firefox-esr"
 			;;
 	sid)		DISTRO="sid"
 			SPECIFIC="libreoffice virt-manager mplayer chromium"
-			FIREFOX="firefox"
+			FIREFOX="firefox firefox-esr"
 			;;
 	*)		echo "unsupported distro."
 			exit 1
