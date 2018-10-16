@@ -164,6 +164,8 @@ for DIRECTORY in * ; do
 				echo "- job-template:" >> $JOB_TEMPLATES
 				echo "    defaults: d-i-manual-${FORMAT}-po2xml" >> $JOB_TEMPLATES
 				echo "    name: '{name}_manual_${DIRECTORY}_${FORMAT}'" >> $JOB_TEMPLATES
+			else
+				echo "Found build job '${DI_MANUAL_JOB_PATTERN}${DIRECTORY}_${FORMAT}'."
 			fi
 		done
 	fi
