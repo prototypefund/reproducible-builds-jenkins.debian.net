@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Copyright 2012,2014,2016 Holger Levsen <holger@layer-acht.org>
+# Copyright 2012-2018 Holger Levsen <holger@layer-acht.org>
 # released under the GPLv=2
 
 DEBUG=false
@@ -15,7 +15,7 @@ NON_PDF_LANGS=$1 ; shift
 #
 # define some variables
 #
-URL="https://anonscm.debian.org/viewvc/d-i/trunk/.mrconfig?view=co" #FIXME: adopt to salsa
+URL="https://salsa.debian.org/installer-team/d-i/raw/master/.mrconfig"
 FAIL=false
 DI_BUILD_JOB_PATTERN=d-i_build_
 DI_MANUAL_JOB_PATTERN=d-i_manual_
@@ -32,7 +32,7 @@ CLEANUP=$(mktemp)
 echo
 echo "Scanning $URL for referred git repos which have no jenkins job associated."
 curl $URL > $TMPFILE 2>/dev/null
-PACKAGES=$( grep salsa.debian.org/installer/team $TMPFILE|cut -d "/" -f6-|cut -d " " -f1)
+PACKAGES=$( grep salsa.debian.org/installer-team $TMPFILE|cut -d "/" -f6-|cut -d " " -f1)
 #
 # check for each git repo if a jenkins job exists
 #
