@@ -185,9 +185,8 @@ build_jenkins_job_health_page() {
 	FILTER[23]="g-i-installation_.*rescue"
 	FILTER[24]="g-i-installation_debian-edu_jessie"
 	FILTER[25]="g-i-installation_debian-edu_stretch"
-	FILTER[26]="torbrowser-launcher"
-	FILTER[27]="debian-archive-keyring"
-	FILTER[28]="live:pu-build"
+	FILTER[26]="debian-archive-keyring"
+	FILTER[27]="live:pu-build"
 	numfilters=${#FILTER[@]}
 	let numfilters-=1	# that's what you get when you start counting from 0
 	echo "$(date -u) - starting to write jenkins_job_health page."

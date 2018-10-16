@@ -468,25 +468,6 @@ correctly, Guix is ready for work.
 
 Development of these tests has stopped. In future we will use https://openqa.debian.net instead.
 
-=== torbrowser-launcher_*
-
-* fix "schroot session cleanup loop" in _common.sh to ignore other schroots
-* test tbl in German
-** edit '~/.config/torbrowser/settings' file and modify the latest_version setting
-** get version from '~/.cache/torbrowser/download/RecommendedTBBVersions'
-** (warning: on update checks these files are written again…)
-* fix broken screenshot while job is running via apache redirect
-* notifications should go somewhere public, after a while of testing.
-* run this in qemu and enable apparmor too? -> create new tests for apparmor first :)
-** extend setup_schroot.sh to also setup virtual harddrives, see http://diogogomes.com/2012/07/13/debootstrap-kvm-image/
-** install linux, grub and copy the testscript and ssh keys on the the fs
-** configure apparmor
-** boot qemu
-** ssh into the vm and run the script as usal
-** touch -d "$(date -u -d '25 hours ago' '+%Y-%m-%d %H:%M')" $FILE
-*** repeat test…
-* run upstream tests on stable and sid too: https://trac.torproject.org/projects/tor/wiki/doc/TorBrowser/Hacking#QAandTesting ?
-
 
 == Further ideas...
 
