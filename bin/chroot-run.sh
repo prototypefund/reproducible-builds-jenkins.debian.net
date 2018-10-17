@@ -179,8 +179,8 @@ echo 'APT::Get::Assume-Yes "true";' > /etc/apt/apt.conf.d/23jenkins
 apt-get install build-essential devscripts git
 if [ "$1" = "gbp" ] ; then
 	apt-get install git-buildpackage
-	# either there is a debian branch or not
-	git checkout debian || echo "No debian branch exists, assuming packaging is in master branch."
+	# there are only two jobs using this and both have no debian directory in the master branch
+	git merge debian
 fi
 if [ -f debian/control ] ; then
 	cat debian/control
