@@ -180,7 +180,7 @@ apt-get install build-essential devscripts git
 if [ "$1" = "gbp" ] ; then
 	apt-get install git-buildpackage
 	# there are only two jobs using this and both have no debian directory in the master branch
-	git merge debian
+	git merge origin/debian
 fi
 if [ -f debian/control ] ; then
 	cat debian/control
