@@ -183,12 +183,10 @@
           my_inst_url: 'http://d-i.debian.org/daily-images/amd64/daily/netboot/gtk/debian-installer/amd64/'
           my_instdesc: ' using netboot gtk'
           my_desktop:
-            - gnome:
-                my_time: '42 19 */2 * *'
-                my_trigger: 'g-i-installation_debian_{my_ver}_gnome_brltty, g-i-installation_debian_{my_ver}_gnome_speakup'
             - gnome_brltty:
                 my_optdesc: ' with braille display support'
-                my_time: ''
+                my_trigger: 'g-i-installation_debian_{my_ver}_gnome_speakup'
+                my_time: '42 19 */2 * *'
                 my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org debian-accessibility@lists.debian.org'
             - gnome_speakup:
                 my_optdesc: ' with Speakup support'
