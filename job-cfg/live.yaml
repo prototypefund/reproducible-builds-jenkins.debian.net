@@ -30,19 +30,19 @@
 
 #- job-template:
 #    defaults: live
-#    name: '{name}_build_debian-edu_jessie_standalone'
+#    name: '{name}_build_debian-edu_stretch_standalone'
 
 #- job-template:
 #    defaults: live
-#    name: '{name}_build_debian-edu_jessie_workstation'
+#    name: '{name}_build_debian-edu_stretch_workstation'
 
 - job-template:
     defaults: live
-    name: '{name}_build_debian_jessie_gnome'
+    name: '{name}_build_debian_stretch_gnome'
 
 - job-template:
     defaults: live
-    name: '{name}_build_debian_jessie_xfce'
+    name: '{name}_build_debian_stretch_xfce'
 
 - job-template:
     defaults: live
@@ -55,28 +55,28 @@
 - project:
     name: live
     jobs:
-       #- '{name}_build_debian-edu_jessie_standalone':
-       #    my_description: 'Build Debian Edu Jessie live-image with "standlone" profile.'
+       #- '{name}_build_debian-edu_stretch_standalone':
+       #    my_description: 'Build Debian Edu Stretch live-image with "standlone" profile.'
        #    my_time: '0 12 1 * *'
-       #    my_shell: 'schroot --directory /tmp -c source:jenkins-live-jessie /srv/jenkins/bin/live-build.sh debian-edu jessie standalone'
-       #- '{name}_build_debian-edu_jessie_workstation':
-       #    my_description: 'Build Debian Edu Jessie live-image with "workstation" profile.'
+       #    my_shell: 'schroot --directory /tmp -c source:jenkins-live-stretch /srv/jenkins/bin/live-build.sh debian-edu stretch standalone'
+       #- '{name}_build_debian-edu_stretch_workstation':
+       #    my_description: 'Build Debian Edu Stretch live-image with "workstation" profile.'
        #    my_time: '0 12 1 * *'
-       #    my_shell: 'schroot --directory /tmp -c source:jenkins-live-jessie /srv/jenkins/bin/live-build.sh debian-edu jessie workstation'
-       - '{name}_build_debian_jessie_gnome':
-           my_description: 'Build Debian Jessie live-image with GNOME desktop.'
+       #    my_shell: 'schroot --directory /tmp -c source:jenkins-live-stretch /srv/jenkins/bin/live-build.sh debian-edu stretch workstation'
+       - '{name}_build_debian_stretch_gnome':
+           my_description: 'Build Debian Stretch live-image with GNOME desktop.'
            my_time: '0 13 1 * *'
-           my_shell: 'schroot --directory /tmp -c source:jenkins-live-jessie /srv/jenkins/bin/live-build.sh debian jessie gnome'
-       - '{name}_build_debian_jessie_xfce':
-           my_description: 'Build Debian Jessie live-image with Xfce desktop.'
+           my_shell: 'schroot --directory /tmp -c source:jenkins-live-stretch /srv/jenkins/bin/live-build.sh debian stretch gnome'
+       - '{name}_build_debian_stretch_xfce':
+           my_description: 'Build Debian Stretch live-image with Xfce desktop.'
            my_time: '0 14 1 * *'
-           my_shell: 'schroot --directory /tmp -c source:jenkins-live-jessie /srv/jenkins/bin/live-build.sh debian jessie xfce'
+           my_shell: 'schroot --directory /tmp -c source:jenkins-live-stretch /srv/jenkins/bin/live-build.sh debian stretch xfce'
        - '{name}_build_debian_sid_xfce':
            my_description: 'Build Debian Sid live-image with Xfce desktop.'
            my_time: '0 14 2 * *'
-           my_shell: 'schroot --directory /tmp -c source:jenkins-live-jessie /srv/jenkins/bin/live-build.sh debian sid xfce'
+           my_shell: 'schroot --directory /tmp -c source:jenkins-live-stretch /srv/jenkins/bin/live-build.sh debian sid xfce'
        - '{name}_setup_schroot':
-           my_description: 'Setup schroot for building live images using live-build in a jessie environment.'
+           my_description: 'Setup schroot for building live images using live-build in a stretch environment.'
            my_time: '42 10 1 * *'
-           my_shell: '/srv/jenkins/bin/schroot-create.sh live-jessie jessie python live-build'
+           my_shell: '/srv/jenkins/bin/schroot-create.sh live-stretch stretch python live-build'
 
