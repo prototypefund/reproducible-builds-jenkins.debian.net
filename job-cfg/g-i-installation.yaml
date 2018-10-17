@@ -183,12 +183,6 @@
           my_inst_url: 'http://d-i.debian.org/daily-images/amd64/daily/netboot/gtk/debian-installer/amd64/'
           my_instdesc: ' using netboot gtk'
           my_desktop:
-            - kde:
-                my_time: '42 15 */2 * *'
-            - xfce:
-                my_time: '42 16 */2 * *'
-            - lxde:
-                my_time: '42 19 */2 * *'
             - gnome:
                 my_time: '42 19 */2 * *'
                 my_trigger: 'g-i-installation_debian_{my_ver}_gnome_brltty, g-i-installation_debian_{my_ver}_gnome_speakup'
