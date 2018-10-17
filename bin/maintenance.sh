@@ -156,7 +156,7 @@ build_jenkins_job_health_page() {
 	#
 	# jenkins job health page
 	#
-	# FIXME: we should really store the output of "$(cd ~/jobs ; ls -1d *)" and only recreate this page if this file doesn't exist or has changed
+	# FIXME: we should store the output of "$(cd ~/jobs ; ls -1d *)" and only recreate this page if this file doesn't exist or has changed
 	# these are simple egrep filters. however, if they contain a colon,
 	# the filter is split in two, see $category and $avoid below
 	FILTER[0]="maintenance"
@@ -186,7 +186,7 @@ build_jenkins_job_health_page() {
 	FILTER[24]="g-i-installation_debian-edu_jessie"
 	FILTER[25]="g-i-installation_debian-edu_stretch"
 	FILTER[26]="debian-archive-keyring"
-	FILTER[27]="live:pu-build"
+	FILTER[27]="live:(pu-build|d-i_build)"
 	numfilters=${#FILTER[@]}
 	let numfilters-=1	# that's what you get when you start counting from 0
 	echo "$(date -u) - starting to write jenkins_job_health page."
