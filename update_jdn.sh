@@ -452,6 +452,7 @@ if [ -f /etc/debian_version ] ; then
 				shorewall6 
 				sqlite3 
 				syslinux 
+				thin-provisioning-tools
 				tor
 				vncsnapshot 
 				vnstat
