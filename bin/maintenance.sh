@@ -156,7 +156,7 @@ build_jenkins_job_health_page() {
 	#
 	# jenkins job health page
 	#
-	# FIXME: we should store the output of "$(cd ~/jobs ; ls -1d *)" and only recreate this page if this file doesn't exist or has changed
+	echo "$(date -u) - starting to write jenkins_job_health page."
 	# these are simple egrep filters. however, if they contain a colon,
 	# the filter is split in two, see $category and $avoid below
 	FILTER[0]="maintenance"
@@ -189,7 +189,6 @@ build_jenkins_job_health_page() {
 	FILTER[27]="live:(pu-build|d-i_build)"
 	numfilters=${#FILTER[@]}
 	let numfilters-=1	# that's what you get when you start counting from 0
-	echo "$(date -u) - starting to write jenkins_job_health page."
 	write_page "<!DOCTYPE html><html lang=\"en\"><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">"
 	write_page "<title>Jenkins job health</title/></head><body>"
 	for CATEGORY in $(seq 0 $numfilters) ; do
@@ -203,7 +202,7 @@ build_jenkins_job_health_page() {
 		fi
 		write_page "<p style=\"clear:both;\">"
 		write_page "<h3>$(echo $category | sed 's#\.\*##g')</h3>"
-		for JOB in $(cd ~/jobs ; ls -1d * | grep -v reproducible_ | egrep "$category" | sort ) ; do
+		for JOB in $(cat ${JOBS} | grep -v reproducible_ | egrep "$category" | sort ) ; do
 			if [ -n "$filter" ] && [[ -n $(echo "$JOB" | egrep "$filter") ]] ; then
 				continue
 			fi
@@ -214,7 +213,7 @@ build_jenkins_job_health_page() {
 		write_page "</p>"
 	done
 	# find jobs not present in jenkins_job_health.html
-	for JOB in $(cd ~/jobs ; ls -1d * | egrep -v '(reproducible_|lost\+found)' | sort ) ; do
+	for JOB in $(cat ${JOBS} | egrep -v '(reproducible_|lost\+found)' | sort ) ; do
 		found=false
 		for CATEGORY in $(seq 0 $numfilters) ; do
 			if $(echo "${FILTER[$CATEGORY]}" | grep -q ":") ; then
@@ -255,7 +254,17 @@ if [ -z $1 ] ; then
 	general_maintenance
 	compress_old_jenkins_logs
 	PAGE=$(mktemp)
-	build_jenkins_job_health_page
+	# only recreate jenkins job health page if jobs have changed
+	JOBS=$(mktemp)
+	(cd ~/jobs ; ls -1d * | sort > $JOBS)
+	if [ ! -f ./joblist ] || ! (diff $JOBS ./joblist > /dev/null) ; then
+		echo "$(date -u) - jobs have changed, recreating jenkins_job_health page."
+		build_jenkins_job_health_page
+		mv $JOBS ./joblist
+	else
+		echo "$(date -u) - jobs haven't changed, not recreating jenkins_job_health page."
+		rm $JOBS
+	fi
 else
 	case $1 in
 		chroot-installation*)		wait4idle $1
