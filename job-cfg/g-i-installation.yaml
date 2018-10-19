@@ -261,7 +261,7 @@
                 my_inst_url: 'http://cdimage.debian.org/cdimage/daily-builds/sid_d-i/arch-latest/amd64/iso-cd/debian-testing-amd64-netinst.iso'
                 my_time: '42 15 23 * *'
           my_title: 'Debian-Installer ({my_verdesc}) used for presentations'
-          my_disksize: 1
+          my_disksize: 10
           my_description: 'Use d-i for presentations via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian_{my_ver}_presentation_preseed.cfg">this preseed.cfg</a>).'
           my_trigger: ''
           my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
