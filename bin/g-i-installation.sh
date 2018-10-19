@@ -92,7 +92,7 @@ fi
 fetch_if_newer() {
 	url="$2"
 	file="$1"
-	echo "Downloading $url"
+	echo "Downloading $url to $file"
 	curlopts="-L -s -S"
 	if [ -f "$file" ] ; then
 		ls -l $file
