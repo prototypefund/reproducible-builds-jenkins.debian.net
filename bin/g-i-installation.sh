@@ -34,7 +34,7 @@ if [ "$(basename $URL)" = "netboot.tar.gz" ] ; then
 	# URL is for a PXE netboot installer, rather than a CD .iso
 	NETBOOT=$(pwd)/$(basename $URL)
 elif [ "$(basename $URL)" != "amd64" ] ; then
-	IMAGE="~/jobs/g-i-installation_maintenance/workspace/$(echo $URL | cut -d '/' -f3-|tr '/' '_'|tr '~' '_')"
+	IMAGE="/var/lib/jenkins/jobs/g-i-installation_maintenance/workspace/$(echo $URL | cut -d '/' -f3-|tr '/' '_'|tr '~' '_')"
 	IMAGE_MNT="/media/cd-$NAME.iso"
 else
 	KERNEL=linux
