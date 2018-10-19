@@ -251,7 +251,7 @@
             - wheezy:
                 my_verdesc: 'wheezy netboot'
                 my_inst_url: 'http://deb.debian.org/debian/dists/wheezy/main/installer-amd64/current/images/netboot/debian-installer/amd64/'
-                my_time: '44 15 23 * *'
+                my_time: '42 15 23 * *'
             - jessie:
                 my_verdesc: 'jessie netboot'
                 my_inst_url: 'http://d-i.debian.org/daily-images/amd64/daily/netboot/debian-installer/amd64/'
@@ -259,15 +259,15 @@
             - stretch:
                 my_verdesc: 'stretch netboot'
                 my_inst_url: 'http://cdimage.debian.org/cdimage/archive/9.4.0/amd64/iso-cd/debian-9.4.0-amd64-netinst.iso'
-                my_time: '43 15 23 * *'
+                my_time: '44 15 23 * *'
             - buster:
                 my_verdesc: 'buster netboot'
                 my_inst_url: 'http://cdimage.debian.org/cdimage/weekly-builds/amd64/iso-cd/debian-testing-amd64-netinst.iso'
-                my_time: '43 15 23 * *'
+                my_time: '45 15 23 * *'
             - sid_daily:
                 my_verdesc: 'sid daily build CD'
                 my_inst_url: 'http://cdimage.debian.org/cdimage/daily-builds/sid_d-i/arch-latest/amd64/iso-cd/debian-testing-amd64-netinst.iso'
-                my_time: '42 15 23 * *'
+                my_time: '46 15 23 * *'
           my_title: 'Debian-Installer ({my_verdesc}) used for presentations'
           my_disksize: 10
           my_description: 'Use d-i for presentations via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian_{my_ver}_presentation_preseed.cfg">this preseed.cfg</a>).'
