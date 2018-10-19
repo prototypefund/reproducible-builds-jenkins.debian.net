@@ -372,7 +372,7 @@ boot_system() {
 		echo "ERROR: no x86 boot sector found in $LV - its filetype is $FILE."
 		exit 1
 	fi
-	QEMU_OPTS="$QEMU_OPTS -drive file=$LV,index=0,media=disk,cache=unsafe -m $RAMSIZE"
+	QEMU_OPTS="$QEMU_OPTS -drive file=$LV,index=0,media=disk,cache=unsafe,format=raw -m $RAMSIZE"
 	QEMU_OPTS="$QEMU_OPTS -net nic,vlan=0 -net user,vlan=0,host=10.0.2.1,dhcpstart=10.0.2.2,dns=10.0.2.254"
 	case $NAME in
 		debian-edu_*ltsp-server|debian-edu_*combi-server)
