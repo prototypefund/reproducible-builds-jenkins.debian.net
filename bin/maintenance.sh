@@ -281,8 +281,13 @@ else
 						report_filetype_usage $1 bak
 						report_filetype_usage $1 raw warn
 						report_filetype_usage $1 iso warn
-						echo "WARNING: there is no check / handling on stale lvm volumes"
 						rm $ACTIVE_JOBS $WATCHED_JOBS $RUNNING
+						for VOLUME in $(sudo lvdisplay jenkins01|grep "LV Path" |grep -v "/dev/jenkins01/swap" | cut -d '/' -f2-) ; do
+							if [ -z "$(ps fax | grep "$VOLUME" | grep -v grep)" ] ; then
+								echo "Error: /$VOLUME exists, but no running job is using it."
+								exit 1
+							fi
+						done
 						;;
 		d-i)				report_old_directories /srv/d-i 7 /srv/d-i/workspace /srv/d-i/isos
 						;;

@@ -30,7 +30,7 @@ jenkins ALL=  \
 	/bin/dd if=/dev/zero of=/dev/jenkins*, \
 	/usr/bin/qemu-system-x86_64 *, \
 	/usr/bin/qemu-img *, \
-	/sbin/lvcreate *, /sbin/lvremove *, \
+	/sbin/lvcreate *, /sbin/lvremove *, /sbin/lvdisplay *, \
 	/bin/mkdir -p /media/*, \
 	/usr/bin/guestmount *, \
 	/bin/cp -rv /media/*, \
