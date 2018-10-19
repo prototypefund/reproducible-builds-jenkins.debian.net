@@ -112,7 +112,7 @@ node_document_environment() {
 		echo " <tr><td>$i</td></tr>" >> "$toolchain_html"
 	done
 	echo "</table>" >> "$toolchain_html"
-	echo "<table><tr><th>Debian $(cat /etc/debian_version) package on $(dpkg --print-architecture)</th><th>installed version</th></tr>" >> "$toolchain_html"
+	echo "<table><tr><th>Debian $(cat /etc/debian_version) $(dpkg --print-architecture) package name</th><th>installed version</th></tr>" >> "$toolchain_html"
 	for i in gcc binutils bzip2 flex python perl make findutils grep diffutils unzip gawk util-linux zlib1g-dev libc6-dev git subversion ; do
 		echo " <tr><td>$i</td><td>" >> "$toolchain_html"
 		dpkg -s $i|grep '^Version'|cut -d " " -f2 >> "$toolchain_html"
