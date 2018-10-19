@@ -277,8 +277,8 @@ else
 						done
 						echo
 						report_disk_usage $1
-						report_filetype_usage $1 png warn
-						report_filetype_usage $1 bak warn
+						report_filetype_usage $1 png
+						report_filetype_usage $1 bak
 						report_filetype_usage $1 raw warn
 						report_filetype_usage $1 iso warn
 						echo "WARNING: there is no check / handling on stale lvm volumes"
