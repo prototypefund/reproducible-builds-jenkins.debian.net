@@ -36,7 +36,7 @@
     wrappers:
       - live-screenshot
       - timeout:
-          timeout: 480
+          timeout: 600
     properties:
       - sidebar: &sb01
           url: https://jenkins.debian.net/userContent/about.html
