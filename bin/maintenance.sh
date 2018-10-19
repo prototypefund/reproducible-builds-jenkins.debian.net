@@ -280,12 +280,15 @@ else
 						report_filetype_usage $1 png
 						report_filetype_usage $1 bak
 						report_filetype_usage $1 raw warn
-						report_filetype_usage $1 iso warn
+						report_filetype_usage $1 iso
 						rm $ACTIVE_JOBS $WATCHED_JOBS $RUNNING
+
 						for VOLUME in $(sudo lvdisplay jenkins01|grep "LV Path" |grep -v "/dev/jenkins01/swap" | cut -d '/' -f2-) ; do
 							if [ -z "$(ps fax | grep "$VOLUME" | grep -v grep)" ] ; then
 								echo "Error: /$VOLUME exists, but no running job is using it."
 								exit 1
+							else
+								echo "/$VOLUME is used by a running job, fine."
 							fi
 						done
 						;;
