@@ -719,9 +719,9 @@ handle_remote_error() {
 }
 
 #
-# create the png (and query the db to populate a csv file...)
+# create the png (and query the db to populate a csv file...) for Debian
 #
-create_png_from_table() {
+create_debian_png_from_table() {
 	echo "Checking whether to update $2..."
 	# $1 = id of the stats table
 	# $2 = image file name

@@ -497,7 +497,7 @@ create_suite_arch_stats_page() {
 	for i in 0 2 ; do
 		# recreate png once a day
 		if [ ! -f $DEBIAN_BASE/$SUITE/$ARCH/${TABLE[$i]}.png ] || [ $DUMMY_FILE -nt $DEBIAN_BASE/$SUITE/$ARCH/${TABLE[$i]}.png ] ; then
-			create_png_from_table $i $SUITE/$ARCH/${TABLE[$i]}.png
+			create_debian_png_from_table $i $SUITE/$ARCH/${TABLE[$i]}.png
 		fi
 	done
 	write_page "</p>"
@@ -522,7 +522,7 @@ write_global_graph() {
 	write_page " <a href=\"/debian/${TABLE[$i]}.png\"><img src=\"/debian/${TABLE[$i]}.png\" class="halfview" alt=\"${MAINLABEL[$i]}\"></a>"
 	# redo pngs once a day
 	if [ ! -f $DEBIAN_BASE/${TABLE[$i]}.png ] || [ $DUMMY_FILE -nt $DEBIAN_BASE/${TABLE[$i]}.png ] ; then
-		create_png_from_table $i ${TABLE[$i]}.png
+		create_debian_png_from_table $i ${TABLE[$i]}.png
 	fi
 }
 
@@ -683,7 +683,7 @@ create_performance_page() {
 		MAINLABEL[1]="Amount of packages built each day on '$ARCH'"
 		write_page " <a href=\"/debian/${TABLE[1]}_$ARCH.png\"><img src=\"/debian/${TABLE[1]}_$ARCH.png\" class=\"overview\" alt=\"${MAINLABEL[1]}\"></a>"
 		if [ ! -f $DEBIAN_BASE/${TABLE[1]}_$ARCH.png ] || [ $DUMMY_FILE -nt $DEBIAN_BASE/${TABLE[1]}_$ARCH.png ] ; then
-				create_png_from_table 1 ${TABLE[1]}_$ARCH.png
+				create_debian_png_from_table 1 ${TABLE[1]}_$ARCH.png
 		fi
 	done
 	write_page "<p style=\"clear:both;\">"
