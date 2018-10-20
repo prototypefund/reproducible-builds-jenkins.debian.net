@@ -118,25 +118,22 @@
     my_time: ''
     my_desktop: ''
     my_trigger: ''
-    my_trigdesc: ''
     my_title_extra: ''
     jobs:
       - '{name}_{my_dist}_{my_ver}_{my_profile}':
          my_title: '{my_distname} ({my_ver}) {my_profile}{my_title_extra}'
-         my_description: 'Do a fully automated installation of a {my_distname} {my_verdesc} {my_profile} profile - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/{my_dist}_{my_ver}_{my_profile}_preseed.cfg">this preseed.cfg</a>) using the {my_ver} image.{my_trigdesc}'
+         my_description: 'Do a fully automated installation of a {my_distname} {my_verdesc} {my_profile} profile - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/{my_dist}_{my_ver}_{my_profile}_preseed.cfg">this preseed.cfg</a>) using the {my_ver} image.'
 
 - job-group:
     name: '{name}_debian_{my_ver}_desktops_group'
     my_optdesc: ''
     my_trigger: ''
     my_time: ''
-    my_trigdesc: ''
-    my_optdesc2: ''
     my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org'
     jobs:
       - '{name}_debian_{my_ver}_{my_desktop}':
           my_title: 'Debian ({my_verdesc}) {my_desktop} desktop install{my_optdesc}'
-          my_description: 'Do a fully automated installation of Debian {my_desktop} desktop{my_optdesc}{my_optdesc2} - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian_{my_ver}_{my_desktop}_preseed.cfg">this preseed.cfg</a>){my_instdesc}.{my_trigdesc}'
+          my_description: 'Do a fully automated installation of Debian {my_desktop} desktop{my_optdesc} - via d-i preseeding (with <a href="https://jenkins.debian.net/d-i-preseed-cfgs/debian_{my_ver}_{my_desktop}_preseed.cfg">this preseed.cfg</a>){my_instdesc}.'
           my_disksize: 10
 
 
@@ -233,16 +230,14 @@
                 my_recipients: 'qa-jenkins-scm@lists.alioth.debian.org debian-hurd@lists.debian.org'
                 my_instdesc: ''
           my_ver:
-            - jessie:
-                my_inst_url: 'http://ftp.debian-ports.org/debian-cd/hurd-i386/debian-hurd-2015/debian-hurd-2015-i386-NETINST-1.iso'
-                my_trigdesc: '<br />This job is only triggered manually.'
-                my_verdesc: jessie
-                my_time: '42 16 31 12 4'
-                my_optdesc2: ' on <a href="https://lists.debian.org/debian-devel-announce/2015/04/msg00012.html">Debian GNU/hurd 2015 Jessie release</a>'
-            - sid_daily:
-                my_inst_url: 'http://people.debian.org/~sthibault/hurd-i386/installer/cdimage/daily/debian-sid-hurd-i386-NETINST-1.iso'
+            - stretch:
+                my_inst_url: 'https://cdimage.debian.org/cdimage/ports//9.0/hurd-i386/iso-cd/debian-hurd-2017-i386-NETINST-1.iso'
+                my_verdesc: 'stretch netinst'
+                my_time: '42 16 31 12 *'
+            - buster:
+                    my_inst_url: 'https://cdimage.debian.org/cdimage/ports//10.0/hurd-i386/current/debian-sid-hurd-i386-NETINST-1.iso'
                 my_time: '42 10 */2 * *'
-                my_verdesc: 'sid daily build CD'
+                my_verdesc: 'buster netinst'
 
       - '{name}_debian_sid_daily_rescue_translations_group'
 
