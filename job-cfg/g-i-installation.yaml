@@ -235,10 +235,13 @@
                 my_verdesc: 'stretch netinst'
                 my_time: '42 16 31 12 *'
             - buster:
-                    my_inst_url: 'https://cdimage.debian.org/cdimage/ports//10.0/hurd-i386/current/debian-sid-hurd-i386-NETINST-1.iso'
-                my_time: '42 10 */2 * *'
+                my_inst_url: 'https://cdimage.debian.org/cdimage/ports//10.0/hurd-i386/current/debian-sid-hurd-i386-NETINST-1.iso'
+                my_time: '42 10 */10 * *'
                 my_verdesc: 'buster netinst'
-
+            - sid:
+                    my_inst_url: 'https://d-i.debian.org/daily-images/hurd-i386/20181020-00:32/netboot/mini.iso'
+                my_time: '42 16 */3 * *'
+                my_verdesc: 'sid mini.iso'
       - '{name}_debian_sid_daily_rescue_translations_group'
 
       - '{name}_debian_{my_ver}_presentation':
