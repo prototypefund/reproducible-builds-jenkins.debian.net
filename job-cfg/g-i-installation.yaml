@@ -218,9 +218,9 @@
                 my_verdesc: jessie
                 my_inst_url: 'http://deb.debian.org/debian/dists/jessie-kfreebsd-proposed-updates/main/installer-kfreebsd-amd64/current/images/netboot-10/gtk/netboot.tar.gz'
                 my_time: '42 16 3,18 * *'
-            - sid_daily:
-                my_verdesc: 'sid daily build CD'
-                my_inst_url: 'http://d-i.debian.org/daily-images/kfreebsd-amd64/daily/netboot-10/gtk/netboot.tar.gz'
+            - sid:
+                my_verdesc: 'sid build from 2017'
+                my_inst_url: 'https://people.debian.org/~jrtc27/debian-unofficial-kfreebsd-amd64-NETINST-1.iso'
                 my_time: '42 8 */7 * *'
 
       - '{name}_debian_{my_ver}_desktops_group':
