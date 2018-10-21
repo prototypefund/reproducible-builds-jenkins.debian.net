@@ -529,7 +529,6 @@ for target in * ; do
 		echo "       <table><tr><th>Images for <code>$target/$subtarget</code></th></tr>" >> "$DBD_HTML"
 		for image in $(printf "%s\n%s" "$IMGS1" "$IMGS2" | sort -u ) ; do
 			let ALL_IMAGES+=1
-			echo "DEBUG - found an image, ALL_IMAGES=$ALL_IMAGES"
 			if [ ! -f "$RESULTSDIR/b1/targets/$target/$subtarget/$image" ] || [ ! -f "$RESULTSDIR/b2/targets/$target/$subtarget/$image" ] ; then
 				echo "         <tr><td><img src=\"/userContent/static/weather-storm.png\" alt=\"ftbfs icon\" /> $image (${SIZE}) failed to build.</td></tr>" >> "$DBD_HTML"
 				rm -f "$BASE/openwrt/dbd/targets/$target/$subtarget/$image.html" # cleanup from previous (unreproducible) tests - if needed
@@ -551,7 +550,6 @@ for target in * ; do
 				SHASUM=$(sha256sum "$image" |cut -d " " -f1)
 				echo "         <tr><td><img src=\"/userContent/static/weather-clear.png\" alt=\"reproducible icon\" /> $image ($SHASUM, $SIZE) is reproducible.</td></tr>" >> "$DBD_HTML"
 				let GOOD_IMAGES+=1
-				echo "DEBUG - found a good image, GOOD_IMAGES=$GOOD_IMAGES"
 				rm -f "$BASE/openwrt/dbd/targets/$target/$subtarget/$image.html" # cleanup from previous (unreproducible) tests - if needed
 			fi
 		done
@@ -580,7 +578,6 @@ for i in * ; do
 
 	for j in $(printf "%s\n%s" "$PKGS1" "$PKGS2" | sort -u ) ; do
 		let ALL_PACKAGES+=1
-		echo "DEBUG - found an package, ALL_PACKAGES=$ALL_PACKAGES"
 		if [ ! -f "$RESULTSDIR/b1/$i/$j" ] || [ ! -f "$RESULTSDIR/b2/$i/$j" ] ; then
 			echo "         <tr><td><img src=\"/userContent/static/weather-storm.png\" alt=\"ftbfs icon\" /> $j (${SIZE}) failed to build.</td></tr>" >> "$DBD_BAD_PKGS_HTML"
 			rm -f "$BASE/openwrt/dbd/$i/$j.html" # cleanup from previous (unreproducible) tests - if needed
@@ -601,7 +598,6 @@ for i in * ; do
 			SHASUM=$(sha256sum "$j" |cut -d " " -f1)
 			echo "         <tr><td><img src=\"/userContent/static/weather-clear.png\" alt=\"reproducible icon\" /> $j ($SHASUM, $SIZE) is reproducible.</td></tr>" >> "$DBD_GOOD_PKGS_HTML"
 			let GOOD_PACKAGES+=1
-			echo "DEBUG - found an package, GOOD_PACKAGES=$GOOD_PACKAGES"
 			rm -f "$BASE/openwrt/dbd/$i/$j.html" # cleanup from previous (unreproducible) tests - if needed
 		fi
 	done
