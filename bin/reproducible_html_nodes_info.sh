@@ -223,7 +223,7 @@ build_job_health_page() {
 	SUITE=unstable
 	FILTER[0]="(builds|spec|lfs)"
 	FILTER[1]="html_(all|break|dash|dd|index|live|node|pkg|repo)"
-	FILTER[2]="le_diffoscope"
+	FILTER[2]="reproducible_diffoscope"
 	FILTER[3]="(reprotest|strip-nonderminism|disorderfs)"
 	FILTER[4]="(json|le_scheduler|meta|le_nodes|rsync|notes)"
 	FILTER[5]="archlinux"
