@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Copyright 2012-2017 Holger Levsen <holger@layer-acht.org>
+# Copyright 2012-2018 Holger Levsen <holger@layer-acht.org>
 # Copyright      2013 Antonio Terceiro <terceiro@debian.org>
 # released under the GPLv=2
 
@@ -179,8 +179,6 @@ echo 'APT::Get::Assume-Yes "true";' > /etc/apt/apt.conf.d/23jenkins
 apt-get install build-essential devscripts git
 if [ "$1" = "gbp" ] ; then
 	apt-get install git-buildpackage
-	# there are only two jobs using this and both have no debian directory in the master branch
-	git merge origin/debian
 fi
 if [ -f debian/control ] ; then
 	cat debian/control

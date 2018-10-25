@@ -707,14 +707,14 @@
                     my_timed: '42 23 1 1 *'
                     my_gitrepo: 'https://salsa.debian.org/reproducible/strip-nondeterminism.git'
                     my_gitbranches: 'origin/master'
-                    my_shell: '/srv/jenkins/bin/chroot-run.sh sid gbp buildpackage -uc -us --git-upstream-branch=master'
+                    my_shell: '/srv/jenkins/bin/chroot-run.sh sid gbp buildpackage -uc -us --git-upstream-branch=master --git-debian-branch=debian'
                     my_parse_rules: '/srv/jenkins/logparse/debian-pkg-ci.rules'
                 - 'disorderfs_from_git_master':
                     my_description: 'Build disorderfs Debian package from git branch master.'
                     my_timed: '42 23 1 1 *'
                     my_gitrepo: 'https://salsa.debian.org/reproducible-builds/disorderfs.git'
                     my_gitbranches: 'origin/master'
-                    my_shell: '/srv/jenkins/bin/chroot-run.sh sid gbp buildpackage -uc -us --git-upstream-branch=master'
+                    my_shell: '/srv/jenkins/bin/chroot-run.sh sid gbp buildpackage -uc -us --git-upstream-branch=master --git-debian-branch=debian'
                     my_parse_rules: '/srv/jenkins/logparse/debian-pkg-ci.rules'
                 - 'builds_website':
                     my_description: 'Build https://reproducible-builds.org on every git commit to {my_gitrepo} with jekyll.'
