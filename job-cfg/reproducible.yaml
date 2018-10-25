@@ -552,7 +552,7 @@
                     my_description: 'Test whether PyPI has the latest diffoscope.'
                     my_timed: '23 23 * * *'
                     my_shell: '/srv/jenkins/bin/diffoscope_distribution_test.sh PyPI'
-                    my_recipients: 'jenkins+debian-reproducible qa-jenkins-scm@lists.alioth.debian.org'
+                    my_recipients: 'jenkins+reproducible-builds qa-jenkins-scm@lists.alioth.debian.org'
                 - 'diffoscope_freebsd':
                     my_description: 'Test whether FreeBSD has the latest diffoscope.'
                     my_timed: '25 23 1 * *'
@@ -739,7 +739,7 @@
                     my_gitrepo: 'https://salsa.debian.org/reproducible-builds/reproducible-lfs.git'
                     git_wipe_workspace: false   # can't do it as it would otherwise take too much to checkout/clone
                     my_shell: '/srv/jenkins/bin/reproducible_sync_lfs.sh'
-            my_recipients: 'jenkins+debian-reproducible jenkins+reproducible-builds qa-jenkins-scm@lists.alioth.debian.org'
+            my_recipients: 'jenkins+reproducible-builds qa-jenkins-scm@lists.alioth.debian.org'
             my_parse_rules: '/srv/jenkins/logparse/reproducible-extra.rules'
             my_hname: ''
             my_naginator_regex: 'Caused by: hudson.plugins.git.GitException: Command "git fetch'
