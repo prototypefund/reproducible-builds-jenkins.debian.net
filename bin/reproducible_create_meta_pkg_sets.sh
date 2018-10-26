@@ -415,7 +415,7 @@ update_pkg_set_specific() {
 			# debian-x@l.d.o maintainers
 			grep-dctrl -sPackage -n -FMaintainer,Uploaders debian-x@lists.debian.org $SOURCES > $TMPFILE
 			;;
-		maint_pkg-android-tools-maintainers)
+		maint_pkg-android-tools-devel)
 			# Android Tools Team
 			grep-dctrl -sPackage -n -FMaintainer,Uploaders android-tools-devel@lists.alioth.debian.org $SOURCES > $TMPFILE
 			;;
