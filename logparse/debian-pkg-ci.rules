@@ -32,7 +32,7 @@ ok /W: .+ changes: orig-tarball-missing-upstream-signature/
 
 # Suppress warnings from cryptsetup initramfs hook
 ok /cryptsetup: .+/
-ok /^    integration and avoid this warning\.$
+ok /^    integration and avoid this warning/
 
 # suppress warnings from commit messages
 ok /HEAD is now at .+/
