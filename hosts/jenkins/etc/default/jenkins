@@ -29,6 +29,9 @@ JAVA_ARGS="$JAVA_ARGS -XX:+PrintGCCause -XX:+PrintTenuringDistribution -XX:+Prin
 # G1 GC settings
 JAVA_ARGS="$JAVA_ARGS -XX:+UseG1GC -XX:+ExplicitGCInvokesConcurrent -XX:+ParallelRefProcEnabled -XX:+UseStringDeduplication"
 JAVA_ARGS="$JAVA_ARGS -XX:+UnlockExperimentalVMOptions -XX:G1NewSizePercent=20 -XX:+UnlockDiagnosticVMOptions -XX:G1SummarizeRSetStatsPeriod=1"
+# h01ger trying stuff
+JAVA_ARGS="$JAVA_ARGS -XX:+UseCompressedOops"
+MALLOC_ARENA_MAX=4
 
 # make jenkins listen on IPv4 address
 #JAVA_ARGS="-Djava.net.preferIPv4Stack=true"
