@@ -437,15 +437,6 @@ if [ -z "$1" ] ; then
 	ARCHLINUX_NR_UNKNOWN=0
 	WIDTH=1920
 	HEIGHT=960
-	# variables related to the stats we update
-	# FIELDS[0]="datum, reproducible, FTBR, FTBFS, other, untested" # FIXME: for this Arch Linux still uses a .csv file...
-	FIELDS[1]="datum"
-	for i in reproducible FTBR FTBFS other ; do
-	        for j in $SUITES ; do
-	                FIELDS[1]="${FIELDS[1]}, ${i}_${j}"
-	        done
-	done
-	FIELDS[2]="datum, oldest"
 
 	repostats
 	dashboard_page
