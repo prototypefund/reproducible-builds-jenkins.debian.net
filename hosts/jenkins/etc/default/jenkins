@@ -31,7 +31,7 @@ JAVA_ARGS="$JAVA_ARGS -XX:+UseG1GC -XX:+ExplicitGCInvokesConcurrent -XX:+Paralle
 JAVA_ARGS="$JAVA_ARGS -XX:+UnlockExperimentalVMOptions -XX:G1NewSizePercent=20 -XX:+UnlockDiagnosticVMOptions -XX:G1SummarizeRSetStatsPeriod=1"
 # h01ger trying stuff
 JAVA_ARGS="$JAVA_ARGS -XX:+UseCompressedOops"
-MALLOC_ARENA_MAX=4
+MALLOC_ARENA_MAX=2
 
 # make jenkins listen on IPv4 address
 #JAVA_ARGS="-Djava.net.preferIPv4Stack=true"
