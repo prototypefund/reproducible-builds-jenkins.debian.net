@@ -17,6 +17,6 @@ if [ -f "$f" ]; then
 fi
 
 echo "This jenkins slave.jar will run as PID $$."
-export JAVA_ARGS="-Xms128M -Xmx512M"
+export JAVA_ARGS="-Xms768M -Xmx768M"
 export MALLOC_ARENA_MAX=2
 exec java $JAVA_ARGS -jar /var/lib/jenkins/slave.jar
