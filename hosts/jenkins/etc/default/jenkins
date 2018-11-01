@@ -14,10 +14,9 @@ JENKINS_HOME=/var/lib/$NAME
 # Allow graphs etc. to work even when an X server is present
 JAVA_ARGS="-Djava.awt.headless=true"
 
-#JAVA_ARGS="-Xmx256m"
 #JAVA_ARGS="-Djava.net.preferIPv4Stack=true" # make jenkins listen on IPv4 address
 # See some recommendation from https://jenkins.io/blog/2016/11/21/gc-tuning/
-JAVA_ARGS="$JAVA_ARGS -Xms4G -Xmx12G"  # heap settings
+JAVA_ARGS="$JAVA_ARGS -Xms20G -Xmx20G"  # heap settings
 JAVA_ARGS="$JAVA_ARGS -server -XX:+AlwaysPreTouch"
 # store heap dumps in case of OOM, to investigate it later
 JAVA_ARGS="$JAVA_ARGS -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=$JENKINS_HOME/heapDumps/"
