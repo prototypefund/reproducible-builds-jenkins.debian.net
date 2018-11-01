@@ -17,7 +17,7 @@ JAVA_ARGS="-Djava.awt.headless=true"
 #JAVA_ARGS="-Xmx256m"
 #JAVA_ARGS="-Djava.net.preferIPv4Stack=true" # make jenkins listen on IPv4 address
 # See some recommendation from https://jenkins.io/blog/2016/11/21/gc-tuning/
-JAVA_ARGS="$JAVA_ARGS -Xms8G -Xmx24G"  # heap settings
+JAVA_ARGS="$JAVA_ARGS -Xms4G -Xmx12G"  # heap settings
 JAVA_ARGS="$JAVA_ARGS -server -XX:+AlwaysPreTouch"
 # store heap dumps in case of OOM, to investigate it later
 JAVA_ARGS="$JAVA_ARGS -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=$JENKINS_HOME/heapDumps/"
@@ -28,7 +28,7 @@ JAVA_ARGS="$JAVA_ARGS -XX:+PrintGCDateStamps -XX:+PrintGCDetails -XX:+PrintHeapA
 JAVA_ARGS="$JAVA_ARGS -XX:+PrintGCCause -XX:+PrintTenuringDistribution -XX:+PrintReferenceGC -XX:+PrintAdaptiveSizePolicy"
 # G1 GC settings
 JAVA_ARGS="$JAVA_ARGS -XX:+UseG1GC -XX:+ExplicitGCInvokesConcurrent -XX:+ParallelRefProcEnabled -XX:+UseStringDeduplication"
-JAVA_ARGS="$JAVA_ARGS -XX:+UnlockExperimentalVMOptions -XX:G1NewSizePercent=20 -XX:+UnlockDiagnosticVMOptions -XX:G1SummarizeRSetStatsPeriod=1"
+JAVA_ARGS="$JAVA_ARGS -XX:+UnlockExperimentalVMOptions -XX:G1NewSizePercent=10 -XX:+UnlockDiagnosticVMOptions -XX:G1SummarizeRSetStatsPeriod=1"
 # h01ger trying stuff
 JAVA_ARGS="$JAVA_ARGS -XX:+UseCompressedOops -XX:+UseCompressedClassPointers"
 export MALLOC_ARENA_MAX=2
