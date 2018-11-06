@@ -10,10 +10,10 @@
 # nothing (set to "none").  If all sessions should be automatically
 # ended, set to "end".  If this is set to "none", START_ACTION should
 # probably be set to "recover" to avoid broken sessions on restart.
-STOP_ACTION="none"
+STOP_ACTION="end"
 
 # What do we want to do with "orphan" sessions when starting or
 # restarting?  Recover them (leave empty or set to "recover") or just
 # end them (set to "end")?
-START_ACTION="recover"
+START_ACTION="end"
 
