@@ -451,7 +451,8 @@ if [ -f /etc/debian_version ] ; then
 				shorewall 
 				shorewall6 
 				sqlite3 
-				syslinux 
+				syslinux
+				systemd/stretch-backports
 				thin-provisioning-tools
 				tor
 				vncsnapshot 
