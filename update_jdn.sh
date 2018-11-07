@@ -653,10 +653,12 @@ if [ "$HOSTNAME" = "jenkins" ] || [ "$HOSTNAME" = "jenkins-test-vm" ] ; then
 	#
 	cd /srv/jenkins/job-cfg
 	for metaconfig in *.yaml.py ; do
-		TMPFILE=$(sudo -u jenkins-adm mktemp)
-		./$metaconfig | sudo -u jenkins-adm tee "$TMPFILE" >/dev/null
-		if ! sudo -u jenkins-adm cmp -s ${metaconfig%.py} "$TMPFILE" ; then
-			sudo -u jenkins-adm mv "$TMPFILE" "${metaconfig%.py}"
+		if [ -f $metaconfig ] ; then
+			TMPFILE=$(sudo -u jenkins-adm mktemp)
+			./$metaconfig | sudo -u jenkins-adm tee "$TMPFILE" >/dev/null
+			if ! sudo -u jenkins-adm cmp -s ${metaconfig%.py} "$TMPFILE" ; then
+				sudo -u jenkins-adm mv "$TMPFILE" "${metaconfig%.py}"
+			fi
 		fi
 	done
 	for config in *.yaml ; do
