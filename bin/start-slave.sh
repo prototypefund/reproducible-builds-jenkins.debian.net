@@ -19,4 +19,6 @@ fi
 echo "This jenkins slave.jar will run as PID $$."
 export JAVA_ARGS="-Xmn128M -Xms1G -Xmx1G -client"
 export MALLOC_ARENA_MAX=1
+unset JAVA_ARGS
+unset MALLOC_ARENA_MAX
 exec java $JAVA_ARGS -jar /var/lib/jenkins/slave.jar
