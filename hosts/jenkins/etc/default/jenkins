@@ -16,9 +16,9 @@ JAVA_ARGS="-Djava.awt.headless=true"
 
 #JAVA_ARGS="-Djava.net.preferIPv4Stack=true" # make jenkins listen on IPv4 address
 # See some recommendation from https://jenkins.io/blog/2016/11/21/gc-tuning/
-JAVA_ARGS="$JAVA_ARGS -Xms20G -Xmx40G"  # heap settings
+JAVA_ARGS="$JAVA_ARGS -Xms24G -Xmx24G"  # heap settings
 JAVA_ARGS="$JAVA_ARGS -server "
-#JAVA_ARGS="$JAVA_ARGS -XX:+AlwaysPreTouch"
+JAVA_ARGS="$JAVA_ARGS -XX:+AlwaysPreTouch"
 # store heap dumps in case of OOM, to investigate it later
 #JAVA_ARGS="$JAVA_ARGS -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=$JENKINS_HOME/heapDumps/"
 # GC logging, in case somebody ever wants to actually finely tune the GC for us...
@@ -27,10 +27,11 @@ JAVA_ARGS="$JAVA_ARGS -server "
 #JAVA_ARGS="$JAVA_ARGS -XX:+PrintGCDateStamps -XX:+PrintGCDetails -XX:+PrintHeapAtGC"
 #JAVA_ARGS="$JAVA_ARGS -XX:+PrintGCCause -XX:+PrintTenuringDistribution -XX:+PrintReferenceGC -XX:+PrintAdaptiveSizePolicy"
 # G1 GC settings
-#JAVA_ARGS="$JAVA_ARGS -XX:+UseG1GC -XX:+ExplicitGCInvokesConcurrent -XX:+ParallelRefProcEnabled -XX:+UseStringDeduplication"
+JAVA_ARGS="$JAVA_ARGS -XX:+UseG1GC "
+#JAVA_ARGS="$JAVA_ARGS -XX:+ExplicitGCInvokesConcurrent -XX:+ParallelRefProcEnabled -XX:+UseStringDeduplication"
 #JAVA_ARGS="$JAVA_ARGS -XX:+UnlockExperimentalVMOptions -XX:G1NewSizePercent=10 -XX:+UnlockDiagnosticVMOptions -XX:G1SummarizeRSetStatsPeriod=1"
 # h01ger trying stuff
-#export MALLOC_ARENA_MAX=1
+export MALLOC_ARENA_MAX=1
 
 # make jenkins listen on IPv4 address
 #JAVA_ARGS="-Djava.net.preferIPv4Stack=true"
