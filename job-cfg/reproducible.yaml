@@ -280,7 +280,7 @@
             my_task:
                 - 'node_health_check':
                     my_description: 'Do some health checks.'
-                    my_timed: 'H/15 * * * *'
+                    my_timed: 'H/20 * * * *'
                     my_recipients: ''
                     my_timeout: '15'
             my_shell: '/srv/jenkins/bin/reproducible_node_health_check.sh'
