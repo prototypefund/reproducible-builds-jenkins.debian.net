@@ -263,6 +263,7 @@ if [ -f /etc/debian_version ] ; then
 			netcat-traditional
 			ntp
 			ntpdate
+			openjdk-8-jre 
 			pigz 
 			postfix
 			procmail
@@ -418,7 +419,6 @@ if [ -f /etc/debian_version ] ; then
 				obfs4proxy
 				openbios-ppc 
 				openbios-sparc 
-				openjdk-8-jre 
 				pandoc
 				postgresql
 				postgresql-autodoc
