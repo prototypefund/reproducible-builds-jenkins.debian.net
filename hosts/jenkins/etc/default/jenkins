@@ -16,7 +16,7 @@ JAVA_ARGS="-Djava.awt.headless=true"
 
 #JAVA_ARGS="-Djava.net.preferIPv4Stack=true" # make jenkins listen on IPv4 address
 # See some recommendation from https://jenkins.io/blog/2016/11/21/gc-tuning/
-JAVA_ARGS="$JAVA_ARGS -Xms24G -Xmx24G"  # heap settings
+JAVA_ARGS="$JAVA_ARGS -Xmn1G -Xms24G -Xmx24G"  # heap settings
 JAVA_ARGS="$JAVA_ARGS -server "
 JAVA_ARGS="$JAVA_ARGS -XX:+AlwaysPreTouch"
 # store heap dumps in case of OOM, to investigate it later
