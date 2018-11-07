@@ -2,6 +2,3 @@
 # No builds will be dispatched to those nodes, and the nodes will be marked
 # as offline in the jenkins UI.
 
-ff64a-armhf-rb.debian.net
-ff64a-armhf-rb
-

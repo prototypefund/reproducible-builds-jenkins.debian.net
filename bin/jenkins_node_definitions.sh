@@ -27,7 +27,6 @@ codethink-sled16-arm64.debian.net
 ff2a-armhf-rb.debian.net
 ff2b-armhf-rb.debian.net
 ff4a-armhf-rb.debian.net
-ff64a-armhf-rb.debian.net
 jtk1a-armhf-rb.debian.net
 jtx1a-armhf-rb.debian.net
 jtx1b-armhf-rb.debian.net
@@ -88,9 +87,6 @@ get_node_ssh_port() {
 	    ;;
 	  ff4a*)
 	    PORT=2241
-	    ;;
-	  ff64a*)
-	    PORT=2250
 	    ;;
 	  opi2a*)
 	    PORT=2236
