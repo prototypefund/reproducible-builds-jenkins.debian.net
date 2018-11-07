@@ -117,7 +117,7 @@ choose_nodes() {
 		arm64_31)	NODE1=codethink-sled16-arm64	NODE2=codethink-sled13-arm64 ;;
 		arm64_32)	NODE1=codethink-sled16-arm64	NODE2=codethink-sled15-arm64 ;;
 		# to choose new armhf jobs:
-            #   for i in cb3a bbx15 cbxi4pro0 ff2a ff2b ff64a jtk1a jtk1b odxu4a odxu4b odxu4c odu3a opi2a opi2b opi2c p64b p64c wbq0 cbxi4a cbxi4b ff4a jtx1a jtx1b jtx1c; do echo "$i: " ; grep NODE1 bin/reproducible_build_service.sh|grep armhf|grep $i-armhf ; done
+            #   for i in cb3a bbx15 cbxi4pro0 ff2a ff2b ff64a jtk1a odxu4a odxu4b odxu4c odu3a opi2a opi2b opi2c p64b p64c wbq0 cbxi4a cbxi4b ff4a jtx1a jtx1b jtx1c; do echo "$i: " ; grep NODE1 bin/reproducible_build_service.sh|grep armhf|grep $i-armhf ; done
 	        #       6 jobs for quad-cores with 4 gb ram
 	        #       4 jobs for octo-cores with 2 gb ram
 	        #       4 jobs for hexa-cores with 2 gb ram
@@ -143,14 +143,10 @@ choose_nodes() {
 		armhf_15)	NODE1=ff2b-armhf-rb			NODE2=opi2c-armhf-rb ;;
 		armhf_16)	NODE1=jtx1b-armhf-rb		NODE2=p64b-armhf-rb ;;
 		armhf_17)	NODE1=jtx1b-armhf-rb		NODE2=opi2c-armhf-rb ;;
-		armhf_18)	NODE1=jtk1b-armhf-rb		NODE2=opi2b-armhf-rb ;;
-		armhf_19)	NODE1=jtk1b-armhf-rb		NODE2=opi2a-armhf-rb ;;
 		armhf_20)	NODE1=odxu4a-armhf-rb		NODE2=opi2b-armhf-rb ;;
 		armhf_21)	NODE1=odxu4a-armhf-rb		NODE2=opi2a-armhf-rb ;;
 		armhf_22)	NODE1=odxu4b-armhf-rb		NODE2=odu3a-armhf-rb ;;
-		armhf_23)	NODE1=odxu4b-armhf-rb		NODE2=jtk1b-armhf-rb ;;
 		armhf_24)	NODE1=odxu4c-armhf-rb		NODE2=jtx1c-armhf-rb ;;
-		armhf_25)	NODE1=odxu4c-armhf-rb		NODE2=jtk1b-armhf-rb ;;
 		armhf_26)	NODE1=odu3a-armhf-rb		NODE2=odxu4a-armhf-rb ;;
 		armhf_27)	NODE1=odu3a-armhf-rb		NODE2=jtx1b-armhf-rb ;;
 		armhf_28)	NODE1=opi2a-armhf-rb		NODE2=odxu4c-armhf-rb ;;

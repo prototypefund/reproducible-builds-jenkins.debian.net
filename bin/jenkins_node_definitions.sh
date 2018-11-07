@@ -29,7 +29,6 @@ ff2b-armhf-rb.debian.net
 ff4a-armhf-rb.debian.net
 ff64a-armhf-rb.debian.net
 jtk1a-armhf-rb.debian.net
-jtk1b-armhf-rb.debian.net
 jtx1a-armhf-rb.debian.net
 jtx1b-armhf-rb.debian.net
 jtx1c-armhf-rb.debian.net
@@ -111,9 +110,6 @@ get_node_ssh_port() {
 	  jtk1a*)
 	    PORT=2246
 	    ;;
-	  jtk1b*)
-	     PORT=2252
-	     ;;
 	  jtx1a*)
 	    PORT=2249
 	    ;;
