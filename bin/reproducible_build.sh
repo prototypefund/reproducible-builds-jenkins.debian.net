@@ -648,6 +648,14 @@ EOF
 	else
 		echo "BUILDDIR=/build" >> "$TMPCFG"
 	fi
+
+	local pbuilder_options=()
+	case "${SUITE}" in
+		(unstable|experimental|buster)
+			pbuilder_options+=(--extrapackages usrmerge)
+			;;
+	esac
+
 	set +e
 	# remember to change the sudoers setting if you change the following command
 	# (the 2nd build gets a longer timeout trying to make sure the first build
@@ -661,6 +669,7 @@ EOF
 			--basetgz /var/cache/pbuilder/$SUITE-reproducible-base.tgz \
 			--buildresult $TMPDIR/b2 \
 			--logfile b2/build.log \
+			"${pbuilder_options[@]}" \
 			${SRCPACKAGE}_${EVERSION}.dsc
 	local PRESULT=$?
 	set -e
