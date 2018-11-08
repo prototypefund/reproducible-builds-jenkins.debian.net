@@ -22,7 +22,7 @@
     triggers:
       - timed: '{my_timed}'
     logrotate: &logrotate
-      daysToKeep: 30
+      daysToKeep: 31
       numToKeep: 50
       artifactDaysToKeep: -1
       artifactNumToKeep: -1
