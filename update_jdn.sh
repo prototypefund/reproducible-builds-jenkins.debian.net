@@ -261,6 +261,7 @@ if [ -f /etc/debian_version ] ; then
 			netcat-traditional
 			ntp
 			ntpdate
+			pbuilder/stretch-backports
 			pigz 
 			postfix
 			procmail
@@ -287,11 +288,9 @@ if [ -f /etc/debian_version ] ; then
 			*) ;;
 		esac
 		# install debootstrap from stretch-backports on ubuntu nodes as since 20180927 debootstrap 1.0.78+nmu1ubuntu1.6 cannot install sid anymore
-		# we also want the latest pbuilder from bpo on this old ubuntu
 		case $HOSTNAME in
 			codethink*) DEBS="$DEBS
-				debootstrap/stretch-backports
-				pbuilder/stretch-backports" ;;
+				debootstrap/stretch-backports" ;;
 			*) 	;;
 		esac
 		# install munin from stretch-backports everywhere, except on ubuntu nodes
