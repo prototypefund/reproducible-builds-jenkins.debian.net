@@ -15,7 +15,8 @@ cgitb.enable()
 def debug_info():
     # Debug info, to be removed once ready to go.
     print()
-    print('WARNING: This endpoint is still a WORK IN PROGRESS. This means that the option details may change without notice.')
+    print('WARNING: This endpoint is still a WORK IN PROGRESS. '
+          'This means that the option details may change without notice.')
     print('You are authenticated as: {}'.format(user))
     print(cgi.FieldStorage())
 
@@ -38,8 +39,9 @@ def sanify_field(field_name, field_text):
         err = '"{}" is not sane (does not match {})'.format(field_name, sane_re)
         raise ValidationError(err)
 
+
 def validate(form):
-    if 'pkg' not in form:
+    if not any(x in form for x in ('pkg', 'status', 'issue', 'after', 'before')):
         raise ValidationError('no packages specified')
     for pkg in form.getlist('pkg'):
         sanify_field('pkg', pkg)
@@ -67,7 +69,7 @@ def validate(form):
         value = form.getvalue(opt)
         if value:
             sanify_field(opt, value)
-            args.append('--{} {}'.format(opt, value))
+            args.extend(('--{}'.format(opt), value))
     for f in ('suite', 'architecture'):
         for i in form.getlist(f):
             sanify_field(f, i)
