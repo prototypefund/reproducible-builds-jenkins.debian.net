@@ -26,8 +26,6 @@
 set -e
 
 BASEDIR="$(dirname "$(readlink -e $0)")"
-PVNAME=/dev/vdb      # LVM physical volume for jobs
-VGNAME=jenkins01     # LVM volume group
 STAMP=/var/log/jenkins/update-jenkins.stamp
 # The $@ below means that command line args get passed on to j-j-b
 # which allows one to specify --flush-cache or --ignore-cache
@@ -682,24 +680,6 @@ fi
 if [ "$(sudo su - jenkins -c 'git config --get user.email')" != "jenkins@jenkins.debian.net" ] ; then
 	sudo su - jenkins -c "git config --global user.email jenkins@jenkins.debian.net"
 	sudo su - jenkins -c "git config --global user.name Jenkins"
-fi
-
-if [ "$HOSTNAME" = "jenkins" ] ; then
-	#
-	# creating LVM volume group for jobs
-	#
-	if [ "$PVNAME" = "" ]; then
-		figlet -f banner Error
-		explain "you must set \$PVNAME to physical volume pathname, exiting."
-		exit 1
-	elif ! $UP2DATE ; then
-		if ! sudo pvs $PVNAME >/dev/null 2>&1; then
-			sudo pvcreate $PVNAME
-		fi
-		if ! sudo vgs $VGNAME >/dev/null 2>&1; then
-			sudo vgcreate $VGNAME $PVNAME
-		fi
-	fi
 fi
 
 #
