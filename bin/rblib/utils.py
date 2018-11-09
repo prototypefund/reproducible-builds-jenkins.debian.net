@@ -73,5 +73,5 @@ def strip_epoch(version):
 def irc_msg(msg, channel='debian-reproducible'):
     kgb = ['kgb-client', '--conf', '/srv/jenkins/kgb/%s.conf' % channel,
            '--relay-msg']
-    kgb.extend(str(msg).strip().split())
+    kgb.extend(str(msg).strip().encode('utf-8').split())
     subprocess.run(kgb)
