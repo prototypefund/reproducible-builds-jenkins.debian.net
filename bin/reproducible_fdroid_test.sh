@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Copyright © 2015-2017 Holger Levsen (holger@layer-acht.org)
+# Copyright © 2015-2018 Holger Levsen (holger@layer-acht.org)
 # Copyright © 2017 Hans-Christoph Steiner (hans@guardianproject.info)
 # released under the GPLv=2
 
@@ -17,9 +17,9 @@ common_init "$@"
 GIT_REPO=https://gitlab.com/fdroid/fdroidserver
 
 # define and clean work space on the machine actually running the
-# build. jenkins.debian.net does not use Jenkins slaves.  Instead
+# build. jenkins.debian.net does not use Jenkins agents.  Instead
 # /srv/jenkins/bin/jenkins_master_wrapper.sh runs this script on the
-# slave using a directly call to ssh, so this script has to do all
+# agent using a directly call to ssh, so this script has to do all
 # of the workspace setup.
 export WORKSPACE=$BASE/reproducible_fdroid_build_apps
 if [ -e $WORKSPACE/.git ]; then

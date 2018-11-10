@@ -2,7 +2,7 @@
 # No builds will be dispatched to those nodes, and the nodes will be marked
 # as offline in the jenkins UI.
 
-# FIXME: the latter is needed by start-slave.sh, the former probably elsewhere
+# FIXME: the latter is needed by start-agent.sh, the former probably elsewhere
 # FIXME: do debug
 #example-armhf-rb.debian.net
 #example-armhf-rb

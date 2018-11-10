@@ -92,7 +92,7 @@ cd vncdotool/
 python setup.py install
 ----
 
-=== adding new slaves to jenkins
+=== adding new agents to jenkins
 
 Process to follow to add a new node to jenkins:
 
@@ -104,12 +104,12 @@ Process to follow to add a new node to jenkins:
   * 'Labels': `$arch $short_name` (with '$short_name' like ff64u if the hostname is ff64u-armhf-rb)
   * 'Usage': select "Only build jobs with label expressions matching this node"
   * 'Launch method': select "Launch agent via execution of command on the master"
-     * 'Launch command': `/srv/jenkins/bin/start-slave.sh`
+     * 'Launch command': `/srv/jenkins/bin/start-agent.sh`
   * 'Availability': select "Take this agent online when in demand, and offline when idle"
     * 'In demand delay': 0 (so that builds will start right away)
     * 'Idle delay': 5 (this is an arbitrary amount of time)
 
-The slave setup is done so that the slave.jar program doesn't get run on the remote nodes,
+The agent setup is done so that the agent.jar program doesn't get run on the remote nodes,
 to avoid needing Java available in there.
 Jobs wanting to run entirely on a remote host will just execute `jenkins_master_wrapper.sh`
 which will do the needed ssh and execute `jenkins_node_wrapper.sh` on the remote host,
