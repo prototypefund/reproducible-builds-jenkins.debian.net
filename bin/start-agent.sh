@@ -17,7 +17,5 @@ if [ -f "$f" ]; then
 fi
 
 echo "This jenkins agent.jar will run as PID $$."
-#export JAVA_ARGS="-Xmn128M -Xms1G -Xmx1G -client"
-export JAVA_ARGS="-Xmx2G"
-#export MALLOC_ARENA_MAX=1
+export JAVA_ARGS="-Xms1G -Xmx2G"
 exec java $JAVA_ARGS -jar /var/lib/jenkins/agent.jar
