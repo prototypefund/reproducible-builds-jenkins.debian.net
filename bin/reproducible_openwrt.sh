@@ -229,6 +229,11 @@ openwrt_config() {
 	printf "CONFIG_TARGET_ROOTFS_TARGZ=y\n" >> .config
 	printf 'CONFIG_KERNEL_BUILD_USER="openwrt"\n' >> .config
 	printf 'CONFIG_KERNEL_BUILD_DOMAIN="buildhost"\n' >> .config
+
+	# WORKAROUND: TODO FIXME
+	# The OpenWrt build system have a bug with iw when using CONFIG_ALL=y and
+	# selecting iw as dependency (over target dependencies).
+	printf 'CONFIG_PACKAGE_iw=y\n' >> .config
 	make defconfig
 }
 
