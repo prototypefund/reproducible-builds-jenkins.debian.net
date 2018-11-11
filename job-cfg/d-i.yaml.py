@@ -160,21 +160,11 @@ jobs = [
     '{name}_manual_html_po2xml_group',
     '{name}_manual_pdf_po2xml_group',
     '{name}_build-group',
-    '{name}_pu-build-group',
 ]
 
 if "jenkins-test-vm" == os.uname()[1]:
     pkgs = [ 'debian-installer', 'preseed', 'debootstrap', 'debian-installer-utils', 'rootskel' ]
-    jobs = [ '{name}_build-group', '{name}_pu-build-group']
-
-# add a special job for triggering from the pu/ branches
-jobs.append( {'{name}_pu-triggered_{pkg}': {
-                'gitrepo': 'https://salsa.debian.org/installer-team/{pkg}',
-                'branchdesc': 'master branch',
-                'branch': 'origin/pu/**',
-                'pkg': 'debian-installer',
-                'trg': '',
-             }} )
+    jobs = [ '{name}_build-group' ]
 
 def scm_svn(po, inc_regs=None):
     if inc_regs is None:
@@ -312,12 +302,7 @@ def gen_default(name, downstream=None, envfile=None, parameters=None):
         builders.append({'inject': {'properties-file': envfile}})
     if downstream is not None:
         builders.append({'trigger-builds': downstream})
-    if '{name}-pu-triggered' == name:
-        desc = ('Builds debian-installer in sid from git using locally built udebs, '
-                'triggered by completion of pu-build job '
-                '{do_not_edit}')
-    else:
-        desc = ('Builds Debian packages in sid from git {branchdesc}, '
+    desc = ('Builds Debian packages in sid from git {branchdesc}, '
                 'triggered by pushes to <pre>{gitrepo}</pre> '
                 '{do_not_edit}')
 
@@ -364,19 +349,8 @@ for f in ['html', 'pdf']:
         templs.append(jtmpl(act='manual', target='{lang}', fmt=f, po=po))
 
 data.append(gen_default( name='{name}-{act}'))
-data.append(gen_default(
-    name='{name}-pu-{act}',
-    downstream=[{'project': 'd-i_pu-triggered_debian-installer', 'predefined-parameters': 'TRIGGERING_BRANCH=$OUR_BRANCH'}],
-    envfile='env.txt',
-    ))
-data.append(gen_default(
-    name='{name}-pu-triggered',
-    parameters=[ {'string': {'name': 'TRIGGERING_BRANCH', 'description': 'git branch that triggered the build that resulted in this subsequent build.'}}],
-    ))
 
 templs.append(jtmpl(act='{act}', target='{pkg}'))
-templs.append(jtmpl(act='pu-{act}', target='{pkg}'))
-templs.append(jtmpl(act='pu-triggered', target='{pkg}'))
 data.extend(templs)
 
 data.append(
@@ -464,17 +438,6 @@ data.append(
         'branchdesc': 'master branch',
         'branch': 'origin/master',
         'trg': 'H/1 19 * * *',
-        'pkg': pkgs}})
-
-data.append(
-    {'job-group': {
-        'name': '{name}_pu-build-group',
-        'jobs': ['{name}_pu-{act}_{pkg}'],
-        'gitrepo': 'https://salsa.debian.org/installer-team/{pkg}',
-        'act': 'build',
-        'branchdesc': 'pu/ branches',
-        'branch': 'origin/pu/**',
-        'trg': 'H/1 H/1 * * *',
         'pkg': pkgs}})
 
 
