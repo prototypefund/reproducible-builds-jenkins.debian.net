@@ -96,7 +96,7 @@ OLDSTUFF=$(find /tmp -maxdepth 1 -type d -mtime +2 -regextype egrep -regex '/tmp
 if [ ! -z "$OLDSTUFF" ] ; then
 	echo
 	echo "Old temp directories found in /tmp"
-	find /tmp -maxdepth 1 -type d -mtime +2 -regextype egrep -regex '/tmp/(tmp.*|Test.*|usession-release.*|.*test.*)' -exec rm -rv --one-file-system {} \; || true
+	find /tmp -maxdepth 1 -type d -mtime +2 -regextype egrep -regex '/tmp/(tmp.*|Test.*|usession-release.*|.*test.*)' -exec sudo rm -rv --one-file-system {} \; || true
 	echo "These old directories have been deleted."
 	echo
 	DIRTY=true
