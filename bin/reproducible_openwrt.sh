@@ -544,7 +544,7 @@ for target in * ; do
 				| cut -f 1 -d ' ' | uniq -c  | wc -l)" != "1" ] ; then
 				call_diffoscope "targets/$target/$subtarget" "$image"
 			else
-				echo "$(date -u) - targets/$target/$subtarget/$image is reproducible, yip!"
+				echo "$(date -u) - targets/$target/$subtarget/$image is reproducible!"
 			fi
 			get_filesize "$image"
 			if [ -f "$RESULTSDIR/targets/$target/$subtarget/$image.html" ] ; then
@@ -592,7 +592,7 @@ for i in * ; do
 		if [ "$(sha256sum "$RESULTSDIR/b1/$i/$j" "$RESULTSDIR/b2/$i/$j" | cut -f 1 -d ' ' | uniq -c  | wc -l)" != "1" ] ; then
 			call_diffoscope "$i" "$j"
 		else
-			echo "$(date -u) - $i/$j is reproducible, yip!"
+			echo "$(date -u) - $i/$j is reproducible!"
 		fi
 		get_filesize "$j"
 		if [ -f "$RESULTSDIR/$i/$j.html" ] ; then
