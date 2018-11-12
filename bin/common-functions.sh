@@ -153,7 +153,7 @@ else
 		bbx15|cb3*|cbxi4*|wbq0|odxu4*|odu3*|odc*|ff*|ff4*|opi2*|jt?1*|p64*)
 			export http_proxy="http://10.0.0.15:8000/" ;;
 		spectrum)
-			export MIRROR=none ;;
+			export http_proxy="http://127.0.0.1:3128" ;;
 		*)
 			echo "unsupported host, exiting." ; exit 1 ;;
 	esac
