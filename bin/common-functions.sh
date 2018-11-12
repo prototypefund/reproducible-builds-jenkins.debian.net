@@ -137,27 +137,26 @@ else
 				echo "unsupported host, exiting." ; exit 1 ;;
 		esac
 	fi
-	if [ -z "$http_proxy" ]; then
-		case $HOSTNAME in
-			jenkins|jenkins-test-vm|profitbricks-build1-a*|profitbricks-build2*|profitbricks-build3*|profitbricks-build9*|profitbricks-build11*|profitbricks-build12*)
-				# pb datacenter in karlsruhe uses pb1 as proxy:
-				export http_proxy="http://78.137.99.97:3128" ;;
-			profitbricks-build4*|profitbricks-build5*|profitbricks-build6*|profitbricks-build10*|profitbricks-build15*|profitbricks-build16*)
-				# pb datacenter in frankfurt uses pb10 as proxy:
-				export http_proxy="http://85.184.249.68:3128" ;;
-			profitbricks-build7*)
-				# let pb7 use its own proxy for the fdroid stuff:
-				export http_proxy="http://127.0.0.1:3128" ;;
-			codethink*)
-				export http_proxy="http://192.168.101.16:3128" ;;
-			bbx15|cb3*|cbxi4*|wbq0|odxu4*|odu3*|odc*|ff*|ff4*|opi2*|jt?1*|p64*)
-				export http_proxy="http://10.0.0.15:8000/" ;;
-			spectrum)
-				export MIRROR=none ;;
-			*)
-				echo "unsupported host, exiting." ; exit 1 ;;
-		esac
-	fi
+	# force http_proxy as we want it
+	case $HOSTNAME in
+		jenkins|jenkins-test-vm|profitbricks-build1-a*|profitbricks-build2*|profitbricks-build3*|profitbricks-build9*|profitbricks-build11*|profitbricks-build12*)
+			# pb datacenter in karlsruhe uses pb1 as proxy:
+			export http_proxy="http://78.137.99.97:3128" ;;
+		profitbricks-build4*|profitbricks-build5*|profitbricks-build6*|profitbricks-build10*|profitbricks-build15*|profitbricks-build16*)
+			# pb datacenter in frankfurt uses pb10 as proxy:
+			export http_proxy="http://85.184.249.68:3128" ;;
+		profitbricks-build7*)
+			# let pb7 use its own proxy for the fdroid stuff:
+			export http_proxy="http://127.0.0.1:3128" ;;
+		codethink*)
+			export http_proxy="http://192.168.101.16:3128" ;;
+		bbx15|cb3*|cbxi4*|wbq0|odxu4*|odu3*|odc*|ff*|ff4*|opi2*|jt?1*|p64*)
+			export http_proxy="http://10.0.0.15:8000/" ;;
+		spectrum)
+			export MIRROR=none ;;
+		*)
+			echo "unsupported host, exiting." ; exit 1 ;;
+	esac
 	if [ -z "$CHROOT_BASE" ]; then
 		export CHROOT_BASE=/chroots
 	fi
