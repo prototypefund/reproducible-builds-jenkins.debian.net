@@ -281,7 +281,7 @@ if [ -f /etc/debian_version ] ; then
 			"
 		# install squid on a few nodes only
 		case $HOSTNAME in
-			jenkins|jenkins-test-vm|profitbricks-build1*|profitbricks-build10*) DEBS="$DEBS
+			profitbricks-build1-a*|profitbricks-build10*|profitbricks-build7*|codethink-sled16*) DEBS="$DEBS
 				squid" ;;
 			*) ;;
 		esac
@@ -572,7 +572,7 @@ if ! $UP2DATE || [ $BASEDIR/hosts/$HOSTNAME/etc/munin -nt $STAMP ] ; then
 	cd /etc/munin/plugins
 	sudo rm -f postfix_* open_inodes interrupts irqstats threads proc_pri vmstat if_err_* exim_* netstat fw_forwarded_local fw_packets forks open_files users nfs* iostat_ios ntp* 2>/dev/null
 	case $HOSTNAME in
-			jenkins|profitbricks-build*|codethink-sled*) [ -L /etc/munin/plugins/squid_cache ] || for i in squid_cache squid_objectsize squid_requests squid_traffic ; do sudo ln -s /usr/share/munin/plugins/$i $i ; done ;;
+			profitbricks-build7*|profitbricks-build1-a*|profitbricks-build10*|codethink-sled16*) [ -L /etc/munin/plugins/squid_cache ] || for i in squid_cache squid_objectsize squid_requests squid_traffic ; do sudo ln -s /usr/share/munin/plugins/$i $i ; done ;;
 			*)	;;
 	esac
 	case $HOSTNAME in
