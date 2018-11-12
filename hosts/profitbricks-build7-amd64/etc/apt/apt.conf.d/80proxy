@@ -1,1 +1,1 @@
-Acquire::http::Proxy "http://85.184.249.68:3128/";
+Acquire::http::Proxy "http://127.0.0.1:3128/";
