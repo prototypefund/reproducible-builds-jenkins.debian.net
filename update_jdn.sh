@@ -279,10 +279,15 @@ if [ -f /etc/debian_version ] ; then
 			vim 
 			zsh
 			"
-		# install squid everywhere except on the armhf nodes
+		# install squid on a few nodes only
 		case $HOSTNAME in
-			jenkins|jenkins-test-vm|profitbricks-build*|codethink*) DEBS="$DEBS
-				squid
+			jenkins|jenkins-test-vm|profitbricks-build1*|profitbricks-build10*) DEBS="$DEBS
+				squid" ;;
+			*) ;;
+		esac
+		# notifications are only done from a view nodes
+		case $HOSTNAME in
+			jenkins|jenkins-test-vm|profitbricks-build*) DEBS="$DEBS
 				kgb-client
 				python3-yaml" ;;
 			*) ;;
