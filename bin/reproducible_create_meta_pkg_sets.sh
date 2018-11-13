@@ -363,7 +363,7 @@ update_pkg_set_specific() {
 		grml)	# grml
 			URL="http://grml.org/files/grml64-full_latest/dpkg.selections"
 			echo "Downloading $URL now."
-			curl $URL | cut -f1 > $TMPFILE
+			curl $URL | cut -f1 | cut -d ':' -f1 > $TMPFILE
 			if ! grep '404 Not Found' $TMPFILE ; then
 				echo "parsing $TMPFILE now..."
 				packages_list_to_deb822
