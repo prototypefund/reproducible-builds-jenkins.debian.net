@@ -21,7 +21,7 @@
       artifactDaysToKeep: -1
       artifactNumToKeep: -1
     builders:
-      - shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh haskell-package-plan {my_distro} "apt-get --no-install-recommends -y install {my_pkgs}; {my_shell}"'
+      - shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh {my_distro} "apt-get --no-install-recommends -y install {my_pkgs}; {my_shell}"'
     publishers:
       - logparser:
           parse-rules: '/srv/jenkins/logparse/haskell-package-plan.rules'
