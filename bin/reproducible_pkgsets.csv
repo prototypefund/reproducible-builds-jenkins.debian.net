@@ -7,6 +7,8 @@ Debian,key_packages
 Debian,installed_on_debian.org
 Debian,had_a_DSA
 Debian,cii-census
+Debian,cloud-image
+Debian,cloud-image_build-depends
 desktop,gnome
 desktop,gnome_build-depends
 desktop,kde

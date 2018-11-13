@@ -253,6 +253,27 @@ update_pkg_set_specific() {
 			rm $CII -r
 			convert_from_deb822_into_source_packages_only
 			;;
+		cloud-image)
+			# cloud images of the Debian GNU/Linux operating system designed for OpenStack.
+			# see https://cloud.debian.org/images/cloud/
+			if [ "$SUITE" = "stretch" ] ; then
+				URL="https://cloud.debian.org/images/cloud/OpenStack/current-9/debian-9-openstack-amd64-packages.list"
+			else
+				URL="https://cloud.debian.org/images/cloud/OpenStack/testing/debian-testing-openstack-amd64-packages.list"
+			fi
+			echo "Downloading $URL now."
+			curl $URL | cut -d ' ' -f1 | cut -d ':' -f1 > $TMPFILE
+			if ! grep '404 Not Found' $TMPFILE ; then
+				echo "parsing $TMPFILE now..."
+				packages_list_to_deb822
+				convert_from_deb822_into_source_packages_only
+			else
+				rm $TMPFILE
+				MESSAGE="Warning: could not download cloud-image package list, skipping pkg set..."
+				irc_message debian-reproducible $MESSAGE
+				ABORT=true
+			fi
+			;;
 		gnome)	# gnome and everything it depends on
 			#
 			# The build-depends of X tasks can be solved once dose-ceve is able to read
