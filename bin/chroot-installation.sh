@@ -86,6 +86,7 @@ set -x
 mount /proc -t proc /proc
 echo -e '#!/bin/sh\nexit 101' > /usr/sbin/policy-rc.d
 chmod +x /usr/sbin/policy-rc.d
+# pb10 runs the chroot installation tests and runs a proxy
 echo 'Acquire::http::Proxy "http://localhost:3128";' > /etc/apt/apt.conf.d/80proxy
 cat > /etc/apt/apt.conf.d/80debug << APTEOF
 # solution calculation
