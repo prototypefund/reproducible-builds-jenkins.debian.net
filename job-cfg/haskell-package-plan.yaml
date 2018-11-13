@@ -58,6 +58,7 @@
           url: 'https://salsa.debian.org/haskell-team/package-plan.git'
           branches:
             - master
+    node: 'profitbricks10'
 
 - job-template:
     defaults: haskell-package-plan
@@ -74,6 +75,6 @@
         - '{name}':
             my_distro: 'sid'
             my_pkgs: 'cabal-install ghc dctrl-tools patchutils libtext-patch-perl libfile-slurp-perl  libipc-run-perl liblist-moreutils-perl libdpkg-perl'
-            my_shell: 'export http_proxy=http://localhost:3128; cabal update ; ./test-packages.pl'
+            my_shell: 'export http_proxy=http://localhost:3128; cabal update ; ./test-packages.pl'      # the job runs on pb10 and that node runs a proxy
             my_description: 'Haskell Metadata sanity checks'
             my_recipients: 'jenkins+debian-haskell qa-jenkins-scm@lists.alioth.debian.org pkg-haskell-maintainers@lists.alioth.debian.org'
