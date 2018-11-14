@@ -58,7 +58,7 @@ USERTAGS="toolchain infrastructure timestamps fileordering buildpath username ho
 # common settings for testing Arch Linux
 ARCHLINUX_REPOS="core extra multilib community"
 ARCHLINUX_PKGS=/srv/reproducible-results/archlinux_pkgs
-ARCHLINUX_BLACKLISTED="syslinux ltrace gnutls"
+ARCHLINUX_BLACKLISTED="syslinux ltrace gnutls haskell-hakyll mitmproxy pandoc python-pyftpdlib v2ray"
 ARCHBASE=$BASE/archlinux
 
 # common settings for testing rpm based distros
@@ -999,7 +999,7 @@ create_pkg_html() {
 	#
 	if [ -z "$(cd $ARCHLINUX_PKG_PATH/ ; ls *.pkg.tar.xz.html 2>/dev/null)" ] ; then
 		for i in $ARCHLINUX_BLACKLISTED ; do
-			if [ "$SRCPACKAGE" = "$i" ] ; then
+			if [ "xxx${SRCPACKAGE}xxx" = "xxx${i}xxx" ] ; then
 				blacklisted=true
 			fi
 		done
