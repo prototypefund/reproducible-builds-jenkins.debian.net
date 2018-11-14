@@ -184,11 +184,11 @@ archlinux_page_footer(){
 
 archlinux_repostats_table(){
 	write_page "    <table><tr><th>repository</th><th>all source packages</th>"
-	write_page "     <th><a href='/archlinux/state_GOOD.html'>reproducible packages</a></th>"
-	write_page "     <th><a href='/archlinux/state_FTBR.html'>unreproducible packages</a></th>"
-	write_page "     <th><a href='/archlinux/state_FTBFS.html'>packages failing to build</a></th>"
-	write_page "     <th><a href='/archlinux/state_DEPWAIT.html'>packages in depwait state</a></th>"
-	write_page "     <th><a href='/archlinux/state_404.html'>packages download problems</a></th>"
+	write_page "     <th><a href='/archlinux/state_GOOD.html'>reproducible</a></th>"
+	write_page "     <th><a href='/archlinux/state_FTBR.html'>unreproducible</a></th>"
+	write_page "     <th><a href='/archlinux/state_FTBFS.html'>failing to build</a></th>"
+	write_page "     <th><a href='/archlinux/state_DEPWAIT.html'>in depwait state</a></th>"
+	write_page "     <th><a href='/archlinux/state_404.html'>download problems</a></th>"
 	write_page "     <th><a href='/archlinux/state_BLACKLISTED.html'>blacklisted</a></th>"
 	write_page "     <th><a href='/archlinux/state_UNKNOWN.html'>unknown state</a></th></tr>"
 	cat $HTML_REPOSTATS >> $PAGE
