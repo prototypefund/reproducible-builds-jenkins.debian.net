@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Copyright 2015-2017 Holger Levsen <holger@layer-acht.org>
+# Copyright 2015-2018 Holger Levsen <holger@layer-acht.org>
 #                2017 kpcyrd <git@rxv.cc>
 #                2017 Mattia Rizzolo <mattia@debian.org>
 #                Juliana Oliveira Rodrigues <juliana.orod@gmail.com>
@@ -147,11 +147,11 @@ fi
 
 $ROOTCMD sed -i 's/^#PACKAGER\s*=.*/PACKAGER="Reproducible Arch Linux tests"/' /etc/makepkg.conf
 
-$ROOTCMD sed -i "s|^#XferCommand = /usr/bin/curl -C -|XferCommand = /usr/bin/curl -C - --proxy $http_proxy|" /etc/pacman.conf
+$ROOTCMD sed -i "s|^#XferCommand = /usr/bin/curl|XferCommand = /usr/bin/curl --proxy $http_proxy|" /etc/pacman.conf
 if [ "$HOSTNAME" = "profitbricks-build4-amd64" ] ; then
 	# disable signature verification so packages won't fail to install when setting the time to +$x years
 	$ROOTCMD sed -i -E 's/^#?SigLevel\s*=.*/SigLevel = Never/g' /etc/pacman.conf
-	$ROOTCMD sed -i "s|^XferCommand = /usr/bin/curl -C -|XferCommand = /usr/bin/curl --insecure -C -|" /etc/pacman.conf
+	$ROOTCMD sed -i "s|^XferCommand = /usr/bin/curl|XferCommand = /usr/bin/curl --insecure|" /etc/pacman.conf
 	# Disable SSL cert checking for future builds
 	$ROOTCMD sed -i "s|/usr/bin/curl |/usr/bin/curl -k |" /etc/makepkg.conf
 fi
