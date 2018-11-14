@@ -58,7 +58,7 @@ USERTAGS="toolchain infrastructure timestamps fileordering buildpath username ho
 # common settings for testing Arch Linux
 ARCHLINUX_REPOS="core extra multilib community"
 ARCHLINUX_PKGS=/srv/reproducible-results/archlinux_pkgs
-ARCHLINUX_BLACKLISTED="syslinux ltrace gnutls haskell-hakyll mitmproxy pandoc python-pyftpdlib v2ray"
+ARCHLINUX_BLACKLISTED="syslinux ltrace gnutls haskell-hakyll mitmproxy pandoc python-pyftpdlib v2ray python-urllib3 perl-net-ssleay"
 ARCHBASE=$BASE/archlinux
 
 # common settings for testing rpm based distros
