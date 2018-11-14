@@ -313,7 +313,6 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 * compare the just built pkg.tar.xz with the one available on the arch mirrors. *then* one can truely say "X% of the Arch Linux packages are reproducible and could bit by bit be reproduced in the real world."
 * maintenance job:
 ** check for archlinux schroot sessions which should not be there and delete them. complain if that fails.
-* _build.sh: use the proxy for installing depends
 
 * use db - see https://tests.reproducible-builds.org/reproducibledb.html
 ** scheduler.sh:
