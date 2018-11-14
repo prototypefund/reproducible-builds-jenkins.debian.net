@@ -258,6 +258,9 @@ if [ -f /etc/debian_version ] ; then
 			lsof
 			molly-guard
 			moreutils
+			munin-node/stretch-backports
+			munin-plugins-core/stretch-backports
+			munin-plugins-extra/stretch-backports
 			netcat-traditional
 			ntp
 			ntpdate
@@ -297,17 +300,6 @@ if [ -f /etc/debian_version ] ; then
 			codethink*) DEBS="$DEBS
 				debootstrap/stretch-backports" ;;
 			*) 	;;
-		esac
-		# install munin from stretch-backports everywhere, except on ubuntu nodes
-		case $HOSTNAME in
-			codethink*) DEBS="$DEBS
-				munin-node
-				munin-plugins-core
-				munin-plugins-extra" ;;
-			*) 	DEBS="$DEBS
-				munin-node/stretch-backports
-				munin-plugins-core/stretch-backports
-				munin-plugins-extra/stretch-backports" ;;
 		esac
 		# needed to run the 2nd reproducible builds nodes in the future...
 		case $HOSTNAME in
