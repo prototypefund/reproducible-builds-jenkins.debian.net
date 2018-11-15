@@ -357,7 +357,6 @@ write_page_intro() {
 		write_page "        <p><em>Reproducible $PROJECTNAME</em> is an effort to apply this to $PROJECTNAME. Thus $PROJECTNAME packages are build twice, with a few variations added and then the resulting packages from the two builds are compared using <a href=\"https://tracker.debian.org/diffoscope\">diffoscope</a>."
 		write_page "   Please note that this is still at an early stage. Also there are more variations expected to be seen in the wild."
 		write_page "Missing bits for <em>testing</em> Arch Linux:<ul>"
-		write_page " <li>more variations, see below.</li>"
 		write_page " <li>cross references to <a href=\"https://tests.reproducible-builds.org/debian/index_issues.html\">Debian notes</a> - and having Arch Linux specific notes.</li>"
 		write_page "</ul></p>"
 		write_page "<p>Missing bits for Arch Linux:<ul>"
