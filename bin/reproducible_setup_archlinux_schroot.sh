@@ -95,7 +95,7 @@ tee $SCHROOT_BASE/$TARGET/etc/profile.d/proxy.sh <<-__END__
 	export no_proxy="localhost,127.0.0.1"
 	__END__
 chmod 755 $SCHROOT_BASE/$TARGET/etc/profile.d/proxy.sh
-sed -i "s|^#XferCommand = /usr/bin/curl -C -|XferCommand = /usr/bin/curl -C - --proxy $http_proxy|" "$SCHROOT_BASE/$TARGET/etc/pacman.conf"
+sed -i "s|^#XferCommand = /usr/bin/curl |XferCommand = /usr/bin/curl --proxy $http_proxy |" "$SCHROOT_BASE/$TARGET/etc/pacman.conf"
 
 
 # configure root user to use this for shells and login shells…
@@ -107,12 +107,11 @@ $ROOTCMD bash -l -c 'pacman-key --populate archlinux'
 # use a specific mirror
 echo "Server = $ARCHLINUX_MIRROR/\$repo/os/\$arch" | tee -a $SCHROOT_BASE/$TARGET/etc/pacman.d/mirrorlist
 # enable multilib
-# (-0777 tells perl to read the whole file before processing it. then it just does a multi-line regex…)
-perl -0777 -i -pe 's/#\[multilib\]\n#Include = \/etc\/pacman.d\/mirrorlist/[multilib]\nInclude = \/etc\/pacman.d\/mirrorlist/igs' $SCHROOT_BASE/$TARGET/etc/pacman.conf
+sed -i '/\[multilib\]/,+1{s/^#//}' $SCHROOT_BASE/$TARGET/etc/pacman.conf
 if [ "$HOSTNAME" = "profitbricks-build4-amd64" ] ; then
 	# disable signature verification so packages won't fail to install when setting the time to +$x years
 	sed -i -E 's/^#?SigLevel\s*=.*/SigLevel = Never/g' "$SCHROOT_BASE/$TARGET/etc/pacman.conf"
-	sed -i "s|^XferCommand = /usr/bin/curl -C -|XferCommand = /usr/bin/curl --insecure -C -|" "$SCHROOT_BASE/$TARGET/etc/pacman.conf"
+	sed -i "/^XferCommand = /{s|/usr/bin/curl |/usr/bin/curl --insecure |}" "$SCHROOT_BASE/$TARGET/etc/pacman.conf"
 fi
 
 echo "============================================================================="
@@ -147,11 +146,11 @@ fi
 
 $ROOTCMD sed -i 's/^#PACKAGER\s*=.*/PACKAGER="Reproducible Arch Linux tests"/' /etc/makepkg.conf
 
-$ROOTCMD sed -i "s|^#XferCommand = /usr/bin/curl|XferCommand = /usr/bin/curl --proxy $http_proxy|" /etc/pacman.conf
+$ROOTCMD sed -i "s|^#XferCommand = /usr/bin/curl |XferCommand = /usr/bin/curl --proxy $http_proxy |" /etc/pacman.conf
 if [ "$HOSTNAME" = "profitbricks-build4-amd64" ] ; then
 	# disable signature verification so packages won't fail to install when setting the time to +$x years
 	$ROOTCMD sed -i -E 's/^#?SigLevel\s*=.*/SigLevel = Never/g' /etc/pacman.conf
-	$ROOTCMD sed -i "s|^XferCommand = /usr/bin/curl|XferCommand = /usr/bin/curl --insecure|" /etc/pacman.conf
+	$ROOTCMD sed -i "/^XferCommand = /{s|/usr/bin/curl |/usr/bin/curl --insecure |}" /etc/pacman.conf
 	# Disable SSL cert checking for future builds
 	$ROOTCMD sed -i "s|/usr/bin/curl |/usr/bin/curl -k |" /etc/makepkg.conf
 fi
