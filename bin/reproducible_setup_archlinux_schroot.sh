@@ -106,7 +106,7 @@ $ROOTCMD bash -l -c 'pacman-key --init'
 $ROOTCMD bash -l -c 'pacman-key --populate archlinux'
 # use a specific mirror
 echo "Server = $ARCHLINUX_MIRROR/\$repo/os/\$arch" | tee -a $SCHROOT_BASE/$TARGET/etc/pacman.d/mirrorlist
-# enable multilib (by uncommenting all lines containing '[multilib]')
+# enable multilib (by uncommenting the first two lines starting with the [multilib] section header)
 sed -i '/\[multilib\]/,+1{s/^#//}' $SCHROOT_BASE/$TARGET/etc/pacman.conf
 if [ "$HOSTNAME" = "profitbricks-build4-amd64" ] ; then
 	# disable signature verification so packages won't fail to install when setting the time to +$x years
