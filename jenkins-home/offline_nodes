@@ -7,3 +7,5 @@
 # FIXME )grep -q example-armhf-rb` should trigger on the former line as well)
 #example-armhf-rb.debian.net
 #example-armhf-rb
+ff4a-armhf-rb.debian.net
+ff4a
