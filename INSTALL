@@ -101,7 +101,7 @@ Process to follow to add a new node to jenkins:
 * Configure it as follow:
   * '# of executors': the number of CPUs of the new node
   * 'Remote root directory': `/srv/jenkins/pseudo-hosts/$hostname`
-  * 'Labels': `$arch $short_name` (with '$short_name' like ff64u if the hostname is ff64u-armhf-rb)
+  * 'Labels': `$arch $short_name` (with '$short_name' like ff64a if the hostname is ff64a-armhf-rb)
   * 'Usage': select "Only build jobs with label expressions matching this node"
   * 'Launch method': select "Launch agent via execution of command on the master"
      * 'Launch command': `/srv/jenkins/bin/start-agent.sh`
