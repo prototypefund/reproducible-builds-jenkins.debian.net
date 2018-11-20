@@ -130,7 +130,7 @@ setup_pbuilder() {
 		pbuilder_http_proxy="--http-proxy $http_proxy"
 	fi
 	# setup base.tgz
-	sudo pbuilder --create $pbuilder_http_proxy --basetgz /var/cache/pbuilder/${NAME}-new.tgz --distribution $SUITE --extrapackages "$EXTRA_PACKAGES" --loglevel D
+	sudo pbuilder --create $pbuilder_http_proxy --basetgz /var/cache/pbuilder/${NAME}-new.tgz --distribution $SUITE --debootstrapopts --no-merged-usr --extrapackages "$EXTRA_PACKAGES" --loglevel D
 
 	# customize pbuilder
 	create_customized_tmpfile ${TMPFILE}
