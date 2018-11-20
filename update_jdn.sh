@@ -251,6 +251,7 @@ if [ -f /etc/debian_version ] ; then
 			etckeeper
 			figlet
 			git
+			gnupg
 			haveged
 			htop
 			less
