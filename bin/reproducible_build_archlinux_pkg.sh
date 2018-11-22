@@ -143,6 +143,9 @@ first_build() {
 	ACTUAL_SRCPACKAGE=$(ls "$BUILDDIR")
 	# modify timezone in the 1st build
 	echo 'export TZ="/usr/share/zoneinfo/Etc/GMT+12"' | schroot --run-session -c $SESSION --directory /tmp -- tee -a /var/lib/jenkins/.bashrc
+	# set LANG, LC_ALL to the same value as devtools.
+	export LANG="en_US.UTF-8"
+	export LC_ALL="en_US.UTF-8"
 	# some more output for debugging
 	set -x
 	# remove possible lock in our local session (happens when root maintenance update running while session starts)
