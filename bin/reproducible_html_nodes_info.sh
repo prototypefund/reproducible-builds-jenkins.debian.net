@@ -14,6 +14,18 @@ common_init "$@"
 # common code defining db access
 . /srv/jenkins/bin/reproducible_common.sh
 
+explain_nodes() {
+	case $JENKINS_NODENAME in
+		jenkins)	;;
+		profitbricks3)	write_page "<br /><small>(r-b Archlinux, OpenWrt, NetBSD, Coreboot builds)</small>" ;;
+		profitbricks4)	write_page "<br /><small>(r-b Archlinux, OpenWrt, NetBSD, Coreboot builds)</small>" ;;
+		profitbricks7)	write_page "<br /><small>(r-b F-Droid builds)</small>" ;;
+		profitbricks9)	write_page "<br /><small>(jenkins.d.n rebootstrap jobs)</small>" ;;
+		profitbricks10)	write_page "<br /><small>(jenkins.d.n chroot-installation jobs)</small>" ;;
+		*)		write_page "<br /><small>(r-b Debian builds)</small>" ;;
+	esac
+}
+
 build_nodes_health_page() {
 	#
 	# build node health page
@@ -74,15 +86,7 @@ build_nodes_health_page() {
 				esac
 			fi
 			write_page "<tr><td>$JENKINS_NODENAME"
-			case $JENKINS_NODENAME in
-				jenkins)	;;
-				profitbricks3)	write_page "<br /><small>(r-b Archlinux, OpenWrt, NetBSD, Coreboot builds)</small>" ;;
-				profitbricks4)	write_page "<br /><small>(r-b Archlinux, OpenWrt, NetBSD, Coreboot builds)</small>" ;;
-				profitbricks7)	write_page "<br /><small>(r-b F-Droid builds)</small>" ;;
-				profitbricks9)	write_page "<br /><small>(jenkins.d.n rebootstrap jobs)</small>" ;;
-				profitbricks10)	write_page "<br /><small>(jenkins.d.n chroot-installation jobs)</small>" ;;
-				*)		write_page "<br /><small>(r-b Debian builds)</small>" ;;
-			esac
+			explain_nodes
 			write_page "</td>"
 			# health check
 			URL="https://jenkins.debian.net/view/reproducible/view/Node_maintenance/job/reproducible_node_health_check_${ARCH}_${JENKINS_NODENAME}"
@@ -198,7 +202,9 @@ build_graph_overview_pages() {
 						armhf) 		JENKINS_NODENAME=$(echo $NODE | cut -d "-" -f1) ;;
 					esac
 				fi
-				write_page "<tr><td>$JENKINS_NODENAME</td>"
+				write_page "<tr><td>$JENKINS_NODENAME"
+				explain_nodes
+				write_page "</td>"
 				for GRAPH in jenkins_reproducible_builds cpu memory df swap load ; do
 					if [ "$GRAPH" = "jenkins_reproducible_builds" ] ; then
 						case $JENKINS_NODENAME in
@@ -290,6 +296,8 @@ build_job_health_page() {
 #
 # main
 #
+PAGE=""
+JENKINS_NODENAME=""
 build_job_health_page
 build_nodes_health_page
 build_graph_overview_pages
