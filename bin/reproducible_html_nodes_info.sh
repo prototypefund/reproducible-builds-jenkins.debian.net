@@ -74,6 +74,15 @@ build_nodes_health_page() {
 				esac
 			fi
 			write_page "<tr><td>$JENKINS_NODENAME"
+			case $JENKINS_NODENAME in
+				jenkins)	;;
+				profitbricks3)	write_page "<br /><small>(r-b Archlinux, OpenWrt, NetBSD, Coreboot build node)</small>" ;;
+				profitbricks4)	write_page "<br /><small>(r-b Archlinux, OpenWrt, NetBSD, Coreboot build node)</small>" ;;
+				profitbricks7)	write_page "<br /><small>(r-b F-Droid build node)</small>" ;;
+				profitbricks9)	write_page "<br /><small>(jenkins.debian.net rebootstrap jobs)</small>" ;;
+				profitbricks10)	write_page "<br /><small>(jenkins.debian.net chroot-installation jobs)</small>" ;;
+				*)		write_page "<br /><small>(r-b Debian build node)</small>" ;;
+			esac
 			write_page "</td>"
 			# health check
 			URL="https://jenkins.debian.net/view/reproducible/view/Node_maintenance/job/reproducible_node_health_check_${ARCH}_${JENKINS_NODENAME}"
