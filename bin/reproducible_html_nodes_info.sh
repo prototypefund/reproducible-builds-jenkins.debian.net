@@ -76,12 +76,12 @@ build_nodes_health_page() {
 			write_page "<tr><td>$JENKINS_NODENAME"
 			case $JENKINS_NODENAME in
 				jenkins)	;;
-				profitbricks3)	write_page "<br /><small>(r-b Archlinux, OpenWrt, NetBSD, Coreboot build node)</small>" ;;
-				profitbricks4)	write_page "<br /><small>(r-b Archlinux, OpenWrt, NetBSD, Coreboot build node)</small>" ;;
-				profitbricks7)	write_page "<br /><small>(r-b F-Droid build node)</small>" ;;
-				profitbricks9)	write_page "<br /><small>(jenkins.debian.net rebootstrap jobs)</small>" ;;
-				profitbricks10)	write_page "<br /><small>(jenkins.debian.net chroot-installation jobs)</small>" ;;
-				*)		write_page "<br /><small>(r-b Debian build node)</small>" ;;
+				profitbricks3)	write_page "<br /><small>(r-b Archlinux, OpenWrt, NetBSD, Coreboot builds)</small>" ;;
+				profitbricks4)	write_page "<br /><small>(r-b Archlinux, OpenWrt, NetBSD, Coreboot builds)</small>" ;;
+				profitbricks7)	write_page "<br /><small>(r-b F-Droid builds)</small>" ;;
+				profitbricks9)	write_page "<br /><small>(jenkins.d.n rebootstrap jobs)</small>" ;;
+				profitbricks10)	write_page "<br /><small>(jenkins.d.n chroot-installation jobs)</small>" ;;
+				*)		write_page "<br /><small>(r-b Debian builds)</small>" ;;
 			esac
 			write_page "</td>"
 			# health check
