@@ -100,6 +100,7 @@ build_nodes_health_page() {
 				profitbricks3)	write_page "<td></td>" ;;
 				profitbricks4)	write_page "<td></td>" ;;
 				profitbricks7)	write_page "<td></td>" ;;
+				profitbricks9)	write_page "<td></td>" ;;
 				profitbricks10)	write_page "<td></td>" ;;
 				*)		write_page "<td>"
 						SHORTNAME=$(echo $NODE | cut -d '.' -f1)
@@ -117,6 +118,7 @@ build_nodes_health_page() {
 					profitbricks3)	write_page "<td></td>" ;;
 					profitbricks4)	write_page "<td></td>" ;;
 					profitbricks7)	write_page "<td></td>" ;;
+					profitbricks9)	write_page "<td></td>" ;;
 					profitbricks10)	write_page "<td></td>" ;;
 					*)		URL="https://jenkins.debian.net/view/reproducible/view/Debian_setup_${ARCH}/job/reproducible_setup_pbuilder_${SUITE}_${ARCH}_${JENKINS_NODENAME}"
 							BADGE="$URL/badge/icon"
@@ -195,6 +197,7 @@ build_graph_overview_pages() {
 							profitbricks3)	write_page "<td></td>" ; continue ;;
 							profitbricks4)	write_page "<td></td>" ; continue ;;
 							profitbricks7)	write_page "<td></td>" ; continue ;;
+							profitbricks9)	write_page "<td></td>" ; continue ;;
 							profitbricks10)	write_page "<td></td>" ; continue ;;
 						*)		;;
 						esac
