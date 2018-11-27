@@ -38,6 +38,7 @@ DISTRO_BASE = os.path.join(BASE, conf_distro['distro_root'])
 
 DBD_URI = os.path.join(DISTRO_URI, conf_distro['diffoscope_html'])
 DBDTXT_URI = os.path.join(DISTRO_URI, conf_distro['diffoscope_txt'])
+DBDJSON_URI = os.path.join(DISTRO_URI, conf_distro['diffoscope_json'])
 LOGS_URI = os.path.join(DISTRO_URI, conf_distro['buildlogs'])
 DIFFS_URI = os.path.join(DISTRO_URI, conf_distro['logdiffs'])
 NOTES_URI = os.path.join(DISTRO_URI, conf_distro['notes'])
@@ -48,6 +49,7 @@ HISTORY_URI = os.path.join(DISTRO_URI, conf_distro['pkghistory'])
 BUILDINFO_URI = os.path.join(DISTRO_URI, conf_distro['buildinfo'])
 DBD_PATH = BASE + DBD_URI
 DBDTXT_PATH = BASE + DBDTXT_URI
+DBDJSON_PATH = BASE + DBDJSON_URI
 LOGS_PATH = BASE + LOGS_URI
 DIFFS_PATH = BASE + DIFFS_URI
 NOTES_PATH = BASE + NOTES_URI
@@ -92,6 +94,8 @@ log.debug("DBD_URI:\t\t" + DBD_URI)
 log.debug("DBD_PATH:\t" + DBD_PATH)
 log.debug("DBDTXT_URI:\t" + DBDTXT_URI)
 log.debug("DBDTXT_PATH:\t" + DBDTXT_PATH)
+log.debug("DBDJSON_URI:\t" + DBDJSON_URI)
+log.debug("DBDJSON_PATH:\t" + DBDJSON_PATH)
 log.debug("LOGS_URI:\t" + LOGS_URI)
 log.debug("LOGS_PATH:\t" + LOGS_PATH)
 log.debug("DIFFS_URI:\t" + DIFFS_URI)

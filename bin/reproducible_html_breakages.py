@@ -77,17 +77,17 @@ def not_unrep_with_dbd_file():
     results = query_db(query)
     for pkg, version, suite, arch in results:
         eversion = strip_epoch(version)
-        dbd = DBD_PATH + '/' + suite + '/' + arch + '/' + pkg + '_' + \
-            eversion + '.diffoscope.html'
-        dbdtxt = '{}/{}/{}/{}_{}.diffoscope.txt.gz'.format(
-            DBDTXT_PATH, suite, arch, pkg, eversion)
-        if os.access(dbd, os.R_OK):
+        for prefix, extension in ((
+            (DBD_PATH, 'html'),
+            (DBDTXT_PATH, 'txt.gz'),
+            (DBDJSON_PATH, 'json.gz'),
+        )):
+            filename = '{}/{}/{}/{}_{}.diffoscope.{}.gz'.format(
+                prefix, suite, arch, pkg, eversion, extension)
+            if not os.access(filename, os.R_OK):
+                continue
             bad_pkgs.append((pkg, version, suite, arch))
-            log.warning(dbd + ' exists but ' + suite + '/' + arch + '/' + pkg + ' (' + version + ')'
-                        ' is not FTBR.')
-        if os.access(dbdtxt, os.R_OK):
-            bad_pkgs.append((pkg, version, suite, arch))
-            log.warning(dbdtxt + ' exists but ' + suite + '/' + arch + '/' + pkg + ' (' + version + ')'
+            log.warning(filename + ' exists but ' + suite + '/' + arch + '/' + pkg + ' (' + version + ')'
                         ' is not FTBR.')
     return bad_pkgs
 

@@ -35,6 +35,7 @@ exit_early_if_debian_is_broken() {
 create_results_dirs() {
 	mkdir -vp $DEBIAN_BASE/dbd/${SUITE}/${ARCH}
 	mkdir -vp $DEBIAN_BASE/dbdtxt/${SUITE}/${ARCH}
+	mkdir -vp $DEBIAN_BASE/dbdjson/${SUITE}/${ARCH}
 	mkdir -vp $DEBIAN_BASE/logs/${SUITE}/${ARCH}
 	mkdir -vp $DEBIAN_BASE/logdiffs/${SUITE}/${ARCH}
 	mkdir -vp $DEBIAN_BASE/rbuild/${SUITE}/${ARCH}
@@ -288,6 +289,10 @@ handle_ftbr() {
 		mv ./$DBDTXT $DEBIAN_BASE/dbdtxt/$SUITE/$ARCH/
 		gzip -9n $DEBIAN_BASE/dbdtxt/$SUITE/$ARCH/$DBDTXT
 	fi
+	if [ -f ./$DBDJSON ] ; then
+		mv ./$DBDJSON $DEBIAN_BASE/dbdjson/$SUITE/$ARCH/
+		gzip -9n $DEBIAN_BASE/dbdjson/$SUITE/$ARCH/$DBDJSON
+	fi
 	calculate_build_duration
 	update_db_and_html "FTBR"
 }
@@ -363,6 +368,7 @@ call_diffoscope_on_changes_files() {
 		-- sh -c "export TMPDIR=$TEMP ; timeout $TIMEOUT diffoscope \
 			--html $TMPDIR/${DBDREPORT} \
 			--text $TMPDIR/$DBDTXT \
+			--json $TMPDIR/$DBDJSON \
 			--profile=- \
 			$TMPDIR/b1/${CHANGES} \
 			$TMPDIR/b2/${CHANGES}" \
@@ -511,6 +517,7 @@ get_source_package() {
 	EVERSION="$(echo $VERSION | cut -d ':' -f2)"  # EPOCH_FREE_VERSION is too long
 	DBDREPORT="${SRCPACKAGE}_${EVERSION}.diffoscope.html"
 	DBDTXT="${SRCPACKAGE}_${EVERSION}.diffoscope.txt"
+	DBDJSON="${SRCPACKAGE}_${EVERSION}.diffoscope.json"
 	BUILDINFO="${SRCPACKAGE}_${EVERSION}_${ARCH}.buildinfo"
 	BUILDINFO_SIGNED="${BUILDINFO}.asc"
 

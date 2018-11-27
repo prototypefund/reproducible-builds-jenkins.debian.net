@@ -685,6 +685,7 @@ cleanup_pkg_files() {
 	rm -vf $DEBIAN_BASE/logs/${SUITE}/${ARCH}/${SRCPACKAGE}_*.build?.log{,.gz}
 	rm -vf $DEBIAN_BASE/dbd/${SUITE}/${ARCH}/${SRCPACKAGE}_*.diffoscope.html
 	rm -vf $DEBIAN_BASE/dbdtxt/${SUITE}/${ARCH}/${SRCPACKAGE}_*.diffoscope.txt{,.gz}
+	rm -vf $DEBIAN_BASE/dbdjson/${SUITE}/${ARCH}/${SRCPACKAGE}_*.diffoscope.json{,.gz}
 	rm -vf $DEBIAN_BASE/buildinfo/${SUITE}/${ARCH}/${SRCPACKAGE}_*.buildinfo
 	rm -vf $DEBIAN_BASE/logdiffs/${SUITE}/${ARCH}/${SRCPACKAGE}_*.diff{,.gz}
 }

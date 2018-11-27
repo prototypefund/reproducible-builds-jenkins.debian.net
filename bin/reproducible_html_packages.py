@@ -32,6 +32,7 @@ from rblib.const import (
     HISTORY_PATH, HISTORY_URI,
     NOTES_PATH, NOTES_URI,
     DBDTXT_PATH, DBDTXT_URI,
+    DBDJSON_PATH, DBDJSON_URI,
     DBD_PATH, DBD_URI,
 #    DIFFS_PATH, DIFFS_URI,
 #    LOGS_PATH, LOGS_URI,
@@ -72,6 +73,8 @@ def get_dbd_links(package, eversion, suite, arch):
     dbd_uri -- included only if file for formatted diffoscope results exists
     dbdtxt_uri -- included only if file for unformatted diffoscope results
                   exists
+    dbdjson_uri -- included only if file for JSON-formatted diffoscope results
+                  exists
     dbd_page_uri -- included only if file for formatted diffoscope results
                     (dbd_uri) exists. This uri is a package page with diffoscope
                     results in main iframe by default.
@@ -82,12 +85,16 @@ def get_dbd_links(package, eversion, suite, arch):
                        + '.diffoscope.html')
     dbdtxt_file = os.path.join(DBDTXT_PATH, suite, arch, package + '_' + eversion
                           + '.diffoscope.txt.gz')
+    dbdjson_file = os.path.join(DBDJSON_PATH, suite, arch, package + '_' + eversion
+                          + '.diffoscope.json.gz')
     dbd_page_file = os.path.join(RB_PKG_PATH, suite, arch, 'diffoscope-results',
                                  package + '.html')
     dbd_uri = DBD_URI + '/' + suite + '/' + arch + '/' +  package + '_' + \
               eversion + '.diffoscope.html'
     dbdtxt_uri = DBDTXT_URI + '/' + suite + '/' + arch + '/' +  package + '_' + \
                 eversion + '.diffoscope.txt.gz'
+    dbdjson_uri = DBDJSON_URI + '/' + suite + '/' + arch + '/' +  package + '_' + \
+                eversion + '.diffoscope.json.gz'
     dbd_page_uri = RB_PKG_URI + '/' + suite + '/' + arch + \
                    '/diffoscope-results/' + package + '.html'
     links = {}
@@ -97,6 +104,8 @@ def get_dbd_links(package, eversion, suite, arch):
         links['dbd_page_uri'] = dbd_page_uri
         if os.access(dbdtxt_file, os.R_OK):
             links['dbdtxt_uri'] = dbdtxt_uri
+        if os.access(dbdjson_file, os.R_OK):
+            links['dbdjson_uri'] = dbdjson_uri
 
     # always return dbd_page_file, because we might need to delete it
     links['dbd_page_file'] = dbd_page_file
@@ -152,6 +161,7 @@ def gen_suitearch_details(package, version, suite, arch, status, spokenstatus,
         context['dbd'] = {
             'dbd_page_uri': dbd_links['dbd_page_uri'],
             'dbdtxt_uri': dbd_links.get('dbdtxt_uri', ''),
+            'dbdjson_uri': dbd_links.get('dbdjson_uri', ''),
         }
         default_view = default_view if default_view else dbd_uri
 
