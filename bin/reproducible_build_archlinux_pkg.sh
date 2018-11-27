@@ -141,11 +141,12 @@ first_build() {
 	schroot --run-session -c $SESSION --directory "$BUILDDIR" -- env GIT_SSL_NO_VERIFY=1 asp checkout "$SRCPACKAGE" 2>&1 | tee -a $LOG || echo "Error: failed to download PKGBUILD for $SRCPACKAGE from $REPOSITORY" | tee -a $LOG
 	# $SRCPACKAGE is actually the binary package
 	ACTUAL_SRCPACKAGE=$(ls "$BUILDDIR")
-	# modify timezone in the 1st build
-	echo 'export TZ="/usr/share/zoneinfo/Etc/GMT+12"' | schroot --run-session -c $SESSION --directory /tmp -- tee -a /var/lib/jenkins/.bashrc
-	# set LANG, LC_ALL to the same value as devtools.
+	# modify timezone, LANG, LC_ALL in the 1st build.
+	schroot --run-session -c $SESSION --directory /tmp -- tee -a /var/lib/jenkins/.bashrc <<-__END__
+	export TZ="/usr/share/zoneinfo/Etc/GMT+12"
 	export LANG="en_US.UTF-8"
 	export LC_ALL="en_US.UTF-8"
+	__END__
 	# some more output for debugging
 	set -x
 	# remove possible lock in our local session (happens when root maintenance update running while session starts)
