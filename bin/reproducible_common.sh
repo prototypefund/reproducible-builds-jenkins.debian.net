@@ -450,8 +450,8 @@ write_variation_table() {
 		write_page "<tr><td>env LANGUAGE</td><td>LANGUAGE=\"en_US:en\"</td><td>on amd64: LANGUAGE=\"fr_CH:fr\"<br />on i386: LANGUAGE=\"de_CH:de\"<br />on arm64: LANGUAGE=\"nl_BE:nl\"<br />on armhf: LANGUAGE=\"it_CH:it\"</td></tr>"
 		write_page "<tr><td>env LC_ALL</td><td><em>not set</em></td><td>on amd64: LC_ALL=\"fr_CH.UTF-8\"<br />on i386: LC_ALL=\"de_CH.UTF-8\"<br />on arm64: LC_ALL=\"nl_BE.UTF-8\"<br />on armhf: LC_ALL=\"it_CH.UTF-8\"</td></tr>"
 	elif [ "$1" = "Arch Linux" ]  ; then
-		write_page "<tr><td>env LANG</td><td><em>en_US.UTF-8</em></td><td>LANG=\"fr_CH.UTF-8\"</td></tr>"
-		write_page "<tr><td>env LC_ALL</td><td><em>en_US.UTF-8</em></td><td>LC_ALL=\"fr_CH.UTF-8\"</td></tr>"
+		write_page "<tr><td>env LANG</td><td><em>LANG=\"en_US.UTF-8\"</em></td><td>LANG=\"fr_CH.UTF-8\"</td></tr>"
+		write_page "<tr><td>env LC_ALL</td><td><em>LANG=\"en_US.UTF-8\"</em></td><td>LC_ALL=\"fr_CH.UTF-8\"</td></tr>"
 		write_page "<tr><td>the build path</td><td colspan=\"2\">is not yet varied between rebuilds of Arch Linux</td></tr>"
 	else
 		write_page "<tr><td>env LANG</td><td>LANG=\"en_GB.UTF-8\"</td><td>LANG=\"fr_CH.UTF-8\"</td></tr>"
