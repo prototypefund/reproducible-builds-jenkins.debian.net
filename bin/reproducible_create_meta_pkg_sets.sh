@@ -390,20 +390,6 @@ update_pkg_set_specific() {
 				ABORT=true
 			fi
 			;;
-		pureos)	# pureos
-			URL="https://repo.puri.sm/pureos/dists/green/main/source/Sources.gz"
-			echo "Downloading $URL now."
-			curl $URL | gunzip > $TMPFILE
-			if [ -s $TMPFILE ] ; then
-				echo "parsing $TMPFILE now..."
-				convert_from_deb822_into_source_packages_only
-			else
-				rm $TMPFILE
-				MESSAGE="Warning: could not download PureOS's Sources file, skipping pkg set..."
-				irc_message debian-reproducible $MESSAGE
-				ABORT=true
-			fi
-			;;
 		subgraph_OS)
 			# installed by Subgraph OS
 			# one day we will get a proper data provider from Subgraph OS...
