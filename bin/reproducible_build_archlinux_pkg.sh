@@ -113,7 +113,7 @@ choose_package() {
 
 first_build() {
 	echo "============================================================================="
-	echo "Building for Arch Linux on $(hostname -f) now."
+	echo "Building for Arch Linux on $(hostname) now."
 	echo "Source package: ${SRCPACKAGE}"
 	echo "Repository:     $REPOSITORY"
 	echo "Date:           $(date -u)"
@@ -124,7 +124,7 @@ first_build() {
 	local FUTURE_STATE="disabled"
 	local MAKEPKG_ENV_VARS="SOURCE_DATE_EPOCH='$SOURCE_DATE_EPOCH' PATH='/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'"
 	local MAKEPKG_OPTIONS="--syncdeps --noconfirm"
-	if [ "$(hostname -f)" = "profitbricks-build4-amd64" ] ; then
+	if [ "$(hostname)" = "profitbricks-build4-amd64" ] ; then
 		FUTURE_STATE="enabled"
 		MAKEPKG_ENV_VARS="$MAKEPKG_ENV_VARS GIT_SSL_NO_VERIFY=1"
 		MAKEPKG_OPTIONS="$MAKEPKG_OPTIONS --skippgpcheck"
@@ -197,7 +197,7 @@ first_build() {
 
 second_build() {
 	echo "============================================================================="
-	echo "Re-Building for Arch Linux on $(hostname -f) now."
+	echo "Re-Building for Arch Linux on $(hostname) now."
 	echo "Source package: ${SRCPACKAGE}"
 	echo "Repository:     $REPOSITORY"
 	echo "Date:           $(date -u)"
@@ -209,7 +209,7 @@ second_build() {
 	local FUTURE_STATE="disabled"
 	local MAKEPKG_ENV_VARS="SOURCE_DATE_EPOCH='$SOURCE_DATE_EPOCH' PATH='/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'"
 	local MAKEPKG_OPTIONS="--syncdeps --noconfirm"
-	if [ "$(hostname -f)" = "profitbricks-build4-amd64" ] ; then
+	if [ "$(hostname)" = "profitbricks-build4-amd64" ] ; then
 		FUTURE_STATE="enabled"
 		MAKEPKG_ENV_VARS="$MAKEPKG_ENV_VARS GIT_SSL_NO_VERIFY=1"
 		MAKEPKG_OPTIONS="$MAKEPKG_OPTIONS --skippgpcheck"

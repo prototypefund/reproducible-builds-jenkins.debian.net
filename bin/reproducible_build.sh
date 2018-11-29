@@ -460,7 +460,7 @@ choose_package() {
 	fi
 	create_results_dirs
 	echo "============================================================================="
-	echo "Initialising reproducibly build of ${SRCPACKAGE} in ${SUITE} on ${ARCH} on $(hostname -f) now. $ANNOUNCE"
+	echo "Initialising reproducibly build of ${SRCPACKAGE} in ${SUITE} on ${ARCH} on $(hostname) now. $ANNOUNCE"
 	echo "1st build will be done on $NODE1."
 	echo "2nd build will be done on $NODE2."
 	echo "============================================================================="
@@ -478,7 +478,7 @@ choose_package() {
 	elif [ "$NOTIFY" = "0" ] ; then  # the build script has a different idea of notify than the scheduler,
 		NOTIFY=''                  # the scheduler uses integers, build.sh uses strings.
 	fi
-	log_info "starting to build ${SRCPACKAGE}/${SUITE}/${ARCH} on $(hostname -f) on '$DATE'"
+	log_info "starting to build ${SRCPACKAGE}/${SUITE}/${ARCH} on $(hostname) on '$DATE'"
 	log_info "The jenkins build log is/was available at ${BUILD_URL}console.log"
 }
 
@@ -562,7 +562,7 @@ check_suitability() {
 
 first_build() {
 	echo "============================================================================="
-	echo "Building ${SRCPACKAGE} in ${SUITE} on ${ARCH} on $(hostname -f) now."
+	echo "Building ${SRCPACKAGE} in ${SUITE} on ${ARCH} on $(hostname) now."
 	echo "Date:     $(date)"
 	echo "Date UTC: $(date -u)"
 	echo "============================================================================="
@@ -612,7 +612,7 @@ EOF
 
 second_build() {
 	echo "============================================================================="
-	echo "Re-Building ${SRCPACKAGE} in ${SUITE} on ${ARCH} on $(hostname -f) now."
+	echo "Re-Building ${SRCPACKAGE} in ${SUITE} on ${ARCH} on $(hostname) now."
 	echo "Date:     $(date)"
 	echo "Date UTC: $(date -u)"
 	echo "============================================================================="

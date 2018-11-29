@@ -92,7 +92,7 @@ choose_package() {
 
 first_build() {
 	echo "============================================================================="
-	echo "Building for $RELEASE ($ARCH) on $(hostname -f) now."
+	echo "Building for $RELEASE ($ARCH) on $(hostname) now."
 	echo "Source package: ${SRCPACKAGE}"
 	echo "Date:           $(date -u)"
 	echo "============================================================================="
@@ -113,7 +113,7 @@ first_build() {
 
 second_build() {
 	echo "============================================================================="
-	echo "Re-Building for $RELEASE ($ARCH) on $(hostname -f) now."
+	echo "Re-Building for $RELEASE ($ARCH) on $(hostname) now."
 	echo "Source package: ${SRCPACKAGE}"
 	echo "Date:           $(date -u)"
 	echo "============================================================================="
