@@ -188,6 +188,8 @@ update_archlinux_repositories() {
 	local CURRENT=$(query_db "SELECT count(*) FROM sources AS s JOIN schedule AS sch ON s.id=sch.package_id WHERE s.architecture='x86_64' AND sch.date_build_started IS NULL;")
 	if [ $CURRENT -le $THRESHOLD ] ; then
 		echo "$(date -u ) - scheduling $MAX old packages."
+		# this query schedules blacklisted packages as they dont have status blacklisted in db...
+		# FIXME: remove bash string blacklisting NOW
 		QUERY="SELECT s.id, s.name, max(r.build_date) max_date
 			FROM sources AS s JOIN results AS r ON s.id = r.package_id
 			WHERE s.architecture='x86_64'
