@@ -262,6 +262,7 @@ if [ -f /etc/debian_version ] ; then
 			munin-node/stretch-backports
 			munin-plugins-core/stretch-backports
 			munin-plugins-extra/stretch-backports
+			needrestart
 			netcat-traditional
 			ntp
 			ntpdate
