@@ -115,7 +115,11 @@ update_archlinux_repositories() {
 					if [ "$VERCMP" = "1" ] ; then
 						# known package with new version, so update db and schedule
 						query_db "UPDATE sources SET version = '$version' WHERE name = '$PKG' AND suite = '$SUITE' AND architecture='$ARCH';"
-						PKG_STATUS=$(query_db "SELECT status FROM results WHERE package_id='$PKG_ID';")
+						PKG_STATUS=$(query_db "SELECT r.status FROM results AS r
+							JOIN sources as s on s.id=r.package_id
+							WHERE s.architecture='x86_64'
+							AND s.name='$PKG'
+							AND s.suite='$SUITE';")
 						if [ "$PKG_STATUS" = "BLACKLISTED" ] ; then
 							echo "$PKG is blacklisted, so not scheduling it."
 							continue

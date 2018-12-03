@@ -1083,11 +1083,11 @@ create_pkg_html() {
 			STATE=FTBFS_4
 			buffer_message='failed to build, pkg relations contain invalid characters'
 		else
-			STATE=query_db "SELECT r.status FROM results AS r
+			STATE=$(query_db "SELECT r.status FROM results AS r
 				JOIN sources as s on s.id=r.package_id
 				WHERE s.architecture='x86_64'
 				AND s.name='$SRCPACKAGE'
-				AND s.suite='archlinux_$REPOSITORY';"
+				AND s.suite='archlinux_$REPOSITORY';")
 			if [ "$STATE" = "BLACKLISTED" ] ; then
 				buffer_message='blacklisted'
 			else
