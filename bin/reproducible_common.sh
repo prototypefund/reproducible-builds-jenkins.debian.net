@@ -58,7 +58,6 @@ USERTAGS="toolchain infrastructure timestamps fileordering buildpath username ho
 # common settings for testing Arch Linux
 ARCHLINUX_REPOS="core extra multilib community"
 ARCHLINUX_PKGS=/srv/reproducible-results/archlinux_pkgs
-ARCHLINUX_BLACKLISTED="syslinux ltrace gnutls haskell-hakyll mitmproxy pandoc python-pyftpdlib v2ray python-urllib3 perl-net-ssleay"
 ARCHBASE=$BASE/archlinux
 
 # common settings for testing rpm based distros
@@ -989,8 +988,6 @@ create_pkg_html() {
 	local buffer_message
 	local STATE
 
-	local blacklisted=false
-
 	# clear files from previous builds
 	cd "$ARCHLINUX_PKG_PATH"
 	for file in build1.log build2.log build1.version build2.version *BUILDINFO.txt *.html; do
@@ -1008,21 +1005,13 @@ create_pkg_html() {
 	#
 	#
 	if [ -z "$(cd $ARCHLINUX_PKG_PATH/ ; ls *.pkg.tar.xz.html 2>/dev/null)" ] ; then
-		for i in $ARCHLINUX_BLACKLISTED ; do
-			if [ "xxx${SRCPACKAGE}xxx" = "xxx${i}xxx" ] ; then
-				blacklisted=true
-			fi
-		done
 		# this horrible if elif elif elif elif...  monster is needed because
 		# https://lists.archlinux.org/pipermail/pacman-dev/2017-September/022156.html
 	        # has not yet been merged yet...
 		# FIXME: this has been merged, see http://jlk.fjfi.cvut.cz/arch/manpages/man/makepkg
 
 		# check different states and figure out what the page should look like
-		if $blacklisted ; then
-			STATE=BLACKLISTED
-			buffer_message='blacklisted'
-		elif find_in_buildlogs '^error: failed to prepare transaction \(conflicting dependencies\)'; then
+		if find_in_buildlogs '^error: failed to prepare transaction \(conflicting dependencies\)'; then
 			STATE=DEPWAIT_0
 			buffer_message='could not resolve dependencies as there are conflicts'
 		elif find_in_buildlogs '==> ERROR: (Could not resolve all dependencies|.pacman. failed to install missing dependencies)'; then
@@ -1094,11 +1083,20 @@ create_pkg_html() {
 			STATE=FTBFS_4
 			buffer_message='failed to build, pkg relations contain invalid characters'
 		else
-			STATE=UNKNOWN
-			buffer_message='probably failed to build from source, please investigate'
+			STATE=query_db "SELECT r.status FROM results AS r
+				JOIN sources as s on s.id=r.package_id
+				WHERE s.architecture='x86_64'
+				AND s.name='$SRCPACKAGE'
+				AND s.suite='archlinux_$REPOSITORY';"
+			if [ "$STATE" = "BLACKLISTED" ] ; then
+				buffer_message='blacklisted'
+			else
+				STATE=UNKNOWN
+				buffer_message='probably failed to build from source, please investigate'
+			fi
 		fi
 		# print build failures
-		if [[ $STATE = UNKNOWN ]]; then
+		if [ "$STATE" = "UNKNOWN" ]; then
 			echo "       $buffer_message" >> $HTML_BUFFER
 		else
 			include_icon $STATE "$buffer_message"

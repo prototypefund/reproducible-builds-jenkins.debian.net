@@ -23,7 +23,6 @@ update_archlinux_repositories() {
 	local UPDATED=$(mktemp -t archlinuxrb-scheduler-XXXXXXXX)
 	local NEW=$(mktemp -t archlinuxrb-scheduler-XXXXXXXX)
 	local KNOWN=$(mktemp -t archlinuxrb-scheduler-XXXXXXXX)
-	local BLACKLIST="/($(echo $ARCHLINUX_BLACKLISTED | sed "s# #|#g"))/"
 	local TOTAL=$(cat ${ARCHLINUX_PKGS}_* | wc -l)
 	echo "$(date -u ) - $TOTAL Arch Linux packages were previously known to Arch Linux."
 	query_db "SELECT suite, name, version FROM sources WHERE architecture='$ARCH';" > $KNOWN
@@ -115,12 +114,14 @@ update_archlinux_repositories() {
 					VERCMP="$(schroot --run-session -c $SESSION --directory /var/tmp -- vercmp $version $VERSION || true)"
 					if [ "$VERCMP" = "1" ] ; then
 						# known package with new version, so update db and schedule
-						echo $REPO/$pkgbase >> $UPDATED
-						echo "$REPO/$pkgbase $VERSION is known in the database, but repo now has $version which is newer, so rescheduling... "
 						query_db "UPDATE sources SET version = '$version' WHERE name = '$PKG' AND suite = '$SUITE' AND architecture='$ARCH';"
-						if [ -z $(echo $PKG | egrep -v "$BLACKLIST") ] ; then
+						PKG_STATUS=$(query_db "SELECT status FROM results WHERE package_id='$PKG_ID';")
+						if [ "$PKG_STATUS" = "BLACKLISTED" ] ; then
 							echo "$PKG is blacklisted, so not scheduling it."
+							continue
 						else
+							echo $REPO/$pkgbase >> $UPDATED
+							echo "$REPO/$pkgbase $VERSION is known in the database, but repo now has $version which is newer, so rescheduling... "
 							PKG_ID=$(query_db "SELECT id FROM sources WHERE name='$PKG' AND suite='$SUITE' AND architecture='$ARCH';")
 							echo " SELECT * FROM schedule WHERE package_id = '${PKG_ID}';"
 							SCHEDULED=$(query_db "SELECT * FROM schedule WHERE package_id = '${PKG_ID}';")
@@ -188,12 +189,10 @@ update_archlinux_repositories() {
 	local CURRENT=$(query_db "SELECT count(*) FROM sources AS s JOIN schedule AS sch ON s.id=sch.package_id WHERE s.architecture='x86_64' AND sch.date_build_started IS NULL;")
 	if [ $CURRENT -le $THRESHOLD ] ; then
 		echo "$(date -u ) - scheduling $MAX old packages."
-		# this query schedules blacklisted packages as they dont have status blacklisted in db...
-		# FIXME: remove bash string blacklisting NOW
 		QUERY="SELECT s.id, s.name, max(r.build_date) max_date
 			FROM sources AS s JOIN results AS r ON s.id = r.package_id
 			WHERE s.architecture='x86_64'
-			AND r.status != 'blacklisted'
+			AND r.status != 'BLACKLISTED'
 			AND r.build_date < '$MINDATE'
 			AND s.id NOT IN (SELECT schedule.package_id FROM schedule)
 			GROUP BY s.id, s.name

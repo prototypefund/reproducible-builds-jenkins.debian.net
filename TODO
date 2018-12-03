@@ -315,7 +315,6 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 ** check for archlinux schroot sessions which should not be there and delete them. complain if that fails.
 
 * use db - see https://tests.reproducible-builds.org/reproducibledb.htm
-** blacklisting uses shell variables and db state, thats horrible
 ** scheduler.sh:
 *** use asp to update trunk packages?
 ** html:
