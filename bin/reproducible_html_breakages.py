@@ -25,7 +25,7 @@ from rblib.utils import bcolors, create_temp_file, strip_epoch
 from rblib.const import (
     BIN_PATH,
     DISTRO_BASE, DISTRO_URL,
-    HISTORY_PATH, RB_PKG_PATH, DBD_PATH, DBDTXT_PATH,
+    HISTORY_PATH, RB_PKG_PATH, DBD_PATH, DBDTXT_PATH, DBDJSON_PATH,
     BUILDINFO_PATH, LOGS_PATH, DIFFS_PATH, RBUILD_PATH,
 )
 
