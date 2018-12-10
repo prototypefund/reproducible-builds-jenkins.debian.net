@@ -417,6 +417,26 @@ update_pkg_set_specific() {
 				ABORT=true
 			fi
 			;;
+		pureos_default_install) # pureos default installation
+			# Use the list of binary packages that is shipped with the .iso image for now
+			BASEURL="https://www.pureos.net/download/"
+			echo "Downloading $BASEURL now."
+			URL="$(curl $BASEURL | sed -n -e 's@.*\(https://downloads.puri.sm/.*\)\.hybrid\.iso.*@\1.packages@p')"
+			if [ -n "$URL" ] ; then
+				echo "Downloading $URL now."
+				# eg. "zlib1g:amd64\t1:1.2.11.dfsg-1"
+				curl $URL | cut -f1 | cut -d: -f1  > $TMPFILE
+				if [ ! -s $TMPFILE ] ; then
+					rm $TMPFILE
+					MESSAGE="Warning: could not download PureOS .packages file from $URL, skipping pkg set..."
+					irc_message debian-reproducible $MESSAGE
+				fi
+			else
+				MESSAGE="Warning: could not determine PureOS ISO .packages file from $BASEURL, skipping pkg set..."
+				irc_message debian-reproducible $MESSAGE
+				ABORT=true
+			fi
+			;;
 		subgraph_OS)
 			# installed by Subgraph OS
 			# one day we will get a proper data provider from Subgraph OS...
