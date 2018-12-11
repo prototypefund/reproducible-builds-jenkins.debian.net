@@ -652,6 +652,10 @@ schema_updates = {
         "UPDATE results SET status='E404' WHERE status='404'",
         "UPDATE stats_build SET status='E404' WHERE status='404'",
     ],
+    37: [  # change the data type in the stats_build.build_date column
+        "ALTER TABLE stats_build ALTER COLUMN build_date SET DATA TYPE timestamp"
+        " USING build_date::timestamp"
+    ]
 }
 
 
