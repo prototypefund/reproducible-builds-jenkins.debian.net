@@ -222,11 +222,11 @@ schema_updates = {
             build_duration TEXT NOT NULL,
             UNIQUE (name, version, suite, architecture, build_date))''',
     ],
-    3: [ # add columns to stats_bugs for new usertag umask
+    3: [  # add columns to stats_bugs for new usertag umask
         '''ALTER TABLE stats_bugs ADD COLUMN open_umask INTEGER''',
         '''ALTER TABLE stats_bugs ADD COLUMN done_umask INTEGER''',
     ],
-    4: [ # stats_pkg_state needs (datum, suite) as primary key
+    4: [  # stats_pkg_state needs (datum, suite) as primary key
         '''CREATE TABLE stats_pkg_state_tmp
            (datum TEXT NOT NULL,
             suite TEXT NOT NULL,
@@ -243,7 +243,7 @@ schema_updates = {
         '''DROP TABLE stats_pkg_state;''',
         '''ALTER TABLE stats_pkg_state_tmp RENAME TO stats_pkg_state;''',
     ],
-    5: [ # stats_builds_per_day needs (datum, suite) as primary key
+    5: [  # stats_builds_per_day needs (datum, suite) as primary key
         '''CREATE TABLE stats_builds_per_day_tmp
                      (datum TEXT NOT NULL,
                       suite TEXT NOT NULL,
@@ -259,7 +259,7 @@ schema_updates = {
         '''DROP TABLE stats_builds_per_day;''',
         '''ALTER TABLE stats_builds_per_day_tmp RENAME TO stats_builds_per_day;''',
     ],
-    6: [ # stats_builds_age needs (datum, suite) as primary key
+    6: [  # stats_builds_age needs (datum, suite) as primary key
         '''CREATE TABLE stats_builds_age_tmp
                      (datum TEXT NOT NULL,
                       suite TEXT NOT NULL,
@@ -274,7 +274,7 @@ schema_updates = {
         '''DROP TABLE stats_builds_age;''',
         '''ALTER TABLE stats_builds_age_tmp RENAME TO stats_builds_age;''',
     ],
-    7: [ # change build_duration field in results and stats_build from str to int
+    7: [  # change build_duration field in results and stats_build from str to int
         '''CREATE TABLE stats_build_tmp
            (id INTEGER PRIMARY KEY,
             name TEXT NOT NULL,
@@ -305,7 +305,7 @@ schema_updates = {
         'DROP TABLE results',
         'ALTER TABLE results_tmp RENAME TO results',
     ],
-    8: [ # add default value to stats_bugs to get a full 'done vs open bugs' graph
+    8: [  # add default value to stats_bugs to get a full 'done vs open bugs' graph
         '''CREATE TABLE stats_bugs_tmp
            (datum TEXT NOT NULL,
             open_toolchain INTEGER DEFAULT '0',
@@ -341,7 +341,7 @@ schema_updates = {
         'DROP TABLE stats_bugs',
         'ALTER TABLE stats_bugs_tmp RENAME TO stats_bugs',
     ],
-    9: [ # rename 'sid' to 'unstable'
+    9: [  # rename 'sid' to 'unstable'
         "UPDATE sources SET suite = 'unstable' WHERE suite = 'sid'",
         "UPDATE stats_build SET suite = 'unstable' WHERE suite = 'sid'",
         "UPDATE stats_pkg_state SET suite = 'unstable' WHERE suite = 'sid'",
@@ -349,7 +349,7 @@ schema_updates = {
         "UPDATE stats_builds_age SET suite = 'unstable' WHERE suite = 'sid'",
         "UPDATE stats_meta_pkg_state SET suite = 'unstable' WHERE suite = 'sid'",
     ],
-    10: [ # add the notes and issues tables
+    10: [  # add the notes and issues tables
         '''CREATE TABLE notes (
             package_id INTEGER,
             version TEXT NOT NULL,
@@ -364,18 +364,18 @@ schema_updates = {
             url TEXT,
             PRIMARY KEY (name))''',
     ],
-    11: [ # table with removed packages, to enable the maintenance job to do clean up
+    11: [  # table with removed packages, to enable the maintenance job to do clean up
         '''CREATE TABLE removed_packages (
             name TEXT NOT NULL,
             suite TEXT NOT NULL,
             architecture TEXT NOT NULL,
             PRIMARY KEY (name, suite, architecture))''',
     ],
-    12: [ # refactor the artifacts handling, splitting artifacts saving from
-          # IRC notification
+    12: [  # refactor the artifacts handling, splitting artifacts saving from
+           # IRC notification
         'ALTER TABLE schedule ADD COLUMN notify TEXT',
     ],
-    13: [ # record manual scheduling done, to be able to limit people
+    13: [  # record manual scheduling done, to be able to limit people
         '''CREATE TABLE manual_scheduler (
             id INTEGER PRIMARY KEY,
             package_id INTEGER NOT NULL,
@@ -383,14 +383,14 @@ schema_updates = {
             date_request INTEGER NOT NULL)''',
         'ALTER TABLE schedule ADD COLUMN scheduler TEXT',
     ],
-    14: [ # column to enable mail notification to maintainers
+    14: [  # column to enable mail notification to maintainers
         'ALTER TABLE sources ADD COLUMN notify_maintainer INTEGER NOT NULL DEFAULT 0',
     ],
-    15: [ # add columns to stats_bugs for new usertag ftbfs
+    15: [  # add columns to stats_bugs for new usertag ftbfs
         '''ALTER TABLE stats_bugs ADD COLUMN open_ftbfs INTEGER''',
         '''ALTER TABLE stats_bugs ADD COLUMN done_ftbfs INTEGER''',
     ],
-    16: [ # add default value to stats_bugs.(open|done)_ftbfs to get a full 'done vs open bugs' graph
+    16: [  # add default value to stats_bugs.(open|done)_ftbfs to get a full 'done vs open bugs' graph
         '''CREATE TABLE stats_bugs_tmp
            (datum TEXT NOT NULL,
             open_toolchain INTEGER DEFAULT '0',
@@ -428,21 +428,22 @@ schema_updates = {
         'DROP TABLE stats_bugs',
         'ALTER TABLE stats_bugs_tmp RENAME TO stats_bugs',
     ],
-    17: [ # add column to save which builders builds what
+    17: [  # add column to save which builders builds what
         "ALTER TABLE schedule ADD COLUMN builder TEXT",
         "ALTER TABLE results ADD COLUMN builder TEXT NOT NULL DEFAULT ''",
         "ALTER TABLE stats_build ADD COLUMN builder TEXT NOT NULL DEFAULT ''",
     ],
-    18: [ # add columns to stats_bugs for new usertag locale
+    18: [  # add columns to stats_bugs for new usertag locale
         '''ALTER TABLE stats_bugs ADD COLUMN open_locale INTEGER DEFAULT 0''',
         '''ALTER TABLE stats_bugs ADD COLUMN done_locale INTEGER DEFAULT 0''',
     ],
-    19: [ # add column architecture to stats_pkg_state, stats_builds_per_day and stats_builds_age tables and set previous values to amd64
+    19: [  # add column architecture to stats_pkg_state, stats_builds_per_day
+           # and stats_builds_age tables and set previous values to amd64
         "ALTER TABLE stats_pkg_state ADD COLUMN architecture TEXT NOT NULL DEFAULT 'amd64'",
         "ALTER TABLE stats_builds_per_day ADD COLUMN architecture TEXT NOT NULL DEFAULT 'amd64'",
         "ALTER TABLE stats_builds_age ADD COLUMN architecture TEXT NOT NULL DEFAULT 'amd64'",
     ],
-    20: [ # use (datum, suite, architecture) as primary key for stats_pkg_state
+    20: [  # use (datum, suite, architecture) as primary key for stats_pkg_state
         '''CREATE TABLE stats_pkg_state_tmp
            (datum TEXT NOT NULL,
             suite TEXT NOT NULL,
@@ -460,7 +461,7 @@ schema_updates = {
         '''DROP TABLE stats_pkg_state;''',
         '''ALTER TABLE stats_pkg_state_tmp RENAME TO stats_pkg_state;''',
     ],
-    21: [ # use (datum, suite, architecture) as primary key for stats_builds_per_day
+    21: [  # use (datum, suite, architecture) as primary key for stats_builds_per_day
         '''CREATE TABLE stats_builds_per_day_tmp
                      (datum TEXT NOT NULL,
                       suite TEXT NOT NULL,
@@ -477,7 +478,7 @@ schema_updates = {
         '''DROP TABLE stats_builds_per_day;''',
         '''ALTER TABLE stats_builds_per_day_tmp RENAME TO stats_builds_per_day;''',
     ],
-    22: [ # use (datum, suite, architecture) as primary key for stats_builds_age
+    22: [  # use (datum, suite, architecture) as primary key for stats_builds_age
         '''CREATE TABLE stats_builds_age_tmp
                      (datum TEXT NOT NULL,
                       suite TEXT NOT NULL,
@@ -493,8 +494,8 @@ schema_updates = {
         '''DROP TABLE stats_builds_age;''',
         '''ALTER TABLE stats_builds_age_tmp RENAME TO stats_builds_age;''',
     ],
-    23: [ # save which builders built a package and change the name of the
-          # field keeping the job name
+    23: [  # save which builders built a package and change the name of the
+           # field keeping the job name
         '''CREATE TABLE stats_build_tmp
             (id INTEGER PRIMARY KEY,
              name TEXT NOT NULL,
@@ -515,7 +516,7 @@ schema_updates = {
         'DROP TABLE stats_build',
         'ALTER TABLE stats_build_tmp RENAME TO stats_build',
     ],
-    24: [ # the same as #23 but for the results table
+    24: [  # the same as #23 but for the results table
         '''CREATE TABLE results_tmp
            (id INTEGER PRIMARY KEY,
             package_id INTEGER NOT NULL,
@@ -535,7 +536,7 @@ schema_updates = {
         'DROP TABLE results',
         'ALTER TABLE results_tmp RENAME TO results',
     ],
-    25: [ # rename the builder column also in the schedule table.
+    25: [  # rename the builder column also in the schedule table.
         '''CREATE TABLE schedule_tmp
            (id INTEGER PRIMARY KEY,
             package_id INTEGER NOT NULL,
@@ -556,14 +557,14 @@ schema_updates = {
         'DROP TABLE schedule',
         'ALTER TABLE schedule_tmp RENAME TO schedule',
     ],
-    26: [ # add a column to the schedule table to save the schedule message
+    26: [  # add a column to the schedule table to save the schedule message
         "ALTER TABLE schedule ADD COLUMN message TEXT",
         "ALTER TABLE stats_build ADD COLUMN schedule_message TEXT NOT NULL DEFAULT ''",
     ],
-    27: [ # add column architecture to stats_meta_pkg_state and set previous values to amd64
+    27: [  # add column architecture to stats_meta_pkg_state and set previous values to amd64
         "ALTER TABLE stats_meta_pkg_state ADD COLUMN architecture TEXT NOT NULL DEFAULT 'amd64'",
     ],
-    28: [ # use (datum, suite, architecture, meta_pkg) as primary key for stats_meta_pkg_state
+    28: [  # use (datum, suite, architecture, meta_pkg) as primary key for stats_meta_pkg_state
         '''CREATE TABLE stats_meta_pkg_state_tmp
            (datum TEXT NOT NULL,
             suite TEXT NOT NULL,
@@ -584,7 +585,7 @@ schema_updates = {
 
     # THE FOLLOWING UPDATES CAN ONLY BE PREFORMED ON POSTGRES DATABASE
 
-    29: [ # Add auto incrementing to the id columns of some tables
+    29: [  # Add auto incrementing to the id columns of some tables
         "CREATE SEQUENCE schedule_id_seq",
         "ALTER TABLE schedule ALTER id SET DEFAULT NEXTVAL('schedule_id_seq')",
         "CREATE SEQUENCE manual_scheduler_id_seq",
@@ -598,19 +599,19 @@ schema_updates = {
         "CREATE SEQUENCE results_id_seq",
         "ALTER TABLE results ALTER id SET DEFAULT NEXTVAL('results_id_seq')",
     ],
-    30: [ # Add new table to track diffoscope breake
+    30: [  # Add new table to track diffoscope breake
         '''CREATE TABLE stats_breakages
                      (datum TEXT,
                       diffoscope_timeouts INTEGER,
                       diffoscope_crashes INTEGER,
                       PRIMARY KEY (datum))''',
     ],
-    31: [ # rename the 'testing' suite into 'stretch'
+    31: [  # rename the 'testing' suite into 'stretch'
         "UPDATE {} SET suite='stretch' WHERE suite='testing'".format(t)
-            for t in ("sources", "stats_pkg_state", "stats_builds_per_day",
-                "stats_builds_age", "stats_meta_pkg_state", "stats_build")
+        for t in ("sources", "stats_pkg_state", "stats_builds_per_day",
+                  "stats_builds_age", "stats_meta_pkg_state", "stats_build")
     ],
-    32: [ # copy stretch packages (includng results) in buster
+    32: [  # copy stretch packages (includng results) in buster
         """INSERT INTO sources (name, version, suite, architecture, notify_maintainer)
             SELECT name, version, 'buster', architecture, notify_maintainer
             FROM sources
@@ -630,24 +631,24 @@ schema_updates = {
                 FROM buster AS b JOIN sr ON b.name=sr.name
                     AND b.architecture=sr.architecture""",
     ],
-    33: [ # the message columns.  They are not actually needed.
+    33: [  # the message columns.  They are not actually needed.
         "ALTER TABLE schedule DROP COLUMN message",
         "ALTER TABLE stats_build DROP COLUMN schedule_message",
     ],
-    34: [ # rename status "not for us" to "NFU"
+    34: [  # rename status "not for us" to "NFU"
         "UPDATE results SET status='NFU' WHERE status='not for us'",
         "UPDATE stats_build SET status='NFU' WHERE status='not for us'",
     ],
-    35: [ # rename status "unreproducible" to "FTBR"
+    35: [  # rename status "unreproducible" to "FTBR"
         "UPDATE results SET status='FTBR' WHERE status='unreproducible'",
         "UPDATE stats_build SET status='FTBR' WHERE status='unreproducible'",
         "ALTER TABLE stats_pkg_state RENAME COLUMN unreproducible to FTBR",
         "ALTER TABLE stats_meta_pkg_state RENAME COLUMN unreproducible to FTBR",
         "ALTER TABLE stats_builds_per_day RENAME COLUMN unreproducible to FTBR",
         "ALTER TABLE stats_builds_age " + \
-         "RENAME COLUMN oldest_unreproducible to oldest_FTBR",
+        "RENAME COLUMN oldest_unreproducible to oldest_FTBR",
     ],
-    36: [ # rename status "404" to "E404"
+    36: [  # rename status "404" to "E404"
         "UPDATE results SET status='E404' WHERE status='404'",
         "UPDATE stats_build SET status='E404' WHERE status='404'",
     ],
