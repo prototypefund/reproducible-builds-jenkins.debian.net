@@ -2,6 +2,10 @@ Package: pbuilder
 Pin: release o=Debian Backports
 Pin-Priority: 990
 
+Package: munin-node munin-plugins-core munin-plugins-extra munin-common
+Pin: release o=Debian Backports
+Pin-Priority: 990
+
 Package: *
 Pin: release o=Debian Backports
 Pin-Priority: -1
