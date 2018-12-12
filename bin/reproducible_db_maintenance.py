@@ -672,6 +672,10 @@ schema_updates = {
         "ALTER TABLE stats_build ALTER COLUMN build_duration SET DATA TYPE integer"
         " USING build_duration::integer"
     ],
+    40: [  # add some new distributions
+        "INSERT INTO distributions (name) VALUES "
+        "('opensuse'), ('archlinux'), ('alpine')"
+    ],
 }
 
 
