@@ -668,6 +668,10 @@ schema_updates = {
             ADD COLUMN distribution INTEGER DEFAULT 1
             REFERENCES distributions(id)""",
     ],
+    39: [  # fix build_duration datatype
+        "ALTER TABLE stats_build ALTER COLUMN build_duration SET DATA TYPE integer"
+        " USING build_duration::integer"
+    ],
 }
 
 
