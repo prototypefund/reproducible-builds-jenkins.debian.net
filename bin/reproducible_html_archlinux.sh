@@ -54,16 +54,16 @@ repostats(){
 		echo "$(date -u) - starting to analyse build results for '$REPOSITORY'."
 		# prepare stats per repository
 		SUITE="archlinux_$REPOSITORY"
-		TOTAL=$(query_db "SELECT count(*) FROM sources AS s WHERE s.architecture='x86_64' AND s.suite='$SUITE';")
-		TESTED=$(query_db "SELECT count(*) FROM sources AS s JOIN results AS r ON s.id=r.package_id WHERE s.architecture='x86_64' AND s.suite='$SUITE';")
-		NR_GOOD=$(query_db "SELECT count(*) FROM sources AS s JOIN results AS r ON s.id=r.package_id WHERE s.architecture='x86_64' AND s.suite='$SUITE' AND r.status='GOOD';")
-		NR_FTBR=$(query_db "SELECT count(*) FROM sources AS s JOIN results AS r ON s.id=r.package_id WHERE s.architecture='x86_64' AND s.suite='$SUITE' AND r.status LIKE 'FTBR_%';")
-		NR_FTBFS=$(query_db "SELECT count(*) FROM sources AS s JOIN results AS r ON s.id=r.package_id WHERE s.architecture='x86_64' AND s.suite='$SUITE' AND r.status LIKE 'FTBFS_%';")
-		NR_DEPWAIT=$(query_db "SELECT count(*) FROM sources AS s JOIN results AS r ON s.id=r.package_id WHERE s.architecture='x86_64' AND s.suite='$SUITE' AND r.status LIKE 'DEPWAIT_%';")
-		NR_404=$(query_db "SELECT count(*) FROM sources AS s JOIN results AS r ON s.id=r.package_id WHERE s.architecture='x86_64' AND s.suite='$SUITE' AND r.status LIKE '404_%';")
-		NR_BLACKLISTED=$(query_db "SELECT count(*) FROM sources AS s JOIN results AS r ON s.id=r.package_id WHERE s.architecture='x86_64' AND s.suite='$SUITE' AND r.status='BLACKLISTED';")
-		NR_UNKNOWN=$(query_db "SELECT count(*) FROM sources AS s JOIN results AS r ON s.id=r.package_id WHERE s.architecture='x86_64' AND s.suite='$SUITE' AND r.status LIKE 'UNKNOWN_%';")
-		NR_UNTESTED=$(query_db "SELECT count(s.name) FROM sources AS s WHERE s.architecture='x86_64' AND s.suite='$SUITE' AND s.id NOT IN (SELECT package_id FROM results)")
+		TOTAL=$(query_db "SELECT count(*) FROM sources AS s WHERE s.distribution=$DISTROID AND s.architecture='x86_64' AND s.suite='$SUITE';")
+		TESTED=$(query_db "SELECT count(*) FROM sources AS s JOIN results AS r ON s.id=r.package_id WHERE s.distribution=$DISTROID AND s.architecture='x86_64' AND s.suite='$SUITE';")
+		NR_GOOD=$(query_db "SELECT count(*) FROM sources AS s JOIN results AS r ON s.id=r.package_id WHERE s.distribution=$DISTROID AND s.architecture='x86_64' AND s.suite='$SUITE' AND r.status='GOOD';")
+		NR_FTBR=$(query_db "SELECT count(*) FROM sources AS s JOIN results AS r ON s.id=r.package_id WHERE s.distribution=$DISTROID AND s.architecture='x86_64' AND s.suite='$SUITE' AND r.status LIKE 'FTBR_%';")
+		NR_FTBFS=$(query_db "SELECT count(*) FROM sources AS s JOIN results AS r ON s.id=r.package_id WHERE s.distribution=$DISTROID AND s.architecture='x86_64' AND s.suite='$SUITE' AND r.status LIKE 'FTBFS_%';")
+		NR_DEPWAIT=$(query_db "SELECT count(*) FROM sources AS s JOIN results AS r ON s.id=r.package_id WHERE s.distribution=$DISTROID AND s.architecture='x86_64' AND s.suite='$SUITE' AND r.status LIKE 'DEPWAIT_%';")
+		NR_404=$(query_db "SELECT count(*) FROM sources AS s JOIN results AS r ON s.id=r.package_id WHERE s.distribution=$DISTROID AND s.architecture='x86_64' AND s.suite='$SUITE' AND r.status LIKE '404_%';")
+		NR_BLACKLISTED=$(query_db "SELECT count(*) FROM sources AS s JOIN results AS r ON s.id=r.package_id WHERE s.distribution=$DISTROID AND s.architecture='x86_64' AND s.suite='$SUITE' AND r.status='BLACKLISTED';")
+		NR_UNKNOWN=$(query_db "SELECT count(*) FROM sources AS s JOIN results AS r ON s.id=r.package_id WHERE s.distribution=$DISTROID AND  s.architecture='x86_64' AND s.suite='$SUITE' AND r.status LIKE 'UNKNOWN_%';")
+		NR_UNTESTED=$(query_db "SELECT count(s.name) FROM sources AS s WHERE s.architecture='x86_64' AND s.distribution=$DISTROID AND s.suite='$SUITE' AND s.id NOT IN (SELECT package_id FROM results)")
 		if [ $NR_UNTESTED -ne 0 ] ; then
 			let NR_UNKNOWN=$NR_UNKNOWN+$NR_UNTESTED
 		fi
@@ -226,14 +226,16 @@ repository_pages(){
 		TESTED=$(query_db "SELECT count(*) FROM sources AS s
 					JOIN results AS r
 					ON s.id=r.package_id
-					WHERE s.architecture='x86_64'
+					WHERE s.distribution=$DISTROID
+					AND s.architecture='x86_64'
 					AND s.suite='$SUITE';")
 		write_page "<h2>$TESTED packages in repository $REPOSITORY</h2>"
 		include_pkg_table_header_in_page
 		REPO_PKGS=$(query_db "SELECT s.name FROM sources
 				AS s JOIN results AS r
 				ON s.id=r.package_id
-				WHERE s.architecture='x86_64'
+				WHERE s.distribution=$DISTROID
+				AND s.architecture='x86_64'
 				AND s.suite='$SUITE'
 				ORDER BY r.status,s.name")
 		for SRCPACKAGE in $REPO_PKGS ; do
@@ -253,12 +255,14 @@ state_pages(){
 		TESTED=$(query_db "SELECT count(*) FROM sources AS s
 				JOIN results AS r
 				ON s.id=r.package_id
-				WHERE s.architecture='x86_64'
+				WHERE s.distribution=$DISTROID
+				AND s.architecture='x86_64'
 				AND r.status LIKE '$STATE%';")
 		if [ "$STATE" = "UNKNOWN" ] ; then
 			# untested packages are also state UNKNOWN...
 			UNTESTED=$(query_db "SELECT count(s.name) FROM sources AS s
-					WHERE s.architecture='x86_64'
+					WHERE s.distribution=$DISTROID
+					AND s.architecture='x86_64'
 					AND s.id NOT IN (SELECT package_id FROM results)")
 			if [ $UNTESTED -ne 0 ] ; then
 				let TESTED=$TESTED+$UNTESTED
@@ -271,7 +275,8 @@ state_pages(){
 			STATE_PKGS=$(query_db "SELECT s.name FROM sources AS s
 					JOIN results AS r
 					ON s.id=r.package_id
-					WHERE s.architecture='x86_64'
+					WHERE s.distribution=$DISTROID
+					AND s.architecture='x86_64'
 					AND s.suite='$SUITE'
 					AND r.status LIKE '$STATE%'
 					ORDER BY r.status,s.name")
@@ -281,7 +286,8 @@ state_pages(){
 			if [ "$STATE" = "UNKNOWN" ] ; then
 				# untested packages are also state UNKNOWN...
 				STATE_PKGS=$(query_db "SELECT s.name FROM sources AS s
-					WHERE s.architecture='x86_64'
+					WHERE s.distribution=$DISTROID
+					AND s.architecture='x86_64'
 					AND s.suite='$SUITE'
 					AND s.id NOT IN (SELECT package_id FROM results)
 					ORDER BY s.name")
@@ -306,13 +312,15 @@ repository_state_pages(){
 			TESTED=$(query_db "SELECT count(*) FROM sources AS s
 					JOIN results AS r
 					ON s.id=r.package_id
-					WHERE s.architecture='x86_64'
+					WHERE s.distribution=$DISTROID
+					AND s.architecture='x86_64'
 					AND s.suite='$SUITE'
 					AND r.status LIKE '$STATE%';")
 			if [ "$STATE" = "UNKNOWN" ] ; then
 				# untested packages are also state UNKNOWN...
 				UNTESTED=$(query_db "SELECT count(s.name) FROM sources AS s
-						WHERE s.architecture='x86_64'
+						WHERE s.distribution=$DISTROID
+						AND s.architecture='x86_64'
 						AND s.suite='$SUITE'
 						AND s.id NOT IN (SELECT package_id FROM results)")
 				if [ $UNTESTED -ne 0 ] ; then
@@ -324,7 +332,8 @@ repository_state_pages(){
 			STATE_PKGS=$(query_db "SELECT s.name FROM sources AS s
 					JOIN results AS r
 					ON s.id=r.package_id
-					WHERE s.architecture='x86_64'
+					WHERE s.distribution=$DISTROID
+					AND s.architecture='x86_64'
 					AND s.suite='$SUITE'
 					AND r.status LIKE '$STATE%'
 					ORDER BY r.status,s.name")
@@ -334,7 +343,8 @@ repository_state_pages(){
 			if [ "$STATE" = "UNKNOWN" ] ; then
 				# untested packages are also state UNKNOWN...
 				STATE_PKGS=$(query_db "SELECT s.name FROM sources AS s
-					WHERE s.architecture='x86_64'
+					WHERE s.distribution=$DISTROID
+					AND s.architecture='x86_64'
 					AND s.suite='$SUITE'
 					AND s.id NOT IN (SELECT package_id FROM results)
 					ORDER BY s.name")
@@ -357,14 +367,16 @@ recent_builds_page(){
 	RECENT=$(query_db "SELECT count(s.name) FROM sources AS s
 				JOIN results AS r
 				ON s.id=r.package_id
-				WHERE s.architecture='x86_64'
+				WHERE s.distribution=$DISTROID
+				AND s.architecture='x86_64'
 				AND r.build_date > '$MAXDATE'")
 	write_page "<h2>$RECENT builds of Archlinux packages in the last 24h</h2>"
 	include_pkg_table_header_in_page
 	STATE_PKGS=$(query_db "SELECT s.name FROM sources AS s
 				JOIN results AS r
 				ON s.id=r.package_id
-				WHERE s.architecture='x86_64'
+				WHERE s.distribution=$DISTROID
+				AND s.architecture='x86_64'
 				AND r.build_date > '$MAXDATE'
 				ORDER BY r.build_date
 				DESC")
@@ -384,7 +396,8 @@ currently_scheduled_page(){
 			FROM sources AS s
 			JOIN schedule AS sch
 			ON s.id=sch.package_id
-			WHERE s.architecture='x86_64'
+			WHERE s.distribution=$DISTROID
+			AND s.architecture='x86_64'
 			AND sch.date_build_started IS NULL")
 	write_page "<h2>Currently $TESTED scheduled builds of Archlinux packages</h2>"
 	write_page "    <table><tr><th>source package</th><th>repository</th><th>version</th><th>scheduled</th></tr>"
@@ -392,7 +405,8 @@ currently_scheduled_page(){
 			FROM sources AS s
 			JOIN schedule AS sch
 			ON s.id=sch.package_id
-			WHERE s.architecture='x86_64'
+			WHERE s.distribution=$DISTROID
+			AND s.architecture='x86_64'
 			AND sch.date_build_started IS NULL
 			ORDER BY sch.date_scheduled, s.name")
 	OIFS=$IFS
@@ -419,6 +433,7 @@ TITLE=""
 STATE=""
 REPOSITORY=""
 SRCPACKAGE=""
+DISTROID=$(query_db "SELECT id FROM distributions WHERE name='archlinux'")
 
 if [ -z "$1" ] ; then
 	MEMBERS_FTBFS="0 1 2 3 4"

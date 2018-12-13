@@ -25,7 +25,7 @@ update_archlinux_repositories() {
 	local KNOWN=$(mktemp -t archlinuxrb-scheduler-XXXXXXXX)
 	local TOTAL=$(cat ${ARCHLINUX_PKGS}_* | wc -l)
 	echo "$(date -u ) - $TOTAL Arch Linux packages were previously known to Arch Linux."
-	query_db "SELECT suite, name, version FROM sources WHERE architecture='$ARCH';" > $KNOWN
+	query_db "SELECT suite, name, version FROM sources WHERE distribution=$DISTROID AND architecture='$ARCH';" > $KNOWN
 	echo "$(date -u ) - $(cat $KNOWN | wc -l) Arch Linux packages are known in our database."
 	# init session
 	schroot --begin-session --session-name=$SESSION -c jenkins-reproducible-archlinux
@@ -47,7 +47,7 @@ update_archlinux_repositories() {
 		done | sort -u -R > "$ARCHLINUX_PKGS"_full_pkgbase_list
 	TOTAL=$(cat ${ARCHLINUX_PKGS}_full_pkgbase_list | wc -l)
 	echo "$(date -u ) - $TOTAL Arch Linux packages are now known to Arch Linux."
-	local total=$(query_db "SELECT count(*) FROM sources AS s JOIN schedule AS sch ON s.id=sch.package_id WHERE s.architecture='x86_64' AND sch.date_build_started IS NULL;")
+	local total=$(query_db "SELECT count(*) FROM sources AS s JOIN schedule AS sch ON s.id=sch.package_id WHERE s.distribution=$DISTROID AND s.architecture='x86_64' AND sch.date_build_started IS NULL;")
 	echo "$(date -u) - updating Arch Linux repositories, currently $total packages scheduled."
 
 	#
@@ -70,7 +70,7 @@ update_archlinux_repositories() {
 					rm -r --one-file-system $BASE/archlinux/$REPO/$PKG
 					echo "$(date -u) - $REPO/$PKG removed as it's gone from the Archlinux repositories."
 					SUITE="archlinux_$repo"
-					PKG_ID=$(query_db "SELECT id FROM sources WHERE name='$PKG' AND suite='$SUITE' AND architecture='$ARCH';")
+					PKG_ID=$(query_db "SELECT id FROM sources WHERE distribution=$DISTROID AND name='$PKG' AND suite='$SUITE' AND architecture='$ARCH';")
 					if [ -n "${PKG_ID}" ] ; then
 						query_db "DELETE FROM results WHERE package_id='${PKG_ID}';"
 						query_db "DELETE FROM schedule WHERE package_id='${PKG_ID}';"
@@ -107,17 +107,19 @@ update_archlinux_repositories() {
 					# new package, add to db and schedule
 					echo $REPO/$pkgbase >> $NEW
 					echo "new package found: $repo/$pkgbase $version "
-					query_db "INSERT into sources (name, version, suite, architecture) VALUES ('$PKG', '$version', '$SUITE', '$ARCH');"
-					PKG_ID=$(query_db "SELECT id FROM sources WHERE name='$PKG' AND suite='$SUITE' AND architecture='$ARCH';")
+					DISTROID=$(query_db "SELECT id FROM distributions WHERE name = 'archlinux'")
+					query_db "INSERT into sources (name, version, suite, architecture, distribution) VALUES ('$PKG', '$version', '$SUITE', '$ARCH', $DISTROID);"
+					PKG_ID=$(query_db "SELECT id FROM sources WHERE distribution=$DISTROID AND name='$PKG' AND suite='$SUITE' AND architecture='$ARCH';")
 					query_db "INSERT INTO schedule (package_id, date_scheduled) VALUES ('${PKG_ID}', '$DATE');"
 				elif [ "$VERSION" != "$version" ] ; then
 					VERCMP="$(schroot --run-session -c $SESSION --directory /var/tmp -- vercmp $version $VERSION || true)"
 					if [ "$VERCMP" = "1" ] ; then
 						# known package with new version, so update db and schedule
-						query_db "UPDATE sources SET version = '$version' WHERE name = '$PKG' AND suite = '$SUITE' AND architecture='$ARCH';"
+						query_db "UPDATE sources SET version = '$version' WHERE name = '$PKG' AND suite = '$SUITE' AND architecture='$ARCH' AND distribution=$DISTROID;"
 						PKG_STATUS=$(query_db "SELECT r.status FROM results AS r
 							JOIN sources as s on s.id=r.package_id
-							WHERE s.architecture='x86_64'
+							WHERE s.distribution=$DISTROID
+							AND s.architecture='x86_64'
 							AND s.name='$PKG'
 							AND s.suite='$SUITE';")
 						if [ "$PKG_STATUS" = "BLACKLISTED" ] ; then
@@ -126,7 +128,7 @@ update_archlinux_repositories() {
 						else
 							echo $REPO/$pkgbase >> $UPDATED
 							echo "$REPO/$pkgbase $VERSION is known in the database, but repo now has $version which is newer, so rescheduling... "
-							PKG_ID=$(query_db "SELECT id FROM sources WHERE name='$PKG' AND suite='$SUITE' AND architecture='$ARCH';")
+							PKG_ID=$(query_db "SELECT id FROM sources WHERE distribution=$DISTROID AND name='$PKG' AND suite='$SUITE' AND architecture='$ARCH';")
 							echo " SELECT * FROM schedule WHERE package_id = '${PKG_ID}';"
 							SCHEDULED=$(query_db "SELECT * FROM schedule WHERE package_id = '${PKG_ID}';")
 							if [ -z "$SCHEDULED" ] ; then
@@ -164,9 +166,10 @@ update_archlinux_repositories() {
 	local MINDATE=$(date -u +"%Y-%m-%d %H:%M" -d "24 hours ago")
 	local SCHDATE=$(date -u +"%Y-%m-%d %H:%M" -d "7 days")
 	QUERY="SELECT s.id FROM sources AS s
-		JOIN results as r on s.id=r.package_id
-		WHERE s.architecture='x86_64'\
-			AND (r.status LIKE 'DEPWAIT%' or r.status LIKE '404%')
+		JOIN results AS r ON s.id=r.package_id
+		WHERE s.distribution = $DISTROID
+		AND s.architecture='x86_64'
+		AND (r.status LIKE 'DEPWAIT%' OR r.status LIKE '404%')
 		AND r.build_date < '$MINDATE'
 		AND s.id NOT IN (SELECT package_id FROM schedule)
 		LIMIT $MAX;"
@@ -190,12 +193,13 @@ update_archlinux_repositories() {
 	local THRESHOLD=450
 	MINDATE=$(date -u +"%Y-%m-%d %H:%M" -d "10 days ago")
 	SCHDATE=$(date -u +"%Y-%m-%d %H:%M" -d "7 days")
-	local CURRENT=$(query_db "SELECT count(*) FROM sources AS s JOIN schedule AS sch ON s.id=sch.package_id WHERE s.architecture='x86_64' AND sch.date_build_started IS NULL;")
+	local CURRENT=$(query_db "SELECT count(*) FROM sources AS s JOIN schedule AS sch ON s.id=sch.package_id WHERE s.distribution=$DISTROID AND s.architecture='x86_64' AND sch.date_build_started IS NULL;")
 	if [ $CURRENT -le $THRESHOLD ] ; then
 		echo "$(date -u ) - scheduling $MAX old packages."
 		QUERY="SELECT s.id, s.name, max(r.build_date) max_date
 			FROM sources AS s JOIN results AS r ON s.id = r.package_id
-			WHERE s.architecture='x86_64'
+			WHERE s.distribution=$DISTROID
+			AND s.architecture='x86_64'
 			AND r.status != 'BLACKLISTED'
 			AND r.build_date < '$MINDATE'
 			AND s.id NOT IN (SELECT schedule.package_id FROM schedule)
@@ -216,7 +220,7 @@ update_archlinux_repositories() {
 	# output stats
 	#
 	rm "$ARCHLINUX_PKGS"_full_pkgbase_list
-	total=$(query_db "SELECT count(*) FROM sources AS s JOIN schedule AS sch ON s.id=sch.package_id WHERE s.architecture='x86_64' AND sch.date_build_started IS NULL;")
+	total=$(query_db "SELECT count(*) FROM sources AS s JOIN schedule AS sch ON s.id=sch.package_id WHERE s.distribution=$DISTROID AND s.architecture='x86_64' AND sch.date_build_started IS NULL;")
 	new=$(cat $NEW | wc -l 2>/dev/null|| true)
 	updated=$(cat $UPDATED 2>/dev/null| wc -l || true)
 	old=$(echo -n "$OLD" | wc -l 2>/dev/null|| true)

@@ -37,7 +37,7 @@ update_pkg_in_db() {
 	BUILD_STATE=$(cat pkg.state)
 	BUILD_VERSION="$(cat pkg.version)"
 	SUITE="archlinux_$REPOSITORY"
-	local SRCPKGID=$(query_db "SELECT id FROM sources WHERE name='$SRCPACKAGE' AND suite='$SUITE' AND architecture='$ARCH';")
+	local SRCPKGID=$(query_db "SELECT id FROM sources WHERE distribution=$DISTROID AND name='$SRCPACKAGE' AND suite='$SUITE' AND architecture='$ARCH';")
 	if [ -z "${SRCPKGID}" ] ; then
 	        echo "${SRCPKGID} empty, ignoring $REPOSITORY/$SRCPACKAGE, failing hard."
 		exit 1
@@ -48,8 +48,8 @@ update_pkg_in_db() {
 		DO UPDATE SET version='$BUILD_VERSION', status='$BUILD_STATE', build_date='$DATE', build_duration='$BUILD_DURATION', node1='$NODE1', node2='$NODE2', job='$BUILD_URL' WHERE results.package_id='$SRCPKGID'";
         echo "$QUERY"
 	query_db "$QUERY"
-        QUERY="INSERT INTO stats_build (name, version, suite, architecture, status, build_date, build_duration, node1, node2, job) 
-		VALUES ('$SRCPACKAGE', '$BUILD_VERSION', '$SUITE', '$ARCH', '$BUILD_STATE', '$DATE', '$BUILD_DURATION', '$NODE1', '$NODE2', '$BUILD_URL');"
+        QUERY="INSERT INTO stats_build (name, version, suite, architecture, distribution, status, build_date, build_duration, node1, node2, job) 
+		VALUES ('$SRCPACKAGE', '$BUILD_VERSION', '$SUITE', '$ARCH', $DISTROID, '$BUILD_STATE', '$DATE', '$BUILD_DURATION', '$NODE1', '$NODE2', '$BUILD_URL');"
         echo "$QUERY"
 	query_db "$QUERY"
         # unmark build since it's properly finished
@@ -66,7 +66,8 @@ choose_package() {
 	local RESULT=$(query_db "
 		SELECT s.suite, s.id, s.name, s.version
 		FROM schedule AS sch JOIN sources AS s ON sch.package_id=s.id
-		WHERE sch.date_build_started is NULL
+		WHERE distribution=$DISTROID
+		AND sch.date_build_started is NULL
 		AND s.architecture='$ARCH'
 		ORDER BY date_scheduled LIMIT 10"|sort -R|head -1)
 	if [ -z "$RESULT" ] ; then
@@ -378,6 +379,7 @@ REPOSITORY=""
 SRCPACKAGE=""
 VERSION=""
 SIZE=""
+DISTROID=$(query_db "SELECT id FROM distributions WHERE name='archlinux'")
 choose_package
 mkdir -p $BASE/archlinux/$REPOSITORY/$SRCPACKAGE
 # build package twice
