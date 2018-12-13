@@ -107,7 +107,6 @@ update_archlinux_repositories() {
 					# new package, add to db and schedule
 					echo $REPO/$pkgbase >> $NEW
 					echo "new package found: $repo/$pkgbase $version "
-					DISTROID=$(query_db "SELECT id FROM distributions WHERE name = 'archlinux'")
 					query_db "INSERT into sources (name, version, suite, architecture, distribution) VALUES ('$PKG', '$version', '$SUITE', '$ARCH', $DISTROID);"
 					PKG_ID=$(query_db "SELECT id FROM sources WHERE distribution=$DISTROID AND name='$PKG' AND suite='$SUITE' AND architecture='$ARCH';")
 					query_db "INSERT INTO schedule (package_id, date_scheduled) VALUES ('${PKG_ID}', '$DATE');"
@@ -269,6 +268,7 @@ update_archlinux_repositories() {
 trap cleanup_all INT TERM EXIT
 ARCH="x86_64"
 SESSION="archlinux-scheduler-$RANDOM"
+DISTROID=$(query_db "SELECT id FROM distributions WHERE name = 'archlinux'")
 update_archlinux_repositories
 trap - INT TERM EXIT
 
