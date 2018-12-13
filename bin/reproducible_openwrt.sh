@@ -644,6 +644,25 @@ else
 	MAGIC_SIGN="?"
 fi
 
+# parse the OpenWrt Packages.manifest files to generate results to fill into the database
+for i in * ; do
+	cd "$i"
+
+	# search packages in both paths to find non-existing ones
+	PKGS1=$(find -- * -type f -name "Packages.manifest" | sort -u )
+	pushd "$RESULTSDIR/b2/$i"
+	PKGS2=$(find -- * -type f -name "Packages.manifest" | sort -u )
+	popd
+
+	for j in $(printf "%s\n%s" "$PKGS1" "$PKGS2" | sort -u ) ; do
+		if [ ! -f "$RESULTSDIR/b1/$i/$j" ] || [ ! -f "$RESULTSDIR/b2/$i/$j" ] ; then
+			echo "One Packages.manifest list does not exist! Either $RESULTSDIR/b1/$i/$j or $RESULTSDIR/b2/$i/$j"
+		fi
+		echo "Running reproducible_openwrt_package_parser.py"
+		/srv/jenkins/bin/reproducible_openwrt_package_parser.py "$PKGS1" "$PKGS2" || true
+	done
+done
+
 write_openwrt_page_header(){
 	cat > "$PAGE" <<- EOF
 <!DOCTYPE html>
