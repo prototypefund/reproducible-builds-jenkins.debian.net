@@ -18,7 +18,7 @@ from rblib.confparse import log
 json_url = 'http://rb.zq1.de/compare.factory/reproducible.json'
 
 log.info('Downloading status file…')
-ofile = urlopen(json_url).read()
+ofile = urlopen(json_url).read().decode('utf-8')
 ostatus = json.loads(ofile)
 
 
