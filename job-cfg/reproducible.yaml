@@ -662,7 +662,7 @@
                 - 'opensuse_import_json':
                     my_description: 'Import the status json'
                     my_timed: 'H H * * H'
-                    my_shell: 'cd /srv/jenkins/bin/ && ./reproducible_opensuse_import_json.py && ./reproducible_html_indexes.py --distro opensuse && ./reproducible_html_all_packages.py --distro opensuse'
+                    my_shell: 'cd /srv/jenkins/bin/ && ./reproducible_opensuse_import_json.py && ./reproducible_html_indexes.py --distro opensuse && ./reproducible_html_all_packages.py --distro opensuse --ignore-missing-files'
                     my_recipients: 'jenkins+reproducible-builds bernhard+debianjenkins@lsmod.de qa-jenkins-scm@lists.alioth.debian.org'
             my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
             my_hname: ''
