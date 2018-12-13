@@ -647,6 +647,7 @@ pages = {
     },
     'notify': {
         'global': True,
+        'limit': ['debian'],
         'notes': True,
         'nosuite': True,
         'title': 'Packages with notification enabled',
@@ -712,7 +713,7 @@ def build_leading_text_section(section, rows, suite, arch):
             timespan_percent = round(((total/timespan_count)*100), 1)
         except ZeroDivisionError:
             log.error('Looks like there are either no tested package or no ' +
-                  'packages available at all. Maybe it\'s a new database?')
+                      'packages available at all. Maybe it\'s a new database?')
             timespan_percent = 0
 
         html += section['text'].substitute(tot=total, percent=percent,
@@ -768,6 +769,8 @@ def build_page_section(page, section, suite, arch):
 
 
 def build_page(page, suite=None, arch=None):
+    if 'limit' in pages[page] and DISTRO not in pages[page]['limit']:
+        return
     gpage = False
     if pages[page].get('global') and pages[page]['global']:
         gpage = True
