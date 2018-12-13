@@ -684,6 +684,10 @@ schema_updates = {
             SELECT id FROM distributions WHERE name='archlinux')
            WHERE suite LIKE 'archlinux_%%'"""
     ],
+    42: [  # add OpenWrt
+        "INSERT INTO distributions (name) VALUES "
+        "('openwrt')"
+    ],
 }
 
 
