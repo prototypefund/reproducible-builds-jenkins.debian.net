@@ -676,6 +676,14 @@ schema_updates = {
         "INSERT INTO distributions (name) VALUES "
         "('opensuse'), ('archlinux'), ('alpine')"
     ],
+    41: [  # mark archlinux packages as archlinx packages
+        """UPDATE sources SET distribution=(
+            SELECT id FROM distributions WHERE name='archlinux')
+           WHERE suite LIKE 'archlinux_%%'""",
+        """UPDATE stats_build SET distribution=(
+            SELECT id FROM distributions WHERE name='archlinux')
+           WHERE suite LIKE 'archlinux_%%'"""
+    ],
 }
 
 
