@@ -68,12 +68,98 @@ def show_list_difference(list_a, list_b):
 
     return (same, alone_a, alone_b, differ)
 
-def insert_into_db(result):
-    from pprint import pprint
+def insert_into_db(result, suite='trunk'):
+    """ takes the result tuple and insert it into the database """
+    from sqlalchemy import select, and_, bindparam
+    from rblib import conn_db, query_db, db_table
+    from rblib.confparse import log
+    from datetime import datetime
+
     same, alone_a, alone_b, differ = result
 
-    for pkg in same:
-        pprint(pkg)
+    distributions = db_table('distributions')
+    results = db_table('results')
+    sources = db_table('sources')
+
+    distro_id = query_db(
+        select([distributions.c.id]).where(distributions.c.name == 'openwrt')
+        )[0][0]
+
+    # Delete all old data
+    transaction = conn_db.begin()
+    d = results.delete(results.c.package_id.in_(
+        select([sources.c.id]).select_from(sources).where(sources.c.distribution == distro_id)
+    ))
+    query_db(d)
+    d = sources.delete(sources.c.distribution == distro_id)
+    query_db(d)
+    transaction.commit()
+
+    # create new data
+    pkgs = []
+    pkgs_b = {}
+    now = datetime.now()
+
+    def insert_pkg_list(pkg_list, state, timestamp):
+        # Add new data
+        for pkg in same:
+            p = {
+                'name': pkg['Package'],
+                'version': pkg['Version'],
+                'suite': suite,
+                'architecture': pkg['Architecture'],
+                'distribution': distro_id
+            }
+            pkgs.append(p)
+            data = {
+                'status': pkg['status'],
+                'build_date': timestamp,
+                'build_duration': 2342,
+            }
+            pkgs_b[(pkg['package'], pkg['version'])] = data
+
+    insert_pkg_list(same, "reproducible", now)
+    insert_pkg_list(alone_a, "FTBFS on B", now)
+    insert_pkg_list(alone_b, "FTBFS on A", now)
+    insert_pkg_list(differ, "unreproducible", now)
+
+    log.info('Injecting new source packages…')
+    transaction = conn_db.begin()
+    conn_db.execute(sources.insert(), pkgs)
+    transaction.commit()
+
+    log.info('Injecting build results…')
+    cur_pkgs = select(
+        [sources.c.id, sources.c.name, sources.c.version,
+         sources.c.suite, sources.c.architecture]
+    ).select_from(
+        sources.join(distributions)
+    ).where(
+        and_(
+            distributions.c.name == 'openwrt',
+            sources.c.suite == bindparam('suite'),
+            sources.c.architecture == bindparam('arch')
+        )
+    )
+    cur_pkgs = query_db(cur_pkgs.params({'suite': 'factory', 'arch': 'x86_64'}))
+
+    builds = []
+    for pkg in cur_pkgs:
+        # (id, name, version, suite, architecture)
+        data = pkgs_b[(pkg[1], pkg[2])]
+        p = {
+            'package_id': pkg[0],
+            'version': pkg[2],
+            'status': pkg['status'],
+            'build_date': data['build_date'],
+            'build_duration': data['build_duration'],
+            'job': 'external',
+        }
+        builds.append(p)
+    if builds:
+        transaction = conn_db.begin()
+        conn_db.execute(results.insert(), builds)
+    transaction.commit()
 
 def example():
     import io
