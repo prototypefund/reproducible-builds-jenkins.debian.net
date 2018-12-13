@@ -15,7 +15,6 @@ import lzma
 import deb822
 import smtplib
 import apt_pkg
-apt_pkg.init_system()
 from sqlalchemy import sql
 from urllib.request import urlopen
 from email.mime.text import MIMEText
@@ -29,6 +28,8 @@ from rblib.models import Package
 from reproducible_html_live_status import generate_schedule
 from reproducible_html_packages import gen_packages_html
 from reproducible_html_packages import purge_old_pages
+
+apt_pkg.init_system()
 
 """
 How the scheduler chooses which limit to apply, based on the MAXIMA
@@ -68,7 +69,7 @@ LIMITS_E404 defines how many packages with status E404 are rescheduled at max.
 
 """
 # only old packages older than this will be rescheduled
-MINIMUM_AGE = {'amd64': 9, 'i386': 12, 'arm64': 11, 'armhf':25 }
+MINIMUM_AGE = {'amd64': 9, 'i386': 12, 'arm64': 11, 'armhf': 25}
 # maximum queue size, see explainations above
 MAXIMA = {'amd64': 2000, 'i386': 1600, 'arm64': 2000, 'armhf': 1800}
 # limits, see explainations above
@@ -334,7 +335,7 @@ def update_sources_db(suite, arch, sources):
     if updated_pkgs:
         transaction = conn_db.begin()
         update_query = sources_table.update().\
-                       where(sources_table.c.id == sql.bindparam('update_id'))
+            where(sources_table.c.id == sql.bindparam('update_id'))
         conn_db.execute(update_query, updated_pkgs)
         transaction.commit()
 
