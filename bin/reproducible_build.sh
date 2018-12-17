@@ -11,7 +11,7 @@
 #   - 3 → the build timeouted
 #   - 404 → failed to download the sources
 
-DEBUG=false
+DEBUG=true
 . /srv/jenkins/bin/common-functions.sh
 common_init "$@"
 
