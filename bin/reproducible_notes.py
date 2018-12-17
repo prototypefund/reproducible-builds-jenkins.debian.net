@@ -48,10 +48,14 @@ def load_notes():
         except AssertionError:
             print_critical_message(pkg + ' does not include a version')
             irc_msg('The note for ' + pkg + ' does not include a version.')
+        # We are only dealing with notes targetting debian, so hardcode it here
+        # for now.  Need to be rethought as a whole when multi-distro notes comes
         query = """SELECT s.id, s.version, s.suite
-                FROM results AS r JOIN sources AS s ON r.package_id=s.id
-                WHERE s.name='{pkg}' AND r.status != ''"""
-                # AND s.architecture='amd64'"""
+                FROM results AS r
+                JOIN sources AS s ON r.package_id=s.id
+                JOIN distributions AS d on d.id=s.distribution
+                WHERE d.name = 'debian'
+                AND s.name='{pkg}' AND r.status != ''"""
         query = query.format(pkg=pkg)
         result = query_db(query)
         if not result:
