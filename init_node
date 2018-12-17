@@ -1,20 +1,17 @@
 #!/bin/bash
 #
-# Copyright 2014-2017 Holger Levsen <holger@layer-acht.org>
+# Copyright 2014-2018 Holger Levsen <holger@layer-acht.org>
 #
 # released under the GPLv=2
 #
 # initial setup for new build nodes
-# - this script assumes that the user running it has unlimited sudo powers…
+# - this script must be run as root
 # - it's also assumed that this script is once manually scp'ed to the new node
 #   and run there manually once :)
 
 # let's check our assumptions first…
-if [ $(sudo id -u) -ne 0 ] ; then
+if [ $(id -u) -ne 0 ] ; then
 	echo we need sudo… exiting.
-	exit 1
-elif [ $(id -u) -eq 0 ] ; then
-	echo please dont run this as root… exiting.
 	exit 1
 fi
 
@@ -26,21 +23,20 @@ echo "$(date -u)"
 set -e
 export LANG=C
 set -x
-sudo addgroup --system jenkins
-sudo adduser --system --shell /bin/bash --home /var/lib/jenkins --ingroup jenkins --disabled-login jenkins
-sudo addgroup --system jenkins-adm
-sudo adduser --system --shell /bin/bash --home /home/jenkins-adm --ingroup jenkins-adm --disabled-login jenkins-adm
-sudo usermod -G jenkins jenkins-adm
-sudo chown jenkins-adm.jenkins-adm /home/jenkins-adm
+addgroup --system jenkins
+adduser --system --shell /bin/bash --home /var/lib/jenkins --ingroup jenkins --disabled-login jenkins
+addgroup --system jenkins-adm
+adduser --system --shell /bin/bash --home /home/jenkins-adm --ingroup jenkins-adm --disabled-login jenkins-adm
+usermod -G jenkins jenkins-adm
+chown jenkins-adm.jenkins-adm /home/jenkins-adm
 cd ~jenkins-adm
-[ -x /usr/bin/git ] || sudo apt-get install -y git
-sudo su jenkins-adm -l -c "git clone $GIT_REPO"
+[ -x /usr/bin/git ] || apt-get install -y git
+su jenkins-adm -l -c "git clone $GIT_REPO"
 cd jenkins.debian.net
-sudo mkdir -p /var/log/jenkins/
-sudo chown jenkins.jenkins /var/log/jenkins/
+mkdir -p /var/log/jenkins/
+chown jenkins.jenkins /var/log/jenkins/
 set +x
 set +e
-./update_jdn.sh 2>&1 | sudo tee -a /var/log/jenkins/update_jdn.log
 
 END=$(date +'%s')
 DURATION=$(( $END - $START ))
@@ -51,7 +47,6 @@ echo "$(date -u) - total duration: ${HOUR}h ${MIN}m ${SEC}s."
 echo
 echo "#### NOTE ####   (Those sudo problems are normal, see below!   #### NOTE ####"
 echo
-echo "Now log out and log in again (to acquire new group memberships, so that above sudo"
-echo "problems are gone) and run:"
+echo "Now log out and log in as your user and run:"
 echo "        cd ~jenkins-adm/jenkins.debian.net/"
 echo "        ./update_jdn.sh 2>&1 | sudo tee -a /var/log/jenkins/update_jdn.log"
