@@ -13,7 +13,6 @@ import os
 import yaml
 import json
 import apt_pkg
-apt_pkg.init_system()
 from sqlalchemy import sql
 
 from rblib import db_table, query_db
@@ -21,6 +20,7 @@ from rblib.confparse import log
 from rblib.const import conn_db
 from rblib.utils import print_critical_message, irc_msg
 
+apt_pkg.init_system()
 
 NOTES = 'packages.yml'
 ISSUES = 'issues.yml'
@@ -55,14 +55,15 @@ def load_notes():
         query = query.format(pkg=pkg)
         result = query_db(query)
         if not result:
-            log.info('Warning: This query produces no results: ' + query
-                                   + '\nThis means there is no tested ' +
-                                   'package with the name ' + pkg)
+            log.info('Warning: This query produces no results: %s'
+                     '\nThis means there is no tested package with the name %s',
+                     query, pkg)
             try:
                 irc_msg("There is problem with the note for {} (it may "
-                    "have been removed from the archive). Please check {} and {}".
-                    format(pkg, os.environ['BUILD_URL'],
-                           "https://tracker.debian.org/pkg/" + pkg))
+                        "have been removed from the archive). "
+                        "Please check {} and {}".format(
+                            pkg, os.environ['BUILD_URL'],
+                            "https://tracker.debian.org/pkg/" + pkg))
             except KeyError:
                 log.error('There is a problem with the note for %s - please '
                           'check.', pkg)
@@ -73,7 +74,7 @@ def load_notes():
 # https://image-store.slidesharecdn.com/c2c44a06-5e28-4296-8d87-419529750f6b-original.jpeg
                 try:
                     if apt_pkg.version_compare(str(original[pkg]['version']),
-                                       str(suite[1])) > 0:
+                                               str(suite[1])) > 0:
                         continue
                 except KeyError:
                     pass
@@ -146,7 +147,7 @@ def store_issues():
     if existing_issues:
         to_delete = [{'issuename': name} for name in existing_issues]
         delete_query = issues_table.delete().\
-                  where(issues_table.c.name == sql.bindparam('issuename'))
+            where(issues_table.c.name == sql.bindparam('issuename'))
         conn_db.execute(delete_query, to_delete)
         log.info("Removed the following issues: " + str(existing_issues))
 
