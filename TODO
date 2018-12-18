@@ -62,7 +62,7 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 
 === new nodes at OSUOSL
 
-* add these nodes to jenkins
+* debug why munin is broken
 * use those nodes...!
 * tmpfs?
 * add to README and THANKS

@@ -22,6 +22,7 @@ explain_nodes() {
 		profitbricks7)	write_page "<br /><small>(r-b F-Droid builds)</small>" ;;
 		profitbricks9)	write_page "<br /><small>(jenkins.d.n rebootstrap jobs)</small>" ;;
 		profitbricks10)	write_page "<br /><small>(jenkins.d.n chroot-installation jobs)</small>" ;;
+		osuosl*)	write_page "<br /><small>(TBD - setup in progress)</small>" ;;
 		*)		write_page "<br /><small>(r-b Debian builds)</small>" ;;
 	esac
 }

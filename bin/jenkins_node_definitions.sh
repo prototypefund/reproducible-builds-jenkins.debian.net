@@ -39,14 +39,6 @@ odxu4c-armhf-rb.debian.net
 opi2a-armhf-rb.debian.net
 opi2b-armhf-rb.debian.net
 opi2c-armhf-rb.debian.net
-osuosl-build167-amd64.debian.net
-osuosl-build168-amd64.debian.net
-osuosl-build169-amd64.debian.net
-osuosl-build170-amd64.debian.net
-osuosl-build171-amd64.debian.net
-osuosl-build172-amd64.debian.net
-osuosl-build173-amd64.debian.net
-osuosl-build174-amd64.debian.net
 p64b-armhf-rb.debian.net
 p64c-armhf-rb.debian.net
 profitbricks-build1-amd64.debian.net
@@ -57,7 +49,15 @@ profitbricks-build11-amd64.debian.net
 profitbricks-build12-i386.debian.net
 profitbricks-build15-amd64.debian.net
 profitbricks-build16-i386.debian.net
-wbq0-armhf-rb.debian.net"
+wbq0-armhf-rb.debian.net
+osuosl-build167-amd64.debian.net
+osuosl-build168-amd64.debian.net
+osuosl-build169-amd64.debian.net
+osuosl-build170-amd64.debian.net
+osuosl-build171-amd64.debian.net
+osuosl-build172-amd64.debian.net
+osuosl-build173-amd64.debian.net
+osuosl-build174-amd64.debian.net"
 
 # return the ports sshd is listening on
 NODE_RUN_IN_THE_FUTURE=false
