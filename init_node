@@ -29,7 +29,7 @@ addgroup --system jenkins-adm
 adduser --system --shell /bin/bash --home /home/jenkins-adm --ingroup jenkins-adm --disabled-login jenkins-adm
 usermod -G jenkins jenkins-adm
 echo '%jenkins-adm ALL= NOPASSWD: ALL' > /etc/sudoers.d/jenkins-adm # will be overwritten later
-grep -q stretch-backports /etc/apt/sources.list || echo "deb http://deb.debian.org/debian/ stretch-backports main contrib non-free" > /etc/apt/sources.list
+grep -q stretch-backports /etc/apt/sources.list || echo "deb http://deb.debian.org/debian/ stretch-backports main contrib non-free" >> /etc/apt/sources.list
 chown jenkins-adm.jenkins-adm /home/jenkins-adm
 cd ~jenkins-adm
 [ -x /usr/bin/git ] || apt-get install -y git
