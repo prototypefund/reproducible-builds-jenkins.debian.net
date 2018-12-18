@@ -330,6 +330,14 @@
                 - 'profitbricks12': { my_arch: 'i386'  }
                 - 'profitbricks15': { my_arch: 'amd64' }
                 - 'profitbricks16': { my_arch: 'i386'  }
+                - 'osuosl167':      { my_arch: 'amd64' }
+                - 'osuosl168':      { my_arch: 'amd64' }
+                - 'osuosl169':      { my_arch: 'amd64' }
+                - 'osuosl170':      { my_arch: 'amd64' }
+                - 'osuosl171':      { my_arch: 'amd64' }
+                - 'osuosl172':      { my_arch: 'amd64' }
+                - 'osuosl173':      { my_arch: 'amd64' }
+                - 'osuosl174':      { my_arch: 'amd64' }
                 - 'codethink9':     { my_arch: 'arm64' }
                 - 'codethink10':    { my_arch: 'arm64' }
                 - 'codethink11':    { my_arch: 'arm64' }
@@ -383,6 +391,14 @@
                 - 'profitbricks12': { my_arch: 'i386'  }
                 - 'profitbricks15': { my_arch: 'amd64' }
                 - 'profitbricks16': { my_arch: 'i386'  }
+                - 'osuosl167':      { my_arch: 'amd64' }
+                - 'osuosl168':      { my_arch: 'amd64' }
+                - 'osuosl169':      { my_arch: 'amd64' }
+                - 'osuosl170':      { my_arch: 'amd64' }
+                - 'osuosl171':      { my_arch: 'amd64' }
+                - 'osuosl172':      { my_arch: 'amd64' }
+                - 'osuosl173':      { my_arch: 'amd64' }
+                - 'osuosl174':      { my_arch: 'amd64' }
                 - 'codethink9':     { my_arch: 'arm64' }
                 - 'codethink10':    { my_arch: 'arm64' }
                 - 'codethink11':    { my_arch: 'arm64' }

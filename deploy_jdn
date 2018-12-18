@@ -53,6 +53,14 @@ profitbricks-build9-amd64.debian.net
 profitbricks-build10-amd64.debian.net
 profitbricks-build11-amd64.debian.net
 profitbricks-build15-amd64.debian.net
+osuosl-build167-amd64.debian.net
+osuosl-build168-amd64.debian.net
+osuosl-build169-amd64.debian.net
+osuosl-build170-amd64.debian.net
+osuosl-build171-amd64.debian.net
+osuosl-build172-amd64.debian.net
+osuosl-build173-amd64.debian.net
+osuosl-build174-amd64.debian.net
 bbx15-armhf-rb.debian.net
 cb3a-armhf-rb.debian.net
 cbxi4a-armhf-rb.debian.net
@@ -136,6 +144,14 @@ elif [ "$1" = "jenkins" ] ; then
 			10|pb10) HOSTS+=(profitbricks-build10-amd64.debian.net) ;;
 			11|pb11) HOSTS+=(profitbricks-build11-amd64.debian.net) ;;
 			15|pb15) HOSTS+=(profitbricks-build15-amd64.debian.net) ;;
+			o167)		HOST+=(osuosl-build167-amd64.debian.net) ;;
+			o168)		HOST+=(osuosl-build168-amd64.debian.net) ;;
+			o169)		HOST+=(osuosl-build169-amd64.debian.net) ;;
+			o170)		HOST+=(osuosl-build170-amd64.debian.net) ;;
+			o171)		HOST+=(osuosl-build171-amd64.debian.net) ;;
+			o172)		HOST+=(osuosl-build172-amd64.debian.net) ;;
+			o173)		HOST+=(osuosl-build173-amd64.debian.net) ;;
+			o174)		HOST+=(osuosl-build174-amd64.debian.net) ;;
 			c9|cs9)		HOSTS+=(codethink-sled9-arm64.debian.net) ;;
 			c10|cs10)	HOSTS+=(codethink-sled10-arm64.debian.net) ;;
 			c11|cs11)	HOSTS+=(codethink-sled11-arm64.debian.net) ;;

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Copyright 2015-2017 Holger Levsen <holger@layer-acht.org>
+# Copyright 2015-2018 Holger Levsen <holger@layer-acht.org>
 # released under the GPLv=2
 
 # define Debian build nodes in use for tests.reproducible-builds.org/debian/
@@ -39,6 +39,14 @@ odxu4c-armhf-rb.debian.net
 opi2a-armhf-rb.debian.net
 opi2b-armhf-rb.debian.net
 opi2c-armhf-rb.debian.net
+osuosl-build167-amd64.debian.net
+osuosl-build168-amd64.debian.net
+osuosl-build169-amd64.debian.net
+osuosl-build170-amd64.debian.net
+osuosl-build171-amd64.debian.net
+osuosl-build172-amd64.debian.net
+osuosl-build173-amd64.debian.net
+osuosl-build174-amd64.debian.net
 p64b-armhf-rb.debian.net
 p64c-armhf-rb.debian.net
 profitbricks-build1-amd64.debian.net
@@ -159,6 +167,30 @@ get_node_ssh_port() {
 	    ;;
 	  codethink-sled16*)
 	    PORT=10116
+	    ;;
+	  osuosl-build167*)
+	    PORT=45046
+	    ;;
+	  osuosl-build168*)
+	    PORT=45047
+	    ;;
+	  osuosl-build169*)
+	    PORT=45048
+	    ;;
+	  osuosl-build170*)
+	    PORT=45049
+	    ;;
+	  osuosl-build171*)
+	    PORT=45050
+	    ;;
+	  osuosl-build172*)
+	    PORT=45051
+	    ;;
+	  osuosl-build173*)
+	    PORT=45052
+	    ;;
+	  osuosl-build174*)
+	    PORT=45053
 	    ;;
 	  jenkins|jenkins.debian.net)
 	    PORT=22
