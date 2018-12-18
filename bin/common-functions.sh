@@ -125,7 +125,7 @@ else
 
 	if [ -z "$MIRROR" ]; then
 		case $HOSTNAME in
-			jenkins|jenkins-test-vm|profitbricks-build*)
+			jenkins|jenkins-test-vm|profitbricks-build*|osuosl*)
 				export MIRROR=http://cdn-fastly.deb.debian.org/debian ;;
 			bbx15|cb3*|cbxi4*|wbq0|odxu4*|odu3*|odc*|ff*|ff4*|opi2*|jt?1*|p64*)
 				export MIRROR=http://cdn-fastly.deb.debian.org/debian ;;
@@ -147,6 +147,9 @@ else
 			export http_proxy="http://85.184.249.68:3128" ;;
 		profitbricks-build7*)
 			# let pb7 use its own proxy for the fdroid stuff:
+			export http_proxy="http://127.0.0.1:3128" ;;
+		osuosl*)
+			# for now, use local proxies as a start:
 			export http_proxy="http://127.0.0.1:3128" ;;
 		codethink*)
 			export http_proxy="http://192.168.101.16:3128" ;;
