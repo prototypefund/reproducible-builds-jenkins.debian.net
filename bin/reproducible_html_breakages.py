@@ -36,7 +36,7 @@ def unrep_with_dbd_issues():
     sources_without_dbd = set()
     query = '''SELECT s.name, r.version, s.suite, s.architecture
                FROM sources AS s JOIN results AS r ON r.package_id=s.id
-               WHERE r.status='FTBR'
+               WHERE r.status='FTBR' AND s.architecture!='x86_64'
                ORDER BY s.name ASC, s.suite DESC, s.architecture ASC'''
     results = query_db(query)
     for pkg, version, suite, arch in results:
