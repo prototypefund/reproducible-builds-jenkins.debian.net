@@ -40,12 +40,10 @@ set +e
 
 END=$(date +'%s')
 DURATION=$(( $END - $START ))
-HOUR=$(echo "$DURATION/3600"|bc)
-MIN=$(echo "($DURATION-$HOUR*3600)/60"|bc)
-SEC=$(echo "$DURATION-$HOUR*3600-$MIN*60"|bc)
+HOUR=$(( $DURATION/3600 ))
+MIN=$(( ($DURATION-$HOUR*3600)/60 ))
+SEC=$(( $DURATION-$HOUR*3600-$MIN*60 ))
 echo "$(date -u) - total duration: ${HOUR}h ${MIN}m ${SEC}s."
-echo
-echo "#### NOTE ####   (Those sudo problems are normal, see below!   #### NOTE ####"
 echo
 echo "Now log out and log in as your user and run:"
 echo "        cd ~jenkins-adm/jenkins.debian.net/"
