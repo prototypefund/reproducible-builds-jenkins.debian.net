@@ -62,11 +62,13 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 
 === new nodes at OSUOSL
 
-* use them...
+* add these nodes to jenkins
+* use those nodes...!
 * tmpfs?
 * add to README and THANKS
 * proxy setup how, esp. considering future nodes?
-* which nodes to run in the future?
+* which nodes to run in the future?a
+* ask about remote hands
 * blog post when done
 
 === ToDo for improving disk space
