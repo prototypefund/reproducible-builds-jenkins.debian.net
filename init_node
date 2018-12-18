@@ -45,6 +45,6 @@ MIN=$(( ($DURATION-$HOUR*3600)/60 ))
 SEC=$(( $DURATION-$HOUR*3600-$MIN*60 ))
 echo "$(date -u) - total duration: ${HOUR}h ${MIN}m ${SEC}s."
 echo
-echo "Now log out and log in as your user and run:"
+echo "Now log out and log in as jenkins-adm and run:"
 echo "        cd ~jenkins-adm/jenkins.debian.net/"
 echo "        ./update_jdn.sh 2>&1 | sudo tee -a /var/log/jenkins/update_jdn.log"
