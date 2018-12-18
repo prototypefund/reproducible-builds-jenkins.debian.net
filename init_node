@@ -28,6 +28,7 @@ adduser --system --shell /bin/bash --home /var/lib/jenkins --ingroup jenkins --d
 addgroup --system jenkins-adm
 adduser --system --shell /bin/bash --home /home/jenkins-adm --ingroup jenkins-adm --disabled-login jenkins-adm
 usermod -G jenkins jenkins-adm
+echo '%jenkins-adm ALL= NOPASSWD: ALL' > /etc/sudoers.d/jenkins-adm # will be overwritten later
 chown jenkins-adm.jenkins-adm /home/jenkins-adm
 cd ~jenkins-adm
 [ -x /usr/bin/git ] || apt-get install -y git
