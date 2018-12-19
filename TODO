@@ -62,10 +62,18 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 
 === new nodes at OSUOSL
 
-* use those nodes...!
-* tmpfs?
+* use those nodes, preliminary plan:
+** osuosl167: squid (only, atm)
+** osuosl168: fdroid
+** osuosl169: archlinux
+** osuosl170: archlinux (future)
+** osuosl171: openwrt, coreboot, netbsd, opensuse
+** osuosl172: openwrt, coreboot, netbsd, opensuse (future)
+** osuosl173: debian
+** osuosl174: debian (future)
+* tmpfs, setup /srv/workspace as needed
+* make nodes run in the future
 * add to README and THANKS
-* which nodes to run in the future?
 * ask about remote hands
 * blog post when done
 
