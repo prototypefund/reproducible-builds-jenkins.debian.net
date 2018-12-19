@@ -73,8 +73,10 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 ** osuosl174: debian (future)
 * tmpfs, setup /srv/workspace as needed
 * make nodes run in the future
-* add to README and THANKS
-* ask about remote hands
+* add to README 
+* probably add links to OSUOSL in THANKS and definitly explain there usage
+* drop 'setup in progress' from r_html_nodes_info
+* document how to contact OSUOSL
 * blog post when done
 
 === ToDo for improving disk space

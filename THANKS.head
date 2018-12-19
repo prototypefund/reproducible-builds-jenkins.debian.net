@@ -38,6 +38,15 @@ Debian packages for t.r-b.o
  ** 8 cores and 64 GB memory for codethink-sled15-arm64.debian.net used for building arm64 Debian packages for t.r-b.o, running in the future
  ** 8 cores and 64 GB memory for codethink-sled16-arm64.debian.net used for building arm64 Debian packages for t.r-b.o
  * link:https://letsencrypt.org[Let's encrypt] provides free of charge SSL certificates for jenkins.debian.net, reproducible.debian.net and tests.reproducible-builds.org.
+ * In December 2018 were given access to eight nodes which were donated by Facebook to the GCC Compile Farm project and are now hosted by OSUOSL:
+  ** 32 cores with 144 GB memory for osuosl167-amd64.debian.net
+  ** 32 cores with 144 GB memory for osuosl168-amd64.debian.net
+  ** 32 cores with 144 GB memory for osuosl169-amd64.debian.net
+  ** 32 cores with 144 GB memory for osuosl170-amd64.debian.net
+  ** 32 cores with 144 GB memory for osuosl171-amd64.debian.net
+  ** 32 cores with 144 GB memory for osuosl172-amd64.debian.net
+  ** 32 cores with 144 GB memory for osuosl173-amd64.debian.net
+  ** 32 cores with 144 GB memory for osuosl174-amd64.debian.net
 
 ==== Past sponsors
 
