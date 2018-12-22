@@ -3,9 +3,9 @@
 # as offline in the jenkins UI.
 
 #example-armhf-rb
-#codethink-sled16-arm64
-#profitbricks-build16-i386
-#
+#codethink-example23-arm64
+#profitbricks-example42-i386
+
 ff4a-armhf-rb
 ff64a-armhf-rb
 jtx1c-armhf-rb
