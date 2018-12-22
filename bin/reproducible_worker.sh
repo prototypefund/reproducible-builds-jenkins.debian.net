@@ -40,7 +40,7 @@ main_loop() {
 		RUNNING=$(systemctl show $SERVICE|grep ^SubState|cut -d "=" -f2)
 		if [ "$RUNNING" != "running" ] ; then
 			echo "$(date --utc) - '$SERVICE' not running, thus stopping this."
-			sleep 60.1337m
+			sleep 42.1337m
 			exit
 		fi
 	fi
