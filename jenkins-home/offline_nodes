@@ -2,11 +2,11 @@
 # No builds will be dispatched to those nodes, and the nodes will be marked
 # as offline in the jenkins UI.
 
-#example-armhf-rb
-#codethink-example23-arm64
-#profitbricks-example42-i386
+#example-armhf
+#codethink23
+#profitbricks42
 
-ff4a-armhf-rb
-ff64a-armhf-rb
-jtx1c-armhf-rb
-p64b-armhf-rb
+ff4a-armhf
+ff64a-armhf
+jtx1c-armhf
+p64b-armhf
