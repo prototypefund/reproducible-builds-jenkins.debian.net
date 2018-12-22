@@ -31,14 +31,6 @@ notify_log_of_failure() {
 }
 
 main_loop() {
-	#
-	# check if we really should be running
-	#
-	RUNNING=$(ps fax|grep -v grep|grep "$0 $1 ")
-	if [ -z "$RUNNING" ] ; then
-		echo "$(date --utc) - '$0 $1' already running, thus stopping this."
-		break
-	fi
 	SERVICE="reproducible_build@startup.service"
 	# try systemctl twice, but only output and thus log the 2nd attempt…
 	RUNNING=$(systemctl show $SERVICE 2>/dev/null |grep ^SubState|cut -d "=" -f2)
@@ -48,13 +40,9 @@ main_loop() {
 		RUNNING=$(systemctl show $SERVICE|grep ^SubState|cut -d "=" -f2)
 		if [ "$RUNNING" != "running" ] ; then
 			echo "$(date --utc) - '$SERVICE' not running, thus stopping this."
-			break
+			sleep 60.1337m
+			exit
 		fi
-	fi
-	LOCKFILE="/var/lib/jenkins/NO-RB-BUILDERS-PLEASE"
-	if [ -f "$LOCKFILE" ]; then
-		echo "The lockfile $LOCKFILE is present, thus stopping this"
-		break
 	fi
 	if [ -f "$JENKINS_OFFLINE_LIST" ]; then
 		for n in "$NODE1" "$NODE2"; do
@@ -104,7 +92,22 @@ main_loop() {
 	[ "$RETCODE" -eq 0 ] || notify_log_of_failure
 }
 
+#
+# check if we really should be running
+#
+RUNNING=$(ps fax|grep -v grep|grep "$0 $1 ")
+if [ -z "$RUNNING" ] ; then
+	echo "$(date --utc) - '$0 $1' already running, thus stopping this."
+	exit
+fi
+LOCKFILE="/var/lib/jenkins/NO-RB-BUILDERS-PLEASE"
+if [ -f "$LOCKFILE" ]; then
+	echo "The lockfile $LOCKFILE is present, thus stopping this"
+	exit
+fi
+#
 # main
+#
 while true ; do
 	main_loop
 done
