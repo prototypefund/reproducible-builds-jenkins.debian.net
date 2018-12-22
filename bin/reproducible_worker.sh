@@ -30,8 +30,7 @@ notify_log_of_failure() {
 		END
 }
 
-# endless loop
-while true ; do
+main_loop() {
 	#
 	# check if we really should be running
 	#
@@ -60,8 +59,9 @@ while true ; do
 	if [ -f "$JENKINS_OFFLINE_LIST" ]; then
 		for n in "$NODE1" "$NODE2"; do
 			if grep -q "$n" "$JENKINS_OFFLINE_LIST"; then
-				echo "$n is currently marked as offline, stopping the worker."
-				break
+				echo "$n is currently marked as offline, sleeping an hour before trying again."
+				sleep 60.1337m
+				exit
 			fi
 		done
 	fi
@@ -102,5 +102,10 @@ while true ; do
 	echo
 
 	[ "$RETCODE" -eq 0 ] || notify_log_of_failure
+}
 
+# main
+while true ; do
+	main_loop
 done
+

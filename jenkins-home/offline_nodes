@@ -2,16 +2,11 @@
 # No builds will be dispatched to those nodes, and the nodes will be marked
 # as offline in the jenkins UI.
 
-# FIXME: the latter is needed by start-agent.sh, the former probably elsewhere
-# FIXME: do debug (only the former should be enough, after all
-# FIXME )grep -q example-armhf-rb` should trigger on the former line as well)
-#example-armhf-rb.debian.net
 #example-armhf-rb
-ff4a-armhf-rb.debian.net
-ff4a
-ff64a-armhf-rb.debian.net
-ff64a
-jtx1c-armhf-rb.debian.net
-jtx1c
-p64b-armhf-rb.debian.net
-p64b
+#codethink-sled16-arm64
+#profitbricks-build16-i386
+#
+ff4a-armhf-rb
+ff64a-armhf-rb
+jtx1c-armhf-rb
+p64b-armhf-rb
