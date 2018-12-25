@@ -1,11 +1,31 @@
 # The hosts listed below are known to be down atm.
 # No builds will be dispatched to those nodes, and the nodes will be marked
 # as offline in the jenkins UI.
+#
+# The code greps for the local hostname, i.e.
+# foobar-armhf-rb
+# codethink-sled23-arm64
+# profitbricks-build42-amd64
+#
+# (name coming from the basename of the workspace directory for start-agent.sh
+# and from the list in reproducible_build_service.sh for reproducible_worker.sh)
+#
+# This means one could specify either the FQDN or the local hostname, bearing
+# in mind the FQDN will always match, whereas the shorter variant may stop
+# working.
 
-#example-armhf
-#codethink23
-#profitbricks42
 
-ff4a-armhf
-ff64a-armhf
-jtx1c-armhf
+# Also see https://pad.sfconservancy.org/p/rb-build-nodes-keep
+
+# unstable in the past, the host is up but we are vaiting for vagrantc to confirm
+# it is good enough to be enabled again.
+ff64a-armhf-rb.debian.net
+
+# disk issues, down indefinitely
+ff4a-armhf-rb.debian.net
+jtx1c-armhf-rb.debian.net
+
+# temporary problems
+
+# Down here nodes are automtically added by the maintenance job when they have
+# been failing their health check for too long.
