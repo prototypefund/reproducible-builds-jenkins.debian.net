@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Copyright 2014-2015 Holger Levsen <holger@layer-acht.org>
+# Copyright 2014-2018 Holger Levsen <holger@layer-acht.org>
 # released under the GPLv=2
 
 DEBUG=false
@@ -51,7 +51,7 @@ cd $TMPBUILDDIR
 echo "============================================================================="
 echo "$(date -u) - Cloning coreboot git repository with submodules."
 echo "============================================================================="
-git clone --recursive http://review.coreboot.org/p/coreboot.git
+git clone --recursive https://review.coreboot.org/coreboot.git
 cd coreboot
 # still required because coreboot moved submodules and to take care of old git versions
 git submodule update --init --checkout 3rdparty/blobs
