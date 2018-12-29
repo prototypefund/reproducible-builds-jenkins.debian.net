@@ -107,13 +107,14 @@ fi
 # (XXX: yes this is hardcoded but meh…)
 echo "$(date -u) - testing whether the time is right..."
 get_node_ssh_port "$HOSTNAME"
-real_year=2019
+real_year=2018
 year=$(date +%Y)
 if "$NODE_RUN_IN_THE_FUTURE"; then
 	if [ "$year" -eq "$real_year" ]; then
 		echo "Warning, today we came back to the present: $(date -u)."
 		DIRTY=true
-	elif [ "$year" -eq $(( $real_year + 1 )) ] ; then
+	elif [ "$year" -eq "$(("$real_year" + 1))" ] || \
+		 [ "$year" -eq "$(("$real_year" + 2))" -a "$(date +%m)" -eq 1]; then
 		echo "Good, today is the right future: $(date -u)."
 	else
 		echo "Warning, today is the wrong future: $(date -u)."
