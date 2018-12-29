@@ -114,7 +114,7 @@ if "$NODE_RUN_IN_THE_FUTURE"; then
 		echo "Warning, today we came back to the present: $(date -u)."
 		DIRTY=true
 	elif [ "$year" -eq "$(("$real_year" + 1))" ] || \
-		 [ "$year" -eq "$(("$real_year" + 2))" -a "$(date +%m)" -eq 1]; then
+		 [ "$year" -eq "$(("$real_year" + 2))" -a "$(date +%m)" -eq 1 ]; then
 		echo "Good, today is the right future: $(date -u)."
 	else
 		echo "Warning, today is the wrong future: $(date -u)."
