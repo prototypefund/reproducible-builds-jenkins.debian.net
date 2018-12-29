@@ -107,7 +107,7 @@ fi
 # (XXX: yes this is hardcoded but meh…)
 echo "$(date -u) - testing whether the time is right..."
 get_node_ssh_port "$HOSTNAME"
-real_year=2018
+real_year=2019
 year=$(date +%Y)
 if "$NODE_RUN_IN_THE_FUTURE"; then
 	if [ "$year" -eq "$real_year" ]; then
