@@ -24,10 +24,10 @@ ff64a-armhf-rb.debian.net
 # disk issues, down indefinitely
 ff4a-armhf-rb.debian.net
 jtx1c-armhf-rb.debian.net
+odxu4a-armhf-rb.debian.net
+bbx15-armhf-rb.debian.net
 
 ## temporary problems
-# file system issues, need reinstall
-odxu4a-armhf-rb.debian.net
 
 # Down here nodes are automtically added by the maintenance job when they have
 # been failing their health check for too long.
