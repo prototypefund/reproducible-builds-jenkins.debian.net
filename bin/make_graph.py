@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 #
-# Copyright 2009-2015 Holger Levsen (holger@layer-acht.org)
+# Copyright 2009-2019 Holger Levsen (holger@layer-acht.org)
 #
 # based on similar code taken from piuparts-reports.py written by me
 
@@ -29,7 +29,7 @@ def main():
     r = robjects.r
     r('t <- (read.table("'+countsfile+'",sep=",",header=1,row.names=1))')
     r('cname <- c("date",rep(colnames(t)))')
-    # thanks to http://tango.freedesktop.org/Generic_Icon_Theme_Guidelines for those nice colors
+    # thanks to http://tango.freedesktop.org/Tango_Icon_Theme_Guidelines for those nice colors
     if int(colors) < 6:
         r('palette(c("#73d216", "#f57900", "#cc0000", "#2e3436", "#888a85"))')
     elif int(colors) == 6:
