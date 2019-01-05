@@ -81,7 +81,7 @@ if [ "${0:0:5}" != "/tmp/" ] ; then
 			abort_if_bug_is_still_open 910812 ;;
 		chroot-installation_stretch_install_education-mathematics_upgrade_to_buster)
 			abort_if_bug_is_still_open 910819 ;;
-		chroot-installation_sid_*education-ltsp*|chroot-installation_buster_*education-ltsp*|)
+		chroot-installation_sid_*education-ltsp*|chroot-installation_buster_*education-ltsp*)
 			abort_if_bug_is_still_open 917633 ;;
 		*) ;;
 	esac
