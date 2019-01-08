@@ -19,6 +19,14 @@ fi
 # define Debian build nodes in use
 . /srv/jenkins/bin/jenkins_node_definitions.sh
 PORT=0
+
+if [ "${NODE_NAME%.*}" = "$NODE_NAME" ]; then
+	# The NODE_NAME variable does not contain a dot, so it is not a FQDN.
+	# Fixup the value, hoping to get it right.
+	# XXX really this should not happen, how this came to be is unknown.
+	export NODE_NAME="${NODE_NAME}.debian.net"
+fi
+
 get_node_ssh_port $NODE_NAME
 
 # don't try to fetch artifacts by default
