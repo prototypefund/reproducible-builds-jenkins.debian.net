@@ -21,21 +21,8 @@ ABORT=false
 
 # helper functions
 packages_list_to_deb822() {
-	script=$(cat <<'EOF'
-		use Dpkg::Control;
-		my $fd;
-		open($fd, '<', $ARGV[0]) or die $!;
-		my %packages = map { chomp; $_ => 1 } <STDIN>;
-		while (1) {
-			my $deb822 = Dpkg::Control->new();
-			last unless $deb822->parse($fd);
-			print "$deb822\n" if $packages{$deb822->{'Package'}};
-		}
-		close($fd);
-EOF
-	)
-	perl -e "$script" $PACKAGES < $TMPFILE > $TMPFILE2
-	mv $TMPFILE2 $TMPFILE
+	ALL_PKGS=$(cat $TMPFILE | cut -d ":" -f1 | sed "s#([^()]*)##g ; s#\[[^][]*\]##g ; s#,##g ; s# #\n#g"  |sort -u | tr '\n' '|')
+	grep-dctrl -F Package -e '^('"$ALL_PKGS"')$' $PACKAGES > $TMPFILE
 }
 
 tails_build_manifest_to_deb822() {
