@@ -1,6 +1,6 @@
 #!/bin/bash
 # vim: set noexpandtab:
-# Copyright 2012-2018 Holger Levsen <holger@layer-acht.org>
+# Copyright 2012-2019 Holger Levsen <holger@layer-acht.org>
 #         ©      2018 Mattia Rizzolo <mattia@debian.org>
 # released under the GPLv=2
 
@@ -183,6 +183,10 @@ case $HOSTNAME in
 		TMPFSSIZE=100
 		TMPSIZE=15
 		;;
+	osuosl*)
+		TMPFSSIZE=400
+		TMPSIZE=50
+		;;
 	*) ;;
 esac
 case $HOSTNAME in
@@ -192,7 +196,7 @@ case $HOSTNAME in
 			exit 1
 		fi
 		;;
-	jenkins|profitbricks-build*amd64|codethink*)
+	jenkins|profitbricks-build*amd64|codethink*|osuosl*)
 		if ! grep -q '^tmpfs\s\+/srv/workspace\s' /etc/fstab; then
 			echo "tmpfs		/srv/workspace	tmpfs	defaults,size=${TMPFSSIZE}g	0	0" | sudo tee -a /etc/fstab >/dev/null  
 		fi
@@ -490,6 +494,9 @@ if [ -f /etc/debian_version ] ; then
 			|| [ "$HOSTNAME" = "profitbricks-build2-i386" ] || [ "$HOSTNAME" = "profitbricks-build12-i386" ] ; then
 			# we dont vary the kernel on i386 atm, see #875990 + #876035
 			$UP2DATE || sudo apt-get install linux-image-amd64:amd64
+		elif [ "$HOSTNAME" = "osuosl-build169-amd64" ] || [ "$HOSTNAME" = "osuosl-build170-amd64" ] ; then
+			# Arch Linux builds latest stuff which sometimes (eg, currentlt Qt) needs newer kernel to build...
+			$UP2DATE || sudo apt-get install -t stretch-backports linux-image-amd64
 		fi
 		# only needed on the main nodes
 		if [ "$HOSTNAME" = "jenkins-test-vm" ] ; then

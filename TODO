@@ -364,6 +364,11 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 * things to be done before enabling more builders:
 ** build in /srv/workspace instead of /tmp (once this has been done reduce /tmp size back to 15G)
 
+* build on OSUOSL nodes:
+** builds not moved yet
+** not yet running in the future
+** disable builds on old nodes
+
 ==== reproducible fdroid
 
 * reproducible_setup_fdroid_buildserver.sh:
