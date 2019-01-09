@@ -28,6 +28,7 @@ Debian distribution,grml_build-depends
 Debian distribution,tails
 Debian distribution,tails_build-depends
 Debian distribution,pureos_default_install
+Debian distribution,pureos_default_install_build-depends
 Debian distribution,subgraph_OS
 Debian distribution,subgraph_OS_build-depends
 maintenance team,maint_debian-accessibility
