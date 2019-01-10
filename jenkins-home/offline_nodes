@@ -17,14 +17,8 @@
 
 # Also see https://pad.sfconservancy.org/p/rb-build-nodes-keep
 
-# unstable in the past, the host is up but we are vaiting for vagrantc to confirm
-# it is good enough to be enabled again.
-ff64a-armhf-rb.debian.net
-
 # disk issues, down indefinitely
 jtx1c-armhf-rb.debian.net
-odxu4a-armhf-rb.debian.net
-bbx15-armhf-rb.debian.net
 
 ## temporary problems
 
