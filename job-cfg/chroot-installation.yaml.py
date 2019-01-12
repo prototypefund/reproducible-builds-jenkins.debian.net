@@ -115,8 +115,11 @@ def is_target_in_distro(distro, target):
          # lxqt is only available since stretch
          elif distro in ('jessie') and target == 'lxqt':
              return False
-         # education-lang-*, parl-desktop* and design-desktop* packages only exist since stretch
-         elif distro in ('jessie') and (target[:15] == 'education-lang-' or target[:12] == 'parl-desktop' or target[:14] == 'design-desktop'):
+         # education-lang-* packages only exist in stretch
+         elif distro not in ('stretch') and target[:15] == 'education-lang-':
+             return False
+         # parl-desktop* and design-desktop* packages only exist since stretch
+         elif distro in ('jessie') and (target[:12] == 'parl-desktop' or target[:14] == 'design-desktop'):
              return False
          # education-desktop-lxqt, education-primaryschool and education-video packages only exist since buster
          elif distro in ('jessie', 'stretch') and target in ('education-desktop-lxqt', 'education-primaryschool', 'education-video'):

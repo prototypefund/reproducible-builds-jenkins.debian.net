@@ -1,7 +1,7 @@
 #!/bin/bash
 # vim: set noexpandtab:
 
-# Copyright 2012-2018 Holger Levsen <holger@layer-acht.org>
+# Copyright 2012-2019 Holger Levsen <holger@layer-acht.org>
 #           2018      Mattia Rizzolo <mattia@debian.org>
 # released under the GPLv=2
 
@@ -273,9 +273,9 @@ if [ "$2" != "" ] ; then
 					;;
 				esac
 				;;
-		education-lang-da|education-lang-he|education-lang-ja|education-lang-no|education-lang-zh-tw)	install_packages "Debian Edu task" $2 $2-desktop
+		education-lang-da|education-lang-he|education-lang-ja|education-lang-no|education-lang-zh-tw)	install_packages "Debian Edu task" $2 $2-desktop	# only in stretch, removed for buster
 				;;
-		education-lang-*)	install_packages "Debian Edu task" $2
+		education-lang-*)	install_packages "Debian Edu task" $2	# only in stretch, removed for buster
 				;;
 		education*)	install_packages "Debian Edu task" $2
 				;;
