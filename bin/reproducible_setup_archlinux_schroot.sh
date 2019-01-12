@@ -101,7 +101,7 @@ sudo tee $SCHROOT_BASE/$TARGET/etc/profile.d/proxy.sh <<-__END__
 	export no_proxy="localhost,127.0.0.1"
 	__END__
 sudo chmod +x $SCHROOT_BASE/$TARGET/etc/profile.d/proxy.sh
-$ROOTCMD sed -i "s|^#XferCommand = /usr/bin/curl |XferCommand = /usr/bin/curl --proxy $http_proxy |" "$SCHROOT_BASE/$TARGET/etc/pacman.conf"
+sudo sed -i "s|^#XferCommand = /usr/bin/curl |XferCommand = /usr/bin/curl --proxy $http_proxy |" "$SCHROOT_BASE/$TARGET/etc/pacman.conf"
 
 # configure root user to use this for shells and login shells…
 echo ". /etc/profile.d/proxy.sh" | sudo tee -a $SCHROOT_BASE/$TARGET/root/.bashrc
@@ -112,11 +112,11 @@ $ROOTCMD bash -l -c 'pacman-key --populate archlinux'
 # use a specific mirror
 echo "Server = $ARCHLINUX_MIRROR/\$repo/os/\$arch" | tee -a $SCHROOT_BASE/$TARGET/etc/pacman.d/mirrorlist
 # enable multilib (by uncommenting the first two lines starting with the [multilib] section header)
-$ROOTCMD sed -i '/\[multilib\]/,+1{s/^#//}' $SCHROOT_BASE/$TARGET/etc/pacman.conf
+sudo sed -i '/\[multilib\]/,+1{s/^#//}' $SCHROOT_BASE/$TARGET/etc/pacman.conf
 if [ "$HOSTNAME" = "profitbricks-build4-amd64" ] ; then
 	# disable signature verification so packages won't fail to install when setting the time to +$x years
-	$ROOTCMD sed -i -E 's/^#?SigLevel\s*=.*/SigLevel = Never/g' "$SCHROOT_BASE/$TARGET/etc/pacman.conf"
-	$ROOTCMD sed -i "/^XferCommand = /{s|/usr/bin/curl |/usr/bin/curl --insecure |}" "$SCHROOT_BASE/$TARGET/etc/pacman.conf"
+	sudo sed -i -E 's/^#?SigLevel\s*=.*/SigLevel = Never/g' "$SCHROOT_BASE/$TARGET/etc/pacman.conf"
+	sudo sed -i "/^XferCommand = /{s|/usr/bin/curl |/usr/bin/curl --insecure |}" "$SCHROOT_BASE/$TARGET/etc/pacman.conf"
 fi
 
 echo "============================================================================="

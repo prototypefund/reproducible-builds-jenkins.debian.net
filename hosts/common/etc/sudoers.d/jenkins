@@ -4,6 +4,7 @@ jenkins ALL=  \
 	/usr/bin/tee -a /schroots/*, \
 	/usr/bin/tee /etc/schroot/chroot.d/jenkins*, \
 	/usr/bin/tee -a /etc/schroot/chroot.d/jenkins*, \
+	/bin/sed -i * /schroots/reproducible-archlinux/etc/pacman.conf, \
 	/bin/chmod +x /schroots/*, \
 	/bin/chmod +x /chroots/*, \
 	/bin/tar -c --exclude ./sys/\* --exclude ./proc/\* -f /schroots/*, \
