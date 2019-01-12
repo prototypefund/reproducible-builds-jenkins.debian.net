@@ -34,6 +34,9 @@ bootstrap() {
 		exit 1
 	fi
 
+	if [ -f "archlinux-bootstrap-$BOOTSTRAP_DATE-x86_64.tar.gz" ]; then
+		rm "archlinux-bootstrap-$BOOTSTRAP_DATE-x86_64.tar.gz"
+	fi
 	if [ ! -f "archlinux-bootstrap-$BOOTSTRAP_DATE-x86_64.tar.gz" ]; then
 		BOOTSTRAP_TAR_GZ="$BOOTSTRAP_DATE/archlinux-bootstrap-$BOOTSTRAP_DATE-x86_64.tar.gz"
 		echo "$(date -u) - downloading Arch Linux bootstrap.tar.gz."
@@ -47,10 +50,6 @@ bootstrap() {
 		sudo rm -rf --one-file-system "$SCHROOT_BASE/$TARGET.old"
 
 		rm archlinux-bootstrap-$BOOTSTRAP_DATE-x86_64.tar.gz
-	else
-		echo 'debug output:'
-		pwd
-		ls "archlinux-bootstrap-$BOOTSTRAP_DATE-x86_64.tar.gz"
 	fi
 
 	# write the schroot config
@@ -73,6 +72,7 @@ cleanup() {
 		rm -rf --one-file-system $SCHROOT_TARGET || ( echo "Warning: $SCHROOT_TARGET could not be fully removed on forced cleanup." ; ls $SCHROOT_TARGET -la )
 	fi
 	rm -f $TMPLOG
+	exit 0
 }
 
 #SCHROOT_TARGET=$(mktemp -d -p $SCHROOT_BASE/ archlinuxrb-setup-$TARGET-XXXX)
