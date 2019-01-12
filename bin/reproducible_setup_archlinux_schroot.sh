@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Copyright 2015-2018 Holger Levsen <holger@layer-acht.org>
+# Copyright 2015-2019 Holger Levsen <holger@layer-acht.org>
 #                2017 kpcyrd <git@rxv.cc>
 #                2017 Mattia Rizzolo <mattia@debian.org>
 #                Juliana Oliveira Rodrigues <juliana.orod@gmail.com>
@@ -29,7 +29,7 @@ bootstrap() {
 	echo "$(date -u) - downloading Arch Linux latest/sha1sums.txt"
 	BOOTSTRAP_DATE=$(curl -sSf $BOOTSTRAP_BASE/latest/sha1sums.txt | grep x86_64.tar.gz | cut -d " " -f3 | cut -d "-" -f3 | egrep -o '[0-9.]{10}')
 	if [ -z $BOOTSTRAP_DATE ] ; then
-		echo "Cannot determine version of boostrap file, aborting."
+		echo "Cannot determine version of bootstrap file, aborting."
 		curl -sSf "$BOOTSTRAP_BASE/latest/sha1sums.txt" | grep x86_64.tar.gz
 		exit 1
 	fi
@@ -47,6 +47,10 @@ bootstrap() {
 		sudo rm -rf --one-file-system "$SCHROOT_BASE/$TARGET.old"
 
 		rm archlinux-bootstrap-$BOOTSTRAP_DATE-x86_64.tar.gz
+	else
+		echo 'debug output:'
+		pwd
+		ls "archlinux-bootstrap-$BOOTSTRAP_DATE-x86_64.tar.gz"
 	fi
 
 	# write the schroot config
