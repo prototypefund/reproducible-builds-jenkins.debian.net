@@ -91,7 +91,7 @@ echo "Setting up schroot $TARGET on $HOSTNAME"...
 echo "============================================================================="
 
 # configure proxy everywhere
-tee $SCHROOT_BASE/$TARGET/etc/profile.d/proxy.sh <<-__END__
+sudo tee $SCHROOT_BASE/$TARGET/etc/profile.d/proxy.sh <<-__END__
 	export http_proxy=$http_proxy
 	export https_proxy=$http_proxy
 	export ftp_proxy=$http_proxy
@@ -100,12 +100,11 @@ tee $SCHROOT_BASE/$TARGET/etc/profile.d/proxy.sh <<-__END__
 	export FTP_PROXY=$http_proxy
 	export no_proxy="localhost,127.0.0.1"
 	__END__
-chmod 755 $SCHROOT_BASE/$TARGET/etc/profile.d/proxy.sh
-sed -i "s|^#XferCommand = /usr/bin/curl |XferCommand = /usr/bin/curl --proxy $http_proxy |" "$SCHROOT_BASE/$TARGET/etc/pacman.conf"
-
+sudo chmod +x $SCHROOT_BASE/$TARGET/etc/profile.d/proxy.sh
+$ROOTCMD sed -i "s|^#XferCommand = /usr/bin/curl |XferCommand = /usr/bin/curl --proxy $http_proxy |" "$SCHROOT_BASE/$TARGET/etc/pacman.conf"
 
 # configure root user to use this for shells and login shells…
-echo ". /etc/profile.d/proxy.sh" | tee -a $SCHROOT_BASE/$TARGET/root/.bashrc
+echo ". /etc/profile.d/proxy.sh" | sudo tee -a $SCHROOT_BASE/$TARGET/root/.bashrc
 
 # configure pacman
 $ROOTCMD bash -l -c 'pacman-key --init'
@@ -113,11 +112,11 @@ $ROOTCMD bash -l -c 'pacman-key --populate archlinux'
 # use a specific mirror
 echo "Server = $ARCHLINUX_MIRROR/\$repo/os/\$arch" | tee -a $SCHROOT_BASE/$TARGET/etc/pacman.d/mirrorlist
 # enable multilib (by uncommenting the first two lines starting with the [multilib] section header)
-sed -i '/\[multilib\]/,+1{s/^#//}' $SCHROOT_BASE/$TARGET/etc/pacman.conf
+$ROOTCMD sed -i '/\[multilib\]/,+1{s/^#//}' $SCHROOT_BASE/$TARGET/etc/pacman.conf
 if [ "$HOSTNAME" = "profitbricks-build4-amd64" ] ; then
 	# disable signature verification so packages won't fail to install when setting the time to +$x years
-	sed -i -E 's/^#?SigLevel\s*=.*/SigLevel = Never/g' "$SCHROOT_BASE/$TARGET/etc/pacman.conf"
-	sed -i "/^XferCommand = /{s|/usr/bin/curl |/usr/bin/curl --insecure |}" "$SCHROOT_BASE/$TARGET/etc/pacman.conf"
+	$ROOTCMD sed -i -E 's/^#?SigLevel\s*=.*/SigLevel = Never/g' "$SCHROOT_BASE/$TARGET/etc/pacman.conf"
+	$ROOTCMD sed -i "/^XferCommand = /{s|/usr/bin/curl |/usr/bin/curl --insecure |}" "$SCHROOT_BASE/$TARGET/etc/pacman.conf"
 fi
 
 echo "============================================================================="
