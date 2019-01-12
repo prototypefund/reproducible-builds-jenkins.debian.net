@@ -72,7 +72,7 @@ cleanup() {
 		rm -rf --one-file-system $SCHROOT_TARGET || ( echo "Warning: $SCHROOT_TARGET could not be fully removed on forced cleanup." ; ls $SCHROOT_TARGET -la )
 	fi
 	rm -f $TMPLOG
-	exit 0
+	exit 1
 }
 
 #SCHROOT_TARGET=$(mktemp -d -p $SCHROOT_BASE/ archlinuxrb-setup-$TARGET-XXXX)
