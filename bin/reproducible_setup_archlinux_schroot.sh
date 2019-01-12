@@ -43,7 +43,7 @@ bootstrap() {
 
 		curl -fO "$BOOTSTRAP_BASE/$BOOTSTRAP_TAR_GZ"
 		sudo rm -rf --one-file-system "$SCHROOT_BASE/root.x86_64/"
-		tar xzf archlinux-bootstrap-$BOOTSTRAP_DATE-x86_64.tar.gz -C $SCHROOT_BASE
+		sudo tar xzf archlinux-bootstrap-$BOOTSTRAP_DATE-x86_64.tar.gz -C $SCHROOT_BASE
 
 		mv "$SCHROOT_BASE/$TARGET" "$SCHROOT_BASE/$TARGET.old"
 		mv $SCHROOT_BASE/root.x86_64 $SCHROOT_BASE/$TARGET
