@@ -110,7 +110,7 @@ echo ". /etc/profile.d/proxy.sh" | sudo tee -a $SCHROOT_BASE/$TARGET/root/.bashr
 $ROOTCMD bash -l -c 'pacman-key --init'
 $ROOTCMD bash -l -c 'pacman-key --populate archlinux'
 # use a specific mirror
-echo "Server = $ARCHLINUX_MIRROR/\$repo/os/\$arch" | tee -a $SCHROOT_BASE/$TARGET/etc/pacman.d/mirrorlist
+echo "Server = $ARCHLINUX_MIRROR/\$repo/os/\$arch" | $ROOTCMD tee -a $SCHROOT_BASE/$TARGET/etc/pacman.d/mirrorlist
 # enable multilib (by uncommenting the first two lines starting with the [multilib] section header)
 sudo sed -i '/\[multilib\]/,+1{s/^#//}' $SCHROOT_BASE/$TARGET/etc/pacman.conf
 if [ "$HOSTNAME" = "profitbricks-build4-amd64" ] ; then
