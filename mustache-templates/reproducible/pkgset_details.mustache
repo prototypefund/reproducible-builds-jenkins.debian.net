@@ -2,13 +2,13 @@
 {{#png}}
   <a href="{{png}}">
     <img src="{{png}}" class="overview"
-     title="Package set {{pkgset_name}} in {{suite}}/{{arch}}. (To switch suite and arch, see top left.)"
+     title="Package set {{pkgset_name}} in {{suite}}/{{arch}}. (To switch suite and/or arch, see top left.)"
      alt="package set {{pkgset_name}} in {{suite}}/{{arch}}">
   </a>
   {{/png}}
   <br />
   The package set <span class="highlight">{{pkgset_name}}</span> in
-  <span class="highlight">{{suite}}/{{arch}}</span> consists of:
+  <span class="highlight">{{suite}}/{{arch}}</span> consists of {{count_all} packages:
   <br />
   {{#status_details}}
   {{{icon_html}}} {{status_count}} ({{status_percent}}%) packages

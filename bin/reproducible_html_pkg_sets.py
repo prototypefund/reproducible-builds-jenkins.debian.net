@@ -3,6 +3,7 @@
 #
 # Copyright © 2016 Valerie Young <spectranaut@riseup.net>
 #           © 2018 Mattia Rizzolo <mattia@mapreri.org>
+#           © 2016-2019 Holger Levsen <holger@layer-acht.org>
 # Based on reproducible_html_pkg_sets.sh:
 #           © 2014-2016 Holger Levsen <holger@layer-acht.org>
 #           © 2015 Mattia Rizzolo <mattia@debian.org>
@@ -210,6 +211,7 @@ def create_pkgset_page_and_graphs(suite, arch, stats, pkgset_name):
     html_body += create_pkgset_navigation(suite, arch, pkgset_name)
     pkgset_context = ({
         'pkgset_name': pkgset_name,
+        'count_all': stats["count_all"],
         'suite': suite,
         'arch': arch,
         'pkg_symbol_legend_html':
