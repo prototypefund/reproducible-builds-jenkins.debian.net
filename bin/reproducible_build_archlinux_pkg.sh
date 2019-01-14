@@ -279,7 +279,7 @@ remote_build() {
 	local BUILDNR=$1
 	local NODE=$2
 	local FQDN=$NODE.debian.net
-	local PORT=22
+	get_node_ssh_port $NODE
 	set +e
 	ssh -o "Batchmode = yes" -p $PORT $FQDN /bin/true
 	RESULT=$?
@@ -396,6 +396,7 @@ else
 	NODE1=$N2
 	NODE2=$N1
 fi
+PORT=22
 echo "============================================================================="
 echo "Initialising reproducibly build of ${SRCPACKAGE} in ${REPOSITORY} on ${ARCH} now."
 echo "1st build will be done on $NODE1."
