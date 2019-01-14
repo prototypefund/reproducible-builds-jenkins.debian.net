@@ -1,7 +1,7 @@
 #!/bin/bash
 # vim: set noexpandtab:
 
-# Copyright 2014-2018 Holger Levsen <holger@layer-acht.org>
+# Copyright 2014-2019 Holger Levsen <holger@layer-acht.org>
 #         © 2015-2018 Mattia Rizzolo <mattia@mapreri.org>
 # released under the GPLv=2
 #
@@ -532,6 +532,8 @@ write_variation_table() {
 		fi
 		if [ "$1" != "FreeBSD" ] && [ "$1" != "Arch Linux" ] ; then
 			write_page "<tr><td>year, month, date</td><td>today ($DATE)</td><td>same for both builds (currently, work in progress)</td></tr>"
+		elif [ "$1" = "Arch Linux" ] ; then
+			write_page "<tr><td>year, month, date</td><td>osuosl-build169-amd64: today ($DATE) or osuosl-build170-amd64: 398 days in the future ($FUTURE)</td><td>the other one</td></tr>"
 		else
 			write_page "<tr><td>year, month, date</td><td>profitbricks-build3-amd64: today ($DATE) or profitbricks-build4-amd64: 398 days in the future ($FUTURE)</td><td>the other one</td></tr>"
 		fi

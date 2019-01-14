@@ -78,6 +78,10 @@ case $HOSTNAME in
 		# set correct date
 		set_correct_date
 		;;
+	osuosl-build170-amd64)
+		# set correct date
+		set_correct_date
+		;;
 	*)	;;
 esac
 
@@ -311,6 +315,7 @@ if [ -f /etc/debian_version ] ; then
 		case $HOSTNAME in
 			profitbricks-build4-amd64|profitbricks-build5-amd64|profitbricks-build6-i386|profitbricks-build15-amd64|profitbricks-build16-i386) DEBS="$DEBS ntpdate" ;;
 			codethink-sled9*|codethink-sled11*|codethink-sled13*|codethink-sled15*) DEBS="$DEBS ntpdate" ;;
+			osuosl-build170-amd64) DEBS="$DEBS ntpdate" ;;
 			*) ;;
 		esac
 		# needed to run coreboot/openwrt/netbsd/fedora jobs
@@ -773,6 +778,10 @@ case $HOSTNAME in
 		sudo date --set="+398 days +6 hours + 23 minutes"
 		;;
 	codethink-sled9*|codethink-sled11*|codethink-sled13*|codethink-sled15*)
+		disable_dsa_check_packages
+		sudo date --set="+398 days +6 hours + 23 minutes"
+		;;
+	osuosl-build170-amd64)
 		disable_dsa_check_packages
 		sudo date --set="+398 days +6 hours + 23 minutes"
 		;;

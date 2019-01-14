@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Copyright 2015-2018 Holger Levsen <holger@layer-acht.org>
+# Copyright 2015-2019 Holger Levsen <holger@layer-acht.org>
 #                2017 kpcyrd <git@rxv.cc>
 # released under the GPLv=2
 
@@ -125,7 +125,7 @@ first_build() {
 	local FUTURE_STATE="disabled"
 	local MAKEPKG_ENV_VARS="SOURCE_DATE_EPOCH='$SOURCE_DATE_EPOCH' PATH='/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'"
 	local MAKEPKG_OPTIONS="--syncdeps --noconfirm"
-	if [ "$(hostname)" = "profitbricks-build4-amd64" ] ; then
+	if [ "$(hostname)" = "osuosl-build170-amd64" ] ; then
 		FUTURE_STATE="enabled"
 		MAKEPKG_ENV_VARS="$MAKEPKG_ENV_VARS GIT_SSL_NO_VERIFY=1"
 		MAKEPKG_OPTIONS="$MAKEPKG_OPTIONS --skippgpcheck"
@@ -210,7 +210,7 @@ second_build() {
 	local FUTURE_STATE="disabled"
 	local MAKEPKG_ENV_VARS="SOURCE_DATE_EPOCH='$SOURCE_DATE_EPOCH' PATH='/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'"
 	local MAKEPKG_OPTIONS="--syncdeps --noconfirm"
-	if [ "$(hostname)" = "profitbricks-build4-amd64" ] ; then
+	if [ "$(hostname)" = "osuosl-build170-amd64" ] ; then
 		FUTURE_STATE="enabled"
 		MAKEPKG_ENV_VARS="$MAKEPKG_ENV_VARS GIT_SSL_NO_VERIFY=1"
 		MAKEPKG_OPTIONS="$MAKEPKG_OPTIONS --skippgpcheck"
@@ -385,8 +385,8 @@ mkdir -p $BASE/archlinux/$REPOSITORY/$SRCPACKAGE
 # build package twice
 mkdir b1 b2
 # currently there are two Arch Linux build nodes… let's keep things simple
-N1="profitbricks-build3-amd64"
-N2="profitbricks-build4-amd64"
+N1="osuosl-build169-amd64"
+N2="osuosl-build170-amd64"
 # if random number between 0 and 99 is greater than 60…
 # (because pb4 is generally less loaded than pb3)
 if [ $(( ( $RANDOM % 100 ) )) -gt 60 ] ; then

@@ -365,9 +365,9 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 ** build in /srv/workspace instead of /tmp (once this has been done reduce /tmp size back to 15G)
 
 * build on OSUOSL nodes:
-** builds not moved yet
-** not yet running in the future
-** disable builds on old nodes
+** confirm, this is working: not yet running in the future
+** delete setup old jobs
+** update thanks & readme
 
 ==== reproducible fdroid
 
