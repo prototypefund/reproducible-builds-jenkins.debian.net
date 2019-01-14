@@ -51,7 +51,7 @@ There'a script to trigger the power on/off/cycle if needed, from hbi1 on Vagrant
   hbi1$ cd /srv/rb/ ; ./remote-power NAME on|off|ccl
 	# ccl means powercycling…
 
-There are at least two machines, bbx15 and jtk1a, that don't tend to
+There are at least three machines, bbx15, jtk1a, and jtk1b that don't tend to
 come up after power cycling, but sometimes even those work too, so it's
 worth a try.
 
