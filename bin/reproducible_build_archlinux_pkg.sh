@@ -211,7 +211,7 @@ second_build() {
 	NEW_NUM_CPU=$(echo $NUM_CPU-1|bc)
 	local FUTURE_STATE="disabled"
 	local MAKEPKG_ENV_VARS="SOURCE_DATE_EPOCH='$SOURCE_DATE_EPOCH' PATH='/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'"
-	local MAKEPKG_OPTIONS="--syncdeps --noconfirm"
+	local MAKEPKG_OPTIONS="--syncdeps --noconfirm --nocheck"
 	if [ "$(hostname)" = "osuosl-build170-amd64" ] ; then
 		FUTURE_STATE="enabled"
 		MAKEPKG_ENV_VARS="$MAKEPKG_ENV_VARS GIT_SSL_NO_VERIFY=1"
