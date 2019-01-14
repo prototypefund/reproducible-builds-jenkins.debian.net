@@ -87,7 +87,6 @@ case $(hostname) in
 	profitbricks-build3*)	put_schroots_on_tmpfs ;;
 	profitbricks-build4*)	put_schroots_on_tmpfs ;;
 	profitbricks-build7*)	put_schroots_on_tmpfs ;;
-	osuosl-build169*)	put_schroots_on_tmpfs ;;
 	osuosl-build170*)	put_schroots_on_tmpfs ;;
 	*)			;;
 esac
@@ -105,7 +104,6 @@ case $(hostname) in
 	profitbricks-build6*)	send_back_to_the_future ;;
 	profitbricks-build15*)	send_back_to_the_future ;;
 	profitbricks-build16*)	send_back_to_the_future ;;
-	osuosl-build169*)	send_back_to_the_future ;;
 	osuosl-build170*)	send_back_to_the_future ;;
 	*)			;;
 esac
