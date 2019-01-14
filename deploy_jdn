@@ -1,7 +1,7 @@
 #!/bin/bash
 # vim: set noexpandtab:
 #
-# Copyright 2014-2018 Holger Levsen <holger@layer-acht.org>
+# Copyright 2014-2019 Holger Levsen <holger@layer-acht.org>
 #           ©    2018 Mattia Rizzolo <mattia@debian.org>
 #
 # released under the GPLv=2
@@ -97,6 +97,7 @@ node_in_the_future () {
 	case "$1" in
 		profitbricks-build4-amd64*|profitbricks-build5-amd64*|profitbricks-build6-i386*|profitbricks-build15-amd64*|profitbricks-build16-i386*) true ;;
 		codethink-sled9*|codethink-sled11*|codethink-sled13*|codethink-sled15*) true ;;
+		osuosl-build170*) true ;;
 		*) false ;;
 	esac
 }
