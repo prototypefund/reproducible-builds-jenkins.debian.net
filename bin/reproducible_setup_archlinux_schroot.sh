@@ -113,7 +113,7 @@ $ROOTCMD bash -l -c 'pacman-key --populate archlinux'
 echo "Server = $ARCHLINUX_MIRROR/\$repo/os/\$arch" | $ROOTCMD tee -a /etc/pacman.d/mirrorlist
 # enable multilib (by uncommenting the first two lines starting with the [multilib] section header)
 sudo sed -i '/\[multilib\]/,+1{s/^#//}' $SCHROOT_BASE/$TARGET/etc/pacman.conf
-if [ "$HOSTNAME" = "profitbricks-build4-amd64" ] ; then
+if [ "$HOSTNAME" = "osuosl-build170-amd64" ] ; then
 	# disable signature verification so packages won't fail to install when setting the time to +$x years
 	sudo sed -i -E 's/^#?SigLevel\s*=.*/SigLevel = Never/g' "$SCHROOT_BASE/$TARGET/etc/pacman.conf"
 	sudo sed -i "/^XferCommand = /{s|/usr/bin/curl |/usr/bin/curl --insecure |}" "$SCHROOT_BASE/$TARGET/etc/pacman.conf"
@@ -136,7 +136,7 @@ echo 'jenkins ALL= NOPASSWD: /usr/sbin/pacman *' | $ROOTCMD tee -a /etc/sudoers
 $ROOTCMD mkdir /var/lib/jenkins
 $ROOTCMD chown -R jenkins:jenkins /var/lib/jenkins
 echo ". /etc/profile.d/proxy.sh" | tee -a $SCHROOT_BASE/$TARGET/var/lib/jenkins/.bashrc
-if [ "$HOSTNAME" = "profitbricks-build4-amd64" ] ; then
+if [ "$HOSTNAME" = "osuosl-build170-amd64" ] ; then
 	# workaround for certificates that aren't valid in the future.
 	# we might need to replace this with a mitm proxy in the future
 	echo "insecure" | tee -a $SCHROOT_BASE/$TARGET/var/lib/jenkins/.curlrc
@@ -145,14 +145,14 @@ $USERCMD bash -l -c 'gpg --check-trustdb' # first run will create ~/.gnupg/gpg.c
 echo "keyserver-options auto-key-retrieve" | tee -a $SCHROOT_BASE/$TARGET/var/lib/jenkins/.gnupg/gpg.conf
 
 # Disable SSL verification for future builds
-if [ "$HOSTNAME" = "profitbricks-build4-amd64" ] ; then
+if [ "$HOSTNAME" = "osuosl-build170-amd64" ] ; then
 	export GIT_SSL_NO_VERIFY=1
 fi
 
 $ROOTCMD sed -i 's/^#PACKAGER\s*=.*/PACKAGER="Reproducible Arch Linux tests"/' /etc/makepkg.conf
 
 $ROOTCMD sed -i "s|^#XferCommand = /usr/bin/curl |XferCommand = /usr/bin/curl --proxy $http_proxy |" /etc/pacman.conf
-if [ "$HOSTNAME" = "profitbricks-build4-amd64" ] ; then
+if [ "$HOSTNAME" = "osuosl-build170-amd64" ] ; then
 	# disable signature verification so packages won't fail to install when setting the time to +$x years
 	$ROOTCMD sed -i -E 's/^#?SigLevel\s*=.*/SigLevel = Never/g' /etc/pacman.conf
 	$ROOTCMD sed -i "/^XferCommand = /{s|/usr/bin/curl |/usr/bin/curl --insecure |}" /etc/pacman.conf
