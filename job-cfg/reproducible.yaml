@@ -655,14 +655,6 @@
                     my_description: 'Setup an Arch Linux schroot to test Arch Linux packages for reproducibility.'
                     my_timed: '42 23 1 1 *'
                     my_shell: '/srv/jenkins/bin/reproducible_setup_archlinux_schroot.sh'
-                - 'setup_schroot_archlinux_profitbricks3':
-                    my_description: 'Setup an Arch Linux schroot to test Arch Linux packages for reproducibility.'
-                    my_timed: '42 23 1 1 *'
-                    my_hname: 'profitbricks3'
-                - 'setup_schroot_archlinux_profitbricks4':
-                    my_description: 'Setup an Arch Linux schroot to test Arch Linux packages for reproducibility.'
-                    my_timed: '42 23 1 1 *'
-                    my_hname: 'profitbricks4'
                 - 'setup_schroot_archlinux_osuosl169':
                     my_description: 'Setup an Arch Linux schroot to test Arch Linux packages for reproducibility.'
                     my_timed: '42 23 1 1 *'
