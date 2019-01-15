@@ -22,6 +22,13 @@ root access to all armhf nodes.
 amd64 and i386 nodes run as VMs in the Profitbricks cloud. Mattia and Holger have "physical"
 access including remote console and BIOS access.
 
+==== nodes at osuosl.org
+
+We now also have 8 nodes running at osuosl.org. Contact via #osuosl on freenode or mail to 
+support@osuosl.org mentioning the machine name in the subject.
+
+Please note that the machines are calloed gcc167-174 at osuosl.org.
+
 === arm64 nodes
 
 We have 8 arm64 nodes running on moonshot hardware kindly given access to us by Codethink.
