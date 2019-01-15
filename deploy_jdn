@@ -218,7 +218,11 @@ for i in "${HOSTS[@]}" ; do
 	if $reset_clock ; then
 		if node_in_the_future "$i" ; then
 			#  set correct future date
-			remote_command="sudo ntpdate -b de.pool.ntp.org && $remote_command && sudo date --set=\"+398 days +6 hours + 23 minutes\" && echo '__$(echo $i|cut -d '.' -f1)=ok__'"
+			case "$i" in
+				osuosl-build*)	NTP_SERVER=de.pool.ntp.org ;;
+				*) 		NTP_SERVER=time.osuosl.org ;;
+			esac
+			remote_command="sudo ntpdate -b $NTP_SERVER && $remote_command && sudo date --set=\"+398 days +6 hours + 23 minutes\" && echo '__$(echo $i|cut -d '.' -f1)=ok__'"
 		fi
 	fi
 	get_arch_color $i

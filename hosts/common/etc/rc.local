@@ -19,7 +19,11 @@ send_back_to_the_future() {
 	systemctl stop systemd-timedated || true
 	systemctl stop ntp.service || true
 	# set correct date
-	ntpdate -b de.pool.ntp.org
+	if [ -z "$1" ] ; then
+		ntpdate -b de.pool.ntp.org
+	else
+		ntpdate -b $1
+	fi
 	# set fake date
 	date --set="+398 days +6 hours + 23 minutes"
 	# finally report success
@@ -104,7 +108,7 @@ case $(hostname) in
 	profitbricks-build6*)	send_back_to_the_future ;;
 	profitbricks-build15*)	send_back_to_the_future ;;
 	profitbricks-build16*)	send_back_to_the_future ;;
-	osuosl-build170*)	send_back_to_the_future ;;
+	osuosl-build170*)	send_back_to_the_future time.osuosl.org;;
 	*)			;;
 esac
 
