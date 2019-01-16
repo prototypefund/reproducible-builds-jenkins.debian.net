@@ -182,6 +182,7 @@ get_node_ssh_port() {
 	    PORT=45048
 	    ;;
 	  osuosl-build170*)
+	    NODE_RUN_IN_THE_FUTURE=true
 	    PORT=45049
 	    ;;
 	  osuosl-build171*)
