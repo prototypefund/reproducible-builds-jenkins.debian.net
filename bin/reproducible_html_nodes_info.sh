@@ -218,7 +218,8 @@ build_graph_overview_pages() {
 							profitbricks7)	write_page "<td></td>" ; continue ;;
 							profitbricks9)	write_page "<td></td>" ; continue ;;
 							profitbricks10)	write_page "<td></td>" ; continue ;;
-						*)		;;
+							osuosl*)	write_page "<td></td>" ; continue ;;
+							*)		;;
 						esac
 					fi
 					write_page "<td><a href='https://jenkins.debian.net/munin/debian.net/$NODE/$GRAPH.html'>"
