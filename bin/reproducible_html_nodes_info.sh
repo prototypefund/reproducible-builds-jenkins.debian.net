@@ -1,7 +1,7 @@
 #!/bin/bash
 # vim: set noexpandtab:
 
-# Copyright © 2015-2018 Holger Levsen <holger@layer-acht.org>
+# Copyright © 2015-2019 Holger Levsen <holger@layer-acht.org>
 #           ©      2018 Mattia Rizzolo <mattia@debian.org>
 # released under the GPLv=2
 
@@ -17,11 +17,13 @@ common_init "$@"
 explain_nodes() {
 	case $JENKINS_NODENAME in
 		jenkins)	;;
-		profitbricks3)	write_page "<br /><small>(r-b Archlinux, OpenWrt, NetBSD, Coreboot builds)</small>" ;;
-		profitbricks4)	write_page "<br /><small>(r-b Archlinux, OpenWrt, NetBSD, Coreboot builds)</small>" ;;
+		profitbricks3)	write_page "<br /><small>(r-b OpenWrt, NetBSD, Coreboot builds)</small>" ;;
+		profitbricks4)	write_page "<br /><small>(r-b OpenWrt, NetBSD, Coreboot builds)</small>" ;;
 		profitbricks7)	write_page "<br /><small>(r-b F-Droid builds)</small>" ;;
 		profitbricks9)	write_page "<br /><small>(jenkins.d.n rebootstrap jobs)</small>" ;;
 		profitbricks10)	write_page "<br /><small>(jenkins.d.n chroot-installation jobs)</small>" ;;
+		osuosl169)	write_page "<br /><small>(r-b Archlinux builds)</small>" ;;
+		osuosl170)	write_page "<br /><small>(r-b Archlinux builds)</small>" ;;
 		osuosl*)	write_page "<br /><small>(TBD - setup in progress)</small>" ;;
 		*)		write_page "<br /><small>(r-b Debian builds)</small>" ;;
 	esac
