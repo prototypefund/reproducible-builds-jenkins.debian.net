@@ -32,13 +32,13 @@ Please note that the machines are calloed gcc167-174 at osuosl.org.
 === arm64 nodes
 
 We have 8 arm64 nodes running on moonshot hardware kindly given access to us by Codethink.
-Holger has access to a 9th node acting as console server.
+Holger and Mattia have access to a 9th node acting as console server, reachable as
+jumpserv.colo.codethink.co.uk.
 
 Axel Beckert is currently in the process of setting up 8 LeMaker HiKey960 boards
 (http://www.96boards.org/product/hikey960/). These boards were sponsored by Hewlett Packard Enterprise
 (https://www.hpe.com/) and will be hosted by the students association
 SOSETH (https://sos.ethz.ch/) at ETH Zurich (https://www.ethz.ch/).
-
 
 === armhf nodes
 
