@@ -226,7 +226,10 @@ if [ "$(uname -s)" = "Linux" ]; then
 	fi
 
 	if [ "$running_version" != "$on_disk_version" ]; then
-		echo "WARNING: Running kernel does not match on-disk kernel image: [$running_version != $on_disk_version]"
+		echo "WARNING: Running kernel does not match on-disk kernel image:"
+		echo "  $running_version"
+		echo "!="
+		echo "  $on_disk_version"
 		exit $WARNING
 	fi
 
