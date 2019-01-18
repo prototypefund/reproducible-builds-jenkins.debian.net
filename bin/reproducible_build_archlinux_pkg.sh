@@ -163,6 +163,8 @@ first_build() {
 	echo $VERSION > $TMPDIR/b1/$SRCPACKAGE/build1.version
 	# show env variables
 	schroot --run-session -c $SESSION --directory "$BUILDDIR/$ACTUAL_SRCPACKAGE/trunk" -- bash -l -c "$MAKEPKG_ENV_VARS printenv 2>&1" | tee -a $LOG
+	# preseed GnuPG keys if relevant in order to get good error logs
+	schroot --run-session -c $SESSION --directory "$BUILDDIR/$ACTUAL_SRCPACKAGE/trunk" -- bash -l -c "makepkg --printsrcinfo | awk -F ' = ' '/^\s+validpgpkeys/{print \$2}'| while read pgpkey; do gpg --recv-key \$pgpkey; done" | tee -a $LOG
 	# nicely run makepkg with a timeout of $TIMEOUT hours
 	timeout -k $TIMEOUT.1h ${TIMEOUT}h /usr/bin/ionice -c 3 /usr/bin/nice \
 		schroot --run-session -c $SESSION --directory "$BUILDDIR/$ACTUAL_SRCPACKAGE/trunk" -- bash -l -c "$MAKEPKG_ENV_VARS makepkg $MAKEPKG_OPTIONS 2>&1" | tee -a $LOG
@@ -248,6 +250,8 @@ second_build() {
 	echo $VERSION > $TMPDIR/b2/$SRCPACKAGE/build2.version
 	# show env variables
 	schroot --run-session -c $SESSION --directory "$BUILDDIR/$ACTUAL_SRCPACKAGE/trunk" -u root -- su -c "bash -l -c '$MAKEPKG_ENV_VARS printenv 2>&1'" build2 | tee -a $LOG
+	# preseed GnuPG keys if relevant in order to get good error logs
+	schroot --run-session -c $SESSION --directory "$BUILDDIR/$ACTUAL_SRCPACKAGE/trunk" -- bash -l -c "makepkg --printsrcinfo | awk -F ' = ' '/^\s+validpgpkeys/{print \$2}'| while read pgpkey; do gpg --recv-key \$pgpkey; done" | tee -a $LOG
 	# nicely run makepkg with a timeout of $TIMEOUT hours
 	timeout -k $TIMEOUT.1h ${TIMEOUT}h /usr/bin/ionice -c 3 /usr/bin/nice \
 		schroot --run-session -c $SESSION --directory "$BUILDDIR/$ACTUAL_SRCPACKAGE/trunk" -- bash -l -c "$MAKEPKG_ENV_VARS makepkg $MAKEPKG_OPTIONS 2>&1" | tee -a $LOG
