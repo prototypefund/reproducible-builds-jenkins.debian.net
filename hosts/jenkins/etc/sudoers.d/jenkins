@@ -4,9 +4,11 @@ jenkins ALL=  \
 	/usr/bin/tee -a /schroots/*, \
 	/usr/bin/tee /etc/schroot/chroot.d/jenkins*, \
 	/usr/bin/tee -a /etc/schroot/chroot.d/jenkins*, \
+	/bin/sed -i * /schroots/reproducible-archlinux/etc/pacman.conf, \
 	/bin/chmod +x /schroots/*, \
 	/bin/chmod +x /chroots/*, \
 	/bin/tar -c --exclude ./sys/\* --exclude ./proc/\* -f /schroots/*, \
+        /bin/tar xzf archlinux-bootstrap-*tar.gz -C /schroots, \
 	/usr/sbin/chroot /schroots/*, \
 	/usr/sbin/chroot /chroots/*, \
 	/usr/sbin/chroot /media/*, \
@@ -16,6 +18,7 @@ jenkins ALL=  \
 	/bin/rm -rf --one-file-system /srv/live-build/*, \
 	/bin/rm -rf --one-file-system /srv/workspace/pbuilder/*, \
 	/bin/rm -rf --one-file-system /tmp/*, \
+	/bin/rm -rv --one-file-system /tmp/*, \
 	/bin/cp -v *.iso /srv/live-build/results/*, \
 	/bin/mv /chroots/* /schroots/*, \
 	/bin/mv /schroots/* /schroots/*, \
