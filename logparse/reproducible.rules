@@ -32,3 +32,4 @@ warning /^WARNING: Running kernel does not match on-disk kernel image/
 warning /Warning: schroots older than/
 warning /Warning: SQL query .+ failed.$/
 warning /Warning: systemd is reporting errors/
+warning /Warning: .+ has wrong MTU, please tell the jenkins admins to fix this./
