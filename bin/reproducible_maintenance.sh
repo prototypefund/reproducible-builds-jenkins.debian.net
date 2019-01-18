@@ -192,6 +192,10 @@ if [ ! -z "$http_proxy" ] ; then
 	pbuilder_http_proxy="--http-proxy $http_proxy"
 fi
 for s in $SUITES ; do
+	if [ "${HOSTNAME:0:6}" = "osuosl" ] ; then
+		# osuosl nodes are not used to do Debian rebuilds
+		continue
+	fi
 	#
 	# chdist update
 	#
