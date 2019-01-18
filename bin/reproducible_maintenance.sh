@@ -1,7 +1,7 @@
 #!/bin/bash
 # vim: set noexpandtab:
 
-# Copyright 2014-2018 Holger Levsen <holger@layer-acht.org>
+# Copyright 2014-2019 Holger Levsen <holger@layer-acht.org>
 #         © 2015-2018 Mattia Rizzolo <mattia@debian.org>
 # released under the GPLv=2
 
@@ -265,7 +265,7 @@ set -e
 # for Arch Linux
 set +e
 case $HOSTNAME in
-	profitbricks-build3-amd64|profitbricks-build4-amd64|jenkins)
+	osuosl-build169*|osuosl-build170*|jenkins)
 		echo "$(date -u) - updating Arch Linux schroot now."
 		schroot --directory /tmp -c source:jenkins-reproducible-archlinux -u root -- pacman -Syu --noconfirm
 		RESULT=$?
