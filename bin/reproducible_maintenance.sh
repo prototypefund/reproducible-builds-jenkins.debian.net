@@ -670,5 +670,3 @@ if ! $DIRTY ; then
 fi
 
 echo "$(date -u) - the end."
-
-

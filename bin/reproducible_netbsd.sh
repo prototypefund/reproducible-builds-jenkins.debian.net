@@ -60,9 +60,9 @@ git log -1
 #                 different switches to make two builds from the same source tree
 #                 result in the same build results.
 # also see http://man.netbsd.org/HEAD/usr/share/man/html5/mk.conf.html
-export MKREPRO="yes"	
+export MKREPRO="yes"
 # MKREPRO_TIMESTAMP is set to SOURCE_DATE_EPOCH of netbsd.git
-# see http://cvsweb.netbsd.org/bsdweb.cgi/~checkout~/src/BUILDING 
+# see http://cvsweb.netbsd.org/bsdweb.cgi/~checkout~/src/BUILDING
 SOURCE_DATE_EPOCH=$(git log -1 --pretty=%ct)
 MKREPRO_TIMESTAMP=${SOURCE_DATE_EPOCH}
 

@@ -48,7 +48,7 @@ update_pkg_in_db() {
 		DO UPDATE SET version='$BUILD_VERSION', status='$BUILD_STATE', build_date='$DATE', build_duration='$BUILD_DURATION', node1='$NODE1', node2='$NODE2', job='$BUILD_URL' WHERE results.package_id='$SRCPKGID'";
         echo "$QUERY"
 	query_db "$QUERY"
-        QUERY="INSERT INTO stats_build (name, version, suite, architecture, distribution, status, build_date, build_duration, node1, node2, job) 
+        QUERY="INSERT INTO stats_build (name, version, suite, architecture, distribution, status, build_date, build_duration, node1, node2, job)
 		VALUES ('$SRCPACKAGE', '$BUILD_VERSION', '$SUITE', '$ARCH', $DISTROID, '$BUILD_STATE', '$DATE', '$BUILD_DURATION', '$NODE1', '$NODE2', '$BUILD_URL');"
         echo "$QUERY"
 	query_db "$QUERY"

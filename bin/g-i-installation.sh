@@ -1402,4 +1402,3 @@ cleanup_all
 
 # don't cleanup twice
 trap - INT TERM EXIT
-

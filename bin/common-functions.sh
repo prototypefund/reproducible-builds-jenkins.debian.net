@@ -104,12 +104,12 @@ if [ "${0:0:5}" != "/tmp/" ] ; then
 	echo "and then have a look at the files README, INSTALL, CONTRIBUTING and maybe TODO."
 	echo
 	echo "This invocation of this script, which is located in bin/$(basename $0),"
-	echo "has been called using \"$@\" as arguments." 
+	echo "has been called using \"$@\" as arguments."
 	echo
 	echo "Please send feedback about jenkins to qa-jenkins-dev@lists.alioth.debian.org,"
 	echo "or as a bug against the 'jenkins.debian.org' pseudo-package,"
 	echo "feedback about specific job results should go to their respective lists and/or the BTS."
-	echo 
+	echo
 	echo "===================================================================================="
 	echo "$(date -u) - start running \"$0\" (md5sum $(md5sum $0|cut -d ' ' -f1)) as \"$TTT\" on $(hostname)."
 	echo

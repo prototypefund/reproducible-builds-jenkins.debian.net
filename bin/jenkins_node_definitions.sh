@@ -206,4 +206,3 @@ get_node_ssh_port() {
 	    ;;
 	esac
 }
-

@@ -88,7 +88,7 @@ update_archlinux_repositories() {
 			irc_message archlinux-reproducible "$MESSAGE"
 		fi
 	fi
-	
+
 	#
 	# schedule packages
 	#
@@ -157,7 +157,7 @@ update_archlinux_repositories() {
 	schroot --end-session -c $SESSION
 
 	#
-	# schedule up to $MAX packages in DEPWAIT_ or 404_ states 
+	# schedule up to $MAX packages in DEPWAIT_ or 404_ states
 	# (which have been tried at least 24h ago)
 	#
 	echo "$(date -u ) - should we schedule packages in DEPWAIT_ or 404_ states?"

@@ -41,4 +41,3 @@ rsync_remote_results() {
 echo "$(date -u) - Starting to rsync results."
 rsync_remote_results
 echo "$(date -u) - the end."
-

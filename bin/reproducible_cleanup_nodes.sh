@@ -48,4 +48,3 @@ done
 ps fax|grep sleep
 
 echo "$(date -u) - slaughtering done."
-

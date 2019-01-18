@@ -77,7 +77,7 @@ for JOB in $(ls -1 ~jenkins/jobs/ | grep ${DI_BUILD_JOB_PATTERN}) ; do
 	else
 		echo "Warning: Git repo $REPONAME not found in $URL, but job $JOB exists."
 	fi
-done 
+done
 # cleanup
 rm $TMPFILE
 echo
@@ -144,7 +144,7 @@ for DIRECTORY in * ; do
 	else
 		for FORMAT in pdf html ; do
 			# Some languages are unsupported in PDF
-			if [ $FORMAT = pdf ] && 
+			if [ $FORMAT = pdf ] &&
 			   expr match "${NON_PDF_LANGS}" ".*\b${DIRECTORY}\b" >/dev/null ; then
 				continue
 			fi
@@ -175,7 +175,7 @@ done
 # fail this job if missing d-i jobs are detected
 #
 echo
-if $FAIL ; then 
+if $FAIL ; then
 	figlet "Missing jobs!"
 	echo
 	echo "Add these job templates to job-cfg/d-i.yaml:"

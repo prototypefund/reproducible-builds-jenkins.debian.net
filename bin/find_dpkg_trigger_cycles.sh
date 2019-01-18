@@ -11,12 +11,12 @@
 #
 # The above copyright notice and this permission notice shall be included in
 # all copies or substantial portions of the Software.
-# 
+#
 # Running
 # =======
-# 
+#
 # Just start `./find_dpkg_trigger_cycles.sh`. It will do the following:
-# 
+#
 # 1. download apt sources and apt-file data for the amd64 Debian
 #     using $1 as distro and store them in a directory tree rooted at
 #    `./debian-sid-amd64`
@@ -45,52 +45,52 @@
 #      each package in the closure:
 #     1. check if the package activate the current explicit trigger
 #     2. store any hits in the file `result-explicit`
-# 
+#
 # Files
 # =====
-# 
+#
 # interested-file
 # ---------------
-# 
+#
 # Associates binary packages to file triggers they are interested in. The first
 # column is the binary package, the second column is either `interest` or
 # `interest-await` and the last column the path they are interested in.
-# 
+#
 # interested-explicit
 # -------------------
-# 
+#
 # Associates binary packages to explicit triggers they are interested in. The
 # first column is the binary package, the second column is either `interest` or
 # `interest-await` and the last column the name of the explicit trigger they are
 # interested in.
-# 
+#
 # activated-file
 # --------------
-# 
+#
 # Associates binary packages to file triggers they activate. The first column is
 # the binary package, the second column is either `activate` or `activate-await`
 # and the last column the path they activate.
-# 
+#
 # activate-explicit
 # -----------------
-# 
+#
 # Associates binary packages to explicit triggers they activate. The first column
 # is the binary package, the second column is either `activate` or
 # `activate-await` and the last column the explicit trigger they activate.
-# 
+#
 # result-file
 # -----------
-# 
+#
 # Associates binary packages with other binary packages they can form a file
 # trigger cycle with. The first column is the binary package containing the file
 # trigger, the second column is the file trigger, the third column is a binary
 # package providing a path that triggers the binary package in the first column,
 # the fourth column is the triggering path of provided by the binary package in
 # the third column.
-# 
+#
 # result-explicit
 # ---------------
-# 
+#
 # Associates binary packages with other binary packages they can form an explicit
 # trigger cycle with. The first column is the binary package interested in the
 # explicit trigger, the second column is the name of the explicit trigger, the

@@ -88,6 +88,6 @@ if [ "$RETRIEVE_ARTIFACTS" = "yes" ] ; then
 fi
 
 #
-# exit with the actual exit code from the target node 
+# exit with the actual exit code from the target node
 #
 exit $RETVAL

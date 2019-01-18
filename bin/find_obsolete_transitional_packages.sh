@@ -5,7 +5,7 @@
 
 #
 # run with "bug" as first parameter for interactive mode which will fire up mutt for 10 buggy packages
-# 
+#
 #
 if [ -z "$1" ] ; then
 	echo "Call $(basename $0) [bug] NEXT SUITE1 SUITE2 SUITE3"
@@ -133,19 +133,19 @@ if $MANUAL_MODE ; then
 		if [ $NR -eq $MAX ] ; then
 			echo "Filed $MAX bugs, ending."
 			break
-		fi	
+		fi
 	done
 	echo "Please open those firefox tabs… and press enter"
 	read a
 	NR=0
 	for PKG in $BAD ; do
 		SRC=$(grep-dctrl -sSource -FPackage -n $PKG --exact-match ${PACKAGES[2]} | cut -d " " -f1)
-		if [ -z "$SRC" ] ; then 
+		if [ -z "$SRC" ] ; then
 			SRC=$PKG
 		fi
 		VERSION=$(grep-dctrl -sVersion -FPackage -n $PKG --exact-match ${PACKAGES[1]})
 		VERBOSE=$( ( for SAUCE in ${PACKAGES[0]} ${PACKAGES[1]} ${PACKAGES[2]} ; do
-				grep-dctrl -sPackage,Description,Version -FPackage $PKG --exact-match $SAUCE 
+				grep-dctrl -sPackage,Description,Version -FPackage $PKG --exact-match $SAUCE
 			done ) | sort -u)
 		#firefox https://packages.debian.org/$PKG &
 		TMPFILE=`mktemp`
@@ -171,7 +171,7 @@ EOF
 		if [ $NR -eq $MAX ] ; then
 			echo "Filed $MAX bugs, ending."
 			break
-		fi	
+		fi
 	done
 
 else
@@ -179,7 +179,7 @@ else
 	for PKG in $BAD ; do
 		echo
 		( for SAUCE in ${PACKAGES[0]} ${PACKAGES[1]} ${PACKAGES[2]} ; do
-			grep-dctrl -sPackage,Description,Version -FPackage $PKG --exact-match $SAUCE 
+			grep-dctrl -sPackage,Description,Version -FPackage $PKG --exact-match $SAUCE
 		done ) | sort -u
 	done
 	echo

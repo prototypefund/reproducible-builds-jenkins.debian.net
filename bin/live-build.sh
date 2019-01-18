@@ -45,4 +45,3 @@ echo
 
 cleanup_all
 trap - INT TERM EXIT
-

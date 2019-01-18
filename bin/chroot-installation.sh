@@ -170,14 +170,14 @@ bootstrap() {
 	sudo debootstrap $1 $CHROOT_TARGET $MIRROR
 	set +x
 	prepare_bootstrap $1
-	execute_ctmpfile 
+	execute_ctmpfile
 }
 
 install_packages() {
 	echo "Installing extra packages for $1 now."
 	shift
 	prepare_install_packages $@
-	execute_ctmpfile 
+	execute_ctmpfile
 }
 
 install_binary_packages() {
@@ -199,7 +199,7 @@ install_build_depends() {
 upgrade2() {
 	echo "Upgrading to $1 now."
 	prepare_upgrade2 $1
-	execute_ctmpfile 
+	execute_ctmpfile
 }
 
 trap cleanup_all INT TERM EXIT
@@ -301,7 +301,7 @@ fi
 #
 if [ "$DISTRO" = "sid" ] ; then
 	# ignore multiarch-support because the transition will never be finished…
-	# ignore 
+	# ignore
 	# - jadetex because #871021
 	# - dh-systemd because #871312
 	# - libpcap-dev because #872265
@@ -503,4 +503,3 @@ echo "Debug: Removing trap."
 trap - INT TERM EXIT
 echo "Debug: Cleanup fine"
 cleanup_all fine
-

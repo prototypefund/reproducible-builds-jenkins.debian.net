@@ -45,4 +45,3 @@ Sources.gz: Sources
 	gzip -n9 < $< > $@.new
 	mv $@.new $@
 	chmod 664 $@
-

@@ -10,7 +10,7 @@ common_init "$@"
 
 # common code defining db access
 . /srv/jenkins/bin/reproducible_common.sh
- 
+
 VIEW=repositories
 PAGE=index_${VIEW}.html
 SOURCES=$(mktemp --tmpdir=$TEMPDIR repo-comp-XXXXXXXXX)
@@ -236,4 +236,3 @@ echo "$BINNMUS_NEEDED" > /srv/reproducible-results/binnmus_needed.txt
 # cleanup
 rm $SOURCES $PACKAGES $TMPFILE
 rm $TABLE_TODO $TABLE_DONE
-
