@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Copyright 2015-2018 Holger Levsen <holger@layer-acht.org>
+# Copyright 2015-2019 Holger Levsen <holger@layer-acht.org>
 # released under the GPLv=2
 
 DEBUG=false
@@ -116,7 +116,7 @@ get_installable_set() {
 	RESULT=$?
 	if [ $RESULT -ne 0 ] ; then
 		rm -f $TMPFILE
-		MESSAGE="Warning: dose-deb-coinstall cannot calculate the installable set for $1"
+		MESSAGE="Warning: dose-deb-coinstall cannot calculate the installable set for ${META_PKGSET[$index]}"
 		irc_message debian-reproducible $MESSAGE
 		dose-deb-coinstall --explain --failures --deb-native-arch=$ARCH --bg=$PACKAGES --fg=${TMPFILE2}
 		ABORT=true
