@@ -116,7 +116,7 @@ get_installable_set() {
 	RESULT=$?
 	if [ $RESULT -ne 0 ] ; then
 		rm -f $TMPFILE
-		MESSAGE="Warning: dose-deb-coinstall cannot calculate the installable set for ${META_PKGSET[$index]}"
+		MESSAGE="Warning: dose-deb-coinstall cannot calculate the installable set for ${META_PKGSET[$index]} in $SUITE."
 		irc_message debian-reproducible $MESSAGE
 		dose-deb-coinstall --explain --failures --deb-native-arch=$ARCH --bg=$PACKAGES --fg=${TMPFILE2}
 		ABORT=true
