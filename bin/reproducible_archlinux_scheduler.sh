@@ -190,7 +190,7 @@ update_archlinux_repositories() {
 	echo "$(date -u ) - should we schedule old packages?"
 	MAX=500
 	local THRESHOLD=600
-	MINDATE=$(date -u +"%Y-%m-%d %H:%M" -d "5 days ago")
+	MINDATE=$(date -u +"%Y-%m-%d %H:%M" -d "4 days ago")
 	SCHDATE=$(date -u +"%Y-%m-%d %H:%M" -d "7 days")
 	local CURRENT=$(query_db "SELECT count(*) FROM sources AS s JOIN schedule AS sch ON s.id=sch.package_id WHERE s.distribution=$DISTROID AND s.architecture='x86_64' AND sch.date_build_started IS NULL;")
 	if [ $CURRENT -le $THRESHOLD ] ; then
