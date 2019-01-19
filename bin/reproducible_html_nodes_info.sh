@@ -21,6 +21,7 @@ explain_nodes() {
 		profitbricks4)	write_page "<br /><small>(r-b OpenWrt, NetBSD, Coreboot builds)</small>" ;;
 		profitbricks9)	write_page "<br /><small>(jenkins.d.n rebootstrap jobs)</small>" ;;
 		profitbricks10)	write_page "<br /><small>(jenkins.d.n chroot-installation jobs)</small>" ;;
+		osuosl167)	write_page "<br /><small>(http-proxy for osuosl nodes)</small>" ;;
 		osuosl168)	write_page "<br /><small>(r-b F-Droid builds)</small>" ;;
 		osuosl169)	write_page "<br /><small>(r-b Archlinux builds)</small>" ;;
 		osuosl170)	write_page "<br /><small>(r-b Archlinux builds)</small>" ;;
