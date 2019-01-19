@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Copyright 2015-2018 Holger Levsen <holger@layer-acht.org>
+# Copyright 2015-2019 Holger Levsen <holger@layer-acht.org>
 # released under the GPLv=2
 
 DEBUG=false
@@ -188,8 +188,8 @@ update_archlinux_repositories() {
 	# (only if less than $THRESHOLD packages are currently scheduled)
 	#
 	echo "$(date -u ) - should we schedule old packages?"
-	MAX=350
-	local THRESHOLD=450
+	MAX=500
+	local THRESHOLD=600
 	MINDATE=$(date -u +"%Y-%m-%d %H:%M" -d "10 days ago")
 	SCHDATE=$(date -u +"%Y-%m-%d %H:%M" -d "7 days")
 	local CURRENT=$(query_db "SELECT count(*) FROM sources AS s JOIN schedule AS sch ON s.id=sch.package_id WHERE s.distribution=$DISTROID AND s.architecture='x86_64' AND sch.date_build_started IS NULL;")
