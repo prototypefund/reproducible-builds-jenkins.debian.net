@@ -241,7 +241,6 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 * html: build variations are wrong
 * html: git commit output includes garbage
 * html: css: add some space on the left side
-* html: css: make it more look like https://lede-project.org/
 
 ==== reproducible NetBSD
 
