@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Copyright 2014-2018 Holger Levsen <holger@layer-acht.org>
+# Copyright 2014-2019 Holger Levsen <holger@layer-acht.org>
 #                2015 anthraxx <levente@leventepolyak.net>
 # released under the GPLv=2
 
@@ -372,7 +372,7 @@ recent_builds_page(){
 				AND r.build_date > '$MAXDATE'")
 	write_page "<h2>$RECENT builds of Archlinux packages in the last 24h</h2>"
 	include_pkg_table_header_in_page
-	STATE_PKGS=$(query_db "SELECT s.name FROM sources AS s
+	STATE_PKGS=$(query_db "SELECT s.name, s.suite FROM sources AS s
 				JOIN results AS r
 				ON s.id=r.package_id
 				WHERE s.distribution=$DISTROID
@@ -380,7 +380,9 @@ recent_builds_page(){
 				AND r.build_date > '$MAXDATE'
 				ORDER BY r.build_date
 				DESC")
-	for SRCPACKAGE in ${STATE_PKGS} ; do
+	for LINE in ${STATE_PKGS} ; do
+		SRCPACKAGE=$(echo "$LINE" | cut -d "|" -f1)
+		REPOSITORY=$(echo "$LINE" | cut -d "|" -f2 | sed 's#archlinux_##')
 		include_pkg_html_in_page
 	done
 	write_page "    </table>"
