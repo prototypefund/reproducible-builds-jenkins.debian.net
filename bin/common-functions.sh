@@ -1,7 +1,7 @@
 #!/bin/bash
 # vim: set noexpandtab:
 
-# Copyright 2014-2018 Holger Levsen <holger@layer-acht.org>
+# Copyright 2014-2019 Holger Levsen <holger@layer-acht.org>
 #         © 2018      Mattia Rizzolo <mattia@mapreri.org>
 # released under the GPLv=2
 
@@ -147,9 +147,6 @@ else
 		profitbricks-build4*|profitbricks-build5*|profitbricks-build6*|profitbricks-build10*|profitbricks-build15*|profitbricks-build16*)
 			# pb datacenter in frankfurt uses pb10 as proxy:
 			export http_proxy="http://85.184.249.68:3128" ;;
-		profitbricks-build7*)
-			# let pb7 use its own proxy for the fdroid stuff:
-			export http_proxy="http://127.0.0.1:3128" ;;
 		osuosl*)
 			# all nodes at OSUOSL use osuosl167 as proxy:
 			export http_proxy="http://10.6.5.46:3128" ;;

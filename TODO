@@ -55,7 +55,6 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 * teach bin/chroot-*.sh and bin/d-i_build.sh how to nicely deal with network problems… (as both reproducible_build.sh and schroot-create.sh do)
 * use static IP for the nodes (h01ger)
 * use vmdebootstrap where applicable
-* Tango Icons are gone: #824477 - update footer once this bug is fixed
 * this is outdated with salsa: add to all git post-receive hooks: `curl -s "https://jenkins.debian.net/git/notifyCommit?url=https://salsa.debian.org/installer-team/$(basename $PWD .git)"` which will trigger jenkins to pull (check) that git repo…
 * salsa stuff:
 ** triggers for d-i repos are missing
@@ -63,26 +62,20 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 === new nodes at OSUOSL
 
 * use those nodes, preliminary plan:
-** osuosl167: squid (only, atm)
-** osuosl168: fdroid
-** osuosl169: archlinux
-** osuosl170: archlinux (future)
+** done: osuosl167: squid (only, atm)
+** done: osuosl168: fdroid
+*** shutdown pb7
+*** inform hans
+** done: osuosl169: archlinux
+** done: osuosl170: archlinux (future)
 ** osuosl171: openwrt, coreboot, netbsd, opensuse
 ** osuosl172: openwrt, coreboot, netbsd, opensuse (future)
 ** osuosl173: debian
 ** osuosl174: debian (future)
-* tmpfs, setup /srv/workspace as needed
-* make nodes run in the future
 * add to README 
-* probably add links to OSUOSL in THANKS and definitly explain there usage
+* add link to OSUOSL in THANKS and explain usage
 * drop 'setup in progress' from r_html_nodes_info
-* document how to contact OSUOSL
 * blog post when done
-
-=== ToDo for improving disk space
-
-* make live-build jobs work again or remove them
-* make sure the live-build jobs clean up /srv/live-build/results/*iso once they are done. thats 8gb wasted.
 
 ==== proper backup
 

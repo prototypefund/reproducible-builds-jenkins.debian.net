@@ -19,9 +19,9 @@ explain_nodes() {
 		jenkins)	;;
 		profitbricks3)	write_page "<br /><small>(r-b OpenWrt, NetBSD, Coreboot builds)</small>" ;;
 		profitbricks4)	write_page "<br /><small>(r-b OpenWrt, NetBSD, Coreboot builds)</small>" ;;
-		profitbricks7)	write_page "<br /><small>(r-b F-Droid builds)</small>" ;;
 		profitbricks9)	write_page "<br /><small>(jenkins.d.n rebootstrap jobs)</small>" ;;
 		profitbricks10)	write_page "<br /><small>(jenkins.d.n chroot-installation jobs)</small>" ;;
+		osuosl168)	write_page "<br /><small>(r-b F-Droid builds)</small>" ;;
 		osuosl169)	write_page "<br /><small>(r-b Archlinux builds)</small>" ;;
 		osuosl170)	write_page "<br /><small>(r-b Archlinux builds)</small>" ;;
 		osuosl*)	write_page "<br /><small>(TBD - setup in progress)</small>" ;;
@@ -66,10 +66,9 @@ build_nodes_health_page() {
 				# pb4	r-b archlinux
 				REPRODUCIBLE_NODES="$REPRODUCIBLE_NODES profitbricks-build3-amd64.debian.net profitbricks-build4-amd64.debian.net"
 			elif [ "$NODE" = "profitbricks-build6-i386.debian.net" ] ; then
-				# pb7 	r-b fdroid build host
 				# pb9 	rebootstrap jobs
 				# pb10	chroot jobs
-				REPRODUCIBLE_NODES="$REPRODUCIBLE_NODES profitbricks-build7-amd64.debian.net profitbricks-build9-amd64.debian.net profitbricks-build10-amd64.debian.net"
+				REPRODUCIBLE_NODES="$REPRODUCIBLE_NODES profitbricks-build9-amd64.debian.net profitbricks-build10-amd64.debian.net"
 			fi
 		done
 		for NODE in $REPRODUCIBLE_NODES ; do
@@ -115,9 +114,9 @@ build_nodes_health_page() {
 				jenkins)	write_page "<td></td>" ;;
 				profitbricks3)	write_page "<td></td>" ;;
 				profitbricks4)	write_page "<td></td>" ;;
-				profitbricks7)	write_page "<td></td>" ;;
 				profitbricks9)	write_page "<td></td>" ;;
 				profitbricks10)	write_page "<td></td>" ;;
+				osuosl*)	write_page "<td></td>" ;;
 				*)		write_page "<td>"
 						SHORTNAME=$(echo $NODE | cut -d '.' -f1)
 						for WORKER in $(grep "${ARCH}_" /srv/jenkins/bin/reproducible_build_service.sh | grep -v \# |grep $SHORTNAME | cut -d ')' -f1) ; do
@@ -133,7 +132,6 @@ build_nodes_health_page() {
 					jenkins)	write_page "<td></td>" ;;
 					profitbricks3)	write_page "<td></td>" ;;
 					profitbricks4)	write_page "<td></td>" ;;
-					profitbricks7)	write_page "<td></td>" ;;
 					profitbricks9)	write_page "<td></td>" ;;
 					profitbricks10)	write_page "<td></td>" ;;
 					osuosl*)	write_page "<td></td>" ;;
@@ -215,7 +213,6 @@ build_graph_overview_pages() {
 							jenkins)	write_page "<td></td>" ; continue ;;
 							profitbricks3)	write_page "<td></td>" ; continue ;;
 							profitbricks4)	write_page "<td></td>" ; continue ;;
-							profitbricks7)	write_page "<td></td>" ; continue ;;
 							profitbricks9)	write_page "<td></td>" ; continue ;;
 							profitbricks10)	write_page "<td></td>" ; continue ;;
 							osuosl*)	write_page "<td></td>" ; continue ;;

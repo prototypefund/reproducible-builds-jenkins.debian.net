@@ -116,7 +116,7 @@ user_host_groups['phil','jenkins']="$sudo_groups"
 user_host_groups['lunar','jenkins']='reproducible'
 user_host_groups['lynxis','profitbricks-build3-amd64']="$sudo_groups"
 user_host_groups['lynxis','profitbricks-build4-amd64']="$sudo_groups"
-user_host_groups['hans','profitbricks-build7-amd64']="$sudo_groups"
+user_host_groups['hans','osuosl-build168-amd64']="$sudo_groups"
 user_host_groups['vagrant','armhf']="$sudo_groups"
 user_host_groups['vagrant','arm64']="$sudo_groups"
 
@@ -158,7 +158,7 @@ sudo mkdir -p /srv/workspace
 [ -h /chroots ] || sudo ln -s /srv/workspace/chroots /chroots
 [ -h /schroots ] || sudo ln -s /srv/schroots /schroots
 
-if [ "$HOSTNAME" = "jenkins-test-vm" ] || [ "$HOSTNAME" = "profitbricks-build7-amd64" ] ; then
+if [ "$HOSTNAME" = "jenkins-test-vm" ] || [ "$HOSTNAME" = "osuosl-build168-amd64" ] ; then
 	# jenkins needs access to libvirt
 	sudo adduser jenkins kvm
 	sudo adduser jenkins libvirt
@@ -294,7 +294,7 @@ if [ -f /etc/debian_version ] ; then
 			"
 		# install squid on a few nodes only
 		case $HOSTNAME in
-			profitbricks-build1-a*|profitbricks-build10*|profitbricks-build7*|codethink-sled16*|osuosl-build167*) DEBS="$DEBS
+			profitbricks-build1-a*|profitbricks-build10*|codethink-sled16*|osuosl-build167*) DEBS="$DEBS
 				squid" ;;
 			*) ;;
 		esac
@@ -355,7 +355,7 @@ if [ -f /etc/debian_version ] ; then
 		esac
 		# needed to run fdroid jobs
 		case $HOSTNAME in
-			profitbricks-build7-amd64) DEBS="$DEBS
+			osuosl-build168-amd64) DEBS="$DEBS
 				androguard/stretch-backports
 				android-sdk
 				bzr
@@ -580,7 +580,7 @@ if ! $UP2DATE || [ $BASEDIR/hosts/$HOSTNAME/etc/munin -nt $STAMP ] ; then
 	cd /etc/munin/plugins
 	sudo rm -f postfix_* open_inodes interrupts irqstats threads proc_pri vmstat if_err_* exim_* netstat fw_forwarded_local fw_packets forks open_files users nfs* iostat_ios ntp* 2>/dev/null
 	case $HOSTNAME in
-			profitbricks-build7*|profitbricks-build1-a*|profitbricks-build10*|codethink-sled16*|osuosl-build167*) [ -L /etc/munin/plugins/squid_cache ] || for i in squid_cache squid_objectsize squid_requests squid_traffic ; do sudo ln -s /usr/share/munin/plugins/$i $i ; done ;;
+			profitbricks-build1-a*|profitbricks-build10*|codethink-sled16*|osuosl-build167*) [ -L /etc/munin/plugins/squid_cache ] || for i in squid_cache squid_objectsize squid_requests squid_traffic ; do sudo ln -s /usr/share/munin/plugins/$i $i ; done ;;
 			*)	;;
 	esac
 	case $HOSTNAME in
@@ -699,7 +699,7 @@ fi
 #
 # generate the kgb-client configurations
 #
-if [ "$HOSTNAME" = "jenkins" ] || [ "$HOSTNAME" = "profitbricks-build3-amd64" ] || [ "$HOSTNAME" = "profitbricks-build4-amd64" ] || [ "$HOSTNAME" = "profitbricks-build7-amd64" ] || [ "$HOSTNAME" = "profitbricks-build2-i386" ] || [ "$HOSTNAME" = "profitbricks-build12-i386" ] ; then
+if [ "$HOSTNAME" = "jenkins" ] || [ "$HOSTNAME" = "profitbricks-build3-amd64" ] || [ "$HOSTNAME" = "profitbricks-build4-amd64" ] || [ "$HOSTNAME" = "osuosl-build168-amd64" ] || [ "$HOSTNAME" = "profitbricks-build2-i386" ] || [ "$HOSTNAME" = "profitbricks-build12-i386" ] ; then
 	cd $BASEDIR
 	KGB_SECRETS="/srv/jenkins/kgb/secrets.yml"
 	if [ -f "$KGB_SECRETS" ] && [ $(stat -c "%a:%U:%G" "$KGB_SECRETS") = "640:jenkins-adm:jenkins-adm" ] ; then

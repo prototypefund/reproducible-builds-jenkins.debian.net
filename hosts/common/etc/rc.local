@@ -90,7 +90,8 @@ iptables -I INPUT -p udp --dport 111 -j DROP
 case $(hostname) in
 	profitbricks-build3*)	put_schroots_on_tmpfs ;;
 	profitbricks-build4*)	put_schroots_on_tmpfs ;;
-	profitbricks-build7*)	put_schroots_on_tmpfs ;;
+	osuosl-build168*)	put_schroots_on_tmpfs ;;
+	osuosl-build169*)	put_schroots_on_tmpfs ;;
 	osuosl-build170*)	put_schroots_on_tmpfs ;;
 	*)			;;
 esac

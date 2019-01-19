@@ -324,7 +324,7 @@
                 - 'profitbricks4':  { my_arch: 'amd64' }
                 - 'profitbricks5':  { my_arch: 'amd64' }
                 - 'profitbricks6':  { my_arch: 'i386'  }
-                - 'profitbricks7':  { my_arch: 'amd64' }
+                - 'osuosl168':  { my_arch: 'amd64' }
                 - 'profitbricks9':  { my_arch: 'amd64' }
                 - 'profitbricks10': { my_arch: 'amd64' }
                 - 'profitbricks11': { my_arch: 'amd64' }
@@ -386,7 +386,7 @@
                 - 'profitbricks4':  { my_arch: 'amd64' }
                 - 'profitbricks5':  { my_arch: 'amd64' }
                 - 'profitbricks6':  { my_arch: 'i386'  }
-                - 'profitbricks7':  { my_arch: 'amd64' }
+                - 'osuosl168':  { my_arch: 'amd64' }
                 - 'profitbricks9':  { my_arch: 'amd64' }
                 - 'profitbricks10': { my_arch: 'amd64' }
                 - 'profitbricks11': { my_arch: 'amd64' }
@@ -692,7 +692,7 @@
                 - 'setup_fdroid_build_environment':
                     my_description: 'Setup a build environment for F-Droid.'
                     my_timed: '42 0 * * 1'
-                    my_hname: 'profitbricks7'
+                    my_hname: 'osuosl168'
                     my_recipients: 'jenkins+reproducible-builds qa-jenkins-scm@lists.alioth.debian.org hans@guardianproject.info michael.poehn@fsfe.org bubu@bubu1.eu'
                     my_blocker: '^reproducible.*fdroid.*'
             my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
@@ -705,7 +705,7 @@
                 - 'fdroid_test':
                     my_description: 'Run tests on all the built APKs for F-Droid.'
                     my_timed: '42 23 1 1 *'
-            my_hname: 'profitbricks7'
+            my_hname: 'osuosl168'
             my_recipients: 'jenkins+reproducible-builds qa-jenkins-scm@lists.alioth.debian.org hans@guardianproject.info michael.poehn@fsfe.org'
             my_blocker: '^reproducible_fdroid.*'
             my_gitrepo: 'https://gitlab.com/fdroid/fdroidserver.git'
