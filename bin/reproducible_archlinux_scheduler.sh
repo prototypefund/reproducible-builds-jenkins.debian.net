@@ -158,11 +158,11 @@ update_archlinux_repositories() {
 
 	#
 	# schedule up to $MAX packages in DEPWAIT_ or 404_ states
-	# (which have been tried at least 24h ago)
+	# (which have been tried at least 16h ago)
 	#
 	echo "$(date -u ) - should we schedule packages in DEPWAIT_ or 404_ states?"
 	local MAX=350
-	local MINDATE=$(date -u +"%Y-%m-%d %H:%M" -d "24 hours ago")
+	local MINDATE=$(date -u +"%Y-%m-%d %H:%M" -d "16 hours ago")
 	local SCHDATE=$(date -u +"%Y-%m-%d %H:%M" -d "7 days")
 	QUERY="SELECT s.id FROM sources AS s
 		JOIN results AS r ON s.id=r.package_id
@@ -190,7 +190,7 @@ update_archlinux_repositories() {
 	echo "$(date -u ) - should we schedule old packages?"
 	MAX=500
 	local THRESHOLD=600
-	MINDATE=$(date -u +"%Y-%m-%d %H:%M" -d "10 days ago")
+	MINDATE=$(date -u +"%Y-%m-%d %H:%M" -d "5 days ago")
 	SCHDATE=$(date -u +"%Y-%m-%d %H:%M" -d "7 days")
 	local CURRENT=$(query_db "SELECT count(*) FROM sources AS s JOIN schedule AS sch ON s.id=sch.package_id WHERE s.distribution=$DISTROID AND s.architecture='x86_64' AND sch.date_build_started IS NULL;")
 	if [ $CURRENT -le $THRESHOLD ] ; then
