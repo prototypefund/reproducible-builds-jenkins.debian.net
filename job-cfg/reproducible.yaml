@@ -324,7 +324,6 @@
                 - 'profitbricks4':  { my_arch: 'amd64' }
                 - 'profitbricks5':  { my_arch: 'amd64' }
                 - 'profitbricks6':  { my_arch: 'i386'  }
-                - 'osuosl168':  { my_arch: 'amd64' }
                 - 'profitbricks9':  { my_arch: 'amd64' }
                 - 'profitbricks10': { my_arch: 'amd64' }
                 - 'profitbricks11': { my_arch: 'amd64' }
@@ -386,7 +385,6 @@
                 - 'profitbricks4':  { my_arch: 'amd64' }
                 - 'profitbricks5':  { my_arch: 'amd64' }
                 - 'profitbricks6':  { my_arch: 'i386'  }
-                - 'osuosl168':  { my_arch: 'amd64' }
                 - 'profitbricks9':  { my_arch: 'amd64' }
                 - 'profitbricks10': { my_arch: 'amd64' }
                 - 'profitbricks11': { my_arch: 'amd64' }
