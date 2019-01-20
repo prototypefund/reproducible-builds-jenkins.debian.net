@@ -17,9 +17,6 @@
 
 # Also see https://pad.sfconservancy.org/p/rb-build-nodes-keep
 
-# down, codethink has been informed/asked
-codethink-sled15-arm64.debian.net
-
 # disk issues, down indefinitely
 jtx1c-armhf-rb.debian.net
 
