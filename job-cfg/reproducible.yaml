@@ -689,7 +689,7 @@
             otherproject_blocked:
                 - 'setup_fdroid_build_environment':
                     my_description: 'Setup a build environment for F-Droid.'
-                    my_timed: '42 0 * * 1'
+                    my_timed: '42 0 * * 1,3,5'
                     my_hname: 'osuosl168'
                     my_recipients: 'jenkins+reproducible-builds qa-jenkins-scm@lists.alioth.debian.org hans@guardianproject.info michael.poehn@fsfe.org bubu@bubu1.eu'
                     my_blocker: '^reproducible.*fdroid.*'
@@ -699,7 +699,7 @@
             otherproject_git_blocked:
                 - 'fdroid_build_apps':
                     my_description: 'Build all the latest apps for F-Droid.'
-                    my_timed: '42 7 * * 1'
+                    my_timed: '42 7 * * *'
                 - 'fdroid_test':
                     my_description: 'Run tests on all the built APKs for F-Droid.'
                     my_timed: '42 23 1 1 *'
