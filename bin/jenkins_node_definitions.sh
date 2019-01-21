@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Copyright 2015-2018 Holger Levsen <holger@layer-acht.org>
+# Copyright 2015-2019 Holger Levsen <holger@layer-acht.org>
 # released under the GPLv=2
 
 # define Debian build nodes in use for tests.reproducible-builds.org/debian/
@@ -9,7 +9,7 @@
 #		  where it *must* only contain the Debian nodes as it's used
 #		  to generate the variations… and
 #		- bin/reproducible_cleanup_nodes.sh where it would be
-#		  nice to also include pb-build3+4+7+9+10, to also cleanup
+#		  nice to also include pb-build9+10, to also cleanup
 #		  jobs there…
 BUILD_NODES="bbx15-armhf-rb.debian.net
 cb3a-armhf-rb.debian.net
@@ -137,7 +137,7 @@ get_node_ssh_port() {
 	  p64c*)
 	    PORT=2248
 	    ;;
-	  profitbricks-build[456]*|profitbricks-build1[56]*)
+	  profitbricks-build[56]*|profitbricks-build1[56]*)
 	    NODE_RUN_IN_THE_FUTURE=true
 	    PORT=22
 	    ;;
@@ -189,6 +189,7 @@ get_node_ssh_port() {
 	    PORT=45050
 	    ;;
 	  osuosl-build172*)
+	    NODE_RUN_IN_THE_FUTURE=true
 	    PORT=45051
 	    ;;
 	  osuosl-build173*)

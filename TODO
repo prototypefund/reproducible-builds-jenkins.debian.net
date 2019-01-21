@@ -70,8 +70,10 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 *** inform #osuosl
 ** done: osuosl169: archlinux
 ** done: osuosl170: archlinux (future)
-** osuosl171: openwrt, coreboot, netbsd, opensuse
-** osuosl172: openwrt, coreboot, netbsd, opensuse (future)
+** osuosl171: openwrt, coreboot, netbsd, FIXME: opensuse/redhat
+*** was pb3
+** osuosl172: openwrt, coreboot, netbsd, FIXME: opensuse/redhat (future)
+*** was pb4
 ** osuosl173: debian
 ** osuosl174: debian (future)
 * add to README 
@@ -206,8 +208,8 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 ==== reproducible non-Debian tests, new host for 398 day variation is unused
 
 * locations in the code which need to be changed
-** RPM_BUILD_NODE=profitbricks-build3-amd64
-** grep for profitbricks-build3-amd64, there's more
+** RPM_BUILD_NODE=osuosl-build171-amd64
+** grep for osuosl-build171-amd64, there's more
 * IOW: these tests should use it:
 ** coreboot
 ** netbsd
@@ -300,7 +302,7 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 * setup script:
 ** mock --clean just uninstalls the chroot but it'll still be rebuilt next time using cache.  you can delete the caches from /var/cache/mock/ or touch the mock config
 ** is /etc/yum/repos.d/fedora.repo really needed?
-** hosts/pb-build3/etc/yum/repos.d/* is really not sooo good but works…
+** hosts/osuosl-build171/etc/yum/repos.d/* is really not sooo good but works…
 * build script
 ** cleanup mock cache between two builds: --scrub=all might be too much, but whats sensible (or is it --scrub=all?)?
 ** no variations introduced yet:
@@ -393,9 +395,7 @@ $ du -hd1 | sort -h | tail -n 6
 
 ==== reproducible qubes
 
-* dont forget: rm holger@profitbricks-build3-amd64:qubes-test/
-* dont forget: rm userContent/qubes/q(1|2) on jenkins
-* add qubes test on pb3 / t.r-b.o
+* add qubes test on t.r-b.o
 ----
         git clone https://github.com/qubesos/qubes-builder
         make get-sources BUILDERCONF=scripts/travis-builder.conf COMPONENTS=installer-qubes-os
@@ -405,7 +405,7 @@ $ du -hd1 | sort -h | tail -n 6
 
         make qubes iso BUILDERCONF=scripts/travis-builder.conf VERBOSE=0 COMPONENTS=installer-qubes-os
 ----
-* pb3 has been modified manually:  apt install createrepo python-yaml
+* depends:  apt install createrepo python-yaml
 * once this iso is being tested, it will be interesting to build the Qubes templates as well, as those images (Qubes templates are images) will be copied on the installation iso. the above iso is a stripped down iso without templates… (and not the real thing)
 
 ==== reproducible guix

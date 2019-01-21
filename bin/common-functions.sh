@@ -141,10 +141,10 @@ else
 	fi
 	# force http_proxy as we want it
 	case $HOSTNAME in
-		jenkins|jenkins-test-vm|profitbricks-build1-a*|profitbricks-build2*|profitbricks-build3*|profitbricks-build9*|profitbricks-build11*|profitbricks-build12*)
+		jenkins|jenkins-test-vm|profitbricks-build1-a*|profitbricks-build2*|profitbricks-build9*|profitbricks-build11*|profitbricks-build12*)
 			# pb datacenter in karlsruhe uses pb1 as proxy:
 			export http_proxy="http://78.137.99.97:3128" ;;
-		profitbricks-build4*|profitbricks-build5*|profitbricks-build6*|profitbricks-build10*|profitbricks-build15*|profitbricks-build16*)
+		profitbricks-build5*|profitbricks-build6*|profitbricks-build10*|profitbricks-build15*|profitbricks-build16*)
 			# pb datacenter in frankfurt uses pb10 as proxy:
 			export http_proxy="http://85.184.249.68:3128" ;;
 		osuosl*)

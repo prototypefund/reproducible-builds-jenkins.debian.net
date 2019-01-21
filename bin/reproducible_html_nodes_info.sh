@@ -17,14 +17,14 @@ common_init "$@"
 explain_nodes() {
 	case $JENKINS_NODENAME in
 		jenkins)	;;
-		profitbricks3)	write_page "<br /><small>(r-b OpenWrt, NetBSD, Coreboot builds)</small>" ;;
-		profitbricks4)	write_page "<br /><small>(r-b OpenWrt, NetBSD, Coreboot builds)</small>" ;;
 		profitbricks9)	write_page "<br /><small>(jenkins.d.n rebootstrap jobs)</small>" ;;
 		profitbricks10)	write_page "<br /><small>(jenkins.d.n chroot-installation jobs)</small>" ;;
 		osuosl167)	write_page "<br /><small>(http-proxy for osuosl nodes)</small>" ;;
 		osuosl168)	write_page "<br /><small>(r-b F-Droid builds)</small>" ;;
 		osuosl169)	write_page "<br /><small>(r-b Archlinux builds)</small>" ;;
 		osuosl170)	write_page "<br /><small>(r-b Archlinux builds)</small>" ;;
+		osuosl171)	write_page "<br /><small>(r-b OpenWrt, NetBSD, Coreboot builds)</small>" ;;
+		osuosl172)	write_page "<br /><small>(r-b OpenWrt, NetBSD, Coreboot builds)</small>" ;;
 		osuosl*)	write_page "<br /><small>(TBD - setup in progress)</small>" ;;
 		*)		write_page "<br /><small>(r-b Debian builds)</small>" ;;
 	esac
@@ -62,11 +62,7 @@ build_nodes_health_page() {
 
 		for NODE in $BUILD_NODES ; do
 			REPRODUCIBLE_NODES="$REPRODUCIBLE_NODES $NODE"
-			if [ "$NODE" = "profitbricks-build2-i386.debian.net" ] ; then
-				# pb3	r-b archlinux
-				# pb4	r-b archlinux
-				REPRODUCIBLE_NODES="$REPRODUCIBLE_NODES profitbricks-build3-amd64.debian.net profitbricks-build4-amd64.debian.net"
-			elif [ "$NODE" = "profitbricks-build6-i386.debian.net" ] ; then
+			if [ "$NODE" = "profitbricks-build6-i386.debian.net" ] ; then
 				# pb9 	rebootstrap jobs
 				# pb10	chroot jobs
 				REPRODUCIBLE_NODES="$REPRODUCIBLE_NODES profitbricks-build9-amd64.debian.net profitbricks-build10-amd64.debian.net"
@@ -113,8 +109,6 @@ build_nodes_health_page() {
 			# worker.log links
 			case $JENKINS_NODENAME in
 				jenkins)	write_page "<td></td>" ;;
-				profitbricks3)	write_page "<td></td>" ;;
-				profitbricks4)	write_page "<td></td>" ;;
 				profitbricks9)	write_page "<td></td>" ;;
 				profitbricks10)	write_page "<td></td>" ;;
 				osuosl*)	write_page "<td></td>" ;;
@@ -131,8 +125,6 @@ build_nodes_health_page() {
 			for SUITE in ${SUITES} ; do
 				case $JENKINS_NODENAME in
 					jenkins)	write_page "<td></td>" ;;
-					profitbricks3)	write_page "<td></td>" ;;
-					profitbricks4)	write_page "<td></td>" ;;
 					profitbricks9)	write_page "<td></td>" ;;
 					profitbricks10)	write_page "<td></td>" ;;
 					osuosl*)	write_page "<td></td>" ;;
@@ -150,7 +142,7 @@ build_nodes_health_page() {
 				URL="https://jenkins.debian.net/view/reproducible/view/Debian_setup_${ARCH}/job/reproducible_setup_schroot_${SUITE}_diffoscope_${ARCH}_${JENKINS_NODENAME}"
 				BADGE="$URL/badge/icon"
 				case $JENKINS_NODENAME in
-					profitbricks3)
+					osuosl171)
 						if [ "$SUITE" = "unstable" ]; then
 							write_page "<td><a href='$URL'><img src='$BADGE' /></a></td>"
 						else
@@ -212,8 +204,6 @@ build_graph_overview_pages() {
 					if [ "$GRAPH" = "jenkins_reproducible_builds" ] ; then
 						case $JENKINS_NODENAME in
 							jenkins)	write_page "<td></td>" ; continue ;;
-							profitbricks3)	write_page "<td></td>" ; continue ;;
-							profitbricks4)	write_page "<td></td>" ; continue ;;
 							profitbricks9)	write_page "<td></td>" ; continue ;;
 							profitbricks10)	write_page "<td></td>" ; continue ;;
 							osuosl*)	write_page "<td></td>" ; continue ;;

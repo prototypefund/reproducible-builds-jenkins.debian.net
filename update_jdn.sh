@@ -70,7 +70,7 @@ fi
 
 # some nodes need special treatment…
 case $HOSTNAME in
-	profitbricks-build4-amd64|profitbricks-build5-amd64|profitbricks-build6-i386|profitbricks-build15-amd64|profitbricks-build16-i386)
+	profitbricks-build5-amd64|profitbricks-build6-i386|profitbricks-build15-amd64|profitbricks-build16-i386)
 		# set correct date
 		set_correct_date de.pool.ntp.org
 		;;
@@ -78,7 +78,7 @@ case $HOSTNAME in
 		# set correct date
 		set_correct_date de.pool.ntp.org
 		;;
-	osuosl-build170-amd64)
+	osuosl-build170-amd64|osuosl-build172-amd64)
 		# set correct date
 		set_correct_date time.osuosl.org
 		;;
@@ -114,8 +114,8 @@ user_host_groups['mattia','jenkins']="reproducible,${user_host_groups['mattia','
 user_host_groups['phil','jenkins-test-vm']="$sudo_groups,libvirt,libvirt-qemu"
 user_host_groups['phil','jenkins']="$sudo_groups"
 user_host_groups['lunar','jenkins']='reproducible'
-user_host_groups['lynxis','profitbricks-build3-amd64']="$sudo_groups"
-user_host_groups['lynxis','profitbricks-build4-amd64']="$sudo_groups"
+user_host_groups['lynxis','osuosl-build171-amd64']="$sudo_groups"
+user_host_groups['lynxis','osuosl-build172-amd64']="$sudo_groups"
 user_host_groups['hans','osuosl-build168-amd64']="$sudo_groups"
 user_host_groups['vagrant','armhf']="$sudo_groups"
 user_host_groups['vagrant','arm64']="$sudo_groups"
@@ -174,10 +174,6 @@ case $HOSTNAME in
 	profitbricks-build9-amd64)
 		TMPFSSIZE=40
 		TMPSIZE=8
-		;;
-	profitbricks-build3-amd64|profitbricks-build4-amd64)
-		TMPFSSIZE=200
-		TMPSIZE=30
 		;;
 	profitbricks-build*)
 		TMPFSSIZE=200
@@ -313,14 +309,14 @@ if [ -f /etc/debian_version ] ; then
 		esac
 		# needed to run the 2nd reproducible builds nodes in the future...
 		case $HOSTNAME in
-			profitbricks-build4-amd64|profitbricks-build5-amd64|profitbricks-build6-i386|profitbricks-build15-amd64|profitbricks-build16-i386) DEBS="$DEBS ntpdate" ;;
+			profitbricks-build5-amd64|profitbricks-build6-i386|profitbricks-build15-amd64|profitbricks-build16-i386) DEBS="$DEBS ntpdate" ;;
 			codethink-sled9*|codethink-sled11*|codethink-sled13*|codethink-sled15*) DEBS="$DEBS ntpdate" ;;
-			osuosl-build170-amd64) DEBS="$DEBS ntpdate" ;;
+			osuosl-build170-amd64|osuosl-build172-amd64) DEBS="$DEBS ntpdate" ;;
 			*) ;;
 		esac
 		# needed to run coreboot/openwrt/netbsd/fedora jobs
 		case $HOSTNAME in
-		profitbricks-build3-amd64|profitbricks-build4-amd64) DEBS="$DEBS
+		osuosl-build171-amd64|osuosl-build172-amd64) DEBS="$DEBS
 				bison
 				ca-certificates
 				cmake
@@ -486,14 +482,14 @@ if [ -f /etc/debian_version ] ; then
 			 sudo apt-get -y purge unattended-upgrades
 		fi
 		# we need mock to build fedora
-		if [ "$HOSTNAME" = "profitbricks-build3-amd64" ] || [ "$HOSTNAME" = "profitbricks-build4-amd64" ] || [ "$HOSTNAME" = "jenkins" ] ; then
+		if [ "$HOSTNAME" = "osuosl-build171-amd64" ] || [ "$HOSTNAME" = "osuosl-build172-amd64" ] || [ "$HOSTNAME" = "jenkins" ] ; then
 			$UP2DATE || sudo apt-get install mock
 		fi
 		# for varying kernels:
 		# - we use bpo kernels on pb-build5+15 (and the default amd64 kernel on pb-build6+16-i386)
-		# - we also use the bpo kernel on pb-build4 (but not pb-build3)
+		# - we also use the bpo kernel on osuosl-build172 (but not osuosl-build171)
 		if [ "$HOSTNAME" = "profitbricks-build5-amd64" ] || [ "$HOSTNAME" = "profitbricks-build15-amd64" ] \
-			|| [ "$HOSTNAME" = "profitbricks-build4-amd64" ] ; then
+			|| [ "$HOSTNAME" = "osuosl-build172-amd64" ] ; then
 			$UP2DATE || sudo apt-get install -t stretch-backports linux-image-amd64
 		elif [ "$HOSTNAME" = "profitbricks-build6-i386" ] || [ "$HOSTNAME" = "profitbricks-build16-i386" ] \
 			|| [ "$HOSTNAME" = "profitbricks-build2-i386" ] || [ "$HOSTNAME" = "profitbricks-build12-i386" ] ; then
@@ -700,7 +696,7 @@ fi
 #
 # generate the kgb-client configurations
 #
-if [ "$HOSTNAME" = "jenkins" ] || [ "$HOSTNAME" = "profitbricks-build3-amd64" ] || [ "$HOSTNAME" = "profitbricks-build4-amd64" ] || [ "$HOSTNAME" = "osuosl-build168-amd64" ] || [ "$HOSTNAME" = "profitbricks-build2-i386" ] || [ "$HOSTNAME" = "profitbricks-build12-i386" ] ; then
+if [ "$HOSTNAME" = "jenkins" ] || [ "$HOSTNAME" = "osuosl-build168-amd64" ] || [ "$HOSTNAME" = "osuosl-build171-amd64" ] || [ "$HOSTNAME" = "osuosl-build172-amd64" ] || [ "$HOSTNAME" = "profitbricks-build2-i386" ] || [ "$HOSTNAME" = "profitbricks-build12-i386" ] ; then
 	cd $BASEDIR
 	KGB_SECRETS="/srv/jenkins/kgb/secrets.yml"
 	if [ -f "$KGB_SECRETS" ] && [ $(stat -c "%a:%U:%G" "$KGB_SECRETS") = "640:jenkins-adm:jenkins-adm" ] ; then
@@ -774,7 +770,7 @@ explain "$(date) - finished deployment."
 # finally!
 case $HOSTNAME in
 	# set time back to the future
-	profitbricks-build4-amd64|profitbricks-build5-amd64|profitbricks-build6-i386|profitbricks-build15-amd64|profitbricks-build16-i386)
+	profitbricks-build5-amd64|profitbricks-build6-i386|profitbricks-build15-amd64|profitbricks-build16-i386)
 		disable_dsa_check_packages
 		sudo date --set="+398 days +6 hours + 23 minutes"
 		;;
@@ -782,7 +778,7 @@ case $HOSTNAME in
 		disable_dsa_check_packages
 		sudo date --set="+398 days +6 hours + 23 minutes"
 		;;
-	osuosl-build170-amd64)
+	osuosl-build170-amd64|osuosl-build172-amd64)
 		disable_dsa_check_packages
 		sudo date --set="+398 days +6 hours + 23 minutes"
 		;;

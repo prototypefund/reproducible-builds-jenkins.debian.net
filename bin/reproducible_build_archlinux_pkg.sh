@@ -392,7 +392,7 @@ mkdir b1 b2
 N1="osuosl-build169-amd64"
 N2="osuosl-build170-amd64"
 # if random number between 0 and 99 is greater than 60…
-# (because pb4 is generally less loaded than pb3)
+# (because osuosl169 is generally less loaded than osuosl170)
 if [ $(( ( $RANDOM % 100 ) )) -gt 60 ] ; then
 	NODE1=$N1
 	NODE2=$N2

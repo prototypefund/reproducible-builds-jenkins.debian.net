@@ -89,7 +89,7 @@ if [ ! -z "$OLDSTUFF" ] ; then
 fi
 
 #
-# delete old temp directories in /tmp (probably only useful on profitbricks3+4)
+# delete old temp directories in /tmp (probably only useful on osuosl171+172)
 #
 echo "$(date -u) - Deleting temporary directories in /tmp, older than 3 days."
 OLDSTUFF=$(find /tmp -maxdepth 1 -type d -mtime +2 -regextype egrep -regex '/tmp/(tmp.*|Test.*|usession-release.*|.*test.*)' -exec ls -lad {} \; || true)

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Copyright 2014-2018 Holger Levsen <holger@layer-acht.org>
+# Copyright 2014-2019 Holger Levsen <holger@layer-acht.org>
 #         © 2015 Reiner Herrmann <reiner@reiner-h.de>
 #           2016-2018 Alexander Couzens <lynxis@fe80.eu>
 # released under the GPLv=2
@@ -11,8 +11,8 @@
 # (which in turn was based on another variant of reproducible_openwrt.sh)
 
 # configuration
-GENERIC_NODE1=profitbricks-build3-amd64.debian.net
-GENERIC_NODE2=profitbricks-build4-amd64.debian.net
+GENERIC_NODE1=osuosl-build171-amd64.debian.net
+GENERIC_NODE2=osuosl-build172-amd64.debian.net
 OPENWRT_GIT_REPO=https://git.openwrt.org/openwrt/openwrt.git
 OPENWRT_GIT_BRANCH=master
 DEBUG=false

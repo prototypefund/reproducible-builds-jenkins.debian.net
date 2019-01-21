@@ -61,7 +61,7 @@ ARCHLINUX_PKGS=/srv/reproducible-results/archlinux_pkgs
 ARCHBASE=$BASE/archlinux
 
 # common settings for testing rpm based distros
-RPM_BUILD_NODE=profitbricks-build3-amd64
+RPM_BUILD_NODE=osuosl-build171-amd64
 RPM_PKGS=/srv/reproducible-results/rpm_pkgs
 
 # number of cores to be used
@@ -434,7 +434,7 @@ write_variation_table() {
 		write_page "<tr><td>domainname</td><td>$(hostname -d)</td><td>i-capture-the-domainname</td></tr>"
 	else
 		if [ "$1" != "Arch Linux" ] || [ "$1" != "OpenWrt" ] ; then
-			write_page "<tr><td>hostname</td><td> profitbricks-build3-amd64 or profitbricks-build4-amd64</td><td>the other one</td></tr>"
+			write_page "<tr><td>hostname</td><td> osuosl-build171-amd64 or osuosl-build172-amd64</td><td>the other one</td></tr>"
 		else
 			write_page "<tr><td>hostname</td><td colspan=\"2\"> is not yet varied between rebuilds of $1.</td></tr>"
 		fi
@@ -535,7 +535,7 @@ write_variation_table() {
 		elif [ "$1" = "Arch Linux" ] ; then
 			write_page "<tr><td>year, month, date</td><td>osuosl-build169-amd64: today ($DATE) or osuosl-build170-amd64: 398 days in the future ($FUTURE)</td><td>the other one</td></tr>"
 		else
-			write_page "<tr><td>year, month, date</td><td>profitbricks-build3-amd64: today ($DATE) or profitbricks-build4-amd64: 398 days in the future ($FUTURE)</td><td>the other one</td></tr>"
+			write_page "<tr><td>year, month, date</td><td>osuosl-build171-amd64: today ($DATE) or osuosl-build172-amd64: 398 days in the future ($FUTURE)</td><td>the other one</td></tr>"
 		fi
 	fi
 	if [ "$1" != "FreeBSD" ] ; then

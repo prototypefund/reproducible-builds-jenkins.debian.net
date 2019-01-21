@@ -25,8 +25,8 @@
 # ./deploy_jdn jenkins o167	- deploy on jenkins and osuosl167
 # ./deploy_jdn jenkins c9	- deploy on jenkins and codethink-sled9
 # ./deploy_jdn jenkins 10	- deploy on jenkins and pb10
-# ./deploy_jdn jenkins 3 4	- deploy on jenkins and pb4 and pb4
-# ./deploy_jdn jenkins amd64	- deploy on jenkins and all amd64 nods
+# ./deploy_jdn jenkins 5 6	- deploy on jenkins and pb6 and pb6
+# ./deploy_jdn jenkins amd64	- deploy on jenkins and all amd64 nodes
 # ./deploy_jdn upgrade		- run "apt-get update && upgrade && clean" everywhere
 # ./deploy_jdn upgradey		- run "apt-get upgrade -y" everywhere
 # ./deploy_jdn rmstamp		- delete stamp files everywhere
@@ -48,8 +48,6 @@ profitbricks-build6-i386.debian.net
 profitbricks-build12-i386.debian.net
 profitbricks-build16-i386.debian.net
 profitbricks-build1-amd64.debian.net
-profitbricks-build3-amd64.debian.net
-profitbricks-build4-amd64.debian.net
 profitbricks-build5-amd64.debian.net
 profitbricks-build9-amd64.debian.net
 profitbricks-build10-amd64.debian.net
@@ -94,9 +92,9 @@ ALL_HOSTS=("${HOSTS[@]}")
 
 node_in_the_future () {
 	case "$1" in
-		profitbricks-build4-amd64*|profitbricks-build5-amd64*|profitbricks-build6-i386*|profitbricks-build15-amd64*|profitbricks-build16-i386*) true ;;
+		profitbricks-build5-amd64*|profitbricks-build6-i386*|profitbricks-build15-amd64*|profitbricks-build16-i386*) true ;;
 		codethink-sled9*|codethink-sled11*|codethink-sled13*|codethink-sled15*) true ;;
-		osuosl-build170*) true ;;
+		osuosl-build170*|osuosl-build172) true ;;
 		*) false ;;
 	esac
 }
@@ -138,9 +136,6 @@ elif [ "$1" = "jenkins" ] ; then
 		case "$i" in
 			1|pb1)	 HOSTS+=(profitbricks-build1-amd64.debian.net) ;;
 			2|pb2)	 HOSTS+=(profitbricks-build2-i386.debian.net) ;;
-			3|pb3)	 HOSTS+=(profitbricks-build3-amd64.debian.net) ;;
-			3+4|pb3+pb4|pb3+4) HOSTS+=(profitbricks-build3-amd64.debian.net profitbricks-build4-amd64.debian.net) ;;
-			4|pb4)	 HOSTS+=(profitbricks-build4-amd64.debian.net) ;;
 			5|pb5)	 HOSTS+=(profitbricks-build5-amd64.debian.net) ;;
 			6|pb6)	 HOSTS+=(profitbricks-build6-i386.debian.net) ;;
 			9|pb9)	 HOSTS+=(profitbricks-build9-amd64.debian.net) ;;

@@ -320,8 +320,6 @@
                 - 'wbq0':           { my_arch: 'armhf' }
                 - 'profitbricks1':  { my_arch: 'amd64' }
                 - 'profitbricks2':  { my_arch: 'i386'  }
-                - 'profitbricks3':  { my_arch: 'amd64' }
-                - 'profitbricks4':  { my_arch: 'amd64' }
                 - 'profitbricks5':  { my_arch: 'amd64' }
                 - 'profitbricks6':  { my_arch: 'i386'  }
                 - 'profitbricks9':  { my_arch: 'amd64' }
@@ -381,8 +379,6 @@
                 - 'wbq0':           { my_arch: 'armhf' }
                 - 'profitbricks1':  { my_arch: 'amd64' }
                 - 'profitbricks2':  { my_arch: 'i386'  }
-                - 'profitbricks3':  { my_arch: 'amd64' }
-                - 'profitbricks4':  { my_arch: 'amd64' }
                 - 'profitbricks5':  { my_arch: 'amd64' }
                 - 'profitbricks6':  { my_arch: 'i386'  }
                 - 'profitbricks9':  { my_arch: 'amd64' }
@@ -498,7 +494,7 @@
                     my_timed: '42 0 * * *'
                     my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
             my_hname:
-                - 'profitbricks3':  { my_arch: 'amd64' }
+                - 'osuosl171':  { my_arch: 'amd64' }
             my_naginator_regex: '^E: Couldn.t download .*/Packages'
 
         - '{name}_{my_task}':
@@ -638,7 +634,7 @@
                     my_timed: '42 23 * * 3'
             my_trigger: 'reproducible_html_rsync_remote_results'
             my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
-            my_hname: 'profitbricks3'
+            my_hname: 'osuosl171'
             my_recipients: 'jenkins+reproducible-builds qa-jenkins-scm@lists.alioth.debian.org'
             my_timeout: '1440'
 
@@ -666,15 +662,15 @@
                     my_timed: '42 23 1 1 *'
                     my_shell: '/srv/jenkins/bin/reproducible_setup_mock.sh fedora-23 x86_64'
                     my_disabled: true
-                - 'setup_mock_fedora-23_x86_64_profitbricks3':
+                - 'setup_mock_fedora-23_x86_64_osuosl171':
                     my_description: 'Setup mock for fedora-23 on X86_64 to test .rpm packages for reproducibility.'
                     my_timed: '42 23 1 1 *'
-                    my_hname: 'profitbricks3'
+                    my_hname: 'osuosl171'
                     my_disabled: true
-                - 'setup_mock_fedora-23_x86_64_profitbricks4':
+                - 'setup_mock_fedora-23_x86_64_osuosl172':
                     my_description: 'Setup mock for fedora-23 on X86_64 to test .rpm packages for reproducibility.'
                     my_timed: '42 23 1 1 *'
-                    my_hname: 'profitbricks4'
+                    my_hname: 'osuosl172'
                     my_disabled: true
                 - 'opensuse_import_json':
                     my_description: 'Import the status json'

@@ -88,11 +88,11 @@ iptables -I INPUT -p udp --dport 111 -j DROP
 # put schroots on tmpfs for non debian hosts
 #
 case $(hostname) in
-	profitbricks-build3*)	put_schroots_on_tmpfs ;;
-	profitbricks-build4*)	put_schroots_on_tmpfs ;;
 	osuosl-build168*)	put_schroots_on_tmpfs ;;
 	osuosl-build169*)	put_schroots_on_tmpfs ;;
 	osuosl-build170*)	put_schroots_on_tmpfs ;;
+	osuosl-build171*)	put_schroots_on_tmpfs ;;
+	osuosl-build172*)	put_schroots_on_tmpfs ;;
 	*)			;;
 esac
 
@@ -104,12 +104,12 @@ case $(hostname) in
 	codethink-sled11*)	send_back_to_the_future ;;
 	codethink-sled13*)	send_back_to_the_future ;;
 	codethink-sled15*)	send_back_to_the_future ;;
-	profitbricks-build4*)	send_back_to_the_future ;;
 	profitbricks-build5*)	send_back_to_the_future ;;
 	profitbricks-build6*)	send_back_to_the_future ;;
 	profitbricks-build15*)	send_back_to_the_future ;;
 	profitbricks-build16*)	send_back_to_the_future ;;
 	osuosl-build170*)	send_back_to_the_future time.osuosl.org;;
+	osuosl-build172*)	send_back_to_the_future time.osuosl.org;;
 	*)			;;
 esac
 
