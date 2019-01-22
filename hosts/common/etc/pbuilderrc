@@ -18,6 +18,9 @@ APTCACHE=""
 COMPRESSPROG="pigz"
 BUILDPLACE=/srv/workspace/pbuilder  # build in /srv/workspace, which is in tmpfs
 
+# dependency resolver to use - the default aptitude one has many dependencies
+PBUILDERSATISFYDEPENDSCMD="/usr/lib/pbuilder/pbuilder-satisfydepends-apt"
+
 # set PATH to predictable values, see #780729 and #780725
 PATH="/usr/sbin:/usr/bin:/sbin:/bin:/usr/games"
 
