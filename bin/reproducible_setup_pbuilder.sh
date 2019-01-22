@@ -58,7 +58,6 @@ create_setup_our_repo_tmpfile() {
 #
 echo "Configure the chroot to use the reproducible team experimental archive..."
 echo "-----BEGIN PGP PUBLIC KEY BLOCK-----
-Version: GnuPG v1.4.12 (GNU/Linux)
 
 mQINBFQsy/gBEADKGF55qQpXxpTn7E0Vvqho82/HFB/yT9N2wD8TkrejhJ1I6hfJ
 zFXD9fSi8WnNpLc6IjcaepuvvO4cpIQ8620lIuONQZU84sof8nAO0LDoMp/QdN3j
@@ -72,21 +71,21 @@ vwGQs/vcChc3BuxJegw/bnP+y0Ys5tsVLw+kkxM5wbpqhWw+hgOlGHKpJLNpmBxn
 T+o84iUWTzpvHgHiw6ShJK50AxSbNzDWdbo7p6e0EPHG4Gj41bwO4zVzmQrFz//D
 txVBvoATTZYMLF5owdCO+rO6s/xuC3s04pk7GpmDmi/G51oiz7hIhxJyhQARAQAB
 tC5EZWJpYW4gUmVwcm9kdWNpYmxlIEJ1aWxkcyBBcmNoaXZlIFNpZ25pbmcgS2V5
-iQI9BBMBCAAnAhsDBQsJCAcDBRUKCQgLBRYDAgEAAh4BAheABQJakW5lBQkKJwlk
-AAoJEF23ymfqWaMfAh0P/RJqbeTtlWYXKWIWU9y+DtJYKLECGhUxRymeIE4NQvkD
-ffHgGKc6CiN7s3gVnWb/hJE9U7UjpQ0E2ufpneGT1JNNK2yCGWsC1ArFRD2ZCdKF
-xDzY9zkh6I9t87Qznb1zfbEkbru89Z+V0Pg6ROMHqQR2fX+FwivblsevGJ27AtZ1
-+hv1CzKdGooDSMJlhYxwR8I0jjoaVV8SI7Kbz+73vvXfrQGHu4gVR1Qlby+pD9NS
-NydzmWdgWxBrSQdWg/K+U3AmLWnLTDcqa54G5S8jyyxMYLRWzVrkz3/CkH3E4qru
-44sVit8GppLUiESR2O7gqDeVnALYNN0m0fiy3vige4AXl/T4R8GFoueCFu7aHN3V
-kNjg2uIXUisyi123r5sb8AtsWYSYO9tocMDIzUxM2lyJAIhJNg+XJifGKxq3LSms
-N13hh6PJsBYJN5H8ykYyHlteIKoYGkSPM8qxqm5nLc3skAuZsQloZhnDHSZmPAZO
-zaIcpUkirRMKTCN4S9CBT6q1dHZwANgx9sn2Z7bWs6F5D//54BmYoHdVCWtptwUg
-0hI7x8jS5PsAI5qQtdA48SBmknDuuLizD6HkJ3XX6PLQ/naaMCpillm0uTEUc0Rw
-3t6mjgG4PvM7bVUNXK3mIjgY/IU5z/tDemzZywiI5sigUz0aBkKI4C4ugoWQdC4c
-=LHVA
+iQJUBBMBCAA+AhsDBQsJCAcDBRUKCQgLBRYDAgEAAh4BAheAFiEESbZXRzbQtjfM
+NwHqXbfKZ+pZox8FAlxG+gsFCQ29yJMACgkQXbfKZ+pZox/oKhAArNl6txTTDzjh
+9DG5qywijR4ydUOuoLZBsvoiltzaTXZVlRdHm3JDU2gpQcZfgWzsGBiN9f1/a9uJ
+teg93n5BlcBa+FEazcdWd9fssOkkphOMpv15y92G3nqfuhHnK/vhI5tP4lC4bGBi
+MCoCLWULD86rPNYZxdr4KuY6RpvbrM7kj4PDaHwWH9EGvfBdqvrbjfG7e4KULl1D
+SfeCxXV5bIVKxlyL8dLwKoyHe9Mp+jXGG3ZdyISprGPTIvSrpHzWIKuToJc4gYdJ
+FHG9jRsJ+tBO5qW8GQ5NsthJJJ3YH3RQwGLLDdV065/DhHTzMvE5KgSkn2eN36Zl
+gCLuT/qlpUkxmoBcqph9jLm/f1Mu9uo9psM/+n+aRscGRoRxtfcEpn+jXgumQ39a
+S3EbiwsTVFqWr1FaCJBkT6biTgHH3oUj+Q9aq7ymZAWOvZ3WeAjRbfkYq9TjgNx9
+LLAt784kuLfFlUv2/jE+pIXrCXp7RfWHq+UbIMLAtHXP8je4G8Sl8m0jmfaYmXL+
+4fCGLQn6VMu/h4iQo0Kr1XpLWcvE3s6fK2GVKm8awbJhtn+xH3BIS4M9TmVz0934
+PmJ9QvvxltW0X/5bhEJaaQRN2HuoiC1hItak9E8GfUIuDng24KGl9mgsgU4thO1F
+TqlQavDrP+hwePoKd4P3Wvj50NVjQL4=
+=1Wlp
 -----END PGP PUBLIC KEY BLOCK-----" > /etc/apt/trusted.gpg.d/reproducible.asc
-# Let's Encrypt intermediary certificate, as found at
 echo 'deb http://tests.reproducible-builds.org/debian/repository/debian/ ./' > /etc/apt/sources.list.d/reproducible.list
 echo "Package: *
 Pin: release o=reproducible
