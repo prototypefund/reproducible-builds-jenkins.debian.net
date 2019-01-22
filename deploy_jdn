@@ -94,7 +94,7 @@ node_in_the_future () {
 	case "$1" in
 		profitbricks-build5-amd64*|profitbricks-build6-i386*|profitbricks-build15-amd64*|profitbricks-build16-i386*) true ;;
 		codethink-sled9*|codethink-sled11*|codethink-sled13*|codethink-sled15*) true ;;
-		osuosl-build170*|osuosl-build172) true ;;
+		osuosl-build170*|osuosl-build172*) true ;;
 		*) false ;;
 	esac
 }
