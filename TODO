@@ -65,16 +65,14 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 ** done: osuosl167: squid (only, atm)
 ** done: osuosl168: fdroid
 *** underused. the old system had 2 cores and 8gb ram
-*** shutdown pb7+3+4
+*** shutdown pb7
 *** more cpu and ram for jenkins
 *** inform hans, also about better specs
 *** inform #osuosl
 ** done: osuosl169: archlinux
 ** done: osuosl170: archlinux (future)
 ** osuosl171: openwrt, coreboot, netbsd, FIXME: opensuse/redhat
-*** was pb3
 ** osuosl172: openwrt, coreboot, netbsd, FIXME: opensuse/redhat (future)
-*** was pb4
 ** osuosl173: debian
 ** osuosl174: debian (future)
 * add to README 
