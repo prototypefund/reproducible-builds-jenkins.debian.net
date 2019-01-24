@@ -714,10 +714,8 @@ if [ "$HOSTNAME" = "jenkins" ] || [ "$HOSTNAME" = "osuosl-build168-amd64" ] || [
 		echo "/srv/jenkins/kgb/client-status should be mode 755 and owned by jenkins:jenkins."
 	fi
 	KGB_STATUS="/srv/jenkins/kgb/client-status"
-	if [ ! -d "$KGB_STATUS" ] ; then
-		sudo mkdir $KGB_STATUS
-		sudo chown jenkins-adm:jenkins $KGB_STATUS
-	fi
+	sudo mkdir -p $KGB_STATUS
+	sudo chown jenkins:jenkins $KGB_STATUS
 fi
 
 #
