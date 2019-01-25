@@ -79,6 +79,21 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 * add link to OSUOSL in THANKS and explain usage
 * drop 'setup in progress' from r_html_nodes_info
 * blog post when done
+* setup netconsoles:
+----
+<guerby> | Ramereth, h01ger netconsole is about the ony way to diagnose this kind of issue in my experience
+<guerby> | h01ger, setup rsyslogd on one of the gccserver then it's just one modprobe netconsole
+<guerby> | h01ger, since the machine are on the same LAN
+<guerby> (if not on the same LAN, modprobe netconsole netconsole=+@${IPSRC}/eth0,514@${IPRSYSLOG}/${GWMACADDR} )
+<guerby> where GWMACADDR is 00:11:22... your gateway MAC
+<guerby> saved the day lots of time here :)
+<guerby> found this ext4 bug thanks to it, CVE : https://bugzilla.redhat.com/show_bug.cgi?id=1360968
+<guerby> "Red Hat would like to thank Laurent Guerby for bringing this to our attention." and /me thanks netconsole :)
+<guerby> https://bugzilla.kernel.org/show_bug.cgi?id=107301
+<Ramereth> ya, netconsole is very nice to find odd kernel issues
+<h01ger> | and you recommend to have that running all the time on all the nodes? or only when we suspect probs?
+<Ramereth> we currently have it running all the time on all physical nodes
+----
 
 ==== proper backup
 
