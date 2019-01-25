@@ -266,7 +266,7 @@ update_archlinux_repositories() {
 				WHERE s.distribution=$DISTROID
 				AND s.architecture='x86_64'
 				AND r.build_date > '$MAXDATE'")
-		MESSAGE="$MESSAGE ($RECENT builds in the last 3h)"
+		MESSAGE="$MESSAGE ($RECENT builds in the last 3h.)"
 		echo -n "$(date -u ) - "
 		irc_message archlinux-reproducible "$MESSAGE"
 	else
