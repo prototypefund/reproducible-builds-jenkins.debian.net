@@ -38,11 +38,11 @@ update_archlinux_repositories() {
 	#
 	echo "$(date -u ) - exporting pacman's knowledge of Arch Linux repositories to the filesystem (by running 'expac -S...')."
 	schroot --run-session -c $SESSION --directory /var/tmp -- expac -S '%r %e %n %v' | \
-		while read repo pkgbase pkgname version; do
+		while read repository pkgbase pkgname version; do
 			if [[ "$pkgbase" = "(null)" ]]; then
-				printf '%s %s %s\n' "$repo" "$pkgname" "$version"
+				printf '%s %s %s\n' "$repository" "$pkgname" "$version"
 			else
-				printf '%s %s %s\n' "$repo" "$pkgbase" "$version"
+				printf '%s %s %s\n' "$repository" "$pkgbase" "$version"
 			fi
 		done | sort -u -R > "$ARCHLINUX_PKGS"_full_pkgbase_list
 	TOTAL=$(cat ${ARCHLINUX_PKGS}_full_pkgbase_list | wc -l)
@@ -98,15 +98,15 @@ update_archlinux_repositories() {
 		echo "$(date -u ) - updating database with available packages in repository '$REPO'."
 		DATE="$(date -u +'%Y-%m-%d %H:%M')"
 		grep "^$REPO" "$ARCHLINUX_PKGS"_full_pkgbase_list | \
-			while read repo pkgbase version; do
+			while read repository pkgbase version; do
 				PKG=$pkgbase
-				SUITE="archlinux_$repo"
-				PKG_IN_DB=$(grep "^archlinux_$repo|$pkgbase|" $KNOWN | head -1) # FIXME: why oh why is head -1 needed here?
+				SUITE="archlinux_$REPO"
+				PKG_IN_DB=$(grep "^archlinux_$REPO|$pkgbase|" $KNOWN | head -1) # FIXME: why oh why is head -1 needed here?
 				VERSION=$(echo ${PKG_IN_DB} | cut -d "|" -f3)
 			        if [ -z "${PKG_IN_DB}" ] ; then
 					# new package, add to db and schedule
 					echo $REPO/$pkgbase >> $NEW
-					echo "new package found: $repo/$pkgbase $version "
+					echo "new package found: $REPO/$pkgbase $version "
 					query_db "INSERT into sources (name, version, suite, architecture, distribution) VALUES ('$PKG', '$version', '$SUITE', '$ARCH', $DISTROID);"
 					PKG_ID=$(query_db "SELECT id FROM sources WHERE distribution=$DISTROID AND name='$PKG' AND suite='$SUITE' AND architecture='$ARCH';")
 					query_db "INSERT INTO schedule (package_id, date_scheduled) VALUES ('${PKG_ID}', '$DATE');"
