@@ -188,7 +188,7 @@ update_archlinux_repositories() {
 	# (only if less than $THRESHOLD packages are currently scheduled)
 	#
 	echo "$(date -u ) - should we schedule old packages?"
-	MAX=500
+	MAX=501
 	local THRESHOLD=600
 	MINDATE=$(date -u +"%Y-%m-%d %H:%M" -d "4 days ago")
 	SCHDATE=$(date -u +"%Y-%m-%d %H:%M" -d "7 days")
