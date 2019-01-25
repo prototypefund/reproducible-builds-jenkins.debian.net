@@ -69,7 +69,7 @@ update_archlinux_repositories() {
 					REMOVE_LIST="$REMOVE_LIST $REPO/$PKG"
 					rm -r --one-file-system $BASE/archlinux/$REPO/$PKG
 					echo "$(date -u) - $REPO/$PKG removed as it's gone from the Archlinux repositories."
-					SUITE="archlinux_$repo"
+					SUITE="archlinux_$REPO"
 					PKG_ID=$(query_db "SELECT id FROM sources WHERE distribution=$DISTROID AND name='$PKG' AND suite='$SUITE' AND architecture='$ARCH';")
 					if [ -n "${PKG_ID}" ] ; then
 						query_db "DELETE FROM results WHERE package_id='${PKG_ID}';"
