@@ -555,7 +555,7 @@
                     my_timed: '15,45 * * * *'
                 - 'archlinux_scheduler':
                     my_description: 'Scheduler for for Arch Linux reproducibility tests'
-                    my_timed: '0 H/3 * * *'
+                    my_timed: '0 H/4 * * *'
                 - 'html_fedora-23_x86_64':
                     my_description: 'Build a simple webpage for Fedora 23 reproducibility tests'
                     my_timed: ''
