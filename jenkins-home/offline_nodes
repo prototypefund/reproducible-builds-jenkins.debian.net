@@ -19,6 +19,8 @@
 
 # host stuck somewhere, will need vagrant to poke physically
 jtx1b-armhf-rb.debian.net
+# i/o errors and reset is not doing anything.  vagrant will need to push the btn
+bbx15-armhf-rb.debian.net
 
 ## temporary problems
 
