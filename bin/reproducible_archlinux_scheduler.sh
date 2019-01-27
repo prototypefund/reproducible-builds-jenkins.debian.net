@@ -259,14 +259,14 @@ update_archlinux_repositories() {
 		MESSAGE="${message}${msg_old}${msg_depwait404}, for $total scheduled out of $TOTAL."
 		# the next 3 lines could maybe do some refactoring. but then, all of this should be rewritten in python using templates...
 		DISTROID=$(query_db "SELECT id FROM distributions WHERE name='archlinux'")
-		MAXDATE="$(date -u +'%Y-%m-%d %H:%M' -d '3 hours ago')"
+		MAXDATE="$(date -u +'%Y-%m-%d %H:%M' -d '4 hours ago')"
 		RECENT=$(query_db "SELECT count(s.name) FROM sources AS s
 				JOIN results AS r
 				ON s.id=r.package_id
 				WHERE s.distribution=$DISTROID
 				AND s.architecture='x86_64'
 				AND r.build_date > '$MAXDATE'")
-		MESSAGE="$MESSAGE ($RECENT builds in the last 3h.)"
+		MESSAGE="$MESSAGE ($RECENT builds in the last 4h.)"
 		echo -n "$(date -u ) - "
 		irc_message archlinux-reproducible "$MESSAGE"
 	else
