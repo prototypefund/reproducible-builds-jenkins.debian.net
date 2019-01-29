@@ -10,6 +10,13 @@
 # reproducible_lede_common.sh and reproducible_lede.sh
 # (which in turn was based on another variant of reproducible_openwrt.sh)
 
+. /srv/jenkins/bin/common-functions.sh
+common_init "$@"
+
+# common code defining db access
+. /srv/jenkins/bin/reproducible_common.sh
+set -e
+
 # configuration
 GENERIC_NODE1=osuosl-build171-amd64.debian.net
 GENERIC_NODE2=osuosl-build172-amd64.debian.net
@@ -18,13 +25,6 @@ OPENWRT_GIT_BRANCH=master
 DEBUG=false
 OPENWRT_CONFIG=
 OPENWRT_TARGET=
-
-. /srv/jenkins/bin/common-functions.sh
-common_init "$@"
-
-# common code defining db access
-. /srv/jenkins/bin/reproducible_common.sh
-set -e
 
 # run on jenkins master
 node_debug() {
