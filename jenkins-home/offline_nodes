@@ -21,8 +21,6 @@
 jtx1b-armhf-rb.debian.net
 # i/o errors and reset is not doing anything.  vagrant will need to push the btn
 bbx15-armhf-rb.debian.net
-# keeps crashing, disabled until vagrant can look at it.
-opi2b-armhf-rb.debian.net
 
 ## temporary problems
 
