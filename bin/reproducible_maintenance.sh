@@ -208,7 +208,7 @@ for s in $SUITES ; do
 			exit 1
 		fi
 		. /srv/jenkins/bin/jenkins_node_definitions.sh
-		get_node_ssh_port "$HOSTNAME"
+		get_node_information "$HOSTNAME"
 		if "$NODE_RUN_IN_THE_FUTURE" ; then
 			echo "This node is reported to run in the future, configuring APT to ignore the Release file expiration..."
 			echo 'Acquire::Check-Valid-Until "false";' > "$CHPATH/$distname/etc/apt/apt.conf.d/398future"

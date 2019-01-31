@@ -1,10 +1,10 @@
 #!/bin/bash
 # vim: set noexpandtab:
 
-# Copyright © 2012-2018 Holger Levsen <holger@layer-acht.org>
+# Copyright © 2012-2019 Holger Levsen <holger@layer-acht.org>
 #           ©      2013 Antonio Terceiro <terceiro@debian.org>
 #           ©      2014 Joachim Breitner <nomeata@debian.org>
-#           © 2015-2018 MAttia Rizzolo <mattia@debian.org>
+#           © 2015-2018 Mattia Rizzolo <mattia@debian.org>
 # released under the GPLv=2
 
 DEBUG=false
@@ -137,7 +137,7 @@ bootstrap() {
 	__END__
 
 	. /srv/jenkins/bin/jenkins_node_definitions.sh
-	get_node_ssh_port "$HOSTNAME"
+	get_node_information "$HOSTNAME"
 	if "$NODE_RUN_IN_THE_FUTURE" ; then
 		echo "This node is reported to run in the future, configuring APT to ignore the Release file expiration..."
 		echo 'Acquire::Check-Valid-Until "false";' | sudo tee -a $SCHROOT_TARGET/etc/apt/apt.conf.d/398future >/dev/null

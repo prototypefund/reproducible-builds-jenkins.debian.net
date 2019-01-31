@@ -62,7 +62,7 @@ osuosl-build174-amd64.debian.net"
 
 # return the ports sshd is listening on
 NODE_RUN_IN_THE_FUTURE=false
-get_node_ssh_port() {
+get_node_information() {
 	local NODE_NAME=$1
 	case "$NODE_NAME" in
 	  bbx15*)

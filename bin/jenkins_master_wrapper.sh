@@ -1,7 +1,7 @@
 #!/bin/bash
 # vim: set noexpandtab:
 
-# Copyright 2015-2018 Holger Levsen <holger@layer-acht.org>
+# Copyright 2015-2019 Holger Levsen <holger@layer-acht.org>
 #                2016 Phil Hands <phil@hands.com>
 #           2018      Mattia Rizzolo <mattia@debian.org>
 # released under the GPLv=2
@@ -27,7 +27,7 @@ if [ "${NODE_NAME%.*}" = "$NODE_NAME" ]; then
 	export NODE_NAME="${NODE_NAME}.debian.net"
 fi
 
-get_node_ssh_port $NODE_NAME
+get_node_information $NODE_NAME
 
 # don't try to fetch artifacts by default
 RETRIEVE_ARTIFACTS=no

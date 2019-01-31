@@ -1,7 +1,7 @@
 #!/bin/bash
 # vim: set noexpandtab:
 
-# Copyright 2014-2018 Holger Levsen <holger@layer-acht.org>
+# Copyright 2014-2019 Holger Levsen <holger@layer-acht.org>
 #           ©    2018 Mattia Rizzolo <mattia@debian.org>
 # released under the GPLv=2
 
@@ -38,7 +38,7 @@ echo "force-unsafe-io" > /etc/dpkg/dpkg.cfg.d/02speedup
 echo
 EOF
 	. /srv/jenkins/bin/jenkins_node_definitions.sh
-	get_node_ssh_port "$HOSTNAME"
+	get_node_information "$HOSTNAME"
 	if "$NODE_RUN_IN_THE_FUTURE" ; then
 		cat >> $TMPFILE <<- EOF
 			echo "Configuring APT to ignore the Release file expiration"

@@ -283,7 +283,7 @@ remote_build() {
 	local BUILDNR=$1
 	local NODE=$2
 	local FQDN=$NODE.debian.net
-	get_node_ssh_port $NODE
+	get_node_information $NODE
 	set +e
 	ssh -o "Batchmode = yes" -p $PORT $FQDN /bin/true
 	RESULT=$?

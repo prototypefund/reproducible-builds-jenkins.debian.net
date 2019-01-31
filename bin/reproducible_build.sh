@@ -1,7 +1,7 @@
 #!/bin/bash
 # vim: set noexpandtab:
 
-# Copyright 2014-2018 Holger Levsen <holger@layer-acht.org>
+# Copyright 2014-2019 Holger Levsen <holger@layer-acht.org>
 #         © 2015-2018 Mattia Rizzolo <mattia@debian.org>
 # released under the GPLv=2
 
@@ -727,9 +727,9 @@ check_node_is_up() {
 
 check_nodes_are_up() {
 	local SLEEPTIME=30
-	get_node_ssh_port $NODE1
+	get_node_information $NODE1
 	check_node_is_up $NODE1 $PORT $SLEEPTIME
-	get_node_ssh_port $NODE2
+	get_node_information $NODE2
 	check_node_is_up $NODE2 $PORT $SLEEPTIME
 }
 
@@ -737,7 +737,7 @@ remote_build() {
 	local BUILDNR=$1
 	local NODE=$2
 	log_info "Preparing to do remote build '$BUILDNR' on $NODE."
-	get_node_ssh_port $NODE
+	get_node_information $NODE
 	# sleep 15min if first node is down
 	# but 1h if the 2nd node is down
 	local SLEEPTIME=$(echo "$BUILDNR*$BUILDNR*15"|bc)

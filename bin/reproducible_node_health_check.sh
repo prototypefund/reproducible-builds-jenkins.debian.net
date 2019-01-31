@@ -1,7 +1,7 @@
 #!/bin/bash
 # vim: set noexpandtab:
 
-# Copyright 2014-2018 Holger Levsen <holger@layer-acht.org>
+# Copyright 2014-2019 Holger Levsen <holger@layer-acht.org>
 #         © 2015-2018 Mattia Rizzolo <mattia@mapreri.org>
 # released under the GPLv=2
 
@@ -106,7 +106,7 @@ fi
 #
 # (XXX: yes this is hardcoded but meh…)
 echo "$(date -u) - testing whether the time is right..."
-get_node_ssh_port "$HOSTNAME"
+get_node_information "$HOSTNAME"
 real_year=2019
 year=$(date +%Y)
 if "$NODE_RUN_IN_THE_FUTURE"; then

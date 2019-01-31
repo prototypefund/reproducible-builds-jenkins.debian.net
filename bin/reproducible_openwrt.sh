@@ -27,10 +27,10 @@ OPENWRT_TARGET=
 # node configuration
 GENERIC_NODE1=osuosl-build171-amd64.debian.net
 PORT=22
-get_node_ssh_port $GENERIC_NODE1
+get_node_information $GENERIC_NODE1
 GENERIC_PORT1=$PORT
 GENERIC_NODE2=osuosl-build172-amd64.debian.net
-get_node_ssh_port $GENERIC_NODE2
+get_node_information $GENERIC_NODE2
 GENERIC_PORT2=$PORT
 SSHN1="ssh -p $GENERIC_PORT1 $GENERIC_NODE1"
 SSHN2="ssh -p $GENERIC_PORT2 $GENERIC_NODE2"
