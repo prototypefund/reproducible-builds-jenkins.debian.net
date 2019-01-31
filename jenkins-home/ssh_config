@@ -1,4 +1,7 @@
 HashKnownHosts no
+Host *
+	ControlMaster auto
+	ControlPath ~/.ssh/master-%r@%h:%p
 Host bpi0-armhf-rb.debian.net
 	Port 2222
 Host hb0-armhf-rb.debian.net
