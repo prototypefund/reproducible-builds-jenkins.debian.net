@@ -70,6 +70,7 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 ** done: osuosl169: archlinux
 ** done: osuosl170: archlinux (future)
 ** done: osuosl171: openwrt, coreboot, netbsd, FIXME: opensuse/redhat
+*** is constantly online (in jenkins) now, which is not how we like it and still doesnt solve the netbsd job probs
 ** done: osuosl172: openwrt, coreboot, netbsd, FIXME: opensuse/redhat (future)
 ** osuosl173: debian
 ** osuosl174: debian (future)
