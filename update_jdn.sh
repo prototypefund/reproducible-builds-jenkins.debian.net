@@ -564,12 +564,6 @@ if [ "$HOSTNAME" = "jenkins" ] ; then
 		[ -L /var/www/userContent ] || sudo ln -sf /var/lib/jenkins/userContent /var/www/userContent
 		sudo service apache2 reload
 	fi
-	if ! grep controlmaster ~jenkins/.ssh/config || ! grep controlpath ~jenkins/.ssh/config ; then
-		echo
-		echo "Please define controlmaster and controlpath in ~jenkins/.ssh/config manually, see https://debian-administration.org/article/290/Reusing_existing_OpenSSH_v4_connections"
-		echo
-		exit 1
-	fi
 fi
 
 if ! $UP2DATE || [ $BASEDIR/hosts/$HOSTNAME/etc/munin -nt $STAMP ] ; then
