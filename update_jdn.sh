@@ -215,7 +215,7 @@ case $HOSTNAME in
 esac
 
 # make sure needed directories exists - some directories will not be needed on all hosts...
-for directory in /schroots /srv/reproducible-results /srv/d-i /srv/udebs /srv/live-build /var/log/jenkins/ /srv/jenkins /srv/jenkins/pseudo-hosts /srv/workspace/chroots ; do
+for directory in /schroots /srv/reproducible-results /srv/d-i /srv/udebs /var/log/jenkins/ /srv/jenkins /srv/jenkins/pseudo-hosts /srv/workspace/chroots ; do
 	if [ ! -d $directory ] ; then
 		sudo mkdir $directory
 	fi
@@ -603,7 +603,7 @@ cd $BASEDIR
 shopt -s nullglob
 for f in bin/*.sh bin/**/*.sh ; do bash -n "$f" ; done
 shopt -u nullglob
-for dir in bin logparse live mustache-templates ; do
+for dir in bin logparse mustache-templates ; do
 	sudo mkdir -p /srv/jenkins/$dir
 	sudo rsync -rpt --delete $dir/ /srv/jenkins/$dir/
 	sudo chown -R jenkins-adm.jenkins-adm /srv/jenkins/$dir

@@ -185,7 +185,6 @@ build_jenkins_job_health_page() {
 	FILTER[23]="g-i-installation_debian-edu_jessie"
 	FILTER[24]="g-i-installation_debian-edu_stretch"
 	FILTER[25]="debian-archive-keyring"
-	FILTER[26]="live:d-i_build"
 	numfilters=${#FILTER[@]}
 	let numfilters-=1	# that's what you get when you start counting from 0
 	write_page "<!DOCTYPE html><html lang=\"en\"><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">"
