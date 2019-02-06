@@ -82,7 +82,7 @@ update_archlinux_repositories() {
 				fi
 			done
 		done
-		MESSAGE="deleted $REMOVED packages: $REMOVE_LIST"
+		MESSAGE="Deleted $REMOVED packages: $REMOVE_LIST"
 		echo -n "$(date -u ) - "
 		if [ $REMOVED -ne 0 ] ; then
 			irc_message archlinux-reproducible "$MESSAGE"
@@ -231,7 +231,7 @@ update_archlinux_repositories() {
 			irc_message archlinux-reproducible "$MESSAGE"
 		fi
 		# inform irc channel how many packages of which kind have been scheduled
-		message="scheduled"
+		message="Scheduled"
 		if [ $new -ne 0 ] ; then
 			message="$message $new new package"
 			if [ $new -gt 1 ] ; then
