@@ -40,8 +40,8 @@ Debian packages for t.r-b.o
   ** 32 cores with 144 GB memory for osuosl168-amd64.debian.net used for building F-Droid for t.r-b.o
   ** 32 cores with 144 GB memory for osuosl169-amd64.debian.net used for building Arch Linux for t.r-b.o
   ** 32 cores with 144 GB memory for osuosl170-amd64.debian.net used for building Arch Linux for t.r-b.o
-  ** 32 cores with 144 GB memory for osuosl171-amd64.debian.net used for building OpenWrt, coreboot, Fedora and NetBSD for t.r-b.o
-  ** 32 cores with 144 GB memory for osuosl172-amd64.debian.net used for building OpenWrt, coreboot, Fedora and NetBSD for t.r-b.o
+  ** 32 cores with 144 GB memory for osuosl171-amd64.debian.net used for building OpenWrt, coreboot and NetBSD for t.r-b.o
+  ** 32 cores with 144 GB memory for osuosl172-amd64.debian.net used for building OpenWrt, coreboot for t.r-b.o
   ** 32 cores with 144 GB memory for osuosl173-amd64.debian.net
   ** 32 cores with 144 GB memory for osuosl174-amd64.debian.net
 
