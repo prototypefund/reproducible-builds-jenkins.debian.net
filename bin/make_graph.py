@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 # -*- coding: utf-8 -*-
 #
 # Copyright 2009-2019 Holger Levsen (holger@layer-acht.org)
@@ -12,7 +12,7 @@ from rpy2.robjects.packages import importr
 
 def main():
     if len(sys.argv) != 8:
-        print "we need exactly seven params: csv-file-in, png-out-file, color, mainlabel, ylabl, width, height"
+        print("we need exactly seven params: csv-file-in, png-out-file, color, mainlabel, ylabl, width, height")
         return
     filein = sys.argv[1]
     fileout = sys.argv[2]

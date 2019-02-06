@@ -148,7 +148,7 @@ Your clone of the jenkins git (https://salsa.debian.org/qa/jenkins.debian.net) w
 
 Some dependencies:
 ----
-sudo apt install python3 python3-psycopg2 python3-yaml sqlite3 python-rpy2 dctrl-tools
+sudo apt install python3 python3-psycopg2 python3-rpy2 python3-yaml sqlite3 dctrl-tools
 ----
 
 Create a user jenkins for testing. Create the following directories:

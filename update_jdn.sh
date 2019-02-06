@@ -433,6 +433,7 @@ if [ -f /etc/debian_version ] ; then
 				python3-debian 
 				python3-pystache
 				python3-requests
+				python3-rpy2 
 				python3-sqlalchemy
 				python3-xdg
 				python3-yaml
@@ -441,7 +442,6 @@ if [ -f /etc/debian_version ] ; then
 				python-imaging 
 				python-lzma 
 				python-pip 
-				python-rpy2 
 				python-setuptools 
 				python-twisted 
 				python-yaml 
