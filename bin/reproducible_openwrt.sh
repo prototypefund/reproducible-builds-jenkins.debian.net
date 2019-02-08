@@ -329,9 +329,8 @@ openwrt_download() {
 	openwrt_create_signing_keys
 
 	# update feeds
-	#FIXME: temporarily disable building all packages
-	#./scripts/feeds update
-	#./scripts/feeds install -a
+	./scripts/feeds update
+	./scripts/feeds install -a
 
 	# configure openwrt because otherwise it wont download everything
 	openwrt_config "$CONFIG"
