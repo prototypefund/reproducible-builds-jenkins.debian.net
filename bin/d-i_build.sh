@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Copyright 2012-2018 Holger Levsen <holger@layer-acht.org>
+# Copyright 2012-2019 Holger Levsen <holger@layer-acht.org>
 # 		 2016 Phil Hands <phil@hands.com>
 # released under the GPLv=2
 
@@ -85,7 +85,7 @@ preserve_artifacts() {
 		ls -ltrc $ISO_DIR
 
 		if [ "$HOSTNAME" = "jenkins" ] ; then
-			# FIXME this rsync should probably be in a separate job that the one on pb10 could then depend on -- otherwise race conditions seem to lurk
+			# this rsync should probably be in a separate job that the one on pb10 could then depend on -- otherwise race conditions seem to lurk
 			echo "and rsync them to the target node ($ISO_TEST_HOST):"
 			ssh -o 'Batchmode = yes' $ISO_TEST_HOST mkdir -p $ISO_DIR
 			rsync -v -e "ssh -o 'Batchmode = yes'" -r $ISO_DIR/ $ISO_TEST_HOST:$ISO_DIR/
