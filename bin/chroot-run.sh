@@ -143,6 +143,14 @@ cleanup() {
 	fi
 
 	#
+	# special case: publish developers-reference on the webserver
+	#
+	CHANGES=$(ls -1 $CHROOT_TARGET/tmp/developers-reference_*.changes 2>/dev/null|| true)
+	if [ ! -z "$CHANGES" ] ; then
+		publish_changes_to_userContent $CHANGES "" "git ${GIT_COMMIT:0:7}"
+	fi
+
+	#
 	# publish artifacts
 	#
 	if [ "$ARTIFACTS" = "true" ] ; then
