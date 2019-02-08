@@ -567,19 +567,19 @@
                     my_recipients: 'jenkins+reproducible-builds qa-jenkins-scm@lists.alioth.debian.org'
                 - 'diffoscope_freebsd':
                     my_description: 'Test whether FreeBSD has the latest diffoscope.'
-                    my_timed: '25 23 1 * *'
+                    my_timed: '25 23 * * 1'
                     my_shell: '/srv/jenkins/bin/diffoscope_distribution_test.sh FreeBSD'
                 - 'diffoscope_netbsd':
                     my_description: 'Test whether NetBSD has the latest diffoscope.'
-                    my_timed: '27 23 1 * *'
+                    my_timed: '27 23 * * 1'
                     my_shell: '/srv/jenkins/bin/diffoscope_distribution_test.sh NetBSD'
                 - 'diffoscope_macports':
                     my_description: 'Test whether MacPorts has the latest diffoscope.'
-                    my_timed: '29 23 1 * *'
+                    my_timed: '29 23 * * 1'
                     my_shell: '/srv/jenkins/bin/diffoscope_distribution_test.sh MacPorts'
                 - 'diffoscope_archlinux':
                     my_description: 'Test whether Arch Linux has the latest diffoscope.'
-                    my_timed: '31 23 1 * *'
+                    my_timed: '31 23 * * 1'
                     my_shell: '/srv/jenkins/bin/diffoscope_distribution_test.sh Arch'
             my_shellext: ".sh"
             my_shell: '/srv/jenkins/bin/reproducible_{my_task}{my_shellext}'
