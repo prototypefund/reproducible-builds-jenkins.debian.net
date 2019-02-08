@@ -380,7 +380,29 @@ if [ -f /etc/debian_version ] ; then
 		if [ "$HOSTNAME" = "jenkins-test-vm" ] ; then
 			# for phil only
 			DEBS="$DEBS postfix-pcre"
+			# only needed on the main node
+		elif [ "$HOSTNAME" = "jenkins" ] ; then
+			DEBS="$DEBS ffmpeg libav-tools python3-popcon dose-extra"
 		fi
+		# mock is needed to build fedora
+		if [ "$HOSTNAME" = "osuosl-build171-amd64" ] || [ "$HOSTNAME" = "osuosl-build172-amd64" ] || [ "$HOSTNAME" = "jenkins" ] ; then
+			DEBS="$DEBS mock"
+		fi
+		# for varying kernels:
+		# - we use bpo kernels on pb-build5+15 (and the default amd64 kernel on pb-build6+16-i386)
+		# - we also use the bpo kernel on osuosl-build172 (but not osuosl-build171)
+		if [ "$HOSTNAME" = "profitbricks-build5-amd64" ] || [ "$HOSTNAME" = "profitbricks-build15-amd64" ] \
+			|| [ "$HOSTNAME" = "osuosl-build172-amd64" ] ; then
+			DEBS="$DEBS linux-image-amd64/stretch-backports"
+		elif [ "$HOSTNAME" = "profitbricks-build6-i386" ] || [ "$HOSTNAME" = "profitbricks-build16-i386" ] \
+			|| [ "$HOSTNAME" = "profitbricks-build2-i386" ] || [ "$HOSTNAME" = "profitbricks-build12-i386" ] ; then
+			# we dont vary the kernel on i386 atm, see #875990 + #876035
+			DEBS="$DEBS linux-image-amd64:amd64"
+		elif [ "$HOSTNAME" = "osuosl-build169-amd64" ] || [ "$HOSTNAME" = "osuosl-build170-amd64" ] ; then
+			# Arch Linux builds latest stuff which sometimes (eg, currentlt Qt) needs newer kernel to build...
+			DEBS="$DEBS linux-image-amd64/stretch-backports"
+		fi
+		# only on main node
 		if [ "$HOSTNAME" = "jenkins" ] || [ "$HOSTNAME" = "jenkins-test-vm" ] ; then
 			MASTERDEBS=" 
 				apache2 
@@ -408,6 +430,7 @@ if [ -f /etc/debian_version ] ; then
 				imagemagick 
 				ip2host
 				jekyll
+				jenkins-job-builder/stretch-backports
 				kgb-client
 				libcap2-bin 
 				libfile-touch-perl 
@@ -480,30 +503,6 @@ if [ -f /etc/debian_version ] ; then
 		# remove unattended-upgrades if it's installed
 		if [ "$(dpkg-query -W -f='${db:Status-Abbrev}\n' unattended-upgrades 2>/dev/null || true)" = "ii "  ] ; then
 			 sudo apt-get -y purge unattended-upgrades
-		fi
-		# we need mock to build fedora
-		if [ "$HOSTNAME" = "osuosl-build171-amd64" ] || [ "$HOSTNAME" = "osuosl-build172-amd64" ] || [ "$HOSTNAME" = "jenkins" ] ; then
-			$UP2DATE || sudo apt-get install mock
-		fi
-		# for varying kernels:
-		# - we use bpo kernels on pb-build5+15 (and the default amd64 kernel on pb-build6+16-i386)
-		# - we also use the bpo kernel on osuosl-build172 (but not osuosl-build171)
-		if [ "$HOSTNAME" = "profitbricks-build5-amd64" ] || [ "$HOSTNAME" = "profitbricks-build15-amd64" ] \
-			|| [ "$HOSTNAME" = "osuosl-build172-amd64" ] ; then
-			$UP2DATE || sudo apt-get install -t stretch-backports linux-image-amd64
-		elif [ "$HOSTNAME" = "profitbricks-build6-i386" ] || [ "$HOSTNAME" = "profitbricks-build16-i386" ] \
-			|| [ "$HOSTNAME" = "profitbricks-build2-i386" ] || [ "$HOSTNAME" = "profitbricks-build12-i386" ] ; then
-			# we dont vary the kernel on i386 atm, see #875990 + #876035
-			$UP2DATE || sudo apt-get install linux-image-amd64:amd64
-		elif [ "$HOSTNAME" = "osuosl-build169-amd64" ] || [ "$HOSTNAME" = "osuosl-build170-amd64" ] ; then
-			# Arch Linux builds latest stuff which sometimes (eg, currentlt Qt) needs newer kernel to build...
-			$UP2DATE || sudo apt-get install -t stretch-backports linux-image-amd64
-		fi
-		# only needed on the main nodes
-		if [ "$HOSTNAME" = "jenkins-test-vm" ] ; then
-			$UP2DATE || sudo apt-get install jenkins-job-builder/stretch-backports
-		elif [ "$HOSTNAME" = "jenkins" ] ; then
-			$UP2DATE || sudo apt-get install ffmpeg libav-tools python3-popcon jenkins-job-builder/stretch-backports dose-extra
 		fi
 		sudo apt-get clean
 		explain "packages installed."
