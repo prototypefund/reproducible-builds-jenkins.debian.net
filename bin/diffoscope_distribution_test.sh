@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Copyright 2014-2018 Holger Levsen <holger@layer-acht.org>
+# Copyright 2014-2019 Holger Levsen <holger@layer-acht.org>
 # released under the GPLv=2
 
 DEBUG=false
@@ -79,7 +79,7 @@ check_whohas() {
 		send_irc_warning "It seems diffoscope $DIFFOSCOPE_IN_DEBIAN is not available in $DISTRIBUTION, which only has $DIFFOSCOPE_IN_WHOHAS."
 		exit 0
 	else
-		# FIXME: archlinux package version will be greater than Debian: 52-1 vs 52
+		# TODO: archlinux package version can greater than Debian: 52-1 vs 52
 		echo "diffoscope in Debian: $DIFFOSCOPE_IN_DEBIAN"
 		echo "diffoscope in $DISTRIBUTION: $DIFFOSCOPE_IN_WHOHAS"
 		echo
@@ -104,10 +104,10 @@ done
 case $1 in
 	PyPI)	check_pypi
 		;;
-	FreeBSD|NetBSD)
+	FreeBSD|NetBSD|Arch)
 		DISTRIBUTION=$1
 		check_whohas
-		# missing tests: Arch, Fedora, openSUSE, maybe OpenBSD, Guix…
+		# missing tests: Fedora, openSUSE, maybe OpenBSD, Guix…
 		;;
 	MacPorts)
 		check_github_macports

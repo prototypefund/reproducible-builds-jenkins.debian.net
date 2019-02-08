@@ -577,6 +577,10 @@
                     my_description: 'Test whether MacPorts has the latest diffoscope.'
                     my_timed: '29 23 1 * *'
                     my_shell: '/srv/jenkins/bin/diffoscope_distribution_test.sh MacPorts'
+                - 'diffoscope_archlinux':
+                    my_description: 'Test whether Arch Linux has the latest diffoscope.'
+                    my_timed: '31 23 1 * *'
+                    my_shell: '/srv/jenkins/bin/diffoscope_distribution_test.sh Arch'
             my_shellext: ".sh"
             my_shell: '/srv/jenkins/bin/reproducible_{my_task}{my_shellext}'
             my_hname: ''
