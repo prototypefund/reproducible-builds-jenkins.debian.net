@@ -389,7 +389,7 @@ write_page_footer() {
 	elif [ "$1" = "Arch Linux" ] ; then
 		other_distro_details='The <a href=\"https://www.archlinux.org\">Arch Linux</a> name and logo are recognized trademarks. Some rights reserved. The registered trademark Linux® is used pursuant to a sublicense from LMI, the exclusive licensee of Linus Torvalds, owner of the mark on a world-wide basis.'
 	elif [ "$1" = "fedora-23" ] ; then
-		other_distro_details="FIXME: add fedora copyright+trademark disclaimers here."
+			other_distro_details="Fedora is sponsored by Red Hat. © 2017 Red Hat, Inc. and others."
 	else
 		other_distro_details=''
 	fi
