@@ -246,9 +246,6 @@ while true ; do
 done
 
 # FIXME: TODO left for _service.sh:
-# * there's also https://jenkins.debian.net/userContent/reproducible/debian/build_service/amd64_1/worker.log (for all the workers…)
-#   - no automatic reload for that yet, though. and not linked anywhere
-#   - probably together with build nodes graphs?
 # * enabling the service in update_jdn
 # * maintenance job might want to:
 #   - check for running builds using systemctl show & ps fax
