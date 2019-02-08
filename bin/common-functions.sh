@@ -204,7 +204,7 @@ publish_changes_to_userContent() {
 	done
 	rm -rf $TARGET
 	mkdir $TARGET
-	mv ${NEW_CONTENT}/usr/share/doc/${SRCPKG}-* $TARGET/
+	mv ${NEW_CONTENT}/usr/share/doc/${SRCPKG}* $TARGET/
 	rm -r ${NEW_CONTENT}
 	if [ -z "$3" ] ; then
 		touch "$TARGET/${VERSION}"
