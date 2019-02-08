@@ -475,7 +475,7 @@ if [ -z "$1" ] ; then
 	rm $HTML_REPOSTATS > /dev/null
 elif [ -z "$2" ] ; then
 	echo "$(date -u) - $0 needs two params or none, exiting."
-	#FIXME: in future also except all core extra multilib community
+	# add code here to also except core, extra, multilib or community...
 	exit 1
 else
 	REPOSITORY=$1
