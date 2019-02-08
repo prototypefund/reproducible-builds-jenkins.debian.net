@@ -750,7 +750,7 @@ fi
 #
 if [ "$HOSTNAME" = "jenkins" ] || [ "$HOSTNAME" = "jenkins-test-vm" ] ; then
 	TMPFILE=$(mktemp)
-	rgrep FI[X]ME $BASEDIR/* | grep -v echo > $TMPFILE || true
+	rgrep FI[X]ME $BASEDIR/* | grep -v $BASEDIR/TODO | grep -v echo > $TMPFILE || true
 	if [ -s $TMPFILE ] ; then
 		echo
 		cat $TMPFILE
