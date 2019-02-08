@@ -150,7 +150,7 @@ EOF
 	NUM_CPU=$(nproc)
 	#
 	# if we got a valid TRIGGERING_BRANCH passed in as a parameter from the triggering job
-	# then grab the generated udebs.  FIXME -- we need to work out a way of cleaning up old branches
+	# then grab the generated udebs.  TODO -- we need to work out a way of cleaning up old branches
 	#
 	if udeb_dir=$(replace_origin_pu "/srv/udebs/" $TRIGGERING_BRANCH) ; then
 		cp $udeb_dir/*.udeb build/localudebs
