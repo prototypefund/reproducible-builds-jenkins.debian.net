@@ -1,5 +1,5 @@
 - defaults:
-    name: def-ref
+    name: dev-ref
     project-type: freestyle
     properties:
       - sidebar:
@@ -10,7 +10,7 @@
           url: http://www.profitbricks.co.uk
           text: Sponsored by Profitbricks
           icon: /userContent/images/profitbricks-24x24.png
-    description: 'Build the master branch of https://salsa.debian.org/debian/{my_package} in sid on every commit.<br><br>Job configuration source is <a href=""https://salsa.debian.org/qa/jenkins.debian.net/blob/master/job-cfg/def-ref.yaml>def-ref.yaml</a>.'
+    description: 'Build the master branch of https://salsa.debian.org/debian/{my_package} in sid on every commit.<br><br>Job configuration source is <a href=""https://salsa.debian.org/qa/jenkins.debian.net/blob/master/job-cfg/dev-ref.yaml>dev-ref.yaml</a>.'
     logrotate:
       daysToKeep: 90
       numToKeep: 30
