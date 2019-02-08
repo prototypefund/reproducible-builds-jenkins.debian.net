@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Copyright 2015 Holger Levsen <holger@layer-acht.org>
+# Copyright 2015-2019 Holger Levsen <holger@layer-acht.org>
 # released under the GPLv=2
 
 DEBUG=false
@@ -34,7 +34,11 @@ update_mock() {
 		echo "$(date -u ) - updating mock for $RELEASE ($ARCH) on $HOSTNAME now..."
 		mock -r $RELEASE-$ARCH --uniqueext=$UNIQUEEXT --resultdir=. --cleanup-after -v --update 2>&1
 		echo "$(date -u ) - mock updated."
-		yum -v --releasever=23 check-update # FIXME: dont hard-code releasever here.
+		case $RELEASE in
+			fedora-23) RELVER=23 ;;
+			*)         echo "Unsupported release $RELEASE, please fix this script." ; exit 1 ;;
+		esac
+		yum -v --releasever=$RELVER check-update
 		echo "$(date -u ) - yum updated."
 		touch $STAMP
 	else
