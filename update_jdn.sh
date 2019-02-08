@@ -584,7 +584,8 @@ if ! $UP2DATE || [ $BASEDIR/hosts/$HOSTNAME/etc/munin -nt $STAMP ] ; then
 		for i in apache_accesses apache_volume ; do sudo ln -s /usr/share/munin/plugins/$i $i ; done
 		sudo ln -s /usr/share/munin/plugins/loggrep jenkins_oom
 	fi
-	sudo service munin-node restart
+	# this is a hack to work around (rare) problems with restarting munin-node...
+	sudo service munin-node restart || sudo service munin-node restart || sudo service munin-node restart
 fi
 explain "packages configured."
 
