@@ -431,7 +431,7 @@ write_variation_table() {
 		write_page "<tr><td>domainname</td><td>$(hostname -d)</td><td>i-capture-the-domainname</td></tr>"
 	else
 		if [ "$1" != "Arch Linux" ] || [ "$1" != "OpenWrt" ] ; then
-			write_page "<tr><td>hostname</td><td> osuosl-build171-amd64 or osuosl-build172-amd64</td><td>the other one</td></tr>"
+			write_page "<tr><td>hostname</td><td> osuosl-build169-amd64 or osuosl-build170-amd64</td><td>the other one</td></tr>"
 		else
 			write_page "<tr><td>hostname</td><td colspan=\"2\"> is not yet varied between rebuilds of $1.</td></tr>"
 		fi
