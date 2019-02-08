@@ -517,10 +517,11 @@ write_variation_table() {
 		write_page "<tr><td>FreeBSD kernel version</td><td colspan=\"2\"> is not yet varied between rebuilds of $1.</td></tr>"
 		write_page "<tr><td>umask</td><td colspan=\"2\"> is not yet varied between rebuilds of $1.</td><tr>"
 	fi
-	FUTURE=$(date --date="${DATE}+398 days" +'%Y-%m-%d')
+	local TODAY=$(date +'%Y-%m-%d')
+	local FUTURE=$(date --date="${TODAY}+398 days" +'%Y-%m-%d')
 	if [ "$1" = "debian" ] ; then
 		write_page "<tr><td>CPU type</td><td>one of: $(cat /srv/reproducible-results/node-information/* | grep CPU_MODEL | cut -d '=' -f2- | sort -u | tr '\n' '\0' | xargs -0 -n1 echo '<br />&nbsp;&nbsp;')</td><td>on i386: systematically varied (AMD or Intel CPU with different names & features)<br />on amd64: same for both builds<br />on arm64: always the same<br />on armhf: sometimes varied (depending on the build job), but only the minor CPU revision</td></tr>"
-		write_page "<tr><td>year, month, date</td><td>today ($DATE) or (on amd64, i386 and arm64 only) also: $FUTURE</td><td>on amd64, i386 and arm64: varied (398 days difference)<br />on armhf: same for both builds (currently, work in progress)</td></tr>"
+		write_page "<tr><td>year, month, date</td><td>today (${TODAY}) or (on amd64, i386 and arm64 only) also: $FUTURE</td><td>on amd64, i386 and arm64: varied (398 days difference)<br />on armhf: same for both builds (currently, work in progress)</td></tr>"
 	else
 		write_page "<tr><td>CPU type</td><td>$(cat /proc/cpuinfo|grep 'model name'|head -1|cut -d ":" -f2-)</td><td>same for both builds</td></tr>"
 		if [ "$1" = "Arch Linux" ]; then
@@ -529,11 +530,11 @@ write_variation_table() {
 			write_page "<tr><td>/bin/sh</td><td colspan=\"2\"> is not yet varied between rebuilds of $1.</td></tr>"
 		fi
 		if [ "$1" != "FreeBSD" ] && [ "$1" != "Arch Linux" ] ; then
-			write_page "<tr><td>year, month, date</td><td>today ($DATE)</td><td>same for both builds (currently, work in progress)</td></tr>"
+			write_page "<tr><td>year, month, date</td><td>today (${TODAY})</td><td>same for both builds (currently, work in progress)</td></tr>"
 		elif [ "$1" = "Arch Linux" ] ; then
-			write_page "<tr><td>year, month, date</td><td>osuosl-build169-amd64: today ($DATE) or osuosl-build170-amd64: 398 days in the future ($FUTURE)</td><td>the other one</td></tr>"
+			write_page "<tr><td>year, month, date</td><td>osuosl-build169-amd64: today (${TODAY}) or osuosl-build170-amd64: 398 days in the future ($FUTURE)</td><td>the other one</td></tr>"
 		else
-			write_page "<tr><td>year, month, date</td><td>osuosl-build171-amd64: today ($DATE) or osuosl-build172-amd64: 398 days in the future ($FUTURE)</td><td>the other one</td></tr>"
+			write_page "<tr><td>year, month, date</td><td>osuosl-build171-amd64: today (${TODAY}) or osuosl-build172-amd64: 398 days in the future ($FUTURE)</td><td>the other one</td></tr>"
 		fi
 	fi
 	if [ "$1" != "FreeBSD" ] ; then
@@ -545,7 +546,7 @@ write_variation_table() {
 			write_page "<tr><td>Filesystem</td><td>tmpfs</td><td>same for both builds (currently, this could be varied using <a href=\"https://tracker.debian.org/disorderfs\">disorderfs</a>)</td></tr>"
 		fi
 	else
-		write_page "<tr><td>year, month, date</td><td>today ($DATE)</td><td>the 2nd build is done with the build node set 1 year, 1 month and 1 day in the future</td></tr>"
+		write_page "<tr><td>year, month, date</td><td>today ($TODAY)</td><td>the 2nd build is done with the build node set 1 year, 1 month and 1 day in the future</td></tr>"
 		write_page "<tr><td>hour, minute</td><td>hour and minute will vary between two builds</td><td>additionally the \"future build\" also runs 6h and 23min ahead</td></tr>"
 		write_page "<tr><td>filesystem of the build directory</td><td>ufs</td><td>same for both builds</td></tr>"
 	fi
