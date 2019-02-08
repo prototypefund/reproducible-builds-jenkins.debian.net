@@ -101,7 +101,7 @@ update_archlinux_repositories() {
 			while read repository pkgbase version; do
 				PKG=$pkgbase
 				SUITE="archlinux_$REPO"
-				PKG_IN_DB=$(grep "^archlinux_$REPO|$pkgbase|" $KNOWN | head -1) # FIXME: why oh why is head -1 needed here?
+				PKG_IN_DB=$(grep "^archlinux_$REPO|$pkgbase|" $KNOWN | head -1) # why oh why is head -1 needed here?
 				VERSION=$(echo ${PKG_IN_DB} | cut -d "|" -f3)
 			        if [ -z "${PKG_IN_DB}" ] ; then
 					# new package, add to db and schedule
