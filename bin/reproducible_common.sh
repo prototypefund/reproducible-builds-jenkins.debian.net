@@ -504,8 +504,9 @@ write_variation_table() {
 		elif [ "$1" != "Arch Linux" ]  ; then
 			write_page "<tr><td>kernel version, modified using /usr/bin/linux64 --uname-2.6</td><td>$(uname -sr)</td><td>$(/usr/bin/linux64 --uname-2.6 uname -sr)</td></tr>"
 		else
-			# FIXME: include information from /srv/reproducible-results/node-information/ here...
-			write_page "<tr><td>kernel version</td><td colspan=\"2\"> is varied between rebuilds of $1.</td></tr>"
+			write_page "<tr><td>kernel version</td>"
+			write_page "$(cat /srv/reproducible-results/node-information/osuosl-build169* | grep KERNEL | cut -d '=' -f2- | sort -u | tr '\n' '\0' | xargs -0 -n1 echo '<br />&nbsp;&nbsp;')"
+			write_page "<td colspan=\"2\"> is currently not varied between rebuilds of $1.</td></tr>"
 		fi
 		if [ "$1" != "OpenWrt" ] ; then
 			write_page "<tr><td>umask</td><td>0022<td>0002</td></tr>"
