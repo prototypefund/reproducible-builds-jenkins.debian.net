@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Copyright © 2017-2018 Holger Levsen (holger@layer-acht.org)
+# Copyright © 2017-2019 Holger Levsen (holger@layer-acht.org)
 # released under the GPLv=2
 
 set -e
@@ -55,7 +55,7 @@ elif [ ! -z "$(ps fax|grep -v grep|grep 'reproducible_worker $WORKER.sh ')" ] ; 
 		zcat $FILE.gz
 	fi
 #
-# FIXME: we should really just convert 'latest' into a number here and use the tail below… 
+# maybe we should just convert 'latest' into a number here and use the tail below…
 #
 elif [ "$BUILD" = "latest" ] ; then
 	if [ -f $FILE.gz ] ; then
