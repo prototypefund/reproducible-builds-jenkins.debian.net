@@ -1007,10 +1007,8 @@ create_pkg_html() {
 	#
 	#
 	if [ -z "$(cd $ARCHLINUX_PKG_PATH/ ; ls *.pkg.tar.xz.html 2>/dev/null)" ] ; then
-		# this horrible if elif elif elif elif...  monster is needed because
-		# https://lists.archlinux.org/pipermail/pacman-dev/2017-September/022156.html
-	        # has not yet been merged yet...
-		# FIXME: this has been merged, see http://jlk.fjfi.cvut.cz/arch/manpages/man/makepkg
+		# this horrible if elif elif elif elif...  monster should be replaced
+		# by using pacman's exit code which is possible since sometime in 2018
 
 		# check different states and figure out what the page should look like
 		if find_in_buildlogs '^error: failed to prepare transaction \(conflicting dependencies\)'; then
