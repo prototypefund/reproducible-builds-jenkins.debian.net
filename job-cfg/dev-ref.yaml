@@ -1,0 +1,51 @@
+- defaults:
+    name: def-ref
+    project-type: freestyle
+    properties:
+      - sidebar:
+          url: https://jenkins.debian.net/userContent/about.html
+          text: About jenkins.debian.net
+          icon: /userContent/images/debian-swirl-24x24.png
+      - sidebar:
+          url: http://www.profitbricks.co.uk
+          text: Sponsored by Profitbricks
+          icon: /userContent/images/profitbricks-24x24.png
+    description: 'Build the master branch of https://salsa.debian.org/debian/{my_package} in sid on every commit.<br><br>Job configuration source is <a href=""https://salsa.debian.org/qa/jenkins.debian.net/blob/master/job-cfg/def-ref.yaml>def-ref.yaml</a>.'
+    logrotate:
+      daysToKeep: 90
+      numToKeep: 30
+      artifactDaysToKeep: -1
+      artifactNumToKeep: -1
+    scm:
+      - git:
+          url: '{my_url}'
+          branches:
+            - master
+    builders:
+      - shell: '{my_shell}'
+    triggers:
+      - pollscm:
+          cron: 'H/1 H/1 * * *'
+    publishers:
+      - email:
+          recipients: 'holger@debian.org'
+      - naginator:
+          progressive-delay-increment: 5
+          progressive-delay-maximum: 15
+          max-failed-builds: 3
+          regular-expression: '(Caused by: hudson.plugins.git.GitException: Command "git fetch|^ERROR: Error cloning remote repo)'
+
+
+- job-template:
+    defaults: dev-ref
+    name: '{name}_{my_distro}_{my_package}'
+
+
+- project:
+    name: dev-ref
+    my_distro: 'sid'
+    my_shell: '/srv/jenkins/bin/chroot-run.sh {my_distro} debuild -b -uc -us'
+    my_url: 'https://salsa.debian.org/debian/{my_package}'
+    my_package:
+        - 'developers-reference'
+    jobs: ['{name}_{my_distro}_{my_package}']
