@@ -31,9 +31,12 @@ update_mock() {
 	local STAMP="${RPM_STAMPS}-$RELEASE-$ARCH"
 	touch -d "$(date -u -d "6 hours ago" '+%Y-%m-%d %H:%M') UTC" $DUMMY
 	if [ ! -f $STAMP ] || [ $DUMMY -nt $STAMP ] ; then
-		echo "$(date -u ) - updating mock for $RELEASE ($ARCH) on $HOSTNAME now..."
-		mock -r $RELEASE-$ARCH --uniqueext=$UNIQUEEXT --resultdir=. --cleanup-after -v --update 2>&1
-		echo "$(date -u ) - mock updated."
+		if [ "$MODE" != "master" ] ; then
+			# mock is only used on the build node
+			echo "$(date -u ) - updating mock for $RELEASE ($ARCH) on $HOSTNAME now..."
+			mock -r $RELEASE-$ARCH --uniqueext=$UNIQUEEXT --resultdir=. --cleanup-after -v --update 2>&1
+			echo "$(date -u ) - mock updated."
+		fi
 		case $RELEASE in
 			fedora-23) RELVER=23 ;;
 			*)         echo "Unsupported release $RELEASE, please fix this script." ; exit 1 ;;
@@ -222,7 +225,7 @@ ARCH="$2"
 UNIQUEEXT="mock${JOB_NAME#reproducible_builder_${RELEASE}_$ARCH}"
 SRCPACKAGE=""	# package name
 SRC_RPM=""	# src rpm file name
-#update_mock # FIXME: we dont have to run mock on the main node yet, but we will need at least have to update yum there…
+update_mock
 choose_package
 # build package twice
 mkdir b1 b2
