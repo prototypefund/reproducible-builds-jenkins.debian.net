@@ -359,10 +359,7 @@ write_page_intro() {
 		write_page " <li>cross references to <a href=\"https://tests.reproducible-builds.org/debian/index_issues.html\">Debian notes</a> - and having Arch Linux specific notes.</li>"
 		write_page "</ul></p>"
 		write_page "<p>Missing bits for Arch Linux:<ul>"
-		write_page " <li>pacman 5.1.0 is now in the official Arch repository, with full support by default for reproducible builds. In order to test this:<ul>"
-		write_page "  <li>all packages need to be rebuilt so that they include .BUILDINFO files.</li>"
-		write_page "  <li>code needs to be written to compare the packages built twice here against newly built packages from the Official Arch Linux repositories.</li>"
-		write_page " </ul></li>"
+		write_page " <li>code needs to be written to compare the packages built twice here against newly built packages from the Official Arch Linux repositories.</li>"
 		write_page " <li>user tools, for users to verify all of this easily.</li>"
 		write_page "</ul></p>"
 		write_page "<p>If you want to help out or discuss reproducible builds in $PROJECTNAME, please join #archlinux-reproducible on freenode.</p>"
@@ -507,7 +504,7 @@ write_variation_table() {
 		elif [ "$1" != "Arch Linux" ]  ; then
 			write_page "<tr><td>kernel version, modified using /usr/bin/linux64 --uname-2.6</td><td>$(uname -sr)</td><td>$(/usr/bin/linux64 --uname-2.6 uname -sr)</td></tr>"
 		else
-			# FIXME: collect information about arch build nodes in /srv/reproducible-results/node-information/ and include this here
+			# FIXME: include information from /srv/reproducible-results/node-information/ here...
 			write_page "<tr><td>kernel version</td><td colspan=\"2\"> is varied between rebuilds of $1.</td></tr>"
 		fi
 		if [ "$1" != "OpenWrt" ] ; then
