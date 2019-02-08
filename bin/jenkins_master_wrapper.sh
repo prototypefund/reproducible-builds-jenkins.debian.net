@@ -18,7 +18,6 @@ fi
 
 # define Debian build nodes in use
 . /srv/jenkins/bin/jenkins_node_definitions.sh
-PORT=0
 
 if [ "${NODE_NAME%.*}" = "$NODE_NAME" ]; then
 	# The NODE_NAME variable does not contain a dot, so it is not a FQDN.
@@ -51,7 +50,7 @@ fi
 # main
 #
 set +e
-ssh -o "BatchMode = yes" -p $PORT $NODE_NAME /bin/true
+ssh -o "BatchMode = yes" $NODE_NAME /bin/true
 RESULT=$?
 # abort job if host is down
 if [ $RESULT -ne 0 ] ; then
@@ -70,7 +69,7 @@ set -e
 # actually run things on the target node
 #
 RETVAL=0
-ssh -o "BatchMode = yes" -p $PORT $NODE_NAME "$PARAMS" || {
+ssh -o "BatchMode = yes" $NODE_NAME "$PARAMS" || {
 	# mention failures, but continue since we might want the artifacts anyway
 	RETVAL=$?
 	printf "\nSSH EXIT CODE: %s\n" $RETVAL
@@ -83,8 +82,8 @@ if [ "$RETRIEVE_ARTIFACTS" = "yes" ] ; then
 	echo "$(date -u) - retrieving artifacts."
 	set -x
 	mkdir -p "$RESULTS"
-	rsync -r --delete -v -e "ssh -o 'Batchmode = yes' -p $PORT" "$NODE_NAME:$NODE_RESULTS/" "$RESULTS/"
-	ssh -o "BatchMode = yes" -p $PORT $NODE_NAME "rm -r $NODE_RESULTS"
+	rsync -r --delete -v -e "ssh -o 'Batchmode = yes'" "$NODE_NAME:$NODE_RESULTS/" "$RESULTS/"
+	ssh -o "BatchMode = yes" $NODE_NAME "rm -r $NODE_RESULTS"
 fi
 
 #

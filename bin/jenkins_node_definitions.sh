@@ -60,150 +60,32 @@ osuosl-build172-amd64.debian.net
 osuosl-build173-amd64.debian.net
 osuosl-build174-amd64.debian.net"
 
-# return the ports sshd is listening on
 NODE_RUN_IN_THE_FUTURE=false
 get_node_information() {
 	local NODE_NAME=$1
 	case "$NODE_NAME" in
-	  bbx15*)
-	    PORT=2242
-	    ;;
-	  wbq0*)
-	    PORT=2225
-	    ;;
-	  cbxi4a*)
-	    PORT=2239
-	    ;;
-	  cbxi4b*)
-	    PORT=2240
-	    ;;
-	  cbxi4pro0*)
-	    PORT=2226
-	    ;;
-	  odxu4a*)
-	    PORT=2229
-	    ;;
-	  odxu4b*)
-	    PORT=2232
-	    ;;
-	  odxu4c*)
-	    PORT=2233
-	    ;;
-	  ff2a*)
-	    PORT=2234
-	    ;;
-	  ff2b*)
-	    PORT=2237
-	    ;;
-	  ff4a*)
-	    PORT=2241
-	    ;;
-	  ff64a*)
-	    PORT=2250
-	    ;;
-	  opi2a*)
-	    PORT=2236
-	    ;;
-	  opi2b*)
-	    PORT=2238
-	    ;;
-	  odu3a*)
-	    PORT=2243
-	    ;;
-	  cb3a*)
-	    PORT=2244
-	    ;;
-	  opi2c*)
-	    PORT=2245
-	    ;;
-	  jtk1a*)
-	    PORT=2246
-	    ;;
-	  jtk1b*)
-	    PORT=2252
-	    ;;
-	  jtx1a*)
-	    PORT=2249
-	    ;;
-	  jtx1b*)
-	    PORT=2253
-	    ;;
-	  jtx1c*)
-	    PORT=2254
-	    ;;
-	  p64b*)
-	    PORT=2247
-	    ;;
-	  p64c*)
-	    PORT=2248
-	    ;;
 	  profitbricks-build[56]*|profitbricks-build1[56]*)
 	    NODE_RUN_IN_THE_FUTURE=true
-	    PORT=22
-	    ;;
-	  profitbricks-build*)
-	    PORT=22
 	    ;;
 	  codethink-sled9*)
 	    NODE_RUN_IN_THE_FUTURE=true
-	    PORT=10109
-	    ;;
-	  codethink-sled10*)
-	    PORT=10110
 	    ;;
 	  codethink-sled11*)
 	    NODE_RUN_IN_THE_FUTURE=true
-	    PORT=10111
-	    ;;
-	  codethink-sled12*)
-	    PORT=10112
 	    ;;
 	  codethink-sled13*)
 	    NODE_RUN_IN_THE_FUTURE=true
-	    PORT=10113
-	    ;;
-	  codethink-sled14*)
-	    PORT=10114
 	    ;;
 	  codethink-sled15*)
 	    NODE_RUN_IN_THE_FUTURE=true
-	    PORT=10115
-	    ;;
-	  codethink-sled16*)
-	    PORT=10116
-	    ;;
-	  osuosl-build167*)
-	    PORT=45046
-	    ;;
-	  osuosl-build168*)
-	    PORT=45047
-	    ;;
-	  osuosl-build169*)
-	    PORT=45048
 	    ;;
 	  osuosl-build170*)
 	    NODE_RUN_IN_THE_FUTURE=true
-	    PORT=45049
-	    ;;
-	  osuosl-build171*)
-	    PORT=45050
 	    ;;
 	  osuosl-build172*)
 	    NODE_RUN_IN_THE_FUTURE=true
-	    PORT=45051
-	    ;;
-	  osuosl-build173*)
-	    PORT=45052
-	    ;;
-	  osuosl-build174*)
-	    PORT=45053
-	    ;;
-	  jenkins|jenkins.debian.net)
-	    PORT=22
 	    ;;
 	  *)
-	    echo >&2 "Unknown node $NODE_NAME."
-	    exit 1
 	    ;;
 	esac
 }

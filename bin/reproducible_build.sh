@@ -702,8 +702,7 @@ check_node_is_up() {
 	# - ssh login works
 	# - /tmp is not mounted in read-only mode
 	local NODE=$1
-	local PORT=$2
-	local SLEEPTIME=$3
+	local SLEEPTIME=$2
 	set +e
 	echo "$(date -u) - checking ~/offline_nodes if $NODE is marked as down."
 	if grep -q $NODE ~/offline_nodes >/dev/null 2>&1 ; then
@@ -713,7 +712,7 @@ check_node_is_up() {
 		exit 0
 	fi
 	echo "$(date -u) - checking via ssh if $NODE is up."
-	ssh -o "BatchMode = yes" -p $PORT $NODE 'rm -v $(mktemp --tmpdir=/tmp read-only-fs-test-XXXXXX)'
+	ssh -o "BatchMode = yes" $NODE 'rm -v $(mktemp --tmpdir=/tmp read-only-fs-test-XXXXXX)'
 	RESULT=$?
 	# abort job if host is down
 	if [ $RESULT -ne 0 ] ; then
@@ -728,9 +727,9 @@ check_node_is_up() {
 check_nodes_are_up() {
 	local SLEEPTIME=30
 	get_node_information $NODE1
-	check_node_is_up $NODE1 $PORT $SLEEPTIME
+	check_node_is_up $NODE1 $SLEEPTIME
 	get_node_information $NODE2
-	check_node_is_up $NODE2 $PORT $SLEEPTIME
+	check_node_is_up $NODE2 $SLEEPTIME
 }
 
 remote_build() {
@@ -741,16 +740,16 @@ remote_build() {
 	# sleep 15min if first node is down
 	# but 1h if the 2nd node is down
 	local SLEEPTIME=$(echo "$BUILDNR*$BUILDNR*15"|bc)
-	check_node_is_up $NODE $PORT $SLEEPTIME
+	check_node_is_up $NODE $SLEEPTIME
 	set +e
-	ssh -o "BatchMode = yes" -p $PORT $NODE /srv/jenkins/bin/reproducible_build.sh $BUILDNR ${SRCPACKAGE} ${SUITE} ${TMPDIR} "$VERSION"
+	ssh -o "BatchMode = yes" $NODE /srv/jenkins/bin/reproducible_build.sh $BUILDNR ${SRCPACKAGE} ${SUITE} ${TMPDIR} "$VERSION"
 	local BUILD_RESULT=$?
-	rsync -e "ssh -o 'BatchMode = yes' -p $PORT" -r $NODE:$TMPDIR/b$BUILDNR $TMPDIR/
+	rsync -e "ssh -o 'BatchMode = yes'" -r $NODE:$TMPDIR/b$BUILDNR $TMPDIR/
 	local RSYNC_RESULT=$?
 	if [ $RSYNC_RESULT -ne 0 ] ; then
 		log_warning "rsync from $NODE failed, sleeping 2m before re-trying..."
 		sleep 2m
-		rsync -e "ssh -o 'BatchMode = yes' -p $PORT" -r $NODE:$TMPDIR/b$BUILDNR $TMPDIR/
+		rsync -e "ssh -o 'BatchMode = yes'" -r $NODE:$TMPDIR/b$BUILDNR $TMPDIR/
 		local RSYNC_RESULT=$?
 		if [ $RSYNC_RESULT -ne 0 ] ; then
 			unregister_build
@@ -759,7 +758,7 @@ remote_build() {
 	fi
 	ls -lR $TMPDIR
 	log_info "Deleting \$TMPDIR on $NODE."
-	ssh -o "BatchMode = yes" -p $PORT $NODE "rm -r $TMPDIR"
+	ssh -o "BatchMode = yes" $NODE "rm -r $TMPDIR"
 	set -e
 	if [ $BUILDNR -eq 1 ] ; then
 		log_file $TMPDIR/b1/build.log
@@ -884,7 +883,6 @@ DATE=$(date -u +'%Y-%m-%d %H:%M')
 START=$(date +'%s')
 RBUILDLOG=$(mktemp --tmpdir=$TMPDIR)
 JOB="${JOB_NAME#reproducible_builder_}/${BUILD_ID}"
-PORT=0
 
 #
 # determine mode

@@ -285,7 +285,7 @@ remote_build() {
 	local FQDN=$NODE.debian.net
 	get_node_information $NODE
 	set +e
-	ssh -o "Batchmode = yes" -p $PORT $FQDN /bin/true
+	ssh -o "Batchmode = yes" $FQDN /bin/true
 	RESULT=$?
 	# abort job if host is down
 	if [ $RESULT -ne 0 ] ; then
@@ -295,10 +295,10 @@ remote_build() {
 		unregister_build
 		exit 0
 	fi
-	ssh -o "Batchmode = yes" -p $PORT $FQDN /srv/jenkins/bin/reproducible_build_archlinux_pkg.sh $BUILDNR $REPOSITORY ${SRCPACKAGE} ${TMPDIR} ${SOURCE_DATE_EPOCH}
+	ssh -o "Batchmode = yes" $FQDN /srv/jenkins/bin/reproducible_build_archlinux_pkg.sh $BUILDNR $REPOSITORY ${SRCPACKAGE} ${TMPDIR} ${SOURCE_DATE_EPOCH}
 	RESULT=$?
 	if [ $RESULT -ne 0 ] ; then
-		ssh -o "Batchmode = yes" -p $PORT $FQDN "rm -r $TMPDIR" || true
+		ssh -o "Batchmode = yes" $FQDN "rm -r $TMPDIR" || true
 		if [ $RESULT -eq 23 ] ; then
 			unregister_build
 			handle_remote_error "job on $NODE could not end schroot session properly and sent error 23 so we could abort silently."
@@ -310,12 +310,12 @@ remote_build() {
 			handle_remote_error "Warning: remote build failed with exit code $RESULT from $NODE for build #$BUILDNR for ${SRCPACKAGE} from $REPOSITORY."
 		fi
 	fi
-	rsync -e "ssh -o 'Batchmode = yes' -p $PORT" -r $FQDN:$TMPDIR/b$BUILDNR $TMPDIR/
+	rsync -e "ssh -o 'Batchmode = yes'" -r $FQDN:$TMPDIR/b$BUILDNR $TMPDIR/
 	RESULT=$?
 	if [ $RESULT -ne 0 ] ; then
 		echo "$(date -u ) - rsync from $NODE failed, sleeping 2m before re-trying..."
 		sleep 2m
-		rsync -e "ssh -o 'Batchmode = yes' -p $PORT" -r $FQDN:$TMPDIR/b$BUILDNR $TMPDIR/
+		rsync -e "ssh -o 'Batchmode = yes'" -r $FQDN:$TMPDIR/b$BUILDNR $TMPDIR/
 		RESULT=$?
 		if [ $RESULT -ne 0 ] ; then
 			unregister_build
@@ -323,7 +323,7 @@ remote_build() {
 		fi
 	fi
 	ls -lR $TMPDIR
-	ssh -o "Batchmode = yes" -p $PORT $FQDN "rm -r $TMPDIR"
+	ssh -o "Batchmode = yes" $FQDN "rm -r $TMPDIR"
 	set -e
 }
 
@@ -400,7 +400,6 @@ else
 	NODE1=$N2
 	NODE2=$N1
 fi
-PORT=22
 echo "============================================================================="
 echo "Initialising reproducibly build of ${SRCPACKAGE} in ${REPOSITORY} on ${ARCH} now."
 echo "1st build will be done on $NODE1."
