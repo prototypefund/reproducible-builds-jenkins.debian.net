@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Copyright 2017 Holger Levsen <holger@layer-acht.org>
+# Copyright 2017-2019 Holger Levsen <holger@layer-acht.org>
 # released under the GPLv=2
 
 #
@@ -150,13 +150,14 @@ if $MANUAL_MODE ; then
 		#firefox https://packages.debian.org/$PKG &
 		TMPFILE=`mktemp`
 		cat >> $TMPFILE <<- EOF
-Package: $PKG
+Package: $SRC
 Version: $VERSION
 Severity: normal
 user: qa.debian.org@packages.debian.org
 usertags: transitional
 
-Please drop the transitional package $PKG for $NEXT,
+Please drop the transitional package $PKG (from the source
+package $SRC) for $NEXT,
 as it has been released with $OLDSTABLE and $STABLE already.
 
 $VERBOSE
@@ -164,7 +165,7 @@ $VERBOSE
 Thanks for maintaining $SRC!
 
 EOF
-		mutt -s "please drop transitional package $PKG" -i $TMPFILE submit@bugs.debian.org
+		mutt -s "please drop transitional package $PKG from src:$SRC" -i $TMPFILE submit@bugs.debian.org
 		rm $TMPFILE
 
 		let NR=$NR+1
