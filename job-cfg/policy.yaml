@@ -48,6 +48,6 @@
     my_url: 'https://salsa.debian.org/debian/{my_package}'
     my_package:
         - 'developers-reference'
-        - 'debian-policy'
+        - 'debian-policy':
            my_url: 'https://salsa.debian.org/dbnpolicy/{my_package}'
     jobs: ['{name}_{my_distro}_{my_package}']
