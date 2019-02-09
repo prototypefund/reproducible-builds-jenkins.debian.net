@@ -1,5 +1,5 @@
 - defaults:
-    name: dev-ref
+    name: policy
     project-type: freestyle
     properties:
       - sidebar:
@@ -10,7 +10,7 @@
           url: http://www.profitbricks.co.uk
           text: Sponsored by Profitbricks
           icon: /userContent/images/profitbricks-24x24.png
-    description: 'Build the master branch of https://salsa.debian.org/debian/{my_package} in sid on every commit.<br><br>Job configuration source is <a href=""https://salsa.debian.org/qa/jenkins.debian.net/blob/master/job-cfg/dev-ref.yaml>dev-ref.yaml</a>.'
+    description: 'Build the master branch of https://salsa.debian.org/debian/{my_package} in sid on every commit.<br><br>Job configuration source is <a href=""https://salsa.debian.org/qa/jenkins.debian.net/blob/master/job-cfg/policy.yaml>dev-ref.yaml</a>.'
     logrotate:
       daysToKeep: 90
       numToKeep: 30
@@ -37,15 +37,18 @@
 
 
 - job-template:
-    defaults: dev-ref
+    defaults: policy
     name: '{name}_{my_distro}_{my_package}'
 
 
 - project:
-    name: dev-ref
+    name: policy
     my_distro: 'sid'
     my_shell: '/srv/jenkins/bin/chroot-run.sh {my_distro} debuild -b -uc -us'
     my_url: 'https://salsa.debian.org/debian/{my_package}'
+    my_package:
+        - 'debian-policy'
+           my_url: 'https://salsa.debian.org/dbnpolicy/{my_package}'
     my_package:
         - 'developers-reference'
     jobs: ['{name}_{my_distro}_{my_package}']
