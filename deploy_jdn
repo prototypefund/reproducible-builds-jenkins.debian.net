@@ -131,7 +131,6 @@ elif [ "$1" = "" ] ; then
 	echo -n "Running j.d.n.git updates on ${HOSTS[@]} now"
 elif [ "$1" = "jenkins" ] ; then
 	HOSTS=(root@jenkins.debian.net)
-	HOSTS=()
 	shift
 	for i in "$@" ; do
 		case "$i" in
