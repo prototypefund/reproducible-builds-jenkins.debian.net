@@ -38,9 +38,6 @@ else
     cd $WORKSPACE
 fi
 
-# workaround some unsolved issues in java/gradle
-export LANG=en_US.UTF-8
-
 cleanup_all() {
     echo "$(date -u) - cleanup in progress..."
     killall adb
