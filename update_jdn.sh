@@ -158,13 +158,6 @@ sudo mkdir -p /srv/workspace
 [ -h /chroots ] || sudo ln -s /srv/workspace/chroots /chroots
 [ -h /schroots ] || sudo ln -s /srv/schroots /schroots
 
-if [ "$HOSTNAME" = "jenkins-test-vm" ] || [ "$HOSTNAME" = "osuosl-build168-amd64" ] ; then
-	# jenkins needs access to libvirt
-	sudo adduser jenkins kvm
-	sudo adduser jenkins libvirt
-	sudo adduser jenkins libvirt-qemu
-fi
-
 # prepare tmpfs on some hosts
 case $HOSTNAME in
 	jenkins)
@@ -357,23 +350,17 @@ if [ -f /etc/debian_version ] ; then
 				bzr
 				git-svn
 				fdroidserver/stretch-backports
-				libvirt-clients
-				libvirt-daemon
-				libvirt-daemon-system
 				mercurial
 				python3-babel
 				python3-defusedxml
-				python3-libvirt
 				python3-mwclient/stretch-backports
 				python3-qrcode
 				python3-ruamel.yaml
 				python3-setuptools
 				python3-vagrant
-				qemu-kvm
 				subversion
 				vagrant
-				vagrant-mutate
-				vagrant-libvirt"
+				virtualbox/stretch-backports"
 			;;
 			*) ;;
 		esac
