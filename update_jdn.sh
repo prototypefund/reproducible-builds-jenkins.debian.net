@@ -351,15 +351,12 @@ if [ -f /etc/debian_version ] ; then
 				git-svn
 				fdroidserver/stretch-backports
 				mercurial
+				python3-asn1crypto/stretch-backports
 				python3-babel
-				python3-defusedxml
 				python3-mwclient/stretch-backports
-				python3-qrcode
-				python3-ruamel.yaml
 				python3-setuptools
-				python3-vagrant
 				subversion
-				vagrant
+				vagrant/stretch-backports
 				virtualbox/stretch-backports"
 			;;
 			*) ;;
