@@ -35,8 +35,10 @@ DPKG_ARCH="$(dpkg --print-architecture)"
 # so we can later run some commands only if $0 has been updated…
 if [ -f $STAMP ] && [ $STAMP -nt $BASEDIR/$0 ] ; then
 	UP2DATE=true
+	echo $HOSTNAME is up2date.
 else
 	UP2DATE=false
+	echo $HOSTNAME needs to be updated.
 fi
 
 
