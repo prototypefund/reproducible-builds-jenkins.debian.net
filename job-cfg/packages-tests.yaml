@@ -88,7 +88,8 @@
       - sid:
           <<: *distro_defaults_sid
           my_origin_triggers:
-            - gitlab
+            - gitlab:
+                secret-token: '{{AQAAABAAAAAwUn9vCBPUfLVePuJ0YzGIefo56GNDCX04sk6uDaZRv9lXSlGM1xzrj3Lap8neBcCtFzq6OoqwTUKfRQggb6tu4Q==}}'
       - buster:
           <<: *distro_defaults_buster
           my_trigger: '{name}_stretch-backports'
