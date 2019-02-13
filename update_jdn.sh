@@ -374,20 +374,6 @@ if [ -f /etc/debian_version ] ; then
 		if [ "$HOSTNAME" = "osuosl-build171-amd64" ] || [ "$HOSTNAME" = "osuosl-build172-amd64" ] || [ "$HOSTNAME" = "jenkins" ] ; then
 			DEBS="$DEBS mock"
 		fi
-		# for varying kernels:
-		# - we use bpo kernels on pb-build5+15 (and the default amd64 kernel on pb-build6+16-i386)
-		# - we also use the bpo kernel on osuosl-build172 (but not osuosl-build171)
-		if [ "$HOSTNAME" = "profitbricks-build5-amd64" ] || [ "$HOSTNAME" = "profitbricks-build15-amd64" ] \
-			|| [ "$HOSTNAME" = "osuosl-build172-amd64" ] ; then
-			DEBS="$DEBS linux-image-amd64/stretch-backports"
-		elif [ "$HOSTNAME" = "profitbricks-build6-i386" ] || [ "$HOSTNAME" = "profitbricks-build16-i386" ] \
-			|| [ "$HOSTNAME" = "profitbricks-build2-i386" ] || [ "$HOSTNAME" = "profitbricks-build12-i386" ] ; then
-			# we dont vary the kernel on i386 atm, see #875990 + #876035
-			DEBS="$DEBS linux-image-amd64:amd64"
-		elif [ "$HOSTNAME" = "osuosl-build169-amd64" ] || [ "$HOSTNAME" = "osuosl-build170-amd64" ] ; then
-			# Arch Linux builds latest stuff which sometimes (eg, currentlt Qt) needs newer kernel to build...
-			DEBS="$DEBS linux-image-amd64/stretch-backports"
-		fi
 		# only on main node
 		if [ "$HOSTNAME" = "jenkins" ] || [ "$HOSTNAME" = "jenkins-test-vm" ] ; then
 			MASTERDEBS=" 
@@ -482,6 +468,21 @@ if [ -f /etc/debian_version ] ; then
 		fi
 		$UP2DATE || sudo apt-get update
 		$UP2DATE || sudo apt-get install $DEBS $MASTERDEBS
+		# for varying kernels:
+		# - we use bpo kernels on pb-build5+15 (and the default amd64 kernel on pb-build6+16-i386)
+		# - we also use the bpo kernel on osuosl-build172 (but not osuosl-build171)
+		# - this is done as a seperate step as bpo kernels are frequently uninstallable when upgraded on bpo
+		if [ "$HOSTNAME" = "profitbricks-build5-amd64" ] || [ "$HOSTNAME" = "profitbricks-build15-amd64" ] \
+			|| [ "$HOSTNAME" = "osuosl-build172-amd64" ] ; then
+			sudo apt install linux-image-amd64/stretch-backports || true # backport kernels are frequently uninstallable...
+		elif [ "$HOSTNAME" = "profitbricks-build6-i386" ] || [ "$HOSTNAME" = "profitbricks-build16-i386" ] \
+			|| [ "$HOSTNAME" = "profitbricks-build2-i386" ] || [ "$HOSTNAME" = "profitbricks-build12-i386" ] ; then
+			# we dont vary the kernel on i386 atm, see #875990 + #876035
+			sudo apt install linux-image-amd64:amd64
+		elif [ "$HOSTNAME" = "osuosl-build169-amd64" ] || [ "$HOSTNAME" = "osuosl-build170-amd64" ] ; then
+			# Arch Linux builds latest stuff which sometimes (eg, currentlt Qt) needs newer kernel to build...
+			sudo apt install linux-image-amd64/stretch-backports || true # backport kernels are frequently uninstallable...
+		fi
 		# don't (re-)install pbuilder if it's on hold
 		if [ "$(dpkg-query -W -f='${db:Status-Abbrev}\n' pbuilder)" != "hi " ] ; then
 			$UP2DATE || sudo apt-get install pbuilder
