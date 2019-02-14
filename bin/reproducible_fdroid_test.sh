@@ -8,6 +8,7 @@
 #
 
 DEBUG=true
+LC_ALL=en_US.UTF-8
 . /srv/jenkins/bin/common-functions.sh
 common_init "$@"
 
