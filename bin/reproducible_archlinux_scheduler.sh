@@ -227,7 +227,11 @@ update_archlinux_repositories() {
 	if [ $new -ne 0 ] || [ $updated -ne 0 ] || [ $old -ne 0 ] || [ $depwait404 -ne 0 ] ; then
 		# inform irc channel about new packages
 		if [ $new -ne 0 ] ; then
-			MESSAGE="Added $new packages: $(cat $NEW | xargs echo)"
+			if [ $new -eq 1 ] ; then
+				MESSAGE="Added $new package: $(cat $NEW | xargs echo)"
+			else
+				MESSAGE="Added $new packages: $(cat $NEW | xargs echo)"
+			fi
 			irc_message archlinux-reproducible "$MESSAGE"
 		fi
 		# inform irc channel how many packages of which kind have been scheduled
