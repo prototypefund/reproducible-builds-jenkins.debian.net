@@ -78,8 +78,11 @@ check_whohas() {
 		echo "Fail: diffoscope in $DISTRIBUTION: $DIFFOSCOPE_IN_WHOHAS"
 		send_irc_warning "It seems diffoscope $DIFFOSCOPE_IN_DEBIAN is not available on $DISTRIBUTION, which only has $DIFFOSCOPE_IN_WHOHAS."
 		exit 0
+	elif [ "${DIFFOSCOPE_IN_DEBIAN}-1" = "$DIFFOSCOPE_IN_WHOHAS" ] ; then
+		# archlinux package version can greater than Debian: 52-1 vs 52
+		# workaround this above...
+		echo "Yay. diffoscope in Debian has the same version as $DISTRIBUTION has: $DIFFOSCOPE_IN_DEBIAN (Debian) and $DIFFOSCOPE_IN_WHOHAS ($DISTRIBUTION)"
 	else
-		# TODO: archlinux package version can greater than Debian: 52-1 vs 52
 		echo "diffoscope in Debian: $DIFFOSCOPE_IN_DEBIAN"
 		echo "diffoscope in $DISTRIBUTION: $DIFFOSCOPE_IN_WHOHAS"
 		echo
