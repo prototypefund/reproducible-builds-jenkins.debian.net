@@ -581,7 +581,7 @@
                     my_description: 'Test whether Arch Linux has the latest diffoscope.'
                     my_timed: '31 23 * * 1'
                     my_shell: '/srv/jenkins/bin/diffoscope_distribution_test.sh Arch'
-                - 'compare_Debian_sha1sums'
+                - 'compare_Debian_sha1sums':
                     my_description: 'Compare sha1sums of Debian binary packages with rebuild ones'
                     my_timed: ''
             my_shellext: ".sh"
