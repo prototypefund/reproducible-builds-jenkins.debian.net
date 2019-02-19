@@ -506,14 +506,14 @@
                     my_shellext: ".py"
                 - 'html_dashboard':
                     my_description: 'Generate HTML dashboard with graphs for reproducible builds.'
-                    my_timed: '*/15 * * * *'
+                    my_timed: '1 * * * *'
                 - 'html_pkg_sets':
                     my_description: 'Generate HTML results (package sets with graphs) for reproducible builds.'
-                    my_timed: '*/30 * * * *'
+                    my_timed: '45 */2 * * *'
                     my_shellext: ".py"
                 - 'html_indexes':
                     my_description: 'Generate HTML results (indexes) for reproducible builds.'
-                    my_timed: '*/30 * * * *'
+                    my_timed: '15 */2 * * *'
                     my_shellext: ".py"
                 - 'html_dd_list':
                     my_description: 'Generate HTML results (dd-list) for reproducible builds.'
@@ -528,18 +528,18 @@
                     my_timed: '0 1 * * *'
                 - 'html_breakages':
                     my_description: 'Generate an HTML page with CI issues (packages with incoherent status or files that should or should not be there).'
-                    my_timed: '30 0,12 * * *'
+                    my_timed: '30 0 * * *'
                     my_shellext: ".py"
                 - 'html_rsync_remote_results':
                     my_description: 'rsync the results from some remote jobs to the main node.'
                     my_timed: ''
                 - 'html_live_status':
                     my_description: 'Generate an HTML page showing the live status of all builds happening or scheduled by humans.'
-                    my_timed: 'H/10 * * * *'
+                    my_timed: 'H/15 * * * *'
                     my_shellext: ".py"
                 - 'html_nodes_info':
                     my_description: 'Generate static HTML pages with various information about nodes and jenkins jobs.'
-                    my_timed: '15 0,2,4,6,8,10,12,14,16,18,20,22 * * *'
+                    my_timed: '15 */3 * * *'
                 - 'nodes_info':
                     my_description: 'Collect various information from build nodes used for reproducible builds.'
                     my_timed: '0 0 * * *'
