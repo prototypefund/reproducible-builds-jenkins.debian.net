@@ -3,6 +3,7 @@
 # as posted by Vagrant on https://lists.reproducible-builds.org/pipermail/rb-general/2018-October/001239.html
 
 # TODOs:
+# - ${package_file}.sha1output includes ${package_file} in the file name and contents
 # - run on osuoslXXX ? harder with using db..
 # - delete downloaded packages, keep sha1s, use them
 # - save results in db
@@ -33,7 +34,11 @@ unreproducible_packages=
 
 for package in $packages ; do
 	schroot --directory  $SHA1DIR -c chroot:jenkins-reproducible-unstable-diffoscope apt-get download ${package}
-	SHA1SUM_OUTPUT="$(sha1sum ${package}_*.deb)"
+	if [ ! -e ${package_file}.sha1output ] ; then
+		SHA1SUM_OUTPUT="$(sha1sum ${package}_*.deb | tee ${package_file}.sha1output)"
+	else
+		SHA1SUM_OUTPUT="$(cat ${package_file}.sha1output)"
+	fi
 	SHA1SUM_PKG="$(echo $SHA1SUM_OUTPUT | awk '{print $1}')"
 	echo "$SHA1SUM_OUTPUT" | while read checksum package_file ; do
 		if [ ! -e ${package_file}.json ]; then
