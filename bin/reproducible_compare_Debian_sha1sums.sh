@@ -2,7 +2,10 @@
 
 # as posted by Vagrant on https://lists.reproducible-builds.org/pipermail/rb-general/2018-October/001239.html
 
-packages="$@"
+
+# hardcode some packages to get started...
+packages="adduser apt base-files base-passwd bash bsdutils coreutils dash debconf debian-archive-keyring debianutils diffutils dpkg e2fsprogs fdisk findutils gcc-8-base gpgv grep gzip hostname init-system-helpers libacl1 libapt-pkg5.0 libattr1 libaudit-common libaudit1 libblkid1 libbz2-1.0 libc-bin libc6 libcap-ng0 libcom-err2 libdb5.3 libdebconfclient0 libext2fs2 libfdisk1 libffi6 libgcc1 libgcrypt20 libgmp10 libgnutls30 libgpg-error0 libhogweed4 libidn2-0 liblz4-1 liblzma5 libmount1 libncursesw6 libnettle6 libp11-kit0 libpam-modules libpam-modules-bin libpam-runtime libpam0g libpcre3 libseccomp2 libselinux1 libsemanage-common libsemanage1 libsepol1 libsmartcols1 libss2 libstdc++6 libsystemd0 libtasn1-6 libtinfo6 libudev1 libunistring2 libuuid1 libzstd1 login mawk mount ncurses-base ncurses-bin passwd perl-base sed sysvinit-utils tar tzdata util-linux zlib1g apt-utils bsdmainutils cpio cron debconf-i18n dmidecode dmsetup gdbm-l10n ifupdown init iproute2 iptables iputils-ping isc-dhcp-client isc-dhcp-common kmod less libapparmor1 libapt-inst2.0 libargon2-1 libbsd0 libcap2 libcap2-bin libcryptsetup12 libdevmapper1.02.1 libdns-export1104 libelf1 libestr0 libfastjson4 libidn11 libip4tc0 libip6tc0 libiptc0 libisc-export1100 libjson-c3 libkmod2 liblocale-gettext-perl liblognorm5 libmnl0 libncurses6 libnetfilter-conntrack3 libnewt0.52 libnfnetlink0 libnftnl11 libpopt0 libprocps7 libslang2 libssl1.1 libtext-charwidth-perl libtext-iconv-perl libtext-wrapi18n-perl libxtables12 logrotate lsb-base nano netbase procps readline-common rsyslog sensible-utils systemd systemd-sysv tasksel tasksel-data udev vim-common vim-tiny whiptail xxd"
+
 bdn_url="https://buildinfo.debian.net/api/v1/buildinfos/checksums/sha1"
 log=$(mktemp --tmpdir=$TMPDIR -d sha1-comp-XXXXXXX)
 
