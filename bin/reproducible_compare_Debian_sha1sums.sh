@@ -55,7 +55,7 @@ unreproducible_packages=$(awk '/^UNREPRODUCIBLE:/{print $2}' $log)
 unreproducible_count=$(echo $unreproducible_packages | wc -w)
 
 percent_repro=$(echo "scale=4 ; $reproducible_count / ($reproducible_count+$unreproducible_count) * 100" | bc)
-percent_unrepro=$(echo "scale=4 ; $reproducible_count / ($reproducible_count+$unreproducible_count) * 100" | bc)
+percent_unrepro=$(echo "scale=4 ; $unreproducible_count / ($reproducible_count+$unreproducible_count) * 100" | bc)
 
 echo "-------------------------------------------------------------"
 echo "reproducible packages: $reproducible_count: $reproducible_packages"
