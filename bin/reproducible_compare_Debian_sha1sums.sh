@@ -4,10 +4,11 @@
 
 packages="$@"
 bdn_url="https://buildinfo.debian.net/api/v1/buildinfos/checksums/sha1"
-log=${0}.log
+log=$(mktemp --tmpdir=$TMPDIR -d sha1-comp-XXXXXXX)
 
 reproducible_packages=
 unreproducible_packages=
+
 for package in $packages ; do
 	apt-get download ${package}/sid
 	sha1sum ${package}_*.deb | while read checksum package_file ; do
@@ -22,13 +23,16 @@ for package in $packages ; do
 		fi
 		echo
 	done
-done > $log
+done | tee $log
 
 reproducible_packages=$(awk '/^REPRODUCIBLE:/{print $2}' $log)
 reproducible_count=$(echo $reproducible_packages | wc -w)
 unreproducible_packages=$(awk '/^UNREPRODUCIBLE:/{print $2}' $log)
 unreproducible_count=$(echo $unreproducible_packages | wc -w)
 
+echo "-------------------------------------------------------------"
 echo reproducible packages: $reproducible_count: $reproducible_packages
 echo
 echo unreproducible packages: $unreproducible_count: $unreproducible_packages
+
+rm $log
