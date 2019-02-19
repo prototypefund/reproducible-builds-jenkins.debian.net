@@ -18,7 +18,10 @@
 # Also see https://pad.sfconservancy.org/p/rb-build-nodes-keep
 
 # unreachable, mailed codethink.
+codethink-sled11-arm64.debian.net
 codethink-sled12-arm64.debian.net
+codethink-sled13-arm64.debian.net
+codethink-sled14-arm64.debian.net
 
 ## temporary problems
 jtk1b-armhf-rb
