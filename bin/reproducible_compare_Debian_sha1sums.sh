@@ -9,6 +9,7 @@
 # - loop through all packages
 # - show results in 'normal pages' 
 # - etc/a lot
+# - store date when a package was last reproduced... (and constantly do that...)
 
 echo 'this is an early prototype...'
 echo
