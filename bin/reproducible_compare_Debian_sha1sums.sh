@@ -14,6 +14,7 @@
 echo
 echo
 echo 'this is an early prototype...'
+set -e
 echo
 echo
 
@@ -32,15 +33,17 @@ unreproducible_packages=
 
 for package in $packages ; do
 	schroot --directory  $SHA1DIR -c chroot:jenkins-reproducible-unstable-diffoscope apt-get download ${package}
-	sha1sum ${package}_*.deb | while read checksum package_file ; do
+	SHA1SUM_OUTPUT="$(sha1sum ${package}_*.deb)"
+	SHA1SUM_PKG="$(echo $SHA1SUM_OUTPUT | awk '{print $1}'"
+	echo "$SHA1SUM_OUTPUT" | while read checksum package_file ; do
 		if [ ! -e ${package_file}.json ]; then
 			wget --quiet -O ${package_file}.json ${bdn_url}/${checksum}
 		fi
 		count=$(fmt ${package_file}.json | grep '\.buildinfo' | wc -l)
 		if [ "${count}" -ge 2 ]; then
-			echo "REPRODUCIBLE: $package_file $count"
+			echo "REPRODUCIBLE: $package_file $count ($SHA1SUM_PKG)"
 		else
-			echo "UNREPRODUCIBLE: $package_file $count"
+			echo "UNREPRODUCIBLE: $package_file $count ($SHA1SUM_PKG on ftp.debian.org)"
 		fi
 		echo
 	done
