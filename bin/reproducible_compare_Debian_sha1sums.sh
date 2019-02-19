@@ -11,6 +11,8 @@
 # - etc/a lot
 # - store date when a package was last reproduced... (and constantly do that...)
 
+echo
+echo
 echo 'this is an early prototype...'
 echo
 echo
@@ -49,9 +51,16 @@ reproducible_count=$(echo $reproducible_packages | wc -w)
 unreproducible_packages=$(awk '/^UNREPRODUCIBLE:/{print $2}' $log)
 unreproducible_count=$(echo $unreproducible_packages | wc -w)
 
+percent_repro=$(echo "scale=3 ; $reproducible_count / ($reproducible_count+$unreproducible_count)" | bc)
+percent_unrepro=$(echo "scale=3 ; $reproducible_count / ($reproducible_count+$unreproducible_count)" | bc)
+
 echo "-------------------------------------------------------------"
-echo reproducible packages: $reproducible_count: $reproducible_packages
+echo "reproducible packages: $reproducible_count: $reproducible_packages"
 echo
-echo unreproducible packages: $unreproducible_count: $unreproducible_packages
+echo "unreproducible packages: $unreproducible_count: $unreproducible_packages"
+echo
+echo "reproducible packages: $reproducible_count: ($percent_repro%)"
+echo
+echo "unreproducible packages: $unreproducible_count: ($percent_unrepro%)"
 
 rm $log
