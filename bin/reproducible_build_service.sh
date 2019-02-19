@@ -245,12 +245,4 @@ while true ; do
 	set -e
 done
 
-# FIXME: TODO left for _service.sh:
-# * enabling the service in update_jdn
-# * maintenance job might want to:
-#   - check for running builds using systemctl show & ps fax
-#   - check if at least one build is running on a build node
-# * use ExecStop to kill remote builds on shutdown
-#   - remove cleanup_nodes.sh once this works
-#   - add support for disabling archs and for shutdown+respan of workers
-#   - add support for starting/stopping workers for specific archs
+

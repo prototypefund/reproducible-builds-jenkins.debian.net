@@ -187,7 +187,15 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 ** repo-comparison: check for binaries without source
 ** issues: currently only state of amd64 is shown. it would be better to display packages as unreproducible if they are unreproducible on any architecture.
 ** include diffoscope run time in log
-
+* for _service.sh
+** enabling the service in update_jdn
+** maintenance job might want to:
+*** check for running builds using systemctl show & ps fax
+*** check if at least one build is running on a build node
+** use ExecStop to kill remote builds on shutdown
+*** remove cleanup_nodes.sh once this works
+*** add support for disabling archs and for shutdown+respan of workers
+*** add support for starting/stopping workers for specific archs
 * missing variations:
 ** 32/64 bit kernel variation on i386
 ** prebuilder does (user) group variation like this: https://salsa.debian.org/reproducible-builds/reproducible-misc/blob/master/prebuilder/pbuilderhooks/A02_user
