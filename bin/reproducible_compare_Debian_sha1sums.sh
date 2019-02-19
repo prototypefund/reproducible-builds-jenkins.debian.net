@@ -34,6 +34,11 @@ unreproducible_packages=
 
 for package in $packages ; do
 	schroot --directory  $SHA1DIR -c chroot:jenkins-reproducible-unstable-diffoscope apt-get download ${package}
+	if [ $(ls -1 ${package}_*.deb | wc -l) -ne 1 ] ; then
+		DEB="$(ls -1 ${package}_*.deb | heads -1)"
+		rm $DEB # first I thought to delete $DEB* but only deleting $DEB is better
+	fi
+	package_file=$(ls ${package}_*.deb)
 	if [ ! -e ${package_file}.sha1output ] ; then
 		SHA1SUM_OUTPUT="$(sha1sum ${package}_*.deb | tee ${package_file}.sha1output)"
 	else
