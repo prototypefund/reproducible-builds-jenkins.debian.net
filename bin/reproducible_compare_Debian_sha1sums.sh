@@ -1,9 +1,10 @@
 #!/bin/bash
 
-# as posted by Vagrant on https://lists.reproducible-builds.org/pipermail/rb-general/2018-October/001239.html
-
 # Copyright 2019 Holger Levsen <holger@layer-acht.org>
 # released under the GPLv=2+
+#
+# based on an idea by Vagrant Cascadian <vagrant@debian.org>
+# see https://lists.reproducible-builds.org/pipermail/rb-general/2018-October/001239.html
 
 DEBUG=false
 . /srv/jenkins/bin/common-functions.sh
@@ -39,7 +40,6 @@ SHA1DIR=/srv/reproducible-results/debian-sha1
 mkdir -p $SHA1DIR
 cd $SHA1DIR
 
-# downloading (and keeping) all the packages is also too much, but let's prototype this... (and improve later)
 PACKAGES=$(mktemp --tmpdir=$TMPDIR sha1-comp-XXXXXXX)
 schroot --directory  $SHA1DIR -c chroot:jenkins-reproducible-${RELEASE}-diffoscope cat /var/lib/apt/lists/cdn-fastly.deb.debian.org_debian_dists_${RELEASE}_main_binary-amd64_Packages > $PACKAGES
 packages="$(grep ^Package: $PACKAGES| awk '{print $2}' | sort | xargs echo)"
