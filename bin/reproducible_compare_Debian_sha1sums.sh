@@ -93,7 +93,7 @@ for package in $packages ; do
 		wget --quiet -O ${package_file}.json ${bdn_url}/${checksum}
 	fi
 	date -u
-	count=$(fmt ${package_file}.json | grep '\.buildinfo' | wc -l)
+	count=$(fmt ${package_file}.json | grep -c '\.buildinfo' || true)
 	if [ "${count}" -ge 2 ]; then
 		echo "REPRODUCIBLE: $package_file: $SHA1SUM_PKG - reproduced $count times."
 	else
