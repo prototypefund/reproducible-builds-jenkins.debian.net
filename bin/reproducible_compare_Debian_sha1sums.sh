@@ -74,6 +74,7 @@ trap cleanup_all INT TERM EXIT
 
 for package in $packages ; do
 	cd $SHA1DIR
+	echo
 	echo "$(date -u) - checking whether we have seen the .deb for $package before"
 	version=$(grep-dctrl -X -P ${package} -s version -n $PACKAGES)
 	arch=$(grep-dctrl -X -P ${package} -s Architecture -n $PACKAGES)
@@ -82,8 +83,8 @@ for package in $packages ; do
 	mkdir -p $pool_dir
 	cd $pool_dir
 	if [ ! -e ${package_file}.sha1output ] ; then
-		echo "$(date -u) - preparing to download $filename"
-		schroot --directory  $SHA1DIR -c chroot:jenkins-reproducible-unstable-diffoscope apt-get download ${package} || continue
+		echo -n "$(date -u) - preparing to download $filename"
+		( schroot --directory  $SHA1DIR -c chroot:jenkins-reproducible-unstable-diffoscope apt-get download ${package} 2>&1 |xargs echo ) || continue
 		echo "$(date -u) - calculating sha1sum"
 		SHA1SUM_PKG="$(sha1sum ${package_file} | tee ${package_file}.sha1output | awk '{print $1}' )"
 		rm ${package_file}
@@ -100,9 +101,9 @@ for package in $packages ; do
 	echo "$(date -u) - generating result"
 	count=$(fmt ${package_file}.json | grep -c '\.buildinfo' || true)
 	if [ "${count}" -ge 2 ]; then
-		echo "REPRODUCIBLE: $package_file: $SHA1SUM_PKG - reproduced $count times."
+		echo "$(date -u) - REPRODUCIBLE: $package_file: $SHA1SUM_PKG - reproduced $count times."
 	else
-		echo "UNREPRODUCIBLE: $package_file: $SHA1SUM_PKG on ftp.debian.org, but nowhere else."
+		echo "$(date -u) - UNREPRODUCIBLE: $package_file: $SHA1SUM_PKG on ftp.debian.org, but nowhere else."
 	fi
 done | tee $log
 
