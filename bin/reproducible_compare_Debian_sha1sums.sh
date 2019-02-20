@@ -102,9 +102,9 @@ for package in $packages ; do
 	        if  [ -e ${package_file}.json ] ; then
 			count=$(fmt ${package_file}.json | grep -c '\.buildinfo' || true)
 			if [ "${count}" -ge 2 ]; then
-				echo "$(date -u) - REPRODUCIBLE: $package_file: $SHA1SUM_PKG - reproduced $count times."
+				echo "$(date -u) - REPRODUCIBLE: $package_file ($SHA1SUM_PKG) - reproduced $count times."
 			else
-				echo "$(date -u) - UNREPRODUCIBLE: $package_file: $SHA1SUM_PKG on ftp.debian.org, but nowhere else."
+				echo "$(date -u) - UNREPRODUCIBLE: $package_file ($SHA1SUM_PKG) on ftp.debian.org, but nowhere else."
 			fi
 		fi
 		continue
@@ -120,10 +120,10 @@ for package in $packages ; do
 		SHA1SUM_PKG="$(cat ${package_file}.sha1output | awk '{print $1}' )"
 	fi
 	if [ ! -e ${package_file}.json ]; then
-		echo "$(date -u) - downloading .json for ${SHA1SUM_PKG} from buildinfo.debian.net"
+		echo "$(date -u) - downloading .json for ${package_file} (${SHA1SUM_PKG}) from buildinfo.debian.net"
 		wget --quiet -O ${package_file}.json ${bdn_url}/${SHA1SUM_PKG} || echo "WARNING: failed to download ${bdn_url}/${SHA1SUM_PKG}"
 	else
-		echo "$(date -u) - reusing local copy of .json for ${SHA1SUM_PKG} from buildinfo.debian.net"
+		echo "$(date -u) - reusing local copy of .json for ${package_file} (${SHA1SUM_PKG}) from buildinfo.debian.net"
 	fi
 	rm -f $LOCK
 done | tee $log
