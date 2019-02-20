@@ -81,4 +81,8 @@ echo "reproducible packages: $reproducible_count: ($percent_repro%)"
 echo
 echo "unreproducible packages: $unreproducible_count: ($percent_unrepro%)"
 
+echo
+echo
+echo "$(du -sch $SHA1DIR)"
+echo
 rm $log
