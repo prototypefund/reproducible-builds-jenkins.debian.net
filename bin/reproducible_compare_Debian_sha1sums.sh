@@ -50,7 +50,6 @@ reproducible_packages=
 unreproducible_packages=
 
 cleanup_all() {
-	rm $log
 	reproducible_packages=$(awk '/^REPRODUCIBLE:/{print $2}' $log)
 	reproducible_count=$(echo $reproducible_packages | wc -w)
 	unreproducible_packages=$(awk '/^UNREPRODUCIBLE:/{print $2}' $log)
@@ -71,6 +70,7 @@ cleanup_all() {
 	echo
 	echo "$(du -sch $SHA1DIR)"
 	echo
+	rm $log
 }
 
 trap cleanup_all INT TERM EXIT
