@@ -105,6 +105,7 @@ for package in $packages ; do
 	if [ "$MODE" = "results" ] ; then
 	        if  [ -e ${package_file}.json ] ; then
 			count=$(fmt ${package_file}.json | grep -c '\.buildinfo' || true)
+			SHA1SUM_PKG="$(cat ${package_file}.sha1output | awk '{print $1}' )"
 			if [ "${count}" -ge 2 ]; then
 				echo "$(date -u) - REPRODUCIBLE: $package_file ($SHA1SUM_PKG) - reproduced $count times."
 			else
