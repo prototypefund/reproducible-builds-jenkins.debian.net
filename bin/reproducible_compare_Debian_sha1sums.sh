@@ -30,6 +30,7 @@ echo
 echo 'this is an early prototype...'
 echo
 echo
+RELEASE=buster
 
 bdn_url="https://buildinfo.debian.net/api/v1/buildinfos/checksums/sha1"
 log=$(mktemp --tmpdir=$TMPDIR sha1-comp-XXXXXXX)
@@ -40,7 +41,7 @@ cd $SHA1DIR
 
 # downloading (and keeping) all the packages is also too much, but let's prototype this... (and improve later)
 PACKAGES=$(mktemp --tmpdir=$TMPDIR sha1-comp-XXXXXXX)
-schroot --directory  $SHA1DIR -c chroot:jenkins-reproducible-buster-diffoscope cat /var/lib/apt/lists/cdn-fastly.deb.debian.org_debian_dists_buster_main_binary-amd64_Packages > $PACKAGES
+schroot --directory  $SHA1DIR -c chroot:jenkins-reproducible-${RELEASE}-diffoscope cat /var/lib/apt/lists/cdn-fastly.deb.debian.org_debian_dists_${RELEASE}_main_binary-amd64_Packages > $PACKAGES
 packages="$(grep ^Package: $PACKAGES| awk '{print $2}' | sort | xargs echo)"
 
 reproducible_packages=
@@ -84,7 +85,7 @@ for package in $packages ; do
 	cd $pool_dir
 	if [ ! -e ${package_file}.sha1output ] ; then
 		echo -n "$(date -u) - preparing to download $filename"
-		( schroot --directory  $SHA1DIR/$pool_dir -c chroot:jenkins-reproducible-buster-diffoscope apt-get download ${package} 2>&1 |xargs echo ) || continue
+		( schroot --directory  $SHA1DIR/$pool_dir -c chroot:jenkins-reproducible-${RELEASE}-diffoscope apt-get download ${package}/${RELEASE} 2>&1 |xargs echo ) || continue
 		echo "$(date -u) - calculating sha1sum"
 		SHA1SUM_PKG="$(sha1sum ${package_file} | tee ${package_file}.sha1output | awk '{print $1}' )"
 		rm ${package_file}
