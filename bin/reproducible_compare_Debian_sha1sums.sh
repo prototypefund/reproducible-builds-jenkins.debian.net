@@ -38,7 +38,7 @@ reproducible_packages=
 unreproducible_packages=
 
 for package in $packages ; do
-	schroot --directory  $SHA1DIR -c chroot:jenkins-reproducible-unstable-diffoscope apt-get download ${package}
+	schroot --directory  $SHA1DIR -c chroot:jenkins-reproducible-unstable-diffoscope apt-get download ${package} || continue
 	if [ $(ls -1 ${package}_*.deb | wc -l) -ne 1 ] ; then
 		DEB="$(ls -1 ${package}_*.deb | heads -1)"
 		echo "deleting $DEB..."
