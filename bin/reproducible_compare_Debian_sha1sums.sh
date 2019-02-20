@@ -90,7 +90,7 @@ for package in $packages ; do
 	fi
 	echo "$(date -u) - downloading .json from buildinfo.debian.net"
 	if [ ! -e ${package_file}.json ]; then
-		wget --quiet -O ${package_file}.json ${bdn_url}/${SHA1SUM_PKG}
+		wget --quiet -O ${package_file}.json ${bdn_url}/${SHA1SUM_PKG} || echo "WARNING: failed to download ${bdn_url}/${SHA1SUM_PKG}"
 	fi
 	echo "$(date -u) - generating result"
 	count=$(fmt ${package_file}.json | grep -c '\.buildinfo' || true)
