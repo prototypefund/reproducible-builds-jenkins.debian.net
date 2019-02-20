@@ -88,7 +88,7 @@ for package in $packages ; do
 	else
 		SHA1SUM_OUTPUT="$(cat ${package_file}.sha1output)"
 	fi
-	SHA1SUM_PKG="$(echo $SHA1SUM_OUTPUT | awk '{print $1}')"
+	SHA1SUM_PKG="$(echo $SHA1SUM_OUTPUT | awk '{print $1}') 2>/dev/null"
 	echo "$SHA1SUM_OUTPUT" | while read checksum package_file ; do
 		if [ ! -e ${package_file}.json ]; then
 			wget --quiet -O ${package_file}.json ${bdn_url}/${checksum}
