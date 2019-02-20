@@ -115,7 +115,7 @@ for package in $packages ; do
 	fi
 	if [ ! -e ${package_file}.sha1output ] ; then
 		echo -n "$(date -u) - downloading... "
-		( schroot --directory  $SHA1DIR/$pool_dir -c chroot:jenkins-reproducible-${RELEASE}-diffoscope apt-get download ${package}/${RELEASE} 2>&1 |xargs echo ) || continue
+		( schroot --directory $pool_dir -c chroot:jenkins-reproducible-${RELEASE}-diffoscope apt-get download ${package}/${RELEASE} 2>&1 |xargs echo ) || continue
 		echo "$(date -u) - calculating sha1sum for ${package_file}"
 		SHA1SUM_PKG="$(sha1sum ${package_file} | tee ${package_file}.sha1output | awk '{print $1}' )"
 		rm ${package_file}
