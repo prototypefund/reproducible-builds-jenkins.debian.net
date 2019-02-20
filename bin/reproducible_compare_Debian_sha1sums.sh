@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # as posted by Vagrant on https://lists.reproducible-builds.org/pipermail/rb-general/2018-October/001239.html
 
