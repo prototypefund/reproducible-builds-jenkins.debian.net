@@ -45,7 +45,6 @@ log=$(mktemp --tmpdir=$TMPDIR sha1-log-XXXXXXX)
 
 SHA1DIR=/srv/reproducible-results/debian-sha1
 mkdir -p $SHA1DIR
-cd $SHA1DIR
 
 PACKAGES=$(mktemp --tmpdir=$TMPDIR sha1-pkgs-XXXXXXX)
 schroot --directory  $SHA1DIR -c chroot:jenkins-reproducible-${RELEASE}-diffoscope cat /var/lib/apt/lists/cdn-fastly.deb.debian.org_debian_dists_${RELEASE}_main_binary-amd64_Packages > $PACKAGES
@@ -85,11 +84,10 @@ cleanup_all() {
 
 trap cleanup_all INT TERM EXIT
 
-rm -f *.lock	# this is a tiny bit hackish, but also an elegant way to get rid of old locks...
-		# (locks are held for 30s only anyway and there is an 3/60000th chance of a race condition only anyway)
+rm -f $SHA1DIR/*.lock	# this is a tiny bit hackish, but also an elegant way to get rid of old locks...
+			# (locks are held for 30s only anyway and there is an 3/60000th chance of a race condition only anyway)
 
 for package in $packages ; do
-	cd $SHA1DIR
 	LOCK="$SHA1DIR/${package}.lock"
 	if [ -e $LOCK ] ; then
 		echo "$(date -u) - skipping locked package $package, sleeping a minute to deescalate."
@@ -101,7 +99,7 @@ for package in $packages ; do
 	version=$(grep-dctrl -X -P ${package} -s version -n $PACKAGES)
 	arch=$(grep-dctrl -X -P ${package} -s Architecture -n $PACKAGES)
 	package_file="${package}_$(echo $version | sed 's#:#%3a#')_${arch}.deb"
-	pool_dir="$(dirname $(grep-dctrl -X -P ${package} -s Filename -n $PACKAGES))"
+	pool_dir="$SHA1DIR/$(dirname $(grep-dctrl -X -P ${package} -s Filename -n $PACKAGES))"
 	mkdir -p $pool_dir
 	cd $pool_dir
 	if [ "$MODE" = "results" ] ; then
