@@ -11,6 +11,7 @@
 # - show results in 'normal pages' 
 # - etc/a lot
 # - store date when a package was last reproduced... (and constantly do that...)
+# - throw away results (if none has been|which have not) signed with a tests.r-b.o key
 
 echo
 echo
