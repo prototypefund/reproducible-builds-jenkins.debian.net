@@ -84,15 +84,14 @@ rm -f *.lock	# this is a tiny bit hackish, but also an elegant way to get rid of
 
 for package in $packages ; do
 	cd $SHA1DIR
-	echo
 	LOCK="$SHA1DIR/${package}.lock"
 	if [ -e $LOCK ] ; then
-		echo "$(date -u) - skipping locked package $package"
+		echo "$(date -u) - skipping locked package $package, sleeping a minute to deescalate."
+		sleep 60
 		continue
 	else
 		touch $LOCK
 	fi
-	echo "$(date -u) - checking whether we have seen the .deb for $package before"
 	version=$(grep-dctrl -X -P ${package} -s version -n $PACKAGES)
 	arch=$(grep-dctrl -X -P ${package} -s Architecture -n $PACKAGES)
 	package_file="${package}_$(echo $version | sed 's#:#%3a#')_${arch}.deb"
@@ -101,7 +100,6 @@ for package in $packages ; do
 	cd $pool_dir
 	if [ "$MODE" = "results" ] ; then
 	        if  [ -e ${package_file}.json ] ; then
-			echo "$(date -u) - generating result"
 			count=$(fmt ${package_file}.json | grep -c '\.buildinfo' || true)
 			if [ "${count}" -ge 2 ]; then
 				echo "$(date -u) - REPRODUCIBLE: $package_file: $SHA1SUM_PKG - reproduced $count times."
@@ -112,9 +110,9 @@ for package in $packages ; do
 		continue
 	fi
 	if [ ! -e ${package_file}.sha1output ] ; then
-		echo -n "$(date -u) - preparing to download $filename"
+		echo -n "$(date -u) - downloading... "
 		( schroot --directory  $SHA1DIR/$pool_dir -c chroot:jenkins-reproducible-${RELEASE}-diffoscope apt-get download ${package}/${RELEASE} 2>&1 |xargs echo ) || continue
-		echo "$(date -u) - calculating sha1sum"
+		echo "$(date -u) - calculating sha1sum for ${package_file}"
 		SHA1SUM_PKG="$(sha1sum ${package_file} | tee ${package_file}.sha1output | awk '{print $1}' )"
 		rm ${package_file}
 	else
@@ -122,10 +120,10 @@ for package in $packages ; do
 		SHA1SUM_PKG="$(cat ${package_file}.sha1output | awk '{print $1}' )"
 	fi
 	if [ ! -e ${package_file}.json ]; then
-		echo "$(date -u) - downloading .json from buildinfo.debian.net"
+		echo "$(date -u) - downloading .json for ${SHA1SUM_PKG} from buildinfo.debian.net"
 		wget --quiet -O ${package_file}.json ${bdn_url}/${SHA1SUM_PKG} || echo "WARNING: failed to download ${bdn_url}/${SHA1SUM_PKG}"
 	else
-		echo "$(date -u) - reusing local copy of .json from buildinfo.debian.net"
+		echo "$(date -u) - reusing local copy of .json for ${SHA1SUM_PKG} from buildinfo.debian.net"
 	fi
 	rm -f $LOCK
 done | tee $log
