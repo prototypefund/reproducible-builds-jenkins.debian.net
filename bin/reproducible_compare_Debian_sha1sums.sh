@@ -90,8 +90,7 @@ rm -f $SHA1DIR/*.lock	# this is a tiny bit hackish, but also an elegant way to g
 for package in $packages ; do
 	LOCK="$SHA1DIR/${package}.lock"
 	if [ -e $LOCK ] ; then
-		echo "$(date -u) - skipping locked package $package, sleeping a minute to deescalate."
-		sleep 60
+		echo "$(date -u) - skipping locked package $package"
 		continue
 	else
 		touch $LOCK
