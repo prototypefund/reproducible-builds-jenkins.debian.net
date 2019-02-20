@@ -72,22 +72,27 @@ cleanup_all() {
 trap cleanup_all INT TERM EXIT
 
 for package in $packages ; do
+	date -u
 	schroot --directory  $SHA1DIR -c chroot:jenkins-reproducible-unstable-diffoscope apt-get download ${package} || continue
+	date -u
 	if [ $(ls -1 ${package}_*.deb | wc -l) -ne 1 ] ; then
 		DEB="$(ls -1 ${package}_*.deb | heads -1)"
 		echo "deleting $DEB..."
 		rm $DEB # first I thought to delete $DEB* but only deleting $DEB is better
 	fi
 	package_file=$(ls ${package}_*.deb)
+	date -u
 	if [ ! -e ${package_file}.sha1output ] ; then
 		SHA1SUM_OUTPUT="$(sha1sum ${package}_*.deb | tee ${package_file}.sha1output)"
 	else
 		SHA1SUM_OUTPUT="$(cat ${package_file}.sha1output)"
 	fi
 	SHA1SUM_PKG="$(echo $SHA1SUM_OUTPUT | awk '{print $1}' 2>/dev/null)"
+	date -u
 	if [ ! -e ${package_file}.json ]; then
 		wget --quiet -O ${package_file}.json ${bdn_url}/${checksum}
 	fi
+	date -u
 	count=$(fmt ${package_file}.json | grep '\.buildinfo' | wc -l)
 	if [ "${count}" -ge 2 ]; then
 		echo "REPRODUCIBLE: $package_file: $SHA1SUM_PKG - reproduced $count times."
