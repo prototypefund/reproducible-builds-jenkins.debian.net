@@ -17,12 +17,11 @@ set -e
 # TODOs:
 # - ${package_file}.sha1output includes ${package_file} in the file name and contents
 # - run on osuoslXXX ? harder with using db..
-# - delete downloaded packages, keep sha1s, use them\
+# - delete downloaded packages, keep sha1s, use them
 # - GRAPH
 # - save results in db
-# - loop through all packages
+# - loop through all packages known in db
 # - show results in 'normal pages' 
-# - etc/a lot
 # - store date when a package was last reproduced... (and constantly do that...)
 # - throw away results (if none has been|which have not) signed with a tests.r-b.o key
 # - json files from buildinfo.d.n are never re-downloaded
@@ -88,7 +87,7 @@ for package in $packages ; do
 	else
 		SHA1SUM_OUTPUT="$(cat ${package_file}.sha1output)"
 	fi
-	SHA1SUM_PKG="$(echo $SHA1SUM_OUTPUT | awk '{print $1}') 2>/dev/null"
+	SHA1SUM_PKG="$(echo $SHA1SUM_OUTPUT | awk '{print $1}' 2>/dev/null)"
 	echo "$SHA1SUM_OUTPUT" | while read checksum package_file ; do
 		if [ ! -e ${package_file}.json ]; then
 			wget --quiet -O ${package_file}.json ${bdn_url}/${checksum}
