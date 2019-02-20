@@ -54,9 +54,9 @@ reproducible_packages=
 unreproducible_packages=
 
 cleanup_all() {
-	reproducible_packages=$(awk '/ REPRODUCIBLE: /{print $2}' $log)
+	reproducible_packages=$(awk '/ REPRODUCIBLE: /{print $9}' $log)
 	reproducible_count=$(echo $reproducible_packages | wc -w)
-	unreproducible_packages=$(awk '/ UNREPRODUCIBLE: /{print $2}' $log)
+	unreproducible_packages=$(awk '/ UNREPRODUCIBLE: /{print $9}' $log)
 	unreproducible_count=$(echo $unreproducible_packages | wc -w)
 
 	percent_repro=$(echo "scale=4 ; $reproducible_count / ($reproducible_count+$unreproducible_count) * 100" | bc)
