@@ -46,7 +46,8 @@ schroot --directory  $SHA1DIR -c chroot:jenkins-reproducible-${RELEASE}-diffosco
 case "$MODE" in
 	random)		SORT="sort -R";;
 	reverse)	SORT="sort -r" ;;
-	*)		SORT="sort" ;;
+	forward)	SORT="sort" ;;
+	*)		SORT="sort" ; MODE="results" ;;
 esac
 packages="$(grep ^Package: $PACKAGES| awk '{print $2}' | $SORT | xargs echo)"
 
@@ -54,26 +55,25 @@ reproducible_packages=
 unreproducible_packages=
 
 cleanup_all() {
-	reproducible_packages=$(awk '/ REPRODUCIBLE: /{print $9}' $log)
-	reproducible_count=$(echo $reproducible_packages | wc -w)
-	unreproducible_packages=$(awk '/ UNREPRODUCIBLE: /{print $9}' $log)
-	unreproducible_count=$(echo $unreproducible_packages | wc -w)
-
-	percent_repro=$(echo "scale=4 ; $reproducible_count / ($reproducible_count+$unreproducible_count) * 100" | bc)
-	percent_unrepro=$(echo "scale=4 ; $unreproducible_count / ($reproducible_count+$unreproducible_count) * 100" | bc)
-
-	echo "-------------------------------------------------------------"
-	echo "reproducible packages: $reproducible_count: $reproducible_packages"
-	echo
-	echo "unreproducible packages: $unreproducible_count: $unreproducible_packages"
-	echo
-	echo "reproducible packages: $reproducible_count: ($percent_repro%)"
-	echo
-	echo "unreproducible packages: $unreproducible_count: ($percent_unrepro%)"
-	echo
-	echo
-	echo "$(du -sch $SHA1DIR)"
-	echo
+	if [ "$MODE" = "results" ]; then
+		reproducible_packages=$(awk '/ REPRODUCIBLE: /{print $9}' $log)
+		reproducible_count=$(echo $reproducible_packages | wc -w)
+		unreproducible_packages=$(awk '/ UNREPRODUCIBLE: /{print $9}' $log)
+		unreproducible_count=$(echo $unreproducible_packages | wc -w)
+		percent_repro=$(echo "scale=4 ; $reproducible_count / ($reproducible_count+$unreproducible_count) * 100" | bc)
+		percent_unrepro=$(echo "scale=4 ; $unreproducible_count / ($reproducible_count+$unreproducible_count) * 100" | bc)
+		echo "-------------------------------------------------------------"
+		echo "reproducible packages: $reproducible_count: $reproducible_packages"
+		echo
+		echo "unreproducible packages: $unreproducible_count: $unreproducible_packages"
+		echo
+		echo "reproducible packages: $reproducible_count: ($percent_repro%)"
+		echo "unreproducible packages: $unreproducible_count: ($percent_unrepro%)"
+		echo
+		echo
+		echo "$(du -sch $SHA1DIR)"
+		echo
+	fi
 	rm $log $PACKAGES
 }
 
@@ -99,6 +99,18 @@ for package in $packages ; do
 	pool_dir="$(dirname $(grep-dctrl -X -P ${package} -s Filename -n $PACKAGES))"
 	mkdir -p $pool_dir
 	cd $pool_dir
+	if [ "$MODE" = "results" ] ; then
+	        if  [ -e ${package_file}.json ] ; then
+			echo "$(date -u) - generating result"
+			count=$(fmt ${package_file}.json | grep -c '\.buildinfo' || true)
+			if [ "${count}" -ge 2 ]; then
+				echo "$(date -u) - REPRODUCIBLE: $package_file: $SHA1SUM_PKG - reproduced $count times."
+			else
+				echo "$(date -u) - UNREPRODUCIBLE: $package_file: $SHA1SUM_PKG on ftp.debian.org, but nowhere else."
+			fi
+		fi
+		continue
+	fi
 	if [ ! -e ${package_file}.sha1output ] ; then
 		echo -n "$(date -u) - preparing to download $filename"
 		( schroot --directory  $SHA1DIR/$pool_dir -c chroot:jenkins-reproducible-${RELEASE}-diffoscope apt-get download ${package}/${RELEASE} 2>&1 |xargs echo ) || continue
@@ -114,13 +126,6 @@ for package in $packages ; do
 		wget --quiet -O ${package_file}.json ${bdn_url}/${SHA1SUM_PKG} || echo "WARNING: failed to download ${bdn_url}/${SHA1SUM_PKG}"
 	else
 		echo "$(date -u) - reusing local copy of .json from buildinfo.debian.net"
-	fi
-	echo "$(date -u) - generating result"
-	count=$(fmt ${package_file}.json | grep -c '\.buildinfo' || true)
-	if [ "${count}" -ge 2 ]; then
-		echo "$(date -u) - REPRODUCIBLE: $package_file: $SHA1SUM_PKG - reproduced $count times."
-	else
-		echo "$(date -u) - UNREPRODUCIBLE: $package_file: $SHA1SUM_PKG on ftp.debian.org, but nowhere else."
 	fi
 	rm -f $LOCK
 done | tee $log
