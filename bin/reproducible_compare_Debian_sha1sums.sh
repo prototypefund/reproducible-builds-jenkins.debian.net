@@ -32,6 +32,7 @@ echo 'this is an early prototype...'
 echo
 echo
 RELEASE=buster
+MODE="$1"
 
 bdn_url="https://buildinfo.debian.net/api/v1/buildinfos/checksums/sha1"
 log=$(mktemp --tmpdir=$TMPDIR sha1-comp-XXXXXXX)
@@ -42,7 +43,12 @@ cd $SHA1DIR
 
 PACKAGES=$(mktemp --tmpdir=$TMPDIR sha1-comp-XXXXXXX)
 schroot --directory  $SHA1DIR -c chroot:jenkins-reproducible-${RELEASE}-diffoscope cat /var/lib/apt/lists/cdn-fastly.deb.debian.org_debian_dists_${RELEASE}_main_binary-amd64_Packages > $PACKAGES
-packages="$(grep ^Package: $PACKAGES| awk '{print $2}' | sort | xargs echo)"
+case MODE in
+	random)		SORT="sort -R";;
+	reverse)	SORT="sort -r" ;;
+	*)		SORT="sort" ;;
+esac
+packages="$(grep ^Package: $PACKAGES| awk '{print $2}' | $SORT | xargs echo)"
 
 reproducible_packages=
 unreproducible_packages=
