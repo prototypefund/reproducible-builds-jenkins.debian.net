@@ -17,7 +17,6 @@ set -e
 # TODOs:
 # - ${package_file}.sha1output includes ${package_file} in the file name and contents
 # - run on osuoslXXX ? harder with using db..
-# - delete downloaded packages, keep sha1s, use them
 # - GRAPH
 # - save results in db
 # - loop through all packages known in db
@@ -74,25 +73,26 @@ cleanup_all() {
 trap cleanup_all INT TERM EXIT
 
 for package in $packages ; do
-	echo "$(date -u) - preparing to download binary package $package"
-	schroot --directory  $SHA1DIR -c chroot:jenkins-reproducible-unstable-diffoscope apt-get download ${package} || continue
-	echo "$(date -u) - checking if more than one .deb exists locally"
-	package_file="$(ls -1 ${package}_*.deb)"
-	if [ $(echo "${package_file}" | wc -l) -ne 1 ] ; then
-		OLD_DEB=$(echo "${package_file}" | head -1)
-		echo "deleting $OLD_DEB..."
-		rm $OLD_DEB # first I thought to delete $OLD_DEB* but only deleting $OLD_DEB is better
-		package_file=$(echo "${package_file}" | tail -1 )
-	fi
-	echo "$(date -u) - gathering sha1sum"
+	echo "$(date -u) - checking whether we have seen the .deb for $package before"
+	version=$(grep-dctrl -X -P ${package} -s version -n $PACKAGES)
+	arch=$(grep-dctrl -X -P ${package} -s Architecture -n $PACKAGES)
+	package_file="${package}_$(echo $version | sed 's#:#%3a#')_${arch}.deb"
+	#pool_dir="$(dirname $filename)"
 	if [ ! -e ${package_file}.sha1output ] ; then
+		echo "$(date -u) - preparing to download $filename"
+		schroot --directory  $SHA1DIR -c chroot:jenkins-reproducible-unstable-diffoscope apt-get download ${package} || continue
+		echo "$(date -u) - calculating sha1sum"
 		SHA1SUM_PKG="$(sha1sum ${package_file} | tee ${package_file}.sha1output | awk '{print $1}' )"
+		rm ${package_file}
 	else
+		echo "$(date -u) - ${package_file} is known, gathering sha1sum"
 		SHA1SUM_PKG="$(cat ${package_file}.sha1output | awk '{print $1}' )"
 	fi
-	echo "$(date -u) - downloading .json from buildinfo.debian.net"
 	if [ ! -e ${package_file}.json ]; then
+		echo "$(date -u) - downloading .json from buildinfo.debian.net"
 		wget --quiet -O ${package_file}.json ${bdn_url}/${SHA1SUM_PKG} || echo "WARNING: failed to download ${bdn_url}/${SHA1SUM_PKG}"
+	else
+		echo "$(date -u) - reusing local copy of .json from buildinfo.debian.net"
 	fi
 	echo "$(date -u) - generating result"
 	count=$(fmt ${package_file}.json | grep -c '\.buildinfo' || true)
