@@ -110,7 +110,7 @@ for package in $packages ; do
 			if [ "${count}" -ge 2 ]; then
 				echo "$(date -u) - REPRODUCIBLE: $package_file ($SHA1SUM_PKG) - reproduced $count times."
 			else
-				echo "$(date -u) - UNREPRODUCIBLE: $package_file ($SHA1SUM_PKG) on ftp.debian.org, but nowhere else."
+				echo "$(date -u) - UNREPRODUCIBLE: $package_file ($SHA1SUM_PKG) only on ftp.debian.org."
 			fi
 		fi
 		continue
