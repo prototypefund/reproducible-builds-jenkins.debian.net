@@ -85,17 +85,15 @@ for package in $packages ; do
 		SHA1SUM_OUTPUT="$(cat ${package_file}.sha1output)"
 	fi
 	SHA1SUM_PKG="$(echo $SHA1SUM_OUTPUT | awk '{print $1}' 2>/dev/null)"
-	echo "$SHA1SUM_OUTPUT" | while read checksum package_file ; do
-		if [ ! -e ${package_file}.json ]; then
-			wget --quiet -O ${package_file}.json ${bdn_url}/${checksum}
-		fi
-		count=$(fmt ${package_file}.json | grep '\.buildinfo' | wc -l)
-		if [ "${count}" -ge 2 ]; then
-			echo "REPRODUCIBLE: $package_file: $SHA1SUM_PKG - reproduced $count times."
-		else
-			echo "UNREPRODUCIBLE: $package_file: $SHA1SUM_PKG on ftp.debian.org, but nowhere else."
-		fi
-	done
+	if [ ! -e ${package_file}.json ]; then
+		wget --quiet -O ${package_file}.json ${bdn_url}/${checksum}
+	fi
+	count=$(fmt ${package_file}.json | grep '\.buildinfo' | wc -l)
+	if [ "${count}" -ge 2 ]; then
+		echo "REPRODUCIBLE: $package_file: $SHA1SUM_PKG - reproduced $count times."
+	else
+		echo "UNREPRODUCIBLE: $package_file: $SHA1SUM_PKG on ftp.debian.org, but nowhere else."
+	fi
 done | tee $log
 
 cleanup_all
