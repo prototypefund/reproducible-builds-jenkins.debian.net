@@ -51,11 +51,10 @@ for package in $packages ; do
 		fi
 		count=$(fmt ${package_file}.json | grep '\.buildinfo' | wc -l)
 		if [ "${count}" -ge 2 ]; then
-			echo "REPRODUCIBLE: $package_file $count ($SHA1SUM_PKG)"
+			echo "REPRODUCIBLE: $package_file: $SHA1SUM_PKG - reproduced $count times."
 		else
-			echo "UNREPRODUCIBLE: $package_file $count ($SHA1SUM_PKG on ftp.debian.org)"
+			echo "UNREPRODUCIBLE: $package_file: $SHA1SUM_PKG on ftp.debian.org, but nowhere else."
 		fi
-		echo
 	done
 done | tee $log
 
