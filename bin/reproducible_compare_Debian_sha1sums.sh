@@ -2,6 +2,18 @@
 
 # as posted by Vagrant on https://lists.reproducible-builds.org/pipermail/rb-general/2018-October/001239.html
 
+# Copyright 2019 Holger Levsen <holger@layer-acht.org>
+# released under the GPLv=2+
+
+DEBUG=false
+. /srv/jenkins/bin/common-functions.sh
+common_init "$@"
+
+# common code defining db access
+. /srv/jenkins/bin/reproducible_common.sh
+
+set -e
+
 # TODOs:
 # - ${package_file}.sha1output includes ${package_file} in the file name and contents
 # - run on osuoslXXX ? harder with using db..
@@ -17,7 +29,6 @@
 echo
 echo
 echo 'this is an early prototype...'
-set -e
 echo
 echo
 
