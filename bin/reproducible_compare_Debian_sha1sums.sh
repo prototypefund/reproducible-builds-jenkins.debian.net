@@ -35,13 +35,13 @@ RELEASE=buster
 MODE="$1"
 
 bdn_url="https://buildinfo.debian.net/api/v1/buildinfos/checksums/sha1"
-log=$(mktemp --tmpdir=$TMPDIR sha1-comp-XXXXXXX)
+log=$(mktemp --tmpdir=$TMPDIR sha1-log-XXXXXXX)
 
 SHA1DIR=/srv/reproducible-results/debian-sha1
 mkdir -p $SHA1DIR
 cd $SHA1DIR
 
-PACKAGES=$(mktemp --tmpdir=$TMPDIR sha1-comp-XXXXXXX)
+PACKAGES=$(mktemp --tmpdir=$TMPDIR sha1-pkgs-XXXXXXX)
 schroot --directory  $SHA1DIR -c chroot:jenkins-reproducible-${RELEASE}-diffoscope cat /var/lib/apt/lists/cdn-fastly.deb.debian.org_debian_dists_${RELEASE}_main_binary-amd64_Packages > $PACKAGES
 case "$MODE" in
 	random)		SORT="sort -R";;
