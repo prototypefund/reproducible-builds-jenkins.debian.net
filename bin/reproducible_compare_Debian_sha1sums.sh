@@ -85,7 +85,7 @@ for package in $packages ; do
 	pool_dir="$(dirname $(grep-dctrl -X -P ${package} -s Filename -n $PACKAGES))"
 	mkdir -p $pool_dir
 	# temp code, only needed to cleanup pool... (from wrong layout before)
-	if [ -e ${package_file}.sha1output ] || [ ${package_file}.json ] ; then
+	if [ -e ${package_file}.sha1output ] || [ -e ${package_file}.json ] ; then
 		mv ${package_file}.sha1output $pool_dir || true
 		mv ${package_file}.json $pool_dir || true
 	fi
