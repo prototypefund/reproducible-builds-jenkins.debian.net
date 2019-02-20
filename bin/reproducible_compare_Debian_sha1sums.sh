@@ -26,13 +26,19 @@ set -e
 # - throw away results (if none has been|which have not) signed with a tests.r-b.o key
 # - json files from buildinfo.d.n are never re-downloaded
 
-echo
-echo
-echo 'this is an early prototype...'
-echo
-echo
 RELEASE=buster
 MODE="$1"
+
+echo
+echo
+echo -n 'this is an early prototype...'
+if [ "$MODE" = "results" ] ; then
+	echo 'this job will show results based on data gathered in other jobs.'
+else
+	echo 'this job gathers data but does not show results.'
+fi
+echo
+echo
 
 bdn_url="https://buildinfo.debian.net/api/v1/buildinfos/checksums/sha1"
 log=$(mktemp --tmpdir=$TMPDIR sha1-log-XXXXXXX)
