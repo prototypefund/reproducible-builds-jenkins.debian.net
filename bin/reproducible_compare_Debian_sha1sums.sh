@@ -82,6 +82,12 @@ for package in $packages ; do
 	pool_dir="$(dirname $(grep-dctrl -X -P ${package} -s Filename -n $PACKAGES))"
 	mkdir -p $pool_dir
 	cd $pool_dir
+	# temp code, only needed to cleanup pool... (from wrong layout before)
+	if [ -e ../${package_file}.sha1output ] || [ -e ../${package_file}.json ] ; then
+		mv ../${package_file}.sha1output . || true
+		mv ../${package_file}.json . || true
+	fi
+	# end temp code
 	if [ ! -e ${package_file}.sha1output ] ; then
 		echo -n "$(date -u) - preparing to download $filename"
 		( schroot --directory  $SHA1DIR/$pool_dir -c chroot:jenkins-reproducible-unstable-diffoscope apt-get download ${package} 2>&1 |xargs echo ) || continue
