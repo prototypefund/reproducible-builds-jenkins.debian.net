@@ -79,9 +79,19 @@ cleanup_all() {
 
 trap cleanup_all INT TERM EXIT
 
+rm -f *.lock	# this is a tiny bit hackish, but also an elegant way to get rid of old locks...
+		# (locks are held for 30s only anyway and there is an 3/60000th chance of a race condition only anyway)
+
 for package in $packages ; do
 	cd $SHA1DIR
 	echo
+	LOCK="$SHA1DIR/${package}.lock"
+	if [ -e $LOCK ] ; then
+		echo "$(date -u) - skipping locked package $package"
+		continue
+	else
+		touch $LOCK
+	fi
 	echo "$(date -u) - checking whether we have seen the .deb for $package before"
 	version=$(grep-dctrl -X -P ${package} -s version -n $PACKAGES)
 	arch=$(grep-dctrl -X -P ${package} -s Architecture -n $PACKAGES)
@@ -112,6 +122,7 @@ for package in $packages ; do
 	else
 		echo "$(date -u) - UNREPRODUCIBLE: $package_file: $SHA1SUM_PKG on ftp.debian.org, but nowhere else."
 	fi
+	rm -f $LOCK
 done | tee $log
 
 cleanup_all
