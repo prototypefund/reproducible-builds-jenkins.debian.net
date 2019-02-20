@@ -41,6 +41,7 @@ for package in $packages ; do
 	schroot --directory  $SHA1DIR -c chroot:jenkins-reproducible-unstable-diffoscope apt-get download ${package}
 	if [ $(ls -1 ${package}_*.deb | wc -l) -ne 1 ] ; then
 		DEB="$(ls -1 ${package}_*.deb | heads -1)"
+		echo "deleting $DEB..."
 		rm $DEB # first I thought to delete $DEB* but only deleting $DEB is better
 	fi
 	package_file=$(ls ${package}_*.deb)
