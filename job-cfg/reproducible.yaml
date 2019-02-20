@@ -584,11 +584,19 @@
                 - 'compare_Debian_sha1sums':
                     my_description: 'Compare sha1sums of Debian binary packages with rebuild ones'
                     my_timed: ''
+                - 'compare_Debian_sha1sums_forward_runner':
+                    my_description: 'Compare sha1sums of Debian binary packages (in reverse order) with rebuild ones'
+                    my_timed: ''
+                    my_shell: '/srv/jenkins/bin/reproducible_compare_Debian_sha1sums.sh forward'
                 - 'compare_Debian_sha1sums_reverse_runner':
                     my_description: 'Compare sha1sums of Debian binary packages (in reverse order) with rebuild ones'
                     my_timed: ''
                     my_shell: '/srv/jenkins/bin/reproducible_compare_Debian_sha1sums.sh reverse'
-                - 'compare_Debian_sha1sums_random_runner':
+                - 'compare_Debian_sha1sums_random_runner_1':
+                    my_description: 'Compare sha1sums of Debian binary packages (in random order) with rebuild ones'
+                    my_timed: ''
+                    my_shell: '/srv/jenkins/bin/reproducible_compare_Debian_sha1sums.sh random'
+                - 'compare_Debian_sha1sums_random_runner_2':
                     my_description: 'Compare sha1sums of Debian binary packages (in random order) with rebuild ones'
                     my_timed: ''
                     my_shell: '/srv/jenkins/bin/reproducible_compare_Debian_sha1sums.sh random'
