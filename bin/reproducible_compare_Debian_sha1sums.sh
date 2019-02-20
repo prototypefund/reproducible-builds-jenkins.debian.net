@@ -17,7 +17,8 @@ set -e
 # TODOs:
 # - ${package_file}.sha1output includes ${package_file} in the file name and contents
 # - run on osuoslXXX ? harder with using db..
-# - delete downloaded packages, keep sha1s, use them
+# - delete downloaded packages, keep sha1s, use them\
+# - GRAPH
 # - save results in db
 # - loop through all packages
 # - show results in 'normal pages' 
@@ -48,6 +49,32 @@ packages="$(schroot --directory  $SHA1DIR -c chroot:jenkins-reproducible-unstabl
 reproducible_packages=
 unreproducible_packages=
 
+cleanup_all() {
+	rm $log
+	reproducible_packages=$(awk '/^REPRODUCIBLE:/{print $2}' $log)
+	reproducible_count=$(echo $reproducible_packages | wc -w)
+	unreproducible_packages=$(awk '/^UNREPRODUCIBLE:/{print $2}' $log)
+	unreproducible_count=$(echo $unreproducible_packages | wc -w)
+
+	percent_repro=$(echo "scale=4 ; $reproducible_count / ($reproducible_count+$unreproducible_count) * 100" | bc)
+	percent_unrepro=$(echo "scale=4 ; $unreproducible_count / ($reproducible_count+$unreproducible_count) * 100" | bc)
+
+	echo "-------------------------------------------------------------"
+	echo "reproducible packages: $reproducible_count: $reproducible_packages"
+	echo
+	echo "unreproducible packages: $unreproducible_count: $unreproducible_packages"
+	echo
+	echo "reproducible packages: $reproducible_count: ($percent_repro%)"
+	echo
+	echo "unreproducible packages: $unreproducible_count: ($percent_unrepro%)"
+	echo
+	echo
+	echo "$(du -sch $SHA1DIR)"
+	echo
+}
+
+trap cleanup_all INT TERM EXIT
+
 for package in $packages ; do
 	schroot --directory  $SHA1DIR -c chroot:jenkins-reproducible-unstable-diffoscope apt-get download ${package} || continue
 	if [ $(ls -1 ${package}_*.deb | wc -l) -ne 1 ] ; then
@@ -75,25 +102,5 @@ for package in $packages ; do
 	done
 done | tee $log
 
-reproducible_packages=$(awk '/^REPRODUCIBLE:/{print $2}' $log)
-reproducible_count=$(echo $reproducible_packages | wc -w)
-unreproducible_packages=$(awk '/^UNREPRODUCIBLE:/{print $2}' $log)
-unreproducible_count=$(echo $unreproducible_packages | wc -w)
-
-percent_repro=$(echo "scale=4 ; $reproducible_count / ($reproducible_count+$unreproducible_count) * 100" | bc)
-percent_unrepro=$(echo "scale=4 ; $unreproducible_count / ($reproducible_count+$unreproducible_count) * 100" | bc)
-
-echo "-------------------------------------------------------------"
-echo "reproducible packages: $reproducible_count: $reproducible_packages"
-echo
-echo "unreproducible packages: $unreproducible_count: $unreproducible_packages"
-echo
-echo "reproducible packages: $reproducible_count: ($percent_repro%)"
-echo
-echo "unreproducible packages: $unreproducible_count: ($percent_unrepro%)"
-
-echo
-echo
-echo "$(du -sch $SHA1DIR)"
-echo
-rm $log
+cleanup_all
+trap - INT TERM EXIT
