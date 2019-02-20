@@ -93,7 +93,8 @@ for package in $packages ; do
 	if [ -e $LOCK ] ; then
 		echo "$(date -u) - skipping locked package $package"
 		continue
-	else
+	elif [ ! "$MODE" = "results" ] ; then
+		# MODE=results is read-only
 		touch $LOCK
 	fi
 	version=$(grep-dctrl -X -P ${package} -s version -n $PACKAGES)
