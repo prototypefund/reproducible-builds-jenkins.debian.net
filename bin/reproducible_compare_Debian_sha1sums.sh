@@ -75,12 +75,13 @@ for package in $packages ; do
 	date -u
 	schroot --directory  $SHA1DIR -c chroot:jenkins-reproducible-unstable-diffoscope apt-get download ${package} || continue
 	date -u
-	if [ $(ls -1 ${package}_*.deb | wc -l) -ne 1 ] ; then
-		DEB="$(ls -1 ${package}_*.deb | heads -1)"
-		echo "deleting $DEB..."
-		rm $DEB # first I thought to delete $DEB* but only deleting $DEB is better
+	package_file="$(ls -1 ${package}_*.deb)"
+	if [ $(echo "${package_file}" | wc -l) -ne 1 ] ; then
+		OLD_DEB=$(echo "${package_file}" | head -1)
+		echo "deleting $OLD_DEB..."
+		rm $OLD_DEB # first I thought to delete $OLD_DEB* but only deleting $OLD_DEB is better
+		package_file=$(echo "${package_file}" | tail -1 )
 	fi
-	package_file=$(ls ${package}_*.deb)
 	date -u
 	if [ ! -e ${package_file}.sha1output ] ; then
 		SHA1SUM_PKG="$(sha1sum ${package_file} | tee ${package_file}.sha1output | awk '{print $1}' )"
