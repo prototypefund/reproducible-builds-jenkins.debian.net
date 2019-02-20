@@ -43,7 +43,7 @@ cd $SHA1DIR
 
 PACKAGES=$(mktemp --tmpdir=$TMPDIR sha1-comp-XXXXXXX)
 schroot --directory  $SHA1DIR -c chroot:jenkins-reproducible-${RELEASE}-diffoscope cat /var/lib/apt/lists/cdn-fastly.deb.debian.org_debian_dists_${RELEASE}_main_binary-amd64_Packages > $PACKAGES
-case MODE in
+case "$MODE" in
 	random)		SORT="sort -R";;
 	reverse)	SORT="sort -r" ;;
 	*)		SORT="sort" ;;
