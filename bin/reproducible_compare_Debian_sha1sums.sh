@@ -42,6 +42,7 @@ echo
 
 bdn_url="https://buildinfo.debian.net/api/v1/buildinfos/checksums/sha1"
 log=$(mktemp --tmpdir=$TMPDIR sha1-log-XXXXXXX)
+echo "$(date -u) - logfile used is $log"
 
 SHA1DIR=/srv/reproducible-results/debian-sha1
 mkdir -p $SHA1DIR
