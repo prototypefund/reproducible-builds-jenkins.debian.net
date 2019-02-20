@@ -73,11 +73,14 @@ cleanup_all() {
 trap cleanup_all INT TERM EXIT
 
 for package in $packages ; do
+	cd $SHA1DIR
 	echo "$(date -u) - checking whether we have seen the .deb for $package before"
 	version=$(grep-dctrl -X -P ${package} -s version -n $PACKAGES)
 	arch=$(grep-dctrl -X -P ${package} -s Architecture -n $PACKAGES)
 	package_file="${package}_$(echo $version | sed 's#:#%3a#')_${arch}.deb"
-	#pool_dir="$(dirname $filename)"
+	pool_dir="$(dirname $(grep-dctrl -X -P ${package} -s Filename -n $PACKAGES))"
+	mkdir -p $pool_dir
+	cd $pool_dir
 	if [ ! -e ${package_file}.sha1output ] ; then
 		echo "$(date -u) - preparing to download $filename"
 		schroot --directory  $SHA1DIR -c chroot:jenkins-reproducible-unstable-diffoscope apt-get download ${package} || continue
