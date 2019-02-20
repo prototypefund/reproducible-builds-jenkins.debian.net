@@ -72,9 +72,9 @@ cleanup_all() {
 trap cleanup_all INT TERM EXIT
 
 for package in $packages ; do
-	date -u
+	echo "$(date -u) - preparing to download binary package $package"
 	schroot --directory  $SHA1DIR -c chroot:jenkins-reproducible-unstable-diffoscope apt-get download ${package} || continue
-	date -u
+	echo "$(date -u) - checking if more than one .deb exists locally"
 	package_file="$(ls -1 ${package}_*.deb)"
 	if [ $(echo "${package_file}" | wc -l) -ne 1 ] ; then
 		OLD_DEB=$(echo "${package_file}" | head -1)
@@ -82,17 +82,17 @@ for package in $packages ; do
 		rm $OLD_DEB # first I thought to delete $OLD_DEB* but only deleting $OLD_DEB is better
 		package_file=$(echo "${package_file}" | tail -1 )
 	fi
-	date -u
+	echo "$(date -u) - gathering sha1sum"
 	if [ ! -e ${package_file}.sha1output ] ; then
 		SHA1SUM_PKG="$(sha1sum ${package_file} | tee ${package_file}.sha1output | awk '{print $1}' )"
 	else
 		SHA1SUM_PKG="$(cat ${package_file}.sha1output | awk '{print $1}' )"
 	fi
-	date -u
+	echo "$(date -u) - downloading .json from buildinfo.debian.net"
 	if [ ! -e ${package_file}.json ]; then
 		wget --quiet -O ${package_file}.json ${bdn_url}/${SHA1SUM_PKG}
 	fi
-	date -u
+	echo "$(date -u) - generating result"
 	count=$(fmt ${package_file}.json | grep -c '\.buildinfo' || true)
 	if [ "${count}" -ge 2 ]; then
 		echo "REPRODUCIBLE: $package_file: $SHA1SUM_PKG - reproduced $count times."
