@@ -40,7 +40,7 @@ mkdir -p $SHA1DIR
 cd $SHA1DIR
 
 # downloading (and keeping) all the packages is also too much, but let's prototype this... (and improve later)
-packages="$(schroot --directory  $SHA1DIR -c chroot:jenkins-reproducible-unstable-diffoscope grep ^Package: /var/lib/apt/lists/cdn-fastly.deb.debian.org_debian_dists_unstable_main_binary-amd64_Packages| awk '{print $2}' | sort -R | xargs echo)"
+packages="$(schroot --directory  $SHA1DIR -c chroot:jenkins-reproducible-unstable-diffoscope grep ^Package: /var/lib/apt/lists/cdn-fastly.deb.debian.org_debian_dists_unstable_main_binary-amd64_Packages| awk '{print $2}' | sort | xargs echo)"
 
 reproducible_packages=
 unreproducible_packages=
