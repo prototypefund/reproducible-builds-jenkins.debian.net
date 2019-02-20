@@ -83,14 +83,13 @@ for package in $packages ; do
 	package_file=$(ls ${package}_*.deb)
 	date -u
 	if [ ! -e ${package_file}.sha1output ] ; then
-		SHA1SUM_OUTPUT="$(sha1sum ${package}_*.deb | tee ${package_file}.sha1output)"
+		SHA1SUM_PKG="$(sha1sum ${package_file} | tee ${package_file}.sha1output | awk '{print $1}' )"
 	else
-		SHA1SUM_OUTPUT="$(cat ${package_file}.sha1output)"
+		SHA1SUM_PKG="$(cat ${package_file}.sha1output | awk '{print $1}' )"
 	fi
-	SHA1SUM_PKG="$(echo $SHA1SUM_OUTPUT | awk '{print $1}' 2>/dev/null)"
 	date -u
 	if [ ! -e ${package_file}.json ]; then
-		wget --quiet -O ${package_file}.json ${bdn_url}/${checksum}
+		wget --quiet -O ${package_file}.json ${bdn_url}/${SHA1SUM_PKG}
 	fi
 	date -u
 	count=$(fmt ${package_file}.json | grep -c '\.buildinfo' || true)
