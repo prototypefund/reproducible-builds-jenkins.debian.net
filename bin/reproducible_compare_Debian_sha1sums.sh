@@ -133,8 +133,9 @@ for package in $packages ; do
 		SHA1SUM_PKG="$(sha1sum ${package_file} | tee ${package_file}.sha1output | awk '{print $1}' )"
 		rm ${package_file}
 		if [ -n "$(ls ${package}_*REPRODUCIBLE.$RELEASE 2>/dev/null)" ] ; then
+			echo "$(date -u) - $package was updated, deleting results for old version."
 			rm ${package}_*REPRODUCIBLE.$RELEASE
-			echo "$(date -u) - $package was updated, result for old version deleted."
+		fi
 	else
 		echo "$(date -u) - ${package_file} is known, gathering sha1sum"
 		SHA1SUM_PKG="$(cat ${package_file}.sha1output | awk '{print $1}' )"
