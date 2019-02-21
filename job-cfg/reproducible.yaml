@@ -583,22 +583,22 @@
                     my_shell: '/srv/jenkins/bin/diffoscope_distribution_test.sh Arch'
                 - 'compare_Debian_sha1sums':
                     my_description: 'Compare sha1sums of Debian binary packages with rebuild ones'
-                    my_timed: ''
+                    my_timed: '55 * * * *'
                 - 'compare_Debian_sha1sums_forward_runner':
                     my_description: 'Fetch .buildinfo files of Debian binary packages (in reverse order)'
-                    my_timed: ''
+                    my_timed: '56 * * * *'
                     my_shell: '/srv/jenkins/bin/reproducible_compare_Debian_sha1sums.sh forward'
                 - 'compare_Debian_sha1sums_reverse_runner':
                     my_description: 'Fetch .buildinfo files of Debian binary packages (in reverse order)'
-                    my_timed: ''
+                    my_timed: '56 * * * *'
                     my_shell: '/srv/jenkins/bin/reproducible_compare_Debian_sha1sums.sh reverse'
                 - 'compare_Debian_sha1sums_random_runner_1':
                     my_description: 'Fetch .buildinfo files of Debian binary packages (in random order)'
-                    my_timed: ''
+                    my_timed: '56 * * * *'
                     my_shell: '/srv/jenkins/bin/reproducible_compare_Debian_sha1sums.sh random'
                 - 'compare_Debian_sha1sums_random_runner_2':
                     my_description: 'Fetch .buildinfo files of Debian binary packages (in random order)'
-                    my_timed: ''
+                    my_timed: '56 * * * *'
                     my_shell: '/srv/jenkins/bin/reproducible_compare_Debian_sha1sums.sh random'
             my_shellext: ".sh"
             my_shell: '/srv/jenkins/bin/reproducible_{my_task}{my_shellext}'
