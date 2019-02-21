@@ -136,9 +136,6 @@ for package in $packages ; do
 			echo "$(date -u) - $package was updated, deleting results for old version."
 			rm ${package}_*REPRODUCIBLE.$RELEASE
 		fi
-	else
-		echo "$(date -u) - ${package_file} is known, gathering sha1sum"
-		SHA1SUM_PKG="$(cat ${package_file}.sha1output | awk '{print $1}' )"
 	fi
 	if [ ! -e ${package_file}.json ]; then
 		echo "$(date -u) - downloading .json for ${package_file} (${SHA1SUM_PKG}) from buildinfo.debian.net"
@@ -153,7 +150,7 @@ for package in $packages ; do
 			echo "$(date -u) - UNREPRODUCIBLE: $package_file ($SHA1SUM_PKG) only on ftp.debian.org."
 		fi
 	else
-		echo "$(date -u) - reusing local copy of .json for ${package_file} (${SHA1SUM_PKG}) from buildinfo.debian.net"
+		echo "$(date -u) - not updating .buildinfo files for known ${package_file}"
 	fi
 	rm -f $LOCK
 done | tee $log
