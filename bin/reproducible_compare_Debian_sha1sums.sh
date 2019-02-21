@@ -17,7 +17,7 @@ set -e
 
 # TODOs:
 # - ${package_file}.sha1output includes ${package_file} in the file name and contents
-# - run on osuoslXXX ? harder with using db..
+# - run job on jenkins, then do work via ssh on osuoslXXX ?
 # - GRAPH
 # - save results in db
 # - loop through all packages known in db
@@ -104,12 +104,23 @@ for package in $packages ; do
 	mkdir -p $pool_dir
 	cd $pool_dir
 	if [ "$MODE" = "results" ] ; then
-	        if  [ -e ${package_file}.json ] ; then
+		if [ -e ${package_file}.REPRODUCIBLE.$RELEASE ] ; then
+			count=$(cat ${package_file}.REPRODUCIBLE.$RELEASE)
+			SHA1SUM_PKG="$(cat ${package_file}.sha1output | awk '{print $1}' )"
+			echo "$(date -u) - REPRODUCIBLE: $package_file ($SHA1SUM_PKG) - reproduced $count times."
+		elif [ -e ${package_file}.UNREPRODUCIBLE.$RELEASE ] ; then
+			count=1
+			SHA1SUM_PKG="$(cat ${package_file}.sha1output | awk '{print $1}' )"
+			echo "$(date -u) - UNREPRODUCIBLE: $package_file ($SHA1SUM_PKG) only on ftp.debian.org."
+		else  [ -e ${package_file}.json ] ; then
+			# this code block can be removed once all packages with existing results have been processed once...
 			count=$(fmt ${package_file}.json | grep -c '\.buildinfo' || true)
 			SHA1SUM_PKG="$(cat ${package_file}.sha1output | awk '{print $1}' )"
 			if [ "${count}" -ge 2 ]; then
+				echo $count > ${package_file}.REPRODUCIBLE.$RELEASE
 				echo "$(date -u) - REPRODUCIBLE: $package_file ($SHA1SUM_PKG) - reproduced $count times."
 			else
+				echo 1 > ${package_file}.UNREPRODUCIBLE.$RELEASE
 				echo "$(date -u) - UNREPRODUCIBLE: $package_file ($SHA1SUM_PKG) only on ftp.debian.org."
 			fi
 		fi
@@ -121,6 +132,9 @@ for package in $packages ; do
 		echo "$(date -u) - calculating sha1sum for ${package_file}"
 		SHA1SUM_PKG="$(sha1sum ${package_file} | tee ${package_file}.sha1output | awk '{print $1}' )"
 		rm ${package_file}
+		if [ -n "$(ls ${package}_*REPRODUCIBLE.$RELEASE 2>/dev/null)" ] ; then
+			rm ${package}_*REPRODUCIBLE.$RELEASE
+			echo "$(date -u) - $package was updated, result for old version deleted."
 	else
 		echo "$(date -u) - ${package_file} is known, gathering sha1sum"
 		SHA1SUM_PKG="$(cat ${package_file}.sha1output | awk '{print $1}' )"
@@ -128,6 +142,15 @@ for package in $packages ; do
 	if [ ! -e ${package_file}.json ]; then
 		echo "$(date -u) - downloading .json for ${package_file} (${SHA1SUM_PKG}) from buildinfo.debian.net"
 		wget --quiet -O ${package_file}.json ${bdn_url}/${SHA1SUM_PKG} || echo "WARNING: failed to download ${bdn_url}/${SHA1SUM_PKG}"
+		count=$(fmt ${package_file}.json | grep -c '\.buildinfo' || true)
+		SHA1SUM_PKG="$(cat ${package_file}.sha1output | awk '{print $1}' )"
+		if [ "${count}" -ge 2 ]; then
+			echo $count > ${package_file}.REPRODUCIBLE.$RELEASE
+			echo "$(date -u) - REPRODUCIBLE: $package_file ($SHA1SUM_PKG) - reproduced $count times."
+		else
+			echo 1 > ${package_file}.UNREPRODUCIBLE.$RELEASE
+			echo "$(date -u) - UNREPRODUCIBLE: $package_file ($SHA1SUM_PKG) only on ftp.debian.org."
+		fi
 	else
 		echo "$(date -u) - reusing local copy of .json for ${package_file} (${SHA1SUM_PKG}) from buildinfo.debian.net"
 	fi
