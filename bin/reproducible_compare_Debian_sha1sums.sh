@@ -150,7 +150,7 @@ for package in $packages ; do
 			echo "$(date -u) - UNREPRODUCIBLE: $package_file ($SHA1SUM_PKG) only on ftp.debian.org."
 		fi
 	else
-		echo "$(date -u) - not updating .buildinfo files for known ${package_file}"
+		echo "$(date -u) - not updating data about ${package_file}"
 	fi
 	rm -f $LOCK
 done | tee $log
