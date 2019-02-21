@@ -73,8 +73,8 @@ cleanup_all() {
 		echo
 		echo "unreproducible packages: $unreproducible_count: $unreproducible_packages"
 		echo
-		echo "reproducible packages: $reproducible_count: ($percent_repro%)"
-		echo "unreproducible packages: $unreproducible_count: ($percent_unrepro%)"
+		echo "reproducible packages in $RELEASE/amd64: $reproducible_count: ($percent_repro%)"
+		echo "unreproducible packages in $RELEASE/amd64: $unreproducible_count: ($percent_unrepro%)"
 		echo
 		echo
 		echo "$(du -sch $SHA1DIR)"
