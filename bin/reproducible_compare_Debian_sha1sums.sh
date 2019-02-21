@@ -112,7 +112,7 @@ for package in $packages ; do
 			count=1
 			SHA1SUM_PKG="$(cat ${package_file}.sha1output | awk '{print $1}' )"
 			echo "$(date -u) - UNREPRODUCIBLE: $package_file ($SHA1SUM_PKG) only on ftp.debian.org."
-		else  [ -e ${package_file}.json ] ; then
+		elif [ -e ${package_file}.json ] ; then
 			# this code block can be removed once all packages with existing results have been processed once...
 			count=$(fmt ${package_file}.json | grep -c '\.buildinfo' || true)
 			SHA1SUM_PKG="$(cat ${package_file}.sha1output | awk '{print $1}' )"
