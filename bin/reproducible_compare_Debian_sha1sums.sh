@@ -25,6 +25,13 @@ set -e
 # - store date when a package was last reproduced... (and constantly do that...)
 # - throw away results (if none has been|which have not) signed with a tests.r-b.o key
 # - json files from buildinfo.d.n are never re-downloaded
+# - rebuilder:
+#   - run on osuoslXXX
+#   - loop randomly through unreproducible packages first, then reproducible ones. do one attempt only.
+#   - one job run tests one package.
+#   - use same debuild options possible? or try all sane options?
+#   - submit .buildinfo file to b.d.n and then fetch the json again.
+#   - debootstrap stretch and upgrade from there?
 
 RELEASE=buster
 MODE="$1"
