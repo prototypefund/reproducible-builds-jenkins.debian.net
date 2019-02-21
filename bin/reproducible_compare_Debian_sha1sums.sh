@@ -53,7 +53,7 @@ case "$MODE" in
 	random)		SORT="sort -R";;
 	reverse)	SORT="sort -r" ;;
 	forward)	SORT="sort" ;;
-	*)		SORT="sort" ; MODE="results" ;;
+	*)		SORT="sort" ; MODE="results" ; RESULTS=$(mktemp --tmpdir=$TMPDIR sha1-results-XXXXXXX) ; find $SHA1DIR -name "*REPRODUCIBLE.buster" > $RESULTS
 esac
 packages="$(grep ^Package: $PACKAGES| awk '{print $2}' | $SORT | xargs echo)"
 
@@ -79,6 +79,7 @@ cleanup_all() {
 		echo
 		echo "$(du -sch $SHA1DIR)"
 		echo
+		rm $RESULTS
 	fi
 	rm $log $PACKAGES
 }
@@ -89,6 +90,25 @@ rm -f $SHA1DIR/*.lock	# this is a tiny bit hackish, but also an elegant way to g
 			# (locks are held for 30s only anyway and there is an 3/60000th chance of a race condition only anyway)
 
 for package in $packages ; do
+	if [ "$MODE" = "results" ] ; then
+		result=$(grep "/${package}_" $RESULTS || true)
+		if [ -n "$result" ] ; then
+			if $(echo $result | grep -q UNREPRODUCIBLE) ; then
+				package_file=$(echo $result | sed 's#\.deb\.UNREPRODUCIBLE\.buster$#.deb#' )
+				count=1
+				SHA1SUM_PKG="$(cat ${package_file}.sha1output | awk '{print $1}' )"
+				package_file=$(basename $package_file)
+				echo "$(date -u) - UNREPRODUCIBLE: $package_file ($SHA1SUM_PKG) only on ftp.debian.org."
+			else
+				package_file=$(echo $result | sed 's#\.deb\.REPRODUCIBLE\.buster$#.deb#' )
+				count=$(cat ${package_file}.REPRODUCIBLE.$RELEASE)
+				SHA1SUM_PKG="$(cat ${package_file}.sha1output | awk '{print $1}' )"
+				package_file=$(basename $package_file)
+				echo "$(date -u) - REPRODUCIBLE: $package_file ($SHA1SUM_PKG) - reproduced $count times."
+			fi
+			continue
+		fi
+	fi
 	LOCK="$SHA1DIR/${package}.lock"
 	if [ -e $LOCK ] ; then
 		echo "$(date -u) - skipping locked package $package"
@@ -104,6 +124,7 @@ for package in $packages ; do
 	mkdir -p $pool_dir
 	cd $pool_dir
 	if [ "$MODE" = "results" ] ; then
+		# this code block can be removed once all packages with existing results have been processed once...
 		if [ -e ${package_file}.REPRODUCIBLE.$RELEASE ] ; then
 			count=$(cat ${package_file}.REPRODUCIBLE.$RELEASE)
 			SHA1SUM_PKG="$(cat ${package_file}.sha1output | awk '{print $1}' )"
@@ -113,7 +134,6 @@ for package in $packages ; do
 			SHA1SUM_PKG="$(cat ${package_file}.sha1output | awk '{print $1}' )"
 			echo "$(date -u) - UNREPRODUCIBLE: $package_file ($SHA1SUM_PKG) only on ftp.debian.org."
 		elif [ -e ${package_file}.json ] ; then
-			# this code block can be removed once all packages with existing results have been processed once...
 			count=$(fmt ${package_file}.json | grep -c '\.buildinfo' || true)
 			SHA1SUM_PKG="$(cat ${package_file}.sha1output | awk '{print $1}' )"
 			if [ "${count}" -ge 2 ]; then
