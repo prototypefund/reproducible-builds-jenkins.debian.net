@@ -61,8 +61,7 @@ case "$MODE" in
 	random)		SORT="sort -R";;
 	reverse)	SORT="sort -r" ;;
 	forward)	SORT="sort" ;;
-	*)		SORT="sort" ; MODE="results" ; RESULTS=$(mktemp --tmpdir=$TMPDIR sha1-results-XXXXXXX) ; find $SHA1DIR -name "*REPRODUCIBLE.buster" > $RESULTS
-			JSONS=$(mktemp --tmpdir=$TMPDIR sha1-results-XXXXXXX) ; find $SHA1DIR -name "*.json" > $JSONS ;;
+	*)		SORT="sort" ; MODE="results" ; RESULTS=$(mktemp --tmpdir=$TMPDIR sha1-results-XXXXXXX) ; find $SHA1DIR -name "*REPRODUCIBLE.buster" > $RESULTS ;;
 esac
 packages="$(grep ^Package: $PACKAGES| awk '{print $2}' | $SORT | xargs echo)"
 
@@ -103,7 +102,7 @@ cleanup_all() {
 		echo
 		echo "$(du -sch $SHA1DIR)"
 		echo
-		rm $RESULTS $JSONS
+		rm $RESULTS
 	fi
 	rm $log $PACKAGES
 }
@@ -131,20 +130,6 @@ if [ "$MODE" = "results" ] ; then
 				#package_file=$(basename $package_file)
 				#echo "$(date -u) - REPRODUCIBLE: $package_file ($SHA1SUM_PKG) - reproduced $count times."
 				echo "$(date -u) - REPRODUCIBLE: $package"
-			fi
-			continue
-		fi
-		json=$(grep "/${package}_" $JSONS || true)
-		if [ -n "$json" ] ; then
-			package_file=$(echo $json | sed 's#\.deb\.json$#.deb#' )
-			count=$(fmt ${package_file}.json | grep -c '\.buildinfo' || true)
-			SHA1SUM_PKG="$(cat ${package_file}.sha1output | awk '{print $1}' )"
-			if [ "${count}" -ge 2 ]; then
-				echo $count > ${package_file}.REPRODUCIBLE.$RELEASE
-				echo "$(date -u) - REPRODUCIBLE: $package_file ($SHA1SUM_PKG) - reproduced $count times."
-			else
-				echo 1 > ${package_file}.UNREPRODUCIBLE.$RELEASE
-				echo "$(date -u) - UNREPRODUCIBLE: $package_file ($SHA1SUM_PKG) only on ftp.debian.org."
 			fi
 			continue
 		fi
