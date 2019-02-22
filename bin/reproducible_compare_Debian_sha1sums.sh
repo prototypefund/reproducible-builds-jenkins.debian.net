@@ -18,6 +18,7 @@ set -e
 # TODOs:
 # - ${package_file}.sha1output includes ${package_file} in the file name and contents
 # - run job on jenkins, then do work via ssh on osuoslXXX ?
+# - unknown state
 # - GRAPH
 # - save results in db
 # - loop through all packages known in db
@@ -61,6 +62,7 @@ case "$MODE" in
 	reverse)	SORT="sort -r" ;;
 	forward)	SORT="sort" ;;
 	*)		SORT="sort" ; MODE="results" ; RESULTS=$(mktemp --tmpdir=$TMPDIR sha1-results-XXXXXXX) ; find $SHA1DIR -name "*REPRODUCIBLE.buster" > $RESULTS
+			JSONS=$(mktemp --tmpdir=$TMPDIR sha1-results-XXXXXXX) ; find $SHA1DIR -name "*.json" > $JSONS ;;
 esac
 packages="$(grep ^Package: $PACKAGES| awk '{print $2}' | $SORT | xargs echo)"
 
@@ -86,7 +88,7 @@ cleanup_all() {
 		echo
 		echo "$(du -sch $SHA1DIR)"
 		echo
-		rm $RESULTS
+		rm $RESULTS $JSONS
 	fi
 	rm $log $PACKAGES
 }
@@ -96,51 +98,30 @@ trap cleanup_all INT TERM EXIT
 rm -f $SHA1DIR/*.lock	# this is a tiny bit hackish, but also an elegant way to get rid of old locks...
 			# (locks are held for 30s only anyway and there is an 3/60000th chance of a race condition only anyway)
 
-for package in $packages ; do
-	if [ "$MODE" = "results" ] ; then
+if [ "$MODE" = "results" ] ; then
+	for package in $packages ; do
 		result=$(grep "/${package}_" $RESULTS || true)
 		if [ -n "$result" ] ; then
 			if $(echo $result | grep -q UNREPRODUCIBLE) ; then
-				package_file=$(echo $result | sed 's#\.deb\.UNREPRODUCIBLE\.buster$#.deb#' )
-				count=1
-				SHA1SUM_PKG="$(cat ${package_file}.sha1output | awk '{print $1}' )"
-				package_file=$(basename $package_file)
-				echo "$(date -u) - UNREPRODUCIBLE: $package_file ($SHA1SUM_PKG) only on ftp.debian.org."
+				#package_file=$(echo $result | sed 's#\.deb\.UNREPRODUCIBLE\.buster$#.deb#' )
+				#count=1
+				#SHA1SUM_PKG="$(cat ${package_file}.sha1output | awk '{print $1}' )"
+				#package_file=$(basename $package_file)
+				#echo "$(date -u) - UNREPRODUCIBLE: $package_file ($SHA1SUM_PKG) only on ftp.debian.org."
+				echo "$(date -u) - UNREPRODUCIBLE: $package"
 			else
-				package_file=$(echo $result | sed 's#\.deb\.REPRODUCIBLE\.buster$#.deb#' )
-				count=$(cat ${package_file}.REPRODUCIBLE.$RELEASE)
-				SHA1SUM_PKG="$(cat ${package_file}.sha1output | awk '{print $1}' )"
-				package_file=$(basename $package_file)
-				echo "$(date -u) - REPRODUCIBLE: $package_file ($SHA1SUM_PKG) - reproduced $count times."
+				#package_file=$(echo $result | sed 's#\.deb\.REPRODUCIBLE\.buster$#.deb#' )
+				#count=$(cat ${package_file}.REPRODUCIBLE.$RELEASE)
+				#SHA1SUM_PKG="$(cat ${package_file}.sha1output | awk '{print $1}' )"
+				#package_file=$(basename $package_file)
+				#echo "$(date -u) - REPRODUCIBLE: $package_file ($SHA1SUM_PKG) - reproduced $count times."
+				echo "$(date -u) - REPRODUCIBLE: $package"
 			fi
 			continue
 		fi
-	fi
-	LOCK="$SHA1DIR/${package}.lock"
-	if [ -e $LOCK ] ; then
-		echo "$(date -u) - skipping locked package $package"
-		continue
-	elif [ ! "$MODE" = "results" ] ; then
-		# MODE=results is read-only
-		touch $LOCK
-	fi
-	version=$(grep-dctrl -X -P ${package} -s version -n $PACKAGES)
-	arch=$(grep-dctrl -X -P ${package} -s Architecture -n $PACKAGES)
-	package_file="${package}_$(echo $version | sed 's#:#%3a#')_${arch}.deb"
-	pool_dir="$SHA1DIR/$(dirname $(grep-dctrl -X -P ${package} -s Filename -n $PACKAGES))"
-	mkdir -p $pool_dir
-	cd $pool_dir
-	if [ "$MODE" = "results" ] ; then
-		# this code block can be removed once all packages with existing results have been processed once...
-		if [ -e ${package_file}.REPRODUCIBLE.$RELEASE ] ; then
-			count=$(cat ${package_file}.REPRODUCIBLE.$RELEASE)
-			SHA1SUM_PKG="$(cat ${package_file}.sha1output | awk '{print $1}' )"
-			echo "$(date -u) - REPRODUCIBLE: $package_file ($SHA1SUM_PKG) - reproduced $count times."
-		elif [ -e ${package_file}.UNREPRODUCIBLE.$RELEASE ] ; then
-			count=1
-			SHA1SUM_PKG="$(cat ${package_file}.sha1output | awk '{print $1}' )"
-			echo "$(date -u) - UNREPRODUCIBLE: $package_file ($SHA1SUM_PKG) only on ftp.debian.org."
-		elif [ -e ${package_file}.json ] ; then
+		json=$(grep "/${package}_" $JSONS || true)
+		if [ -n "$json" ] ; then
+			package_file=$(echo $json | sed 's#\.deb\.json$#.deb#' )
 			count=$(fmt ${package_file}.json | grep -c '\.buildinfo' || true)
 			SHA1SUM_PKG="$(cat ${package_file}.sha1output | awk '{print $1}' )"
 			if [ "${count}" -ge 2 ]; then
@@ -150,9 +131,27 @@ for package in $packages ; do
 				echo 1 > ${package_file}.UNREPRODUCIBLE.$RELEASE
 				echo "$(date -u) - UNREPRODUCIBLE: $package_file ($SHA1SUM_PKG) only on ftp.debian.org."
 			fi
+			continue
 		fi
+	done | tee $log
+	exit
+fi
+
+# only used by the runners
+for package in $packages ; do
+	LOCK="$SHA1DIR/${package}.lock"
+	if [ -e $LOCK ] ; then
+		echo "$(date -u) - skipping locked package $package"
 		continue
+	else
+		touch $LOCK
 	fi
+	version=$(grep-dctrl -X -P ${package} -s version -n $PACKAGES)
+	arch=$(grep-dctrl -X -P ${package} -s Architecture -n $PACKAGES)
+	package_file="${package}_$(echo $version | sed 's#:#%3a#')_${arch}.deb"
+	pool_dir="$SHA1DIR/$(dirname $(grep-dctrl -X -P ${package} -s Filename -n $PACKAGES))"
+	mkdir -p $pool_dir
+	cd $pool_dir
 	if [ ! -e ${package_file}.sha1output ] ; then
 		echo -n "$(date -u) - downloading... "
 		( schroot --directory $pool_dir -c chroot:jenkins-reproducible-${RELEASE}-diffoscope apt-get download ${package}/${RELEASE} 2>&1 |xargs echo ) || continue
@@ -180,7 +179,7 @@ for package in $packages ; do
 		echo "$(date -u) - not updating data about ${package_file}"
 	fi
 	rm -f $LOCK
-done | tee $log
+done | tee -a $log
 
 cleanup_all
 trap - INT TERM EXIT
