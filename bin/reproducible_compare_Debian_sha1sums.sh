@@ -32,6 +32,7 @@ set -e
 #   - use same debuild options possible? or try all sane options?
 #   - submit .buildinfo file to b.d.n and then fetch the json again.
 #   - debootstrap stretch and upgrade from there?
+# - this is all amd64 only for a start
 
 RELEASE=buster
 MODE="$1"
@@ -94,7 +95,7 @@ cleanup_all() {
 		echo
 		percent_repro=$(echo "scale=4 ; $reproducible_count / ($reproducible_count+$unreproducible_count) * 100" | bc)
 		percent_unrepro=$(echo "scale=4 ; $unreproducible_count / ($reproducible_count+$unreproducible_count) * 100" | bc)
-		echo "Statistics of packages in known state only"
+		echo "Statistics of packages in known states only"
 		echo "-------------------------------------------------------------"
 		echo "reproducible packages in $RELEASE/amd64: $reproducible_count: ($percent_repro%)"
 		echo "unreproducible packages in $RELEASE/amd64: $unreproducible_count: ($percent_unrepro%)"
