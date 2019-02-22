@@ -18,7 +18,6 @@ set -e
 # TODOs:
 # - ${package_file}.sha1output includes ${package_file} in the file name and contents
 # - run job on jenkins, then do work via ssh on osuoslXXX ?
-# - unknown state
 # - GRAPH
 # - save results in db
 # - loop through all packages known in db
@@ -71,17 +70,23 @@ unreproducible_packages=
 
 cleanup_all() {
 	if [ "$MODE" = "results" ]; then
+		unknown_packages=$(awk '/ UNKNOWN: /{print $9}' $log)
+		unknown_count=$(echo $unknown_packages | wc -w)
 		reproducible_packages=$(awk '/ REPRODUCIBLE: /{print $9}' $log)
 		reproducible_count=$(echo $reproducible_packages | wc -w)
 		unreproducible_packages=$(awk '/ UNREPRODUCIBLE: /{print $9}' $log)
 		unreproducible_count=$(echo $unreproducible_packages | wc -w)
-		percent_repro=$(echo "scale=4 ; $reproducible_count / ($reproducible_count+$unreproducible_count) * 100" | bc)
-		percent_unrepro=$(echo "scale=4 ; $unreproducible_count / ($reproducible_count+$unreproducible_count) * 100" | bc)
+		percent_unknown=$(echo "scale=4 ; $unknown_count / ($reproducible_count+$unreproducible_count+$unknown_count) * 100" | bc)
+		percent_repro=$(echo "scale=4 ; $reproducible_count / ($reproducible_count+$unreproducible_count+$unknown_count) * 100" | bc)
+		percent_unrepro=$(echo "scale=4 ; $unreproducible_count / ($reproducible_count+$unreproducible_count+$unknown_count) * 100" | bc)
 		echo "-------------------------------------------------------------"
+		echo "unknown packages: $unknown_count: $unknown_packages"
+		echo
 		echo "reproducible packages: $reproducible_count: $reproducible_packages"
 		echo
 		echo "unreproducible packages: $unreproducible_count: $unreproducible_packages"
 		echo
+		echo "unknown packages in $RELEASE/amd64: $unknown_count: ($percent_unknown%)"
 		echo "reproducible packages in $RELEASE/amd64: $reproducible_count: ($percent_repro%)"
 		echo "unreproducible packages in $RELEASE/amd64: $unreproducible_count: ($percent_unrepro%)"
 		echo
@@ -133,6 +138,7 @@ if [ "$MODE" = "results" ] ; then
 			fi
 			continue
 		fi
+		echo "$(date -u) - UNKNOWN: $package"
 	done | tee $log
 	exit
 fi
