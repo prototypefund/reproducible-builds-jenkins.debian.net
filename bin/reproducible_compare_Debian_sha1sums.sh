@@ -86,15 +86,16 @@ cleanup_all() {
 		echo
 		echo "unreproducible packages: $unreproducible_count: $unreproducible_packages"
 		echo
-		echo "Statistics including packages (currently) in an unknown state"
+		echo "ftp.debian.org package reproducibility statistics including packages (currently) in an unknown state"
 		echo "-------------------------------------------------------------"
-		echo "unknown packages in $RELEASE/amd64: $unknown_count: ($percent_unknown%)"
+		echo "packages in unknown reproducibility state in $RELEASE/amd64: $unknown_count: ($percent_unknown%)"
 		echo "reproducible packages in $RELEASE/amd64: $reproducible_count: ($percent_repro%)"
 		echo "unreproducible packages in $RELEASE/amd64: $unreproducible_count: ($percent_unrepro%)"
+		echo "total number of packages in $RELEASE/amd64: $(echo $reproducible_count+$unreproducible_count+$unknown_count | bc)"
 		echo
 		percent_repro=$(echo "scale=4 ; $reproducible_count / ($reproducible_count+$unreproducible_count) * 100" | bc)
 		percent_unrepro=$(echo "scale=4 ; $unreproducible_count / ($reproducible_count+$unreproducible_count) * 100" | bc)
-		echo "Statistics of packages in known states only"
+		echo "ftp.debian.org package reproducibility statistics of packages in known states only"
 		echo "-------------------------------------------------------------"
 		echo "reproducible packages in $RELEASE/amd64: $reproducible_count: ($percent_repro%)"
 		echo "unreproducible packages in $RELEASE/amd64: $unreproducible_count: ($percent_unrepro%)"
