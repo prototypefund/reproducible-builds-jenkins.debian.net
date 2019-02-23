@@ -101,7 +101,7 @@ cleanup_all() {
 		echo "unreproducible packages in $RELEASE/amd64: $unreproducible_count: ($percent_unrepro%)"
 		echo
 		echo
-		echo "$(du -sch $SHA1DIR)"
+		echo "$(du -sch $SHA1DIR 2>/dev/null)"
 		echo
 		rm $RESULTS
 	fi
