@@ -24,7 +24,8 @@ explain_nodes() {
 		osuosl169)	write_page "<br /><small>(r-b Archlinux builds)</small>" ;;
 		osuosl170)	write_page "<br /><small>(r-b Archlinux builds)</small>" ;;
 		osuosl171)	write_page "<br /><small>(r-b OpenWrt, NetBSD, Coreboot builds)</small>" ;;
-		osuosl172)	write_page "<br /><small>(r-b OpenWrt, NetBSD, Coreboot builds)</small>" ;;
+		osuosl172)	write_page "<br /><small>(r-b OpenWrt, Coreboot builds)</small>" ;;
+		osuosl173)	write_page "<br /><small>(r-b Debian rebuilder)</small>" ;;
 		osuosl*)	write_page "<br /><small>(TBD - setup in progress)</small>" ;;
 		*)		write_page "<br /><small>(r-b Debian builds)</small>" ;;
 	esac
@@ -144,6 +145,13 @@ build_nodes_health_page() {
 				case $JENKINS_NODENAME in
 					osuosl171)
 						if [ "$SUITE" = "unstable" ]; then
+							write_page "<td><a href='$URL'><img src='$BADGE' /></a></td>"
+						else
+							write_page "<td></td>"
+						fi
+						;;
+					osuosl173)
+						if [ "$SUITE" = "buster" ]; then
 							write_page "<td><a href='$URL'><img src='$BADGE' /></a></td>"
 						else
 							write_page "<td></td>"
