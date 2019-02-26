@@ -151,7 +151,7 @@ elif [ "$1" = "reproducible_compare_Debian_sha1sums_forward_runner" ] ; then
 	exec /srv/jenkins/bin/reproducible_compare_Debian_sha1sums.sh forward ; croak "Exec failed";
 elif [ "$1" = "reproducible_compare_Debian_sha1sums_reverse_runner" ] ; then
 	exec /srv/jenkins/bin/reproducible_compare_Debian_sha1sums.sh reverse ; croak "Exec failed";
-elif [[ "$1" ~= "reproducible_compare_Debian_sha1sums_random_runner_?" ]] ; then
+elif [[ "$1" =~ "reproducible_compare_Debian_sha1sums_random_runner_?" ]] ; then
 	exec /srv/jenkins/bin/reproducible_compare_Debian_sha1sums.sh random ; croak "Exec failed";
 elif [ "$*" = "some_jenkins_job_name" ] ; then
 	exec echo run any commands here ; croak "Exec failed";
