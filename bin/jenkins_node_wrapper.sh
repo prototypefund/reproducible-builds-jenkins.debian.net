@@ -145,6 +145,14 @@ elif [ "$1" = "/srv/jenkins/bin/reproducible_build_archlinux_pkg.sh" ] && ( [ "$
 	exec /srv/jenkins/bin/reproducible_build_archlinux_pkg.sh "$2" "$3" "$4" "$5" "$6" ; croak "Exec failed";
 elif [ "$1" = "/srv/jenkins/bin/reproducible_build_rpm.sh" ] && ( [ "$2" = "1" ] || [ "$2" = "2" ] ) ; then
 	exec /srv/jenkins/bin/reproducible_build_rpm.sh "$2" "$3" "$4" "$5" "$6" "$7" ; croak "Exec failed";
+elif [ "$1" = "reproducible_compare_Debian_sha1sums" ] ; then
+	exec /srv/jenkins/bin/reproducible_compare_Debian_sha1sums.sh ; croak "Exec failed";
+elif [ "$1" = "reproducible_compare_Debian_sha1sums_forward_runner" ] ; then
+	exec /srv/jenkins/bin/reproducible_compare_Debian_sha1sums.sh forward ; croak "Exec failed";
+elif [ "$1" = "reproducible_compare_Debian_sha1sums_reverse_runner" ] ; then
+	exec /srv/jenkins/bin/reproducible_compare_Debian_sha1sums.sh reverse ; croak "Exec failed";
+elif [[ "$1" ~= "reproducible_compare_Debian_sha1sums_random_runner_?" ]] ; then
+	exec /srv/jenkins/bin/reproducible_compare_Debian_sha1sums.sh random ; croak "Exec failed";
 elif [ "$*" = "some_jenkins_job_name" ] ; then
 	exec echo run any commands here ; croak "Exec failed";
 fi
