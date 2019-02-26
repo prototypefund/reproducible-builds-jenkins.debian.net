@@ -72,8 +72,8 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 ** done: osuosl171: openwrt, coreboot, netbsd
 *** is constantly online (in jenkins) now, which is not how we like it and still doesnt solve the netbsd job probs
 ** done: osuosl172: openwrt, coreboot (future)
-** osuosl173: debian
-** osuosl174: debian (future)
+** osuosl173: debian rebuilder#1
+** osuosl174:
 * add to README 
 * add link to OSUOSL in THANKS and explain usage
 * drop 'setup in progress' from r_html_nodes_info

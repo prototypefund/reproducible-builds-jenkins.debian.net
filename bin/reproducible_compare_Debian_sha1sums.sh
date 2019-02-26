@@ -17,7 +17,6 @@ set -e
 
 # TODOs:
 # - ${package_file}.sha1output includes ${package_file} in the file name and contents
-# - run job on jenkins, then do work via ssh on osuoslXXX ?
 # - GRAPH
 # - save results in db
 # - loop through all packages known in db
@@ -26,7 +25,7 @@ set -e
 # - throw away results (if none has been|which have not) signed with a tests.r-b.o key
 # - json files from buildinfo.d.n are never re-downloaded
 # - rebuilder:
-#   - run on osuoslXXX
+#   - run on osuosl173
 #   - loop randomly through unreproducible packages first, then reproducible ones. do one attempt only.
 #   - one job run tests one package.
 #   - use same debuild options possible? or try all sane options?
