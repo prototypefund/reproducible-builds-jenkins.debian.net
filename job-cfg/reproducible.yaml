@@ -492,13 +492,13 @@
                 - 'setup_schroot_unstable_diffoscope':
                     my_description: 'Setup schroot for running diffoscope in a unstable environment'
                     my_timed: '42 0 * * *'
-                                   my_hname:
+                    my_hname:
                         - 'osuosl171':  { my_arch: 'amd64' }
             my_task:
                 - 'setup_schroot_buster_diffoscope':
                     my_description: 'Setup schroot for running diffoscope in a unstable environment'
                     my_timed: '42 0 * * *'
-                                   my_hname:
+                    my_hname:
                         - 'osuosl173':  { my_arch: 'amd64' }
             my_naginator_regex: '^E: Couldn.t download .*/Packages'
             my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
