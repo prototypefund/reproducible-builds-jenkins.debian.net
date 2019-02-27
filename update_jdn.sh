@@ -283,6 +283,11 @@ if [ -f /etc/debian_version ] ; then
 			vim 
 			zsh
 			"
+		# needed for rebuilding Debian (using .buildinfo files)
+		case $HOSTNAME in
+			osuosl-build173-amd64) DEBS="$DEBS libdpkg-perl libwww-mechanize-perl sbuild" ;;
+			*) ;;
+		esac
 		# install squid on a few nodes only
 		case $HOSTNAME in
 			profitbricks-build1-a*|profitbricks-build10*|codethink-sled16*|osuosl-build167*) DEBS="$DEBS
@@ -573,6 +578,15 @@ if ! $UP2DATE || [ $BASEDIR/hosts/$HOSTNAME/etc/munin -nt $STAMP ] ; then
 	# this is a hack to work around (rare) problems with restarting munin-node...
 	sudo service munin-node restart || sudo service munin-node restart || sudo service munin-node restart
 fi
+
+# add some users to groups after packages have been installed
+if ! $UP2DATE ; then
+	case $HOSTNAME in
+		osuosl-build173-amd64)		sudo adduser jenkins sbuild ;;
+		*) 				;;
+	esac
+fi
+# finally
 explain "packages configured."
 
 #
