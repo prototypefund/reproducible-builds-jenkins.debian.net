@@ -75,6 +75,12 @@ cleanup_all() {
 		reproducible_count=$(echo $reproducible_packages | wc -w)
 		unreproducible_packages=$(awk '/ UNREPRODUCIBLE: /{print $9}' $log)
 		unreproducible_count=$(echo $unreproducible_packages | wc -w)
+		reproducible_binnmu=$(find $SHA1DIR -type f | egrep -c '+b._(all|amd64).deb.REPRODUCIBLE.buster')
+		unreproducible_binnmu=$(find $SHA1DIR -type f | egrep -c '+b._(all|amd64).deb.UNREPRODUCIBLE.buster')
+		reproducible_arch_all=$(find $SHA1DIR -type f | egrep -c '_all.deb.REPRODUCIBLE.buster')
+		unreproducible_arch_all=$(find $SHA1DIR -type f | egrep -c '_all.deb.UNREPRODUCIBLE.buster')
+		reproducible_arch_amd64=$(find $SHA1DIR -type f | egrep -c '_amd64.deb.REPRODUCIBLE.buster')
+		unreproducible_arch_amd64=$(find $SHA1DIR -type f | egrep -c '_amd64.deb.UNREPRODUCIBLE.buster')
 		percent_unknown=$(echo "scale=4 ; $unknown_count / ($reproducible_count+$unreproducible_count+$unknown_count) * 100" | bc)
 		percent_repro=$(echo "scale=4 ; $reproducible_count / ($reproducible_count+$unreproducible_count+$unknown_count) * 100" | bc)
 		percent_unrepro=$(echo "scale=4 ; $unreproducible_count / ($reproducible_count+$unreproducible_count+$unknown_count) * 100" | bc)
@@ -94,10 +100,24 @@ cleanup_all() {
 		echo
 		percent_repro=$(echo "scale=4 ; $reproducible_count / ($reproducible_count+$unreproducible_count) * 100" | bc)
 		percent_unrepro=$(echo "scale=4 ; $unreproducible_count / ($reproducible_count+$unreproducible_count) * 100" | bc)
+		percent_binnmu_repro=$(echo "scale=4 ; $reproducible_binnmu / ($reproducible_count+$unreproducible_count) * 100" | bc)
+		percent_binnmu_unrepro=$(echo "scale=4 ; $unreproducible_binnmu / ($reproducible_count+$unreproducible_count) * 100" | bc)
+		percent_arch_all_repro=$(echo "scale=4 ; $reproducible_arch_all / ($reproducible_count+$unreproducible_count) * 100" | bc)
+		percent_arch_all_unrepro=$(echo "scale=4 ; $unreproducible_arch_all / ($reproducible_count+$unreproducible_count) * 100" | bc)
+		percent_arch_amd64_repro=$(echo "scale=4 ; $reproducible_arch_amd64 / ($reproducible_count+$unreproducible_count) * 100" | bc)
+		percent_arch_amd64_unrepro=$(echo "scale=4 ; $unreproducible_arch_amd64 / ($reproducible_count+$unreproducible_count) * 100" | bc)
 		echo "ftp.debian.org package reproducibility statistics of packages in known states only"
 		echo "-------------------------------------------------------------"
 		echo "reproducible packages in $RELEASE/amd64: $reproducible_count: ($percent_repro%)"
 		echo "unreproducible packages in $RELEASE/amd64: $unreproducible_count: ($percent_unrepro%)"
+		echo
+		echo "reproducible binNMUs in $RELEASE/amd64: $reproducible_binnmu: ($percent_binnmu_repro%)"
+		echo "unreproducible binNMU in $RELEASE/amd64: $unreproducible_binnmu: ($percent_binnmu_unrepro%)"
+		echo
+		echo "reproducible arch:all packages in $RELEASE/amd64: $reproducible_arch_all: ($percent_arch_all_repro%)"
+		echo "unreproducible arch:all packages in $RELEASE/amd64: $unreproducible_arch_allu: ($percent_arch_all_unrepro%)"
+		echo "reproducible arch:amd64 packages in $RELEASE/amd64: $reproducible_arch_amd64: ($percent_arch_amd64_repro%)"
+		echo "unreproducible arch:amd64 packages in $RELEASE/amd64: $unreproducible_arch_amd64u: ($percent_arch_amd64_unrepro%)"
 		echo
 		echo
 		echo "$(du -sch $SHA1DIR 2>/dev/null)"
