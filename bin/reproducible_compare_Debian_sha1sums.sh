@@ -69,6 +69,7 @@ unreproducible_packages=
 
 cleanup_all() {
 	if [ "$MODE" = "results" ]; then
+		set -x
 		unknown_packages=$(awk '/ UNKNOWN: /{print $9}' $log)
 		unknown_count=$(echo $unknown_packages | wc -w)
 		reproducible_packages=$(awk '/ REPRODUCIBLE: /{print $9}' $log)
