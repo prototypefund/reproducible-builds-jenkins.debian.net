@@ -69,19 +69,18 @@ unreproducible_packages=
 
 cleanup_all() {
 	if [ "$MODE" = "results" ]; then
-		set -x
 		unknown_packages=$(awk '/ UNKNOWN: /{print $9}' $log)
 		unknown_count=$(echo $unknown_packages | wc -w)
 		reproducible_packages=$(awk '/ REPRODUCIBLE: /{print $9}' $log)
 		reproducible_count=$(echo $reproducible_packages | wc -w)
 		unreproducible_packages=$(awk '/ UNREPRODUCIBLE: /{print $9}' $log)
 		unreproducible_count=$(echo $unreproducible_packages | wc -w)
-		reproducible_binnmu=$(find $SHA1DIR -type f | egrep -c '+b._(all|amd64).deb.REPRODUCIBLE.buster')
-		unreproducible_binnmu=$(find $SHA1DIR -type f | egrep -c '+b._(all|amd64).deb.UNREPRODUCIBLE.buster')
-		reproducible_arch_all=$(find $SHA1DIR -type f | egrep -c '_all.deb.REPRODUCIBLE.buster')
-		unreproducible_arch_all=$(find $SHA1DIR -type f | egrep -c '_all.deb.UNREPRODUCIBLE.buster')
-		reproducible_arch_amd64=$(find $SHA1DIR -type f | egrep -c '_amd64.deb.REPRODUCIBLE.buster')
-		unreproducible_arch_amd64=$(find $SHA1DIR -type f | egrep -c '_amd64.deb.UNREPRODUCIBLE.buster')
+		reproducible_binnmu=$((find $SHA1DIR -type f | egrep -c '+b._(all|amd64).deb.REPRODUCIBLE.buster') || echo 0)
+		unreproducible_binnmu=$((find $SHA1DIR -type f | egrep -c '+b._(all|amd64).deb.UNREPRODUCIBLE.buster') || echo 0)
+		reproducible_arch_all=$((find $SHA1DIR -type f | egrep -c '_all.deb.REPRODUCIBLE.buster') || echo 0)
+		unreproducible_arch_all=$((find $SHA1DIR -type f | egrep -c '_all.deb.UNREPRODUCIBLE.buster') || echo 0)
+		reproducible_arch_amd64=$((find $SHA1DIR -type f | egrep -c '_amd64.deb.REPRODUCIBLE.buster') || echo 0)
+		unreproducible_arch_amd64=$((find $SHA1DIR -type f | egrep -c '_amd64.deb.UNREPRODUCIBLE.buster') || echo 0)
 		percent_unknown=$(echo "scale=4 ; $unknown_count / ($reproducible_count+$unreproducible_count+$unknown_count) * 100" | bc)
 		percent_repro=$(echo "scale=4 ; $reproducible_count / ($reproducible_count+$unreproducible_count+$unknown_count) * 100" | bc)
 		percent_unrepro=$(echo "scale=4 ; $unreproducible_count / ($reproducible_count+$unreproducible_count+$unknown_count) * 100" | bc)
