@@ -115,9 +115,9 @@ cleanup_all() {
 		echo "unreproducible binNMU in $RELEASE/amd64: $unreproducible_binnmu: ($percent_binnmu_unrepro%)"
 		echo
 		echo "reproducible arch:all packages in $RELEASE/amd64: $reproducible_arch_all: ($percent_arch_all_repro%)"
-		echo "unreproducible arch:all packages in $RELEASE/amd64: $unreproducible_arch_allu: ($percent_arch_all_unrepro%)"
+		echo "unreproducible arch:all packages in $RELEASE/amd64: $unreproducible_arch_all: ($percent_arch_all_unrepro%)"
 		echo "reproducible arch:amd64 packages in $RELEASE/amd64: $reproducible_arch_amd64: ($percent_arch_amd64_repro%)"
-		echo "unreproducible arch:amd64 packages in $RELEASE/amd64: $unreproducible_arch_amd64u: ($percent_arch_amd64_unrepro%)"
+		echo "unreproducible arch:amd64 packages in $RELEASE/amd64: $unreproducible_arch_amd64: ($percent_arch_amd64_unrepro%)"
 		echo
 		echo
 		echo "$(du -sch $SHA1DIR 2>/dev/null)"
