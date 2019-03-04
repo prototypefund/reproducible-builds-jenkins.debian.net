@@ -119,6 +119,22 @@ if [ -d /srv/workspace/pbuilder/ ] ; then
 fi
 
 #
+# delete old chroot-installation directories (not related to reproducible builds)
+#
+if [ -d /srv/workspace/chroots/ ] ; then
+	echo "$(date -u) - Deleting chroots build directories, older than 7 days."
+	OLDSTUFF=$(find /srv/workspace/chroots/ -maxdepth 2 -regex '.*/[0-9]+' -type d -mtime +6 -exec ls -lad {} \; || true)
+	if [ ! -z "$OLDSTUFF" ] ; then
+		echo
+		echo "Old chroot-installation directories found in /srv/workspace/chroots/"
+		echo -n "$OLDSTUFF"
+		( find /srv/workspace/chroots/ -maxdepth 2 -regex '.*/[0-9]+' -type d -mtime +6 -exec sudo rm -rf --one-file-system {} \; ) || true
+		echo
+		DIRTY=true
+	fi
+fi
+
+#
 # check for working proxy
 #
 echo "$(date -u) - testing whether the proxy works..."
