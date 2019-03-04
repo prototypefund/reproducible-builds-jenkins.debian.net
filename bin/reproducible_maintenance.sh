@@ -78,7 +78,7 @@ fi
 # delete old temp directories
 #
 echo "$(date -u) - Deleting temp directories in $REP_RESULTS/rbuild-debian, older than 3 days."
-OLDSTUFF=$(find $REP_RESULTS/rbuild-debian -maxdepth 1 -type d -mtime +2 -name "tmp.*" -exec ls -lad {} \; || true)
+OLDSTUFF=$(find $REP_RESULTS/rbuild-debian -maxdepth 1 -type d -mtime +2 -name "tmp.*" -exec ls -lad {} \; 2>/dev/null|| true)
 if [ ! -z "$OLDSTUFF" ] ; then
 	echo
 	echo "Old temp directories found in $REP_RESULTS/rbuild-debian"
