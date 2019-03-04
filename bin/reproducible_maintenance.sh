@@ -123,12 +123,12 @@ fi
 #
 if [ -d /srv/workspace/chroots/ ] ; then
 	echo "$(date -u) - Deleting chroots build directories, older than 7 days."
-	OLDSTUFF=$(find /srv/workspace/chroots/ -maxdepth 2 -regex '.*/[0-9]+' -type d -mtime +6 -exec ls -lad {} \; || true)
+	OLDSTUFF=$(find /srv/workspace/chroots/ -maxdepth 2 -name 'chroot-installation*' -type d -mtime +6 -exec ls -lad {} \; || true)
 	if [ ! -z "$OLDSTUFF" ] ; then
 		echo
 		echo "Old chroot-installation directories found in /srv/workspace/chroots/"
 		echo -n "$OLDSTUFF"
-		( find /srv/workspace/chroots/ -maxdepth 2 -regex '.*/[0-9]+' -type d -mtime +6 -exec sudo rm -rf --one-file-system {} \; ) || true
+		( find /srv/workspace/chroots/ -maxdepth 2 -name 'chroot-installation*' -type d -mtime +6 -exec sudo rm -rf --one-file-system {} \; ) || true
 		echo
 		DIRTY=true
 	fi
