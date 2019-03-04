@@ -14,6 +14,7 @@ jenkins ALL=  \
 	/bin/rm -rf --one-file-system /chroots/*, \
 	/bin/rm -rf --one-file-system /schroots/*, \
 	/bin/rm -rf --one-file-system /srv/workspace/pbuilder/*, \
+	/bin/rm -rf --one-file-system /srv/workspace/chroots/*, \
 	/bin/mv /chroots/* /schroots/*, \
 	/bin/mv /schroots/* /schroots/*, \
 	/bin/umount -l /chroots/*, \
