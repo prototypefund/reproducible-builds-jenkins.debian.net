@@ -278,7 +278,7 @@ build_job_health_page() {
 				| sed 's#html_##' \
 				| sed 's#builds_##' \
 				| sed 's#_diffoscope_amd64##' \
-				| sed 's#reproducible_compare_Debian_##' \
+				| sed 's#compare_Debian_##' \
 				| sed 's#_#-#g' \
 				)"
 			write_page "<th>$SHORTNAME</th>"
