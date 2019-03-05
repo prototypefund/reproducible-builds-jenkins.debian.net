@@ -598,7 +598,7 @@
                     my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
                 - 'compare_Debian_sha1sums_forward_runner':
                     my_description: 'Fetch .buildinfo files of Debian binary packages (in reverse order)'
-                    my_timed: '56 * * * *'
+                    my_timed: '56 0,12 * * *'
                     my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
                     my_hname: 'osuosl173'
                 - 'compare_Debian_sha1sums_reverse_runner':
