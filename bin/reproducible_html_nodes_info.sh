@@ -248,15 +248,16 @@ build_job_health_page() {
 	# these are or-filters used with egrep
 	FILTER[0]="(builds|spec|lfs)"
 	FILTER[1]="html_(all|break|dash|dd|index|live|node|pkg|repo)"
-	FILTER[2]="reproducible_diffoscope"
-	FILTER[3]="(reprotest|strip-nonderminism|disorderfs)"
-	FILTER[4]="(json|le_scheduler|meta|le_nodes|rsync|notes)"
-	FILTER[5]="archlinux"
-	FILTER[6]="coreboot"
-	FILTER[7]="(openwrt)"
-	FILTER[8]="(le_netbsd|le_freebsd)"
-	FILTER[9]="fdroid"
-	FILTER[10]="fedora"
+	FILTER[2]="reproducible_compare"
+	FILTER[3]="reproducible_diffoscope"
+	FILTER[4]="(reprotest|strip-nonderminism|disorderfs)"
+	FILTER[5]="(json|le_scheduler|meta|le_nodes|rsync|notes)"
+	FILTER[6]="archlinux"
+	FILTER[7]="coreboot"
+	FILTER[8]="(openwrt)"
+	FILTER[9]="(le_netbsd|le_freebsd)"
+	FILTER[10]="fdroid"
+	FILTER[11]="fedora"
 	echo "$(date -u) - starting to write $PAGE page."
 	write_page_header $VIEW "Job health overview"
 	write_page "<p style=\"clear:both;\">"
@@ -277,6 +278,7 @@ build_job_health_page() {
 				| sed 's#html_##' \
 				| sed 's#builds_##' \
 				| sed 's#_diffoscope_amd64##' \
+				| sed 's#reproducible_compare_Debian_##' \
 				| sed 's#_#-#g' \
 				)"
 			write_page "<th>$SHORTNAME</th>"
