@@ -268,6 +268,8 @@ openwrt_compile() {
 	echo "$(date -u) - Building OpenWrt ${OPENWRT_VERSION} ($TARGET) - $RUN build run."
 	echo "============================================================================="
 	ionice -c 3 $MAKE $OPTIONS
+
+	openwrt_strip_metadata_signature "$PWD"
 }
 
 openwrt_create_signing_keys() {
@@ -349,6 +351,18 @@ openwrt_get_banner() {
 	echo "===bannerbegin==="
 	find staging_dir/ -name banner | grep etc/banner|head -1| xargs cat /dev/null
 	echo "===bannerend==="
+}
+
+# OpenWrt is signing some images and appending the signature as meta data
+openwrt_strip_metadata_signature() {
+	local openwrttop=$1
+
+	cd "$openwrttop"
+	find bin/targets/ -type f | \
+		grep -E -v '(\.ipk|sha256sums|config.seed|kernel-debug.tar.bz2|manifest|Packages.gz|Packages|Packages.sig)$' | \
+		while read -r line ; do
+			fwtool -s /dev/null -t "$line" || true
+	done
 }
 
 # openwrt_build is run on a remote host
