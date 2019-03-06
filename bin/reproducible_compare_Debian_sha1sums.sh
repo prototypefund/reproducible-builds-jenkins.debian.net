@@ -60,10 +60,10 @@ mkdir -p $SHA1DIR
 PACKAGES=$(mktemp --tmpdir=$TMPDIR sha1-pkgs-XXXXXXX)
 schroot --directory  $SHA1DIR -c chroot:jenkins-reproducible-${RELEASE}-diffoscope cat /var/lib/apt/lists/cdn-fastly.deb.debian.org_debian_dists_${RELEASE}_main_binary-amd64_Packages > $PACKAGES
 case "$MODE" in
-	random)		SORT="sort -R";;
-	reverse)	SORT="sort -r" ;;
-	forward)	SORT="sort" ;;
-	*)		SORT="sort" ; MODE="results" ; RESULTS=$(mktemp --tmpdir=$TMPDIR sha1-results-XXXXXXX) ; find $SHA1DIR -name "*REPRODUCIBLE.buster" > $RESULTS ;;
+	random)		SORT="sort -u -R";;
+	reverse)	SORT="sort -u -r" ;;
+	forward)	SORT="sort -u" ;;
+	*)		SORT="sort -u" ; MODE="results" ; RESULTS=$(mktemp --tmpdir=$TMPDIR sha1-results-XXXXXXX) ; find $SHA1DIR -name "*REPRODUCIBLE.buster" > $RESULTS ;;
 esac
 packages="$(grep ^Package: $PACKAGES| awk '{print $2}' | $SORT | xargs echo)"
 
@@ -159,10 +159,10 @@ for package in $packages ; do
 	else
 		touch $LOCK
 	fi
-	version=$(grep-dctrl -X -P ${package} -s version -n $PACKAGES)
-	arch=$(grep-dctrl -X -P ${package} -s Architecture -n $PACKAGES)
+	version=$(grep-dctrl -X -P ${package} -s Version -n $PACKAGES | head -1)
+	arch=$(grep-dctrl -X -P ${package} -s Architecture -n $PACKAGES | head -1)
 	package_file="${package}_$(echo $version | sed 's#:#%3a#')_${arch}.deb"
-	pool_dir="$SHA1DIR/$(dirname $(grep-dctrl -X -P ${package} -s Filename -n $PACKAGES))"
+	pool_dir="$SHA1DIR/$(dirname $(grep-dctrl -X -P ${package} -s Filename -n $PACKAGES | head -1))"
 	mkdir -p $pool_dir
 	cd $pool_dir
 	if [ ! -e ${package_file}.sha1output ] ; then
