@@ -87,32 +87,21 @@ cleanup_all() {
 		percent_unknown=$(echo "scale=4 ; $unknown_count / ($reproducible_count+$unreproducible_count+$unknown_count) * 100" | bc)
 		percent_repro=$(echo "scale=4 ; $reproducible_count / ($reproducible_count+$unreproducible_count+$unknown_count) * 100" | bc)
 		percent_unrepro=$(echo "scale=4 ; $unreproducible_count / ($reproducible_count+$unreproducible_count+$unknown_count) * 100" | bc)
+		percent_binnmu_repro=$(echo "scale=4 ; $reproducible_binnmu / ($reproducible_count+$unreproducible_count+$unknown_count) * 100" | bc)
+		percent_binnmu_unrepro=$(echo "scale=4 ; $unreproducible_binnmu / ($reproducible_count+$unreproducible_count+$unknown_count) * 100" | bc)
+		percent_arch_all_repro=$(echo "scale=4 ; $reproducible_arch_all / ($reproducible_count+$unreproducible_count+$unknown_count) * 100" | bc)
+		percent_arch_all_unrepro=$(echo "scale=4 ; $unreproducible_arch_all / ($reproducible_count+$unreproducible_count+$unknown_count) * 100" | bc)
+		percent_arch_amd64_repro=$(echo "scale=4 ; $reproducible_arch_amd64 / ($reproducible_count+$unreproducible_count+$unknown_count) * 100" | bc)
+		percent_arch_amd64_unrepro=$(echo "scale=4 ; $unreproducible_arch_amd64 / ($reproducible_count+$unreproducible_count+$unknown_count) * 100" | bc)
 		echo "-------------------------------------------------------------"
-		echo "unknown packages: $unknown_count: $unknown_packages"
 		echo
-		echo "reproducible packages: $reproducible_count: $reproducible_packages"
-		echo
-		echo "unreproducible packages: $unreproducible_count: $unreproducible_packages"
-		echo
-		echo "ftp.debian.org package reproducibility statistics including packages (currently) in an unknown state"
+		echo "ftp.debian.org package reproducibility statistics"
 		echo "-------------------------------------------------------------"
 		echo "packages in unknown reproducibility state in $RELEASE/amd64: $unknown_count: ($percent_unknown%)"
 		echo "reproducible packages in $RELEASE/amd64: $reproducible_count: ($percent_repro%)"
 		echo "unreproducible packages in $RELEASE/amd64: $unreproducible_count: ($percent_unrepro%)"
 		echo "total number of packages in $RELEASE/amd64: $(echo $reproducible_count+$unreproducible_count+$unknown_count | bc)"
 		echo
-		percent_repro=$(echo "scale=4 ; $reproducible_count / ($reproducible_count+$unreproducible_count) * 100" | bc)
-		percent_unrepro=$(echo "scale=4 ; $unreproducible_count / ($reproducible_count+$unreproducible_count) * 100" | bc)
-		percent_binnmu_repro=$(echo "scale=4 ; $reproducible_binnmu / ($reproducible_count+$unreproducible_count) * 100" | bc)
-		percent_binnmu_unrepro=$(echo "scale=4 ; $unreproducible_binnmu / ($reproducible_count+$unreproducible_count) * 100" | bc)
-		percent_arch_all_repro=$(echo "scale=4 ; $reproducible_arch_all / ($reproducible_count+$unreproducible_count) * 100" | bc)
-		percent_arch_all_unrepro=$(echo "scale=4 ; $unreproducible_arch_all / ($reproducible_count+$unreproducible_count) * 100" | bc)
-		percent_arch_amd64_repro=$(echo "scale=4 ; $reproducible_arch_amd64 / ($reproducible_count+$unreproducible_count) * 100" | bc)
-		percent_arch_amd64_unrepro=$(echo "scale=4 ; $unreproducible_arch_amd64 / ($reproducible_count+$unreproducible_count) * 100" | bc)
-		echo "ftp.debian.org package reproducibility statistics of packages in known states only"
-		echo "-------------------------------------------------------------"
-		echo "reproducible packages in $RELEASE/amd64: $reproducible_count: ($percent_repro%)"
-		echo "unreproducible packages in $RELEASE/amd64: $unreproducible_count: ($percent_unrepro%)"
 		echo
 		echo "reproducible binNMUs in $RELEASE/amd64: $reproducible_binnmu: ($percent_binnmu_repro%)"
 		echo "unreproducible binNMU in $RELEASE/amd64: $unreproducible_binnmu: ($percent_binnmu_unrepro%)"
