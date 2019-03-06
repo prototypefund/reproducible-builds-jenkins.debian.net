@@ -23,7 +23,6 @@ set -e
 # - show results in 'normal pages' 
 # - store date when a package was last reproduced... (and constantly do that...)
 # - throw away results (if none has been|which have not) signed with a tests.r-b.o key
-# - json files from buildinfo.d.n are never re-downloaded
 # - rebuilder:
 #   - run on osuosl173
 #   - loop randomly through unreproducible packages first, then reproducible ones. do one attempt only.
@@ -50,6 +49,10 @@ echo
 bdn_url="https://buildinfo.debian.net/api/v1/buildinfos/checksums/sha1"
 log=$(mktemp --tmpdir=$TMPDIR sha1-log-XXXXXXX)
 echo "$(date -u) - logfile used is $log"
+
+FORCE_DATE=$(date -u -d "14 days ago" '+%Y-%m-%d')
+DUMMY_FILE=$(mktemp --tmpdir=$TMPDIR sha1-date-XXXXXXX)
+touch -d "$(date '+%Y-%m-%d') 00:00 UTC" $DUMMY_FILE
 
 SHA1DIR=/srv/reproducible-results/debian-sha1
 mkdir -p $SHA1DIR
@@ -184,7 +187,8 @@ for package in $packages ; do
 			rm ${package}_*REPRODUCIBLE.$RELEASE
 		fi
 	fi
-	if [ ! -e ${package_file}.json ]; then
+	# download .json if non existing or older than $DUMMY_FILE
+	if [ ! -e ${package_file}.json ] || [ ${package_file}.json -ot $DUMMY_FILE ]; then
 		echo "$(date -u) - downloading .json for ${package_file} (${SHA1SUM_PKG}) from buildinfo.debian.net"
 		wget --quiet -O ${package_file}.json ${bdn_url}/${SHA1SUM_PKG} || echo "WARNING: failed to download ${bdn_url}/${SHA1SUM_PKG}"
 		count=$(fmt ${package_file}.json | grep -c '\.buildinfo' || true)
