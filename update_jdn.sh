@@ -106,7 +106,7 @@ sudo_groups='jenkins,jenkins-adm,sudo,adm'
 
 # if there's a need for host groups, a case statement on $HOSTNAME here that sets $GROUPNAME, say, should do the trick
 # then you can define user_host_groups['phil','lvm_group']=... below
-# and add checks for the GROUP version wherever the HOSTNAME is checked in the following code
+# and add checks for the GROUP version where ever the HOSTNAME is checked in the following code
 
 user_host_groups['helmut','*']="$sudo_groups"
 user_host_groups['holger','*']="$sudo_groups"
@@ -118,7 +118,7 @@ user_host_groups['phil','jenkins']="$sudo_groups"
 user_host_groups['lunar','jenkins']='reproducible'
 user_host_groups['lynxis','osuosl-build171-amd64']="$sudo_groups"
 user_host_groups['lynxis','osuosl-build172-amd64']="$sudo_groups"
-user_host_groups['lynxis','jenkins']="reproducible,${user_host_groups['lynxis','*']}"
+user_host_groups['lynxis','jenkins']="jenkins"
 user_host_groups['hans','osuosl-build168-amd64']="$sudo_groups"
 user_host_groups['vagrant','armhf']="$sudo_groups"
 user_host_groups['vagrant','arm64']="$sudo_groups"
