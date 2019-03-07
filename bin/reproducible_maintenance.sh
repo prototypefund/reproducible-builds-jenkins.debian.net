@@ -150,13 +150,24 @@ if [ "$HOSTNAME" = "$MAINNODE" ] ; then
 	#
 	echo "$(date -u) - Looking for unhealthy nodes."
 	cd ~/jobs
-	FORCE_DATE=$(date -u -d "1 hour ago" '+%Y-%m-%d %H:%M')
 	DUMMY_FILE=$(mktemp --tmpdir=$TMPDIR maintenance-XXXXXXX)
-	touch -d "$FORCE_DATE" $DUMMY_FILE
 	SICK=""
-	for i in reproducible_node_health_check_* ; do
-		NODE_ALIAS=$(echo $i | cut -d '_' -f6)
-		NODE_ARCH=$(echo $i | cut -d '_' -f5)
+	for i in reproducible_node_health_check_* reproducible_maintenance_* ; do
+		case $i in
+			reproducible_node_health_check_*)
+				NODE_ALIAS=$(echo $i | cut -d '_' -f6)
+				NODE_ARCH=$(echo $i | cut -d '_' -f5)
+				FORCE_DATE=$(date -u -d "1 hour ago" '+%Y-%m-%d %H:%M')
+				MAXDIFF=4
+				;;
+			reproducible_maintenance_*)
+				NODE_ALIAS=$(echo $i | cut -d '_' -f4)
+				NODE_ARCH=$(echo $i | cut -d '_' -f3)
+				FORCE_DATE=$(date -u -d "5 hour ago" '+%Y-%m-%d %H:%M')
+				MAXDIFF=2
+				;;
+		esac
+		touch -d "$FORCE_DATE" $DUMMY_FILE
 		case $NODE_ARCH in
 			amd64)	NODE="profitbricks-build${NODE_ALIAS#profitbricks}-amd64.debian.net" ;;
 			i386)	NODE="profitbricks-build${NODE_ALIAS#profitbricks}-i386.debian.net" ;;
@@ -177,9 +188,9 @@ if [ "$HOSTNAME" = "$MAINNODE" ] ; then
 		fi
 		if [ $DIFF -eq -1 ] ; then
 			echo "Problems analysing $i build logs, ignoring $NODE."
-		# either the diff is greater than 4 (=the last 4 job runs failed)
+		# either the diff is greater than $MAXDIFF (=the last $MAXDIFF job runs failed)
 		# or the last successful run is older than an hour (=a job is still running/hanging)
-		elif [ $DIFF -gt 4 ] || [ $LAST -ot $DUMMY_FILE ] ; then
+		elif [ $DIFF -gt $MAXDIFF ] || [ $LAST -ot $DUMMY_FILE ] ; then
 			echo -n "$i job has issues since more than an hour"
 			if grep -q $NODE ~/offline_nodes >/dev/null 2>&1 ; then
 				echo " and $NODE already marked as offline, good."
