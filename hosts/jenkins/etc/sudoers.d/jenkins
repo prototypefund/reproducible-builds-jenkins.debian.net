@@ -58,5 +58,8 @@ jenkins ALL=  \
 	/usr/bin/createuser *, \
 	/usr/bin/createdb *
 
+# allow members of the jenkins group to sudo to the jenkins user 
+%jenkins ALL=(jenkins:jenkins) NOPASSWD: ALL
+
 # keep these environment variables
 Defaults        env_keep += "http_proxy", env_reset
