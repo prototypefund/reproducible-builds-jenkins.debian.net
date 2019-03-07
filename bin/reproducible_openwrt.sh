@@ -361,7 +361,7 @@ openwrt_strip_metadata_signature() {
 	find bin/targets/ -type f | \
 		grep -E -v '(\.ipk|sha256sums|config.seed|kernel-debug.tar.bz2|manifest|Packages.gz|Packages|Packages.sig)$' | \
 		while read -r line ; do
-			fwtool -s /dev/null -t "$line" || true
+			./staging_dir/host/bin/fwtool -s /dev/null -t "$line" || true
 	done
 }
 
