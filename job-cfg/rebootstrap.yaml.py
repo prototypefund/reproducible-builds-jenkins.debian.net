@@ -36,7 +36,7 @@ release_architectures = """
 
 architectures += mono_architectures
 
-gcc_versions = ("8",)
+gcc_versions = ("8", "9")
 diffoscope_gcc_versions = ("8",)
 
 # repository url doubly maintained in bin/rebootstrap.sh
