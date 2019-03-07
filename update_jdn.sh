@@ -118,6 +118,7 @@ user_host_groups['phil','jenkins']="$sudo_groups"
 user_host_groups['lunar','jenkins']='reproducible'
 user_host_groups['lynxis','osuosl-build171-amd64']="$sudo_groups"
 user_host_groups['lynxis','osuosl-build172-amd64']="$sudo_groups"
+user_host_groups['lynxis','jenkins']="reproducible,${user_host_groups['lynxis','*']}"
 user_host_groups['hans','osuosl-build168-amd64']="$sudo_groups"
 user_host_groups['vagrant','armhf']="$sudo_groups"
 user_host_groups['vagrant','arm64']="$sudo_groups"
