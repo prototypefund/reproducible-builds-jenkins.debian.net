@@ -150,6 +150,9 @@ if [ "$HOSTNAME" = "$MAINNODE" ] ; then
 	#
 	echo "$(date -u) - Looking for unhealthy nodes."
 	cd ~/jobs
+	FORCE_DATE=$(date -u -d "1 hour ago" '+%Y-%m-%d %H:%M')
+	DUMMY_FILE=$(mktemp --tmpdir=$TMPDIR maintenance-XXXXXXX)
+	touch -d "$FORCE_DATE" $DUMMY_FILE
 	SICK=""
 	for i in reproducible_node_health_check_* ; do
 		NODE_ALIAS=$(echo $i | cut -d '_' -f6)
@@ -174,7 +177,9 @@ if [ "$HOSTNAME" = "$MAINNODE" ] ; then
 		fi
 		if [ $DIFF -eq -1 ] ; then
 			echo "Problems analysing $i build logs, ignoring $NODE."
-		elif [ $DIFF -gt 4 ] ; then
+		# either the diff is greater than 4 (=the last 4 job runs failed)
+		# or the last successful run is older than an hour (=a job is still running/hanging)
+		elif [ $DIFF -gt 4 ] || [ $LAST -ot $DUMMY_FILE ] ; then
 			echo -n "$i job has issues since more than an hour"
 			if grep -q $NODE ~/offline_nodes >/dev/null 2>&1 ; then
 				echo " and $NODE already marked as offline, good."
@@ -198,6 +203,7 @@ if [ "$HOSTNAME" = "$MAINNODE" ] ; then
 		fi
 		irc_message debian-reproducible "$MESSAGE To make this permanent, edit jenkins-home/offline_nodes in git."
 	fi
+	rm -f $DUMMY_FILE
 fi
 
 echo "$(date -u) - updating the schroots and pbuilder now..."
