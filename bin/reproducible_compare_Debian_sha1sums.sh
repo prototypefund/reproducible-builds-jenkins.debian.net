@@ -50,9 +50,9 @@ bdn_url="https://buildinfo.debian.net/api/v1/buildinfos/checksums/sha1"
 log=$(mktemp --tmpdir=$TMPDIR sha1-log-XXXXXXX)
 echo "$(date -u) - logfile used is $log"
 
-FORCE_DATE=$(date -u -d "14 days ago" '+%Y-%m-%d')
+FORCE_DATE=$(date -u -d "14 days ago" '+%Y-%m-%d %H:%M')
 DUMMY_FILE=$(mktemp --tmpdir=$TMPDIR sha1-date-XXXXXXX)
-touch -d "$(date '+%Y-%m-%d') 00:00 UTC" $DUMMY_FILE
+touch -d "$FORCE_DATE" $DUMMY_FILE
 
 SHA1DIR=/srv/reproducible-results/debian-sha1
 mkdir -p $SHA1DIR
@@ -160,7 +160,7 @@ for package in $packages ; do
 		touch $LOCK
 	fi
 	version=$(grep-dctrl -X -P ${package} -s Version -n $PACKAGES | head -1)
-	arch=$(grep-dctrl -X -P ${package} -s Architecture -n $PACKAGES | head -1)
+	arch=$(grep-dctrl -X -P ${package} -F -s Architecture -n $PACKAGES | head -1)
 	package_file="${package}_$(echo $version | sed 's#:#%3a#')_${arch}.deb"
 	pool_dir="$SHA1DIR/$(dirname $(grep-dctrl -X -P ${package} -s Filename -n $PACKAGES | head -1))"
 	mkdir -p $pool_dir
