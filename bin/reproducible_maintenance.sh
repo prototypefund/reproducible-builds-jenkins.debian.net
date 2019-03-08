@@ -177,6 +177,9 @@ if [ "$HOSTNAME" = "$MAINNODE" ] ; then
 		if [ "$NODE" = "jenkins" ] ; then
 			echo 'Skipping jenkins...'
 			continue
+		elif [ "$NODE" = "profitbricks-build9-amd64" ] ; then
+			echo "Skipping $NODE..." # not used for r-b and sometimes too busy to run healthcheck / maintenance jobs
+			continue
 		fi
 		cd $i/builds
 		LAST=$(ls -rt1 | tail -1)
