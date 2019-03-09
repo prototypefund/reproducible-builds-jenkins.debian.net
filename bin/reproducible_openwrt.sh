@@ -645,6 +645,7 @@ else
 fi
 
 # parse the OpenWrt Packages.manifest files to generate results to fill into the database
+cd "$RESULTSDIR/b1"
 for i in * ; do
 	cd "$i"
 
