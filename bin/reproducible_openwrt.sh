@@ -650,8 +650,13 @@ else
 fi
 
 # parse the OpenWrt Packages.manifest files to generate results to fill into the database
+tree .
 cd "$RESULTSDIR/b1"
 for i in * ; do
+	if [ ! -d "$i" ] ; then
+		continue
+	fi
+
 	cd "$i"
 
 	# search packages in both paths to find non-existing ones
