@@ -172,7 +172,7 @@ save_openwrt_results() {
 			# save subtarget specific packages
 			if [ -d packages ] ; then
 				pushd packages
-				for package in $(find * -name "*.ipk") ; do
+				for package in $(find * -name "*.ipk" -o -name "Package*") ; do
 					mkdir -p $TMPDIR/$RUN/packages/$target/$subtarget/$(dirname $package) || ( echo $TMPDIR/$RUN/packages/$target/$subtarget/$(dirname $package) ; continue )
 					cp -p $package $TMPDIR/$RUN/packages/$target/$subtarget/$(dirname $package)/
 				done
@@ -191,7 +191,7 @@ save_openwrt_results() {
 		pushd "$arch" || continue
 		for feed in * ; do
 			pushd "$feed" || continue
-			for package in $(find * -name "*.ipk") ; do
+			for package in $(find * -name "*.ipk" -o -name "Package*") ; do
 				mkdir -p "$TMPDIR/$RUN/packages/$arch/$feed/$(dirname "$package")"
 				cp -p "$package" "$TMPDIR/$RUN/packages/$arch/$feed/$(dirname "$package")/"
 			done
