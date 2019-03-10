@@ -670,8 +670,9 @@ for i in * ; do
 			echo "One Packages.manifest list does not exist! Either $RESULTSDIR/b1/$i/$j or $RESULTSDIR/b2/$i/$j"
 		fi
 		echo "Running reproducible_openwrt_package_parser.py"
-		/srv/jenkins/bin/reproducible_openwrt_package_parser.py "$PKGS1" "$PKGS2" || true
+		/srv/jenkins/bin/reproducible_openwrt_package_parser.py "$RESULTSDIR/b1/$i/$j" "$RESULTSDIR/b2/$i/$j" || true
 	done
+	cd ..
 done
 
 write_openwrt_page_header(){
