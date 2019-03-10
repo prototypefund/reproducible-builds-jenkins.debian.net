@@ -590,7 +590,12 @@ fi
 GOOD_PACKAGES=0
 ALL_PACKAGES=0
 cd "$RESULTSDIR/b1"
+tree .
 for i in * ; do
+	if [ ! -d "$i" ] ; then
+		continue
+	fi
+
 	cd "$i"
 
 	# search packages in both paths to find non-existing ones
