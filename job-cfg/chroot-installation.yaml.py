@@ -135,7 +135,7 @@ def get_recipients(target):
     elif target == 'gnome':
         return 'jenkins+debian-qa pkg-gnome-maintainers@lists.alioth.debian.org qa-jenkins-scm@lists.alioth.debian.org'
     elif target == 'cinnamon':
-        return 'jenkins+debian-cinnamon pkg-cinnamon-team@lists.alioth.debian.org qa-jenkins-scm@lists.alioth.debian.org'
+        return 'jenkins+debian-cinnamon debian-cinnamon@lists.debian.org qa-jenkins-scm@lists.alioth.debian.org'
     elif target == 'debconf-video':
         return 'jenkins+debconf-video qa-jenkins-scm@lists.alioth.debian.org'
     elif target[:3] == 'kde' or target[:2] == 'qt':
