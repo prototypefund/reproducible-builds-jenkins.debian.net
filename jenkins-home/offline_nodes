@@ -17,9 +17,6 @@
 
 # Also see https://pad.sfconservancy.org/p/rb-build-nodes-keep
 
-# unreachable, mailed codethink.
-codethink-sled14-arm64.debian.net
-
 ## temporary problems
 
 # Down here nodes are automtically added by the maintenance job when they have
