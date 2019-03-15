@@ -174,13 +174,13 @@ if [ "$HOSTNAME" = "$MAINNODE" ] ; then
 			arm64)	NODE="codethink-sled${NODE_ALIAS#codethink}-arm64.debian.net" ;;
 			armhf)	NODE="${NODE_ALIAS}-armhf-rb.debian.net" ;;
 		esac
-		if [ "$NODE" = "jenkins" ] ; then
-			echo 'Skipping jenkins...'
-			continue
-		elif [ "$NODE" = "profitbricks-build9-amd64.debian.net" ] ; then
-			echo "Skipping $NODE..." # not used for r-b and sometimes too busy to run healthcheck / maintenance jobs
-			continue
-		fi
+		case "$NODE" in
+			jenkins|profitbricks-build9-amd64.debian.net)
+				# pb not used for r-b and sometimes too busy to run healthcheck / maintenance jobs
+				echo "Skipping ${NODE}..."
+				continue
+				;;
+		esac
 		cd $i/builds
 		LAST=$(ls -rt1 | tail -1)
 		GOOD=$(basename $(readlink -f lastSuccessfulBuild))
