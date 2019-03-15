@@ -177,7 +177,7 @@ if [ "$HOSTNAME" = "$MAINNODE" ] ; then
 		if [ "$NODE" = "jenkins" ] ; then
 			echo 'Skipping jenkins...'
 			continue
-		elif [ "$NODE" = "profitbricks-build9-amd64" ] ; then
+		elif [ "$NODE" = "profitbricks-build9-amd64.debian.net" ] ; then
 			echo "Skipping $NODE..." # not used for r-b and sometimes too busy to run healthcheck / maintenance jobs
 			continue
 		fi
