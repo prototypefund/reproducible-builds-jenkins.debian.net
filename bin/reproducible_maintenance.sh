@@ -175,8 +175,9 @@ if [ "$HOSTNAME" = "$MAINNODE" ] ; then
 			armhf)	NODE="${NODE_ALIAS}-armhf-rb.debian.net" ;;
 		esac
 		case "$NODE" in
-			jenkins|profitbricks-build9-amd64.debian.net)
-				# pb not used for r-b and sometimes too busy to run healthcheck / maintenance jobs
+			jenkins|profitbricks-build9-amd64.debian.net|profitbricks-build10-amd64.debian.net)
+				# pb9 and pb10 are not used for r-b and sometimes are too busy
+				# to run healthcheck / maintenance jobs
 				echo "Skipping ${NODE}..."
 				continue
 				;;
