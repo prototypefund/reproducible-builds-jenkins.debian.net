@@ -18,8 +18,9 @@ trap rmtmp INT TERM EXIT
 cat > "$TMPFILE"
 
 # try to run the new script to see how it goes
-/srv/jenkins/bin/email2irc.py "$TMPFILE" 2>&1 >> "$LOGFILE"
+/srv/jenkins/bin/email2irc.py "$TMPFILE" >> "$LOGFILE" 2>&1
 
+# shellcheck disable=SC2181
 if [ $? -ne 0 ]; then
     # email2irc failed to parse the file, mail it for further investigation
     echo "@@@@ email2irc failed" >> $LOGFILE
