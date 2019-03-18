@@ -1,3 +1,24 @@
-:0
-*From: jenkins@jenkins.debian.net
+#! /usr/bin/procmail
+
+# collect the argument, i.e. what is after 'jenkins+'
+ARG = $1
+# uncomment to enable debbuging logfile
+#VERBOSE=yes
+#LOGFILE=/tmp/mailproc
+
+
+# only pass to email2irc mails that seemingly are what we want...
+:0W
+* From: jenkins@jenkins.debian.net
+* ^X-Jenkins-Job
+* ARG ?? .+
 | /srv/jenkins/bin/email2irc.sh
+
+# ...and forward to root what doesn't look sane (note: this doesn't forward
+# mails that were passed to email2irc.sh but then failed there)
+:0cE
+! root
+
+# if we get this far, ignore whatever's left
+:0
+/dev/null
