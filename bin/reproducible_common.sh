@@ -315,13 +315,14 @@ write_page_header() {
 		write_page "   <li><a href=\"/netbsd/\">NetBSD</a></li>, "
 		write_page "   <li><a href=\"/freebsd/\">FreeBSD</a></li>, "
 		write_page "   and <li><a href=\"/archlinux/\">Arch Linux</a></li> "
-		write_page "   though not as thoroughly as Debian (yet?) - and testing of "
+		write_page "   though not as thoroughly as Debian yet. "
+		write_page "   <a href=\"http://rb.zq1.de/\">openSUSE</a> and "
+		write_page "   <a href=\"https://r13y.com/\">NixOS</a> are also being tested, "
+		write_page "   and F-Droid and GNU Guix too and will soon be linked here. "
+		write_page "   Testing of "
 		write_page "   <li><a href=\"/rpms/fedora-23.html\">Fedora</a></li> "
-		write_page "   has just begun, and there are plans to test "
-		write_page "   <a href=\"https://jenkins.debian.net/userContent/todo.html#_reproducible_fdroid\">F-Droid</a> and "
-		write_page "   <a href=\"https://jenkins.debian.net/userContent/todo.html#_reproducible_guix\">GNU Guix</a> too, "
-		# link openSUSE here too
-		write_page "   and more, if you contribute!"
+		write_page "   has sadly been suspended for now. "
+		write_page " We can test more projects, if <em>you</em> contribute!"
 		write_page "</ul>"
 	fi
 }
