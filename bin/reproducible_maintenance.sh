@@ -68,7 +68,7 @@ if [ ! -z "$TOOBIG" ] ; then
 	echo "$TOOBIG"
 	echo
 	DIRTY=true
-	if $(find /var/log -size +32G /dev/null 2>&1) ; then
+	if [ -n "$(find /var/log -size +32G 2> >(grep -v 'Permission denied'))" ] ; then
 		echo "$(date -u) - Error, more than 32gb is just wrong..."
 		exit 1
 	fi
