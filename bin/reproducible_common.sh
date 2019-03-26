@@ -319,6 +319,7 @@ write_page_header() {
 		write_page "   <li><a href=\"http://rb.zq1.de/\">openSUSE</a></li>, "
 		write_page "   <li><a href=\"https://r13y.com/\">NixOS</a></li> and "
 		write_page "   <li><a href=\"https://verification.f-droid.org/\">F-Droid</a></li> are also being tested, though elsewhere."
+		write_page "   As far as we know, the <a href=\"https://www.gnu.org/software/guix/manual/en/html_node/Invoking-guix-challenge.html\">Guix challenge</a> is not yet run systematically anywhere."
 		write_page "   Testing of "
 		write_page "   <a href=\"/rpms/fedora-23.html\">Fedora</a> "
 		write_page "   has sadly been suspended for now. "
