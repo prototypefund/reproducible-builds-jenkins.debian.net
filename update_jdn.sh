@@ -621,7 +621,8 @@ if [ "$HOSTNAME" = "jenkins" ] ; then
 else
 	sudo cp jenkins-nodes-home/authorized_keys /var/lib/jenkins/.ssh/authorized_keys
 fi
-sudo -u jenkins cp jenkins-home/ssh_config /var/lib/jenkins/.ssh/config
+sudo -u jenkins cp jenkins-home/ssh_config.in /var/lib/jenkins/.ssh/config
+nodes/gen_ssh_config | sudo -u jenkins tee -a /var/lib/jenkins/.ssh/config > /dev/null
 explain "scripts and configurations for jenkins updated."
 
 if [ "$HOSTNAME" = "jenkins" ] ; then

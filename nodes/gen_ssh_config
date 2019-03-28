@@ -1,0 +1,16 @@
+#! /usr/bin/python3
+
+import os
+import yaml
+
+with open(os.path.join(os.path.dirname(__file__), 'list.yml')) as f:
+    data = yaml.load(f)
+
+for host in data:
+    try:
+        port = host['port']
+    except KeyError:
+        # port not defined; no need to write this paragraph
+        continue
+    print('Host', host['hostname'])
+    print('    Port', port)

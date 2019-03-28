@@ -1,9 +1,10 @@
 #! /usr/bin/python3
 
+import os
 import sys
 import yaml
 
-with open('list.yml') as f:
+with open(os.path.join(os.path.dirname(__file__), 'list.yml')) as f:
     data = yaml.load(f)
 
 
