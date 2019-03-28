@@ -12,6 +12,10 @@ class Host:
         self.hostname = d['hostname']
         self.ip = d['ip']
         self.keys = d['keys']
+        try:
+            self.port = d['port']
+        except KeyError:
+            self.port = None
 
 
 for host in data:
@@ -22,4 +26,13 @@ for host in data:
         sys.exit(1)
 
     for key in h.keys:
-        print('{},{} {}'.format(h.hostname, h.ip, key))
+        fmt = {
+            'h': h.hostname,
+            'i': h.ip,
+            'p': h.port,
+            'k': key,
+        }
+        if h.port is None:
+            print('{h},{i} {k}'.format(**fmt))
+        else:
+            print('[{h}]:{p},[{i}]:{p} {k}'.format(**fmt))

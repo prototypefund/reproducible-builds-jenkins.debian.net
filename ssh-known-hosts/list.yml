@@ -4,3 +4,251 @@
     - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAVYP8sYSp95zWTMFVEbt6aw3RAyv+4tjNh/JfbsihXQ root@jenkins
     - ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBNE6RhNS1kjo2nlEMXzNM4G0fMB/AQECLiXZZVfKKyHnmPTj+bAAvf98vAJ5QpAT2+wt/nF9xSIPKVJNSnxoC2I= root@jenkins
     - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDklpU2iLalJONEFGJe42Sg2cISwCiDaq/nAEgIAnbDpnkyDC9PRUcsT3j72AWhoau0FUGcHxCUndTRNiz71M2nPyxyqOFMXpcQqlMnDdDzfOg41BCGnOHbTihtPtTiS4nRm3mQgT0fTMar367daWjpe0gQd0+h5Ec7y7N11iFUMKA6i70fePSS2vPtVMfsayMyHkH/hPWi2OFPP0WV9RLS/TH91KEy/oRb4MNEi10cfsERXpEAB+JLMtQZuhAwKNwAn54KuC1MThFOmgxw8/sCfYYlNpjSMgaBtgqxuoQMZbeGqiIYIj9IzbYwUST5EHfm6CNIvqqqmbz4k3MwRGkZ root@jenkins
+
+# armhf
+- hostname: bbx15-armhf-rb.debian.net
+  ip: 75.164.186.179
+  port: 2242
+  keys:
+    - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEKVNDREKhC+aBLY8j+ptEOtZA4Nagm1u+3FnC5NYlwb root@bbx15
+- hostname: cb3a-armhf-rb.debian.net
+  ip: 75.164.186.179
+  port: 2244
+  keys:
+    - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIH6b9fYiJ7UZVQuSxuRD4iomCyan1YxifGb1CKBkwI5f root@cb3a
+- hostname: cbxi4a-armhf-rb.debian.net
+  ip: 75.164.186.179
+  port: 2239
+  keys:
+    - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPGR99RD6NhIag7rqMgwam5LkkSLulax/oNDTFDX/W4d root@cbxi4a
+- hostname: cbxi4b-armhf-rb.debian.net
+  ip: 75.164.186.179
+  port: 2240
+  keys:
+    - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPDJeqPW/ZU4MRnr3h65J8GE9Ov/UvZU6JwtdmN8heM7 root@cbxi4b
+- hostname: cbxi4pro0-armhf-rb.debian.net
+  ip: 75.164.186.179
+  port: 2226
+  keys:
+    - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIItrniNdsLdoTz60tjmrlYUOWADSD1npMvUANZqE/CqU root@cbxi4pro0
+- hostname: ff2a-armhf-rb.debian.net
+  ip: 75.164.186.179
+  port: 2234
+  keys:
+    - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJZzVtwaLtTuuiy+45O4+ym11myyqfwC1hokLtBbf9gz root@ff2a
+- hostname: ff2b-armhf-rb.debian.net
+  ip: 75.164.186.179
+  port: 2237
+  keys:
+    - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIF8rhR3nfnzlM2zw1Dc3Pg7AIF+NkGX2+f3/9eZgtz18 root@ff2b
+- hostname: ff4a-armhf-rb.debian.net
+  ip: 75.164.186.179
+  port: 2241
+  keys:
+    - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKKYkmrAKGQxedIpfFmWHdGeuUkAUag7+firCPPnEJgb root@ff4a
+- hostname: ff64a-armhf-rb.debian.net
+  ip: 75.164.186.179
+  port: 2250
+  keys:
+    - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILS8JWrw1/2E43HZQKpdV6eg6q5SgxUn3EFsDN6ScQSX root@ff64a
+- hostname: jtk1a-armhf-rb.debian.net
+  ip: 75.164.186.179
+  port: 2246
+  keys:
+    - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFUAiMcaH8QU+O5Gg3B5ECcrwaQtewrHdkCsnJCQjvZP root@jtk1a
+- hostname: jtk1b-armhf-rb.debian.net
+  ip: 75.164.186.179
+  port: 2252
+  keys:
+    - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIN4skWiTTiXvYBXl2iJgZPA0hQEawBwmSRWgB9hBr/SZ root@jtk1b
+- hostname: jtx1a-armhf-rb.debian.net
+  ip: 75.164.186.179
+  port: 2249
+  keys:
+    - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEmAvTregr0PIoR1V03b4c1amc7Uhu76wyy5KqoEq40x root@jtx1a
+- hostname: jtx1b-armhf-rb.debian.net
+  ip: 75.164.186.179
+  port: 2253
+  keys:
+    - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPpDyNs/czjIXCvIGGXjj4cwf2m0nD/kVtbMWyUtir/M root@jtx1b
+- hostname: jtx1c-armhf-rb.debian.net
+  ip: 75.164.186.179
+  port: 2254
+  keys:
+    - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBKyJXxdHhWuq3RcgEQWI4Vn3ql5gss7PYPa9FBVVFsg root@jtx1cx
+- hostname: odu3a-armhf-rb.debian.net
+  ip: 75.164.186.179
+  port: 2243
+  keys:
+    - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHpVhcqBq8OGYRbd9Qj1DFHX4Lc2pnB0vGdUMr9GnAYv root@odu3a
+- hostname: odxu4a-armhf-rb.debian.net
+  ip: 75.164.186.179
+  port: 2229
+  keys:
+    - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIN8ZcHsuBnKDO4c4t0CurvAPT67kOCl7urLlXxerR7b6 root@odxu4a
+- hostname: odxu4b-armhf-rb.debian.net
+  ip: 75.164.186.179
+  port: 2232
+  keys:
+    - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAII4ysLWXJL7rDYtrHGI/G4knWKo7rfn75NGJj5L37sKc root@odxu4b
+- hostname: odxu4c-armhf-rb.debian.net
+  ip: 75.164.186.179
+  port: 2233
+  keys:
+    - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFz+RmEkj6AqeBKqUvP8PRLPmbjjnVhc2xwMwN18pa6A root@odxu4c
+- hostname: opi2a-armhf-rb.debian.net
+  ip: 75.164.186.179
+  port: 2236
+  keys:
+    - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKVUUlhOcJTBg+Gpr2k7ImCpkENzeoP9x9GYyvXAfOq7 root@opi2a
+- hostname: opi2b-armhf-rb.debian.net
+  ip: 75.164.186.179
+  port: 2238
+  keys:
+    - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIK0Hcbx6rSL3Ar1X1BF+9ra433zD1wfoEen+srND3oZi root@opi2b
+- hostname: opi2c-armhf-rb.debian.net
+  ip: 75.164.186.179
+  port: 2245
+  keys:
+    - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPALLv370+l2CfkV84TFzpuMFa0uRU+cJat3+s+j0Jrv root@opi2c
+- hostname: p64b-armhf-rb.debian.net
+  ip: 75.164.186.179
+  port: 2247
+  keys:
+    - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAII72lFT+t6TR/nzETrUOq354iZFr70A872JowpInbxqU root@p64b
+- hostname: p64c-armhf-rb.debian.net
+  ip: 75.164.186.179
+  port: 2248
+  keys:
+    - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICtsjm6UDHyJvqQVlM/SRZpbgd7/QVQ4keMkRyiAZnkm root@p64c
+- hostname: wbq0-armhf-rb.debian.net
+  ip: 75.164.186.179
+  port: 2225
+  keys:
+    - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILcEEk0GyoCdOkNugtaADcIluZWbxykVhjJDpttwvWfG root@wbq0
+
+# arm64
+- hostname: codethink-sled9-arm64.debian.net
+  ip: 78.40.148.164
+  port: 10109
+  keys:
+    - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIIWSbi27ipvqgA0JdC1nwoYhg8p/Toq5cJXSmUyHwsbj root@codethink-sled9-arm64
+- hostname: codethink-sled10-arm64.debian.net
+  ip: 78.40.148.164
+  port: 10110
+  keys:
+    - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGZ90P6Iot+AHEx/+8AGFKYlYHzcWFikmI37gUvaG3Gk root@sled10
+- hostname: codethink-sled11-arm64.debian.net
+  ip: 78.40.148.164
+  port: 10111
+  keys:
+    - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIIAJJ8fvhFeE7ePVNmjqN7wwfQ3tswAbs9rqDRxd5tXb root@sled11
+- hostname: codethink-sled12-arm64.debian.net
+  ip: 78.40.148.164
+  port: 10112
+  keys:
+    - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIL5aPBK8SPG8Qs3PronNtvpbB+4izRz8qPaY7+dCkBZY root@sled12
+- hostname: codethink-sled13-arm64.debian.net
+  ip: 78.40.148.164
+  port: 10113
+  keys:
+    - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGnHniDoWxNiZV8qtyfOPNFoXRK+GhYisLP8hCJu5ryS root@sled13
+- hostname: codethink-sled14-arm64.debian.net
+  ip: 78.40.148.164
+  port: 10114
+  keys:
+    - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIIL6oZI38HeglW+3gEkLr0FXfVApVRkBK+bDms68KwAc root@sled14
+- hostname: codethink-sled15-arm64.debian.net
+  ip: 78.40.148.164
+  port: 10115
+  keys:
+    - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIN7XShDEh0j2LhUzjbtR9hHXrsKzi0Yx86UrtPdoQc+m root@sled15
+- hostname: codethink-sled16-arm64.debian.net
+  ip: 78.40.148.164
+  port: 10116
+  keys:
+    - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFlNpch4lpSdL1K60Z8HwYxtrY2LJVmacnW9h6jhk3Fe root@sled16
+
+# x86 profitbricks
+- hostname: profitbricks-build1-amd64.debian.net
+  ip: 78.137.99.97
+  keys:
+    - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINnatbql/ru6kRgXLWSeFS/hsl+kAqwAu5/RU76SNBQQ root@debian
+- hostname: profitbricks-build2-i386.debian.net
+  ip: 46.16.73.166
+  keys:
+    - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFez9q/k1rxbsQ2odoGTvThfyi+TlYTKNagNsjTcQrYA root@profitbricks-build2-i386
+- hostname: profitbricks-build5-amd64.debian.net
+  ip: 85.184.249.46
+  keys:
+    - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJIxI1NQOcSv4GZqBcixQ2hA/nTGxsxMc9N5UUjuR3V2 root@debian
+- hostname: profitbricks-build6-i386.debian.net
+  ip: 213.244.192.14
+  keys:
+    - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAMBF2j2Xq41fXFC2z5O23AMB4wRqkiisge5hv8BjUxG root@profitbricks-build6-i386
+- hostname: profitbricks-build9-amd64.debian.net
+  ip: 46.16.78.222
+  keys:
+    - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAII1qzcNyDC5gsodfjm+zr2/KGaY96K3VzPbhVR7Dq7Sy root@debian
+- hostname: profitbricks-build10-amd64.debian.net
+  ip: 85.184.249.68
+  keys:
+    - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINChZiAhYZJd4mC/5snOiDtCqvu0ep6cppHH3eJ49Cct root@debian
+- hostname: profitbricks-build11-amd64.debian.net
+  ip: 78.137.101.155
+  keys:
+    - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEZVWw5L934jafl0hoNVYxMiYBXco8/x0cfwpFB6WmJ2 root@debian
+- hostname: profitbricks-build12-i386.debian.net
+  ip: 46.16.73.168
+  keys:
+    - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPymi8reXg3GKwbT2wthm7vdMaFSPqrn7TJfHgmGgUgk root@profitbricks-build12-i386
+- hostname: profitbricks-build15-amd64.debian.net
+  ip: 157.97.110.46
+  keys:
+    - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIF5BdtJ0mpxqqsqnshMKfuew5CDfvWzHyef/26uhkjq+ root@debian
+- hostname: profitbricks-build16-i386.debian.net
+  ip: 85.184.249.230
+  keys:
+    - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHpQZqTEC04W87vDJtnhpRTx/9FihfQ2YQoalclFJMVz root@profitbricks-build16-i386
+
+# x86 osuosl
+- hostname: osuosl-build167-amd64.debian.net
+  ip: 128.193.126.200
+  port: 45046
+  keys:
+    - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIIrs6U0w34/OQpm+vPgg8NExsqCcLR06yQnk8J/ZeXT5 root@gcc167
+- hostname: osuosl-build168-amd64.debian.net
+  ip: 128.193.126.200
+  port: 45047
+  keys:
+    - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKW0YYo21NiN6dzM0Rnu+XCu13NEgZOPsKo50gJJF/HJ root@gcc168
+- hostname: osuosl-build169-amd64.debian.net
+  ip: 128.193.126.200
+  port: 45048
+  keys:
+    - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIP3IPpuQbbkPI0g9ELV7XT/Wg9J3OwYDUNPKgy5CXluX root@gcc169
+- hostname: osuosl-build170-amd64.debian.net
+  ip: 128.193.126.200
+  port: 45049
+  keys:
+    - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIP0tz2xw8wZZWX8THoJVAF7W/xDsIl47KCKx2u+zj6NZ root@gcc170
+- hostname: osuosl-build171-amd64.debian.net
+  ip: 128.193.126.200
+  port: 45050
+  keys:
+    - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINnoofw7vcw32tYyrMqGOoF6hoZ4zouIQkEBExL15JiG root@gcc171
+- hostname: osuosl-build172-amd64.debian.net
+  ip: 128.193.126.200
+  port: 45051
+  keys:
+    - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICdPDtykqN6VtH0qIcim11725N5ZJiloOKI33YVvpqxI root@gcc172
+- hostname: osuosl-build173-amd64.debian.net
+  ip: 128.193.126.200
+  port: 45052
+  keys:
+    - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILbVh1pcBRs/m5Skt56F3KAVxQFq9mM2eII8f1IfE3A2 root@gcc173
+- hostname: osuosl-build174-amd64.debian.net
+  ip: 128.193.126.200
+  port: 45053
+  keys:
+    - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEtj8tDmRAoZUBum1GqPupVSq1hhjtt0V8SL9zOxassT root@gcc174
