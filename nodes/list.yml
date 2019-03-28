@@ -1,4 +1,4 @@
-- hostname: jenkins.debian.net,jenkins
+- hostname: jenkins.debian.net
   ip: 46.16.76.207
   keys:
     - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAVYP8sYSp95zWTMFVEbt6aw3RAyv+4tjNh/JfbsihXQ root@jenkins
