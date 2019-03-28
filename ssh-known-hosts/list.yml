@@ -1,0 +1,6 @@
+- hostname: jenkins.debian.net,jenkins
+  ip: 78.137.96.196
+  keys:
+    - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAVYP8sYSp95zWTMFVEbt6aw3RAyv+4tjNh/JfbsihXQ root@jenkins
+    - ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBNE6RhNS1kjo2nlEMXzNM4G0fMB/AQECLiXZZVfKKyHnmPTj+bAAvf98vAJ5QpAT2+wt/nF9xSIPKVJNSnxoC2I= root@jenkins
+    - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDklpU2iLalJONEFGJe42Sg2cISwCiDaq/nAEgIAnbDpnkyDC9PRUcsT3j72AWhoau0FUGcHxCUndTRNiz71M2nPyxyqOFMXpcQqlMnDdDzfOg41BCGnOHbTihtPtTiS4nRm3mQgT0fTMar367daWjpe0gQd0+h5Ec7y7N11iFUMKA6i70fePSS2vPtVMfsayMyHkH/hPWi2OFPP0WV9RLS/TH91KEy/oRb4MNEi10cfsERXpEAB+JLMtQZuhAwKNwAn54KuC1MThFOmgxw8/sCfYYlNpjSMgaBtgqxuoQMZbeGqiIYIj9IzbYwUST5EHfm6CNIvqqqmbz4k3MwRGkZ root@jenkins
