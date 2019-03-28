@@ -623,6 +623,7 @@ else
 fi
 sudo -u jenkins cp jenkins-home/ssh_config.in /var/lib/jenkins/.ssh/config
 nodes/gen_ssh_config | sudo -u jenkins tee -a /var/lib/jenkins/.ssh/config > /dev/null
+nodes/gen_known_host_file | sudo tee /etc/ssh/ssh_known_hosts > /dev/null
 explain "scripts and configurations for jenkins updated."
 
 if [ "$HOSTNAME" = "jenkins" ] ; then
