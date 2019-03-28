@@ -1,0 +1,9 @@
+#! /usr/bin/python3
+
+import os
+import yaml
+
+with open(os.path.join(os.path.dirname(__file__), 'list.yml')) as f:
+    d = yaml.load(f)
+    for host in d:
+        print(host['hostname'])
