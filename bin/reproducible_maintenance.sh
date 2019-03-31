@@ -181,15 +181,6 @@ if [ "$HOSTNAME" = "$MAINNODE" ] ; then
 				echo "Skipping ${NODE}..."
 				continue
 				;;
-		case $NODE in
-			jenkins)	echo 'Skipping jenkins...' ; continue ;;
-			profitbricks-build9-amd64) 
-				echo "Skipping $NODE..." # not used for r-b and sometimes too busy to run healthcheck / maintenance jobs
-				continue ;;
-			profitbricks-build10-amd64) 
-				echo "Skipping $NODE..." # not used for r-b and sometimes too busy to run healthcheck / maintenance jobs
-				continue ;;
-			*)	;;
 		esac
 		cd $i/builds
 		LAST=$(ls -rt1 | tail -1)
