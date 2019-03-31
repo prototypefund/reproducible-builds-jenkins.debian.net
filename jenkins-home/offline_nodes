@@ -18,7 +18,6 @@
 # Also see https://pad.sfconservancy.org/p/rb-build-nodes-keep
 
 ## temporary problems
-cb3a-armhf
 
 # Down here nodes are automtically added by the maintenance job when they have
 # been failing their health check for too long.
