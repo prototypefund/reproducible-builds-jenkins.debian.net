@@ -22,6 +22,11 @@ root access to all armhf nodes.
 amd64 and i386 nodes run as VMs in the Profitbricks cloud. Mattia and Holger have "physical"
 access including remote console and BIOS access.
 
+The VMs for jenkins.d.n and rb-mail1.r-b.o have a statically allocated IP address, as well
+as PTR records for them.  IONOS asked us to inform them (support@cloud.ionos.com) in case
+at some point we will decommission them and the reserved IPs won't be needed anymore, so they
+can remove the PTR records and unblock the IP addresses.
+
 ==== nodes at osuosl.org
 
 We now also have 8 nodes running at osuosl.org. Contact via #osuosl on freenode or mail to 
