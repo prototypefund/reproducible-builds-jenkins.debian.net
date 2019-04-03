@@ -42,7 +42,7 @@ EOF
 	if "$NODE_RUN_IN_THE_FUTURE" ; then
 		cat >> $TMPFILE <<- EOF
 			echo "Configuring APT to ignore the Release file expiration"
-			sed -i 's,^deb ,deb [check-valid-until=no] ,g' /etc/apt/sources.list
+			echo 'Acquire::Check-Valid-Until "false";' > /etc/apt/apt.conf.d/398future
 			echo
 		EOF
 	fi
