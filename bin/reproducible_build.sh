@@ -587,6 +587,11 @@ EOF
 	else
 		echo "BUILDDIR=/build" >> "$TMPCFG"
 	fi
+	if [ "$SRCPACKAGE" = "debian-installer" ]; then
+		# d-i needs to access to a debian-archive.  this is not possible in
+		# pbuilder, so grant complete netowrk access to it.
+		echo "USENETWORK=yes" >> "$TMPCFG"
+	fi
 	set +e
 	# remember to change the sudoers setting if you change the following command
 	sudo timeout -k 18.1h 18h /usr/bin/ionice -c 3 /usr/bin/nice \
@@ -656,6 +661,11 @@ EOF
 		echo "BUILDSUBDIR=2nd" >> "$TMPCFG"
 	else
 		echo "BUILDDIR=/build" >> "$TMPCFG"
+	fi
+	if [ "$SRCPACKAGE" = "debian-installer" ]; then
+		# d-i needs to access to a debian-archive.  this is not possible in
+		# pbuilder, so grant complete netowrk access to it.
+		echo "USENETWORK=yes" >> "$TMPCFG"
 	fi
 
 	local pbuilder_options=()
