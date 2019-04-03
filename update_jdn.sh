@@ -271,6 +271,7 @@ if [ -f /etc/debian_version ] ; then
 			procmail
 			psmisc
 			python3-psycopg2 
+			python3-yaml
 			schroot 
 			screen
 			slay
