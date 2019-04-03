@@ -589,7 +589,7 @@ EOF
 	fi
 	if [ "$SRCPACKAGE" = "debian-installer" ]; then
 		# d-i needs to access to a debian-archive.  this is not possible in
-		# pbuilder, so grant complete netowrk access to it.
+		# pbuilder, so grant complete network access to it.
 		echo "USENETWORK=yes" >> "$TMPCFG"
 	fi
 	set +e
@@ -664,7 +664,7 @@ EOF
 	fi
 	if [ "$SRCPACKAGE" = "debian-installer" ]; then
 		# d-i needs to access to a debian-archive.  this is not possible in
-		# pbuilder, so grant complete netowrk access to it.
+		# pbuilder, so grant complete network access to it.
 		echo "USENETWORK=yes" >> "$TMPCFG"
 	fi
 
