@@ -101,7 +101,7 @@ ircmsg = re.sub(r'\?page=changes$', r'', ircmsg)
 ircmsg = re.sub(r'/(console|changes)$', r'', ircmsg)
 ircmsg = re.sub(r'/display/redirect.*$', r'', ircmsg)
 ircmsg = re.sub(r'/$', r'', ircmsg)
-ircmsg = re.sub(r'\s+$', r' ', ircmsg)
+ircmsg = re.sub(r'\s+', r' ', ircmsg)
 
 print('''
 -----------
