@@ -18,7 +18,7 @@ from email.utils import getaddresses, parseaddr
 parser = argparse.ArgumentParser()
 parser.add_argument('-n', '--dry-run', action='store_true')
 parser.add_argument('origin_file', metavar='email',
-        help='file containing the email to be relayed to IRC')
+                    help='file containing the email to be relayed to IRC')
 args = parser.parse_args()
 
 
@@ -114,8 +114,7 @@ Subject:    {subject}
 First line: {fline}
 IRC msg:    {ircmsg}
 .'''.format(date=date, jenkins_job=jenkins_job, channels=channels,
-    subject=subject, fline=fline, ircmsg=ircmsg)
-)
+            subject=subject, fline=fline, ircmsg=ircmsg))
 
 if args.dry_run:
     print('Running in dry-run mode, not actually notifying kgb')
@@ -126,10 +125,10 @@ for ch in channels:
     print('Noifying kgb for {}...'.format(ch))
     try:
         p = run(['kgb-client', '--conf', '/srv/jenkins/kgb/{}.conf'.format(ch),
-            '--relay-msg', ircmsg], check=True)
+                 '--relay-msg', ircmsg], check=True)
     except CalledProcessError as p:
         print('E: kgb-client returned an error (code {})'.format(p.returncode),
-                file=sys.stderr)
+              file=sys.stderr)
     else:
         print('kgb informed successfully')
     finally:
