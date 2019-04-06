@@ -157,8 +157,8 @@ if [ "$HOSTNAME" = "$MAINNODE" ] ; then
 			reproducible_node_health_check_*)
 				NODE_ALIAS=$(echo $i | cut -d '_' -f6)
 				NODE_ARCH=$(echo $i | cut -d '_' -f5)
-				FORCE_DATE=$(date -u -d "1 hour ago" '+%Y-%m-%d %H:%M')
-				MAXDIFF=4
+				FORCE_DATE=$(date -u -d "2 hour ago" '+%Y-%m-%d %H:%M')
+				MAXDIFF=8
 				;;
 			reproducible_maintenance_*)
 				NODE_ALIAS=$(echo $i | cut -d '_' -f4)
