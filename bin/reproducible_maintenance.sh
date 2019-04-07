@@ -154,6 +154,10 @@ if [ "$HOSTNAME" = "$MAINNODE" ] ; then
 	SICK=""
 	for i in reproducible_node_health_check_* reproducible_maintenance_* ; do
 		case $i in
+			reproducible_node_health_check_amd64_jenkins|reproducible_maintenance_amd64_jenkins)
+				echo "Skipping $i..."
+				continue
+				;;
 			reproducible_node_health_check_*)
 				NODE_ALIAS=$(echo $i | cut -d '_' -f6)
 				NODE_ARCH=$(echo $i | cut -d '_' -f5)
@@ -175,7 +179,7 @@ if [ "$HOSTNAME" = "$MAINNODE" ] ; then
 			armhf)	NODE="${NODE_ALIAS}-armhf-rb.debian.net" ;;
 		esac
 		case "$NODE" in
-			jenkins|profitbricks-build9-amd64.debian.net|profitbricks-build10-amd64.debian.net)
+			profitbricks-build9-amd64.debian.net|profitbricks-build10-amd64.debian.net)
 				# pb9 and pb10 are not used for r-b and sometimes are too busy
 				# to run healthcheck / maintenance jobs
 				echo "Skipping ${NODE}..."
