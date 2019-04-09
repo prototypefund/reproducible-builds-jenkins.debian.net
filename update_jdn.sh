@@ -244,7 +244,8 @@ if [ -f /etc/debian_version ] ; then
 			bsd-mailx
 			curl
 			debian-archive-keyring
-			debootstrap 
+			debootstrap/stretch-backports
+			cdebootstrap-
 			devscripts
 			eatmydata
 			etckeeper
