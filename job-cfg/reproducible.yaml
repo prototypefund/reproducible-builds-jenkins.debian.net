@@ -601,27 +601,27 @@
                     my_timed: '56 0,12 * * *'
                     my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
                     my_hname: 'osuosl173'
-                    my_timeout: '4340'
+                    my_timeout: '7200'
                 - 'compare_Debian_sha1sums_reverse_runner':
                     my_description: 'Fetch .buildinfo files of Debian binary packages (in reverse order)'
                     my_timed: '56 * * * *'
                     my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
                     my_hname: 'osuosl173'
-                    my_timeout: '4340'
+                    my_timeout: '7200'
                 - 'compare_Debian_sha1sums_random_runner_1':
                     my_description: 'Fetch .buildinfo files of Debian binary packages (in random order)'
                     my_timed: '56 * * * *'
                     my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
                     my_hname: 'osuosl173'
                     my_disabled: true
-                    my_timeout: '4340'
+                    my_timeout: '7200'
                 - 'compare_Debian_sha1sums_random_runner_2':
                     my_description: 'Fetch .buildinfo files of Debian binary packages (in random order)'
                     my_timed: '56 * * * *'
                     my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
                     my_hname: 'osuosl173'
                     my_disabled: true
-                    my_timeout: '4340'
+                    my_timeout: '7200'
             my_shellext: ".sh"
             my_shell: '/srv/jenkins/bin/reproducible_{my_task}{my_shellext}'
             my_hname: ''
