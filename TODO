@@ -61,12 +61,11 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 
 === new nodes at OSUOSL
 
-* use those nodes,current plan:
+* use those nodes:
 ** done: osuosl167: squid (only, atm)
 ** done: osuosl168: fdroid
 *** underused. the old system had 2 cores and 8gb ram
 *** shutdown pb7
-*** inform hans, also about better specs
 ** done: osuosl169: archlinux
 ** done: osuosl170: archlinux (future)
 ** done: osuosl171: openwrt, coreboot, netbsd
