@@ -290,10 +290,12 @@ if [ -f /etc/debian_version ] ; then
 			osuosl-build173-amd64) DEBS="$DEBS libdpkg-perl libwww-mechanize-perl sbuild" ;;
 			*) ;;
 		esac
-		# install squid on a few nodes only
+		# install squid / apache2 on a few nodes only
 		case $HOSTNAME in
 			profitbricks-build1-a*|profitbricks-build10*|codethink-sled16*|osuosl-build167*) DEBS="$DEBS
 				squid" ;;
+			profitbricks-build7-a*) DEBS="$DEBS
+				apache2" ;;
 			*) ;;
 		esac
 		# notifications are only done from a view nodes
@@ -539,7 +541,7 @@ sudo chown root.root /etc/sudoers.d/jenkins ; sudo chmod 700 /etc/sudoers.d/jenk
 sudo chown root.root /etc/sudoers.d/jenkins-adm ; sudo chmod 700 /etc/sudoers.d/jenkins-adm
 [ -f /etc/mailname ] || ( echo $HOSTNAME.debian.net | sudo tee /etc/mailname )
 
-if [ "$HOSTNAME" = "jenkins" ] ; then
+if [ "$HOSTNAME" = "jenkins" ] || [ "$HOSTNAME" = "profitbricks-build7-amd64" ] ; then
 	if ! $UP2DATE || [ $BASEDIR/hosts/$HOSTNAME/etc/apache2 -nt $STAMP ]  ; then
 		if [ ! -e /etc/apache2/mods-enabled/proxy.load ] ; then
 			sudo a2enmod proxy
@@ -550,9 +552,14 @@ if [ "$HOSTNAME" = "jenkins" ] ; then
 			sudo a2enmod macro
 			sudo a2enmod filter
 		fi
-		sudo a2ensite -q jenkins.debian.net
+		if [ "$HOSTNAME" = "jenkins" ] ; then
+			sudo a2ensite -q jenkins.debian.net
+			sudo chown jenkins-adm.jenkins-adm /etc/apache2/sites-enabled/jenkins.debian.net.conf
+		else # "$HOSTNAME" = "profitbricks-build7-amd64"
+			sudo a2ensite -q buildinfos.debian.net
+			sudo chown jenkins-adm.jenkins-adm /etc/apache2/sites-enabled/buildinfos.debian.net.conf
+		fi
 		sudo a2enconf -q munin
-		sudo chown jenkins-adm.jenkins-adm /etc/apache2/sites-enabled/jenkins.debian.net.conf
 		# for reproducible.d.n url rewriting:
 		[ -L /var/www/userContent ] || sudo ln -sf /var/lib/jenkins/userContent /var/www/userContent
 		sudo service apache2 reload

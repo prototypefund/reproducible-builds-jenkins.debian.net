@@ -17,6 +17,7 @@ common_init "$@"
 explain_nodes() {
 	case $JENKINS_NODENAME in
 		jenkins)	;;
+		profitbricks7)	write_page "<br /><small>(buildinfos.debian.net)</small>" ;;
 		profitbricks9)	write_page "<br /><small>(jenkins.d.n rebootstrap jobs)</small>" ;;
 		profitbricks10)	write_page "<br /><small>(jenkins.d.n chroot-installation jobs)</small>" ;;
 		osuosl167)	write_page "<br /><small>(http-proxy for osuosl nodes)</small>" ;;
@@ -109,6 +110,7 @@ build_nodes_health_page() {
 			# worker.log links
 			case $JENKINS_NODENAME in
 				jenkins)	write_page "<td></td>" ;;
+				profitbricks7)	write_page "<td></td>" ;;
 				profitbricks9)	write_page "<td></td>" ;;
 				profitbricks10)	write_page "<td></td>" ;;
 				osuosl*)	write_page "<td></td>" ;;
@@ -125,6 +127,7 @@ build_nodes_health_page() {
 			for SUITE in ${SUITES} ; do
 				case $JENKINS_NODENAME in
 					jenkins)	write_page "<td></td>" ;;
+					profitbricks7)	write_page "<td></td>" ;;
 					profitbricks9)	write_page "<td></td>" ;;
 					profitbricks10)	write_page "<td></td>" ;;
 					osuosl*)	write_page "<td></td>" ;;
@@ -211,6 +214,7 @@ build_graph_overview_pages() {
 					if [ "$GRAPH" = "jenkins_reproducible_builds" ] ; then
 						case $JENKINS_NODENAME in
 							jenkins)	write_page "<td></td>" ; continue ;;
+							profitbricks7)	write_page "<td></td>" ; continue ;;
 							profitbricks9)	write_page "<td></td>" ; continue ;;
 							profitbricks10)	write_page "<td></td>" ; continue ;;
 							osuosl*)	write_page "<td></td>" ; continue ;;
