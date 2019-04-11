@@ -555,11 +555,11 @@ if [ "$HOSTNAME" = "jenkins" ] || [ "$HOSTNAME" = "profitbricks-build7-amd64" ] 
 		if [ "$HOSTNAME" = "jenkins" ] ; then
 			sudo a2ensite -q jenkins.debian.net
 			sudo chown jenkins-adm.jenkins-adm /etc/apache2/sites-enabled/jenkins.debian.net.conf
+			sudo a2enconf -q munin
 		else # "$HOSTNAME" = "profitbricks-build7-amd64"
 			sudo a2ensite -q buildinfos.debian.net
 			sudo chown jenkins-adm.jenkins-adm /etc/apache2/sites-enabled/buildinfos.debian.net.conf
 		fi
-		sudo a2enconf -q munin
 		# for reproducible.d.n url rewriting:
 		[ -L /var/www/userContent ] || sudo ln -sf /var/lib/jenkins/userContent /var/www/userContent
 		sudo service apache2 reload
