@@ -174,9 +174,6 @@ else
 	if $DEBUG ; then
 		set -x
 	fi
-	if $DEEPDEBUG ; then
-		PS4=$'$? \\ (${BASH_SOURCE[0]}:${LINENO}): ${FUNCNAME[0]:--} [SHLVL=${SHLVL} BASH_SUBSHELL=${BASH_SUBSHELL}]\n  '
-	fi
 	set -e
 	export DEBIAN_FRONTEND=noninteractive
 	export LC_ALL=$LC_ALL
@@ -186,9 +183,6 @@ else
 	if $DEBUG ; then
 		export
 		set -x
-	fi
-	if $DEEPDEBUG ; then
-		PS4=$'$? \\ (${BASH_SOURCE[0]}:${LINENO}): ${FUNCNAME[0]:--} [SHLVL=${SHLVL} BASH_SUBSHELL=${BASH_SUBSHELL}]\n  '
 	fi
 	set -e
 fi
