@@ -100,7 +100,9 @@ case $(hostname) in
 	*)			;;
 esac
 
+#
 # fixup pbuilder lockfiles if needed
+#
 fixup_pbuilder_lockfiles
 
 #
