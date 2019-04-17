@@ -1,0 +1,53 @@
+#!/bin/bash
+# vim: set noexpandtab:
+
+# Copyright 2019 Holger Levsen <holger@layer-acht.org>
+# released under the GPLv=2
+
+###################################################################
+###								###
+### this is running on coccia.debian.org via holger's crontab:	###
+###								###
+### # m h  dom mon dow   command				###
+### 0 1,7,13,19 * * *  ~holger/rsync2buildinfos.debian.net	###
+###								###
+###################################################################
+
+YEAR="$(date -u +%Y)"
+MONTH="$(date -u +%m)"
+DAY="$(date -u +%d)"
+cd /srv/ftp-master.debian.org/buildinfo/
+
+rsync_day(){
+	rsync -e ssh -av $YEAR/$MONTH/$DAY jenkins@profitbricks-build7-amd64.debian.net://var/lib/jenkins/userContent/reproducible/debian/ftp-master.debian.org/buildinfo/$YEAR/$MONTH/
+}
+
+rsync_month(){
+	rsync -e ssh -av $YEAR/$MONTH jenkins@profitbricks-build7-amd64.debian.net://var/lib/jenkins/userContent/reproducible/debian/ftp-master.debian.org/buildinfo/$YEAR/
+}
+
+rsync_year(){
+	rsync -e ssh -av $YEAR jenkins@profitbricks-build7-amd64.debian.net://var/lib/jenkins/userContent/reproducible/debian/ftp-master.debian.org/buildinfo/
+}
+
+if [ -n "$1" ] ; then
+	for i in $(seq 2016 $YEAR) ; do
+		rsync_year
+	done
+else
+	if [ "$DAY" = "01" ] && [ "$MONTH" = "01" ] ; then
+		# even though we do this several times a day
+		# it's ok, because the year is young :)
+		rsync_year
+	elif [ "$DAY" = "01" ] ; then
+		# see comment above
+		rsync_month
+	else
+		rsync_day
+	fi
+	# rsync yesterday, always
+	YEAR="$(date -u -d '1 day ago' +%Y)"
+	MONTH="$(date -u -d '1 day ago' +%m)"
+	DAY="$(date -u -d '1 day ago' +%d)"
+	rsync_day
+fi
