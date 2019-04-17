@@ -20,7 +20,6 @@ FTPPATH=$BASEPATH/ftp-master.debian.org/buildinfo
 POOLPATH=$BASEPATH/buildinfo-pool
 
 PROBLEMS=$(mktemp -t poolize.XXXXXXXX)
-
 mkdir -p $POOLPATH
 
 YEAR="$(date -u +%Y)"
@@ -28,6 +27,7 @@ MONTH="$(date -u +%m)"
 DAY="$(date -u +%d)"
 
 do_day(){
+	COUNTER=0
 	MONTHPATH=$FTPPATH/$YEAR/$MONTH
 	if [ ! -d $MONTHPATH ] ; then
 		echo "$MONTHPATH does not exist, next."
@@ -40,7 +40,6 @@ do_day(){
 		return
 	fi
 	cd $DAY
-	echo "Working on $YEAR/$MONTH/$DAY"
 	for FILE in * ; do
 		# echo $FILE
 		PACKAGE=$(echo $FILE | cut -d '_' -f1)
@@ -70,6 +69,7 @@ do_day(){
 		elif [ ! -e "$FULLTARGET" ] && [ -e "$MONTHPATH/$DAY/$FILE" ] ; then
 			ln -s $MONTHPATH/$DAY/$FILE $FULLTARGET
 			# echo "$MONTHPATH/$DAY/$FILE linked from $FULLTARGET"
+			let COUNTER+=1
 		elif [ ! -e $MONTHPATH/$DAY/$FILE ] ; then
 			echo "on no $MONTHPATH/$DAY/$FILE does not exist, exiting."
 			exit 1
@@ -78,6 +78,7 @@ do_day(){
 			if [ ! -e "$FULLTARGET.0" ] ; then
 				ln -s $MONTHPATH/$DAY/$FILE $FULLTARGET.0
 				echo "$MONTHPATH/$DAY/$FILE linked from $FULLTARGET.0"
+				let COUNTER+=1
 			elif [ "$(readlink -f $FULLTARGET.0)" = "$MONTHPATH/$DAY/$FILE" ] ; then
 				# also ignoring this
 				:
@@ -91,6 +92,12 @@ do_day(){
 			fi
 		fi
 	done
+	echo -n "Done processing $YEAR/$MONTH/$DAY"
+	if [ $COUNTER -gt 0 ] ; then
+		echo " - $COUNTER links added."
+	else
+		echo
+	fi
 	cd ..
 }
 

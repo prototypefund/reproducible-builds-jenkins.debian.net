@@ -79,6 +79,8 @@ elif [[ "$1" =~ ^chroot-installation_.* ]]; then
 	shift ; exec /srv/jenkins/bin/chroot-installation.sh $@ ; croak "Exec failed"
 elif [ "$*" = "reproducible_nodes_info" ] ; then
 	exec /srv/jenkins/bin/reproducible_info.sh ; croak "Exec failed";
+elif [ "$1" = "reproducible_pool_buildinfos" ] ; then
+	exec /srv/jenkins/bin/reproducible_pool_buildinfos.sh ; croak "Exec failed";
 elif [ "$1" = "haskell-package-plan" ] ; then
 	shift ; exec /srv/jenkins/bin/chroot-run.sh $@ ; croak "Exec failed";
 elif [ "$1" = "/srv/jenkins/bin/reproducible_build.sh" ] && ( [ "$2" = "1" ] || [ "$2" = "2" ] ) ; then

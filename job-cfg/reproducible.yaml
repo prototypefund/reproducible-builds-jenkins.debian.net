@@ -802,6 +802,10 @@
                     my_gitrepo: 'https://salsa.debian.org/reproducible-builds/reproducible-lfs.git'
                     git_wipe_workspace: false   # can't do it as it would otherwise take too much to checkout/clone
                     my_shell: '/srv/jenkins/bin/reproducible_sync_lfs.sh'
+                - 'pool_buildinfos'
+                    my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
+                    my_hname: 'profitbricks7'
+                    my_timed: '30 1,7,13,19 * * *'
             my_recipients: 'jenkins+reproducible-builds qa-jenkins-scm@lists.alioth.debian.org'
             my_parse_rules: '/srv/jenkins/logparse/reproducible-extra.rules'
             my_hname: ''
