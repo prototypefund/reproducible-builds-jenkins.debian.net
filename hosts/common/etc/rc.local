@@ -55,6 +55,10 @@ fixup_mtu() {
 	fi
 }
 
+fixup_pbuilder_lockfiles() {
+	rm -f /var/cache/pbuilder/*.tgz.tmp
+}
+
 #
 # init, notify about reboots
 #
@@ -95,6 +99,9 @@ case $(hostname) in
 	osuosl-build172*)	put_schroots_on_tmpfs ;;
 	*)			;;
 esac
+
+# fixup pbuilder lockfiles if needed
+fixup_pbuilder_lockfiles
 
 #
 # run some hosts in the future
