@@ -19,15 +19,15 @@ DAY="$(date -u +%d)"
 cd /srv/ftp-master.debian.org/buildinfo/
 
 rsync_day(){
-	rsync -e ssh -av $YEAR/$MONTH/$DAY jenkins@profitbricks-build7-amd64.debian.net://var/lib/jenkins/userContent/reproducible/debian/ftp-master.debian.org/buildinfo/$YEAR/$MONTH/
+	rsync -e ssh -av $YEAR/$MONTH/$DAY jenkins@profitbricks-build7-amd64.debian.net:/var/lib/jenkins/userContent/reproducible/debian/ftp-master.debian.org/buildinfo/$YEAR/$MONTH/
 }
 
 rsync_month(){
-	rsync -e ssh -av $YEAR/$MONTH jenkins@profitbricks-build7-amd64.debian.net://var/lib/jenkins/userContent/reproducible/debian/ftp-master.debian.org/buildinfo/$YEAR/
+	rsync -e ssh -av $YEAR/$MONTH jenkins@profitbricks-build7-amd64.debian.net:/var/lib/jenkins/userContent/reproducible/debian/ftp-master.debian.org/buildinfo/$YEAR/
 }
 
 rsync_year(){
-	rsync -e ssh -av $YEAR jenkins@profitbricks-build7-amd64.debian.net://var/lib/jenkins/userContent/reproducible/debian/ftp-master.debian.org/buildinfo/
+	rsync -e ssh -av $YEAR jenkins@profitbricks-build7-amd64.debian.net:/var/lib/jenkins/userContent/reproducible/debian/ftp-master.debian.org/buildinfo/
 }
 
 if [ -n "$1" ] ; then
