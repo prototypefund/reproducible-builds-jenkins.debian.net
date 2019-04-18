@@ -251,7 +251,7 @@ build_job_health_page() {
 	# these are or-filters used with egrep
 	FILTER[0]="(builds|spec|lfs)"
 	FILTER[1]="html_(all|break|dash|dd|index|live|node|pkg|repo)"
-	FILTER[2]="reproducible_compare"
+	FILTER[2]="(reproducible_compare|pool)"
 	FILTER[3]="reproducible_diffoscope"
 	FILTER[4]="(reprotest|strip-nonderminism|disorderfs)"
 	FILTER[5]="(json|le_scheduler|meta|le_nodes|rsync|notes)"
