@@ -101,6 +101,10 @@ elif [[ "$*" =~ ^rsync\ --server\ .*\ \.\ /srv/workspace/chroots/.* ]] ; then
 elif [[ "$*" =~ ^rsync\ --server\ .*\ \.\ /srv/reproducible-results/.* ]] ; then
 	# allow to push files to /srv/reproducible-results/
 	exec rsync --server "$3" . "$5" ; croak "Exec failed";
+elif [[ "$*" =~ ^rsync\ --server\ .*\ \.\ /var/lib/jenkins/userContent/reproducible/debian/ftp-master.debian.org/buildinfo/.* ]] ; then
+	# allow to push buildinfo files from coccia
+	# FIXME: limit this to pb7
+	exec rsync --server "$3" . "$5" ; croak "Exec failed";
 elif [[ "$*" =~ ^mkdir\ -p\ /srv/d-i/isos.* ]] ; then
 	exec mkdir -p "$3"  ; croak "Exec failed";
 elif [[ "$*" =~ ^rm\ -r\ /srv/reproducible-results/tmp.* ]] ; then
