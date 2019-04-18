@@ -631,7 +631,7 @@ else
 	sudo cp jenkins-nodes-home/authorized_keys /var/lib/jenkins/.ssh/authorized_keys
 fi
 if [ -f jenkins-nodes-home/authorized_keys.$HOSTNAME ] ; then
-	sudo cat jenkins-nodes-home/authorized_keys.$HOSTNAME >> /var/lib/jenkins/.ssh/authorized_keys
+	cat jenkins-nodes-home/authorized_keys.$HOSTNAME | sudo tee -a /var/lib/jenkins/.ssh/authorized_keys
 fi
 sudo -u jenkins cp jenkins-home/ssh_config.in /var/lib/jenkins/.ssh/config
 nodes/gen_ssh_config | sudo -u jenkins tee -a /var/lib/jenkins/.ssh/config > /dev/null
