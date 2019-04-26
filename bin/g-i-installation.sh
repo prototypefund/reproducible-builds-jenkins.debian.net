@@ -135,9 +135,9 @@ cleanup_all() {
 	# remove lvm volume
 	#
 	case $NAME in
-	#	*debian-edu_jessie*_main-server)	echo "Warning: not deleting file $FILEPATH"
+	#	*debian-edu_jessie*_main-server)	echo "Warning: not deleting file ${FILEPATH}"
 	#				;;
-		*) 	rm -f $FILEPATH
+		*) 	rm -f ${FILEPATH}
 		;;
 	esac
 	rm -f $QEMU_LAUNCHER
@@ -183,7 +183,7 @@ show_preseed() {
 bootstrap_system() {
 	cd $WORKSPACE
 	echo "Creating raw disk image with ${DISKSIZE_IN_GB} GiB now."
-	qemu-img create -f raw $FILEPATH ${DISKSIZE_IN_GB}G
+	qemu-img create -f raw ${FILEPATH} ${DISKSIZE_IN_GB}G
 	echo "Doing g-i installation test for $NAME now."
 	# qemu related variables (incl kernel+initrd) - display first, as we grep for this in the process list
 	QEMU_OPTS="-display vnc=$DISPLAY -enable-kvm -cpu host"
@@ -230,7 +230,7 @@ bootstrap_system() {
 	else
 		QEMU_KERNEL="--kernel $KERNEL --initrd $INITRD"
 	fi
-	QEMU_OPTS="$QEMU_OPTS -drive file=$FILEPATH,index=0,media=disk,cache=unsafe,format=raw -serial file:$RESULTS/serial.log -m $RAMSIZE $QEMU_NET_OPTS"
+	QEMU_OPTS="$QEMU_OPTS -drive file=${FILEPATH},index=0,media=disk,cache=unsafe,format=raw -serial file:$RESULTS/serial.log -m $RAMSIZE $QEMU_NET_OPTS"
 	INST_LOCALE="locale=$DI_LOCALE"
 	INST_KEYMAP="keymap=us"	# always us!
 	INST_VIDEO="video=vesa:ywrap,mtrr vga=788"
@@ -363,13 +363,13 @@ boot_system() {
 		*_hurd*)	;;
 		*)		QEMU_OPTS="$QEMU_OPTS -enable-kvm -cpu host" ;;
 	esac
-	echo "Checking $FILEPATH:"
-	FILE=$(file -Ls $FILEPATH)
+	echo "Checking ${FILEPATH}:"
+	FILE=$(file -Ls ${FILEPATH})
 	if [ $(echo $FILE | grep -E '(x86 boot sector|DOS/MBR boot sector)' | wc -l) -eq 0 ] ; then
-		echo "ERROR: no x86 boot sector found in $FILEPATH - its filetype is $FILE."
+		echo "ERROR: no x86 boot sector found in ${FILEPATH} - its filetype is $FILE."
 		exit 1
 	fi
-	QEMU_OPTS="$QEMU_OPTS -drive file=$FILEPATH,index=0,media=disk,cache=unsafe,format=raw -m $RAMSIZE"
+	QEMU_OPTS="$QEMU_OPTS -drive file=${FILEPATH},index=0,media=disk,cache=unsafe,format=raw -m $RAMSIZE"
 	QEMU_OPTS="$QEMU_OPTS -net nic,vlan=0 -net user,vlan=0,host=10.0.2.1,dhcpstart=10.0.2.2,dns=10.0.2.254"
 	case $NAME in
 		debian-edu_*ltsp-server|debian-edu_*combi-server)
@@ -1220,7 +1220,7 @@ save_logs() {
 	FAILURE=false
 	# workaround problem in guestmount in wheezy: -o uid doesnt work:
 	# "sudo guestmount -o uid=$(id -u) -o gid=$(id -g)" would be nicer, but it doesnt work: as root, the files seem to belong to jenkins, but as jenkins they cannot be accessed
-	sudo guestmount -a $FILEPATH -i --ro $SYSTEM_MNT || { echo "Warning: cannot mount filesystems from $FILEPATH" ; export FAILURE=true ; }
+	sudo guestmount -a ${FILEPATH} -i --ro $SYSTEM_MNT || { echo "Warning: cannot mount filesystems from ${FILEPATH}" ; export FAILURE=true ; }
 	#
 	# copy logs (and continue if some logs cannot be copied)
 	#
