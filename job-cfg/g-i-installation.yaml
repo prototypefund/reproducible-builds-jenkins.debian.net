@@ -239,9 +239,11 @@
                 my_time: '42 10 */10 * *'
                 my_verdesc: 'buster netinst'
             - sid:
-                my_inst_url: 'https://d-i.debian.org/daily-images/hurd-i386/daily/netboot/mini.iso'
+                #my_inst_url: 'https://d-i.debian.org/daily-images/hurd-i386/daily/netboot/mini.iso'
+                my_inst_url: 'https://people.debian.org/~sthibault/hurd-i386/installer/cdimage/daily/debian-sid-hurd-i386-NETINST-1.iso'
                 my_time: '42 16 */3 * *'
-                my_verdesc: 'sid mini.iso'
+                #my_verdesc: 'sid mini.iso'
+                my_verdesc: 'sid netinst'
       - '{name}_debian_sid_daily_rescue_translations_group'
 
       - '{name}_debian_{my_ver}_presentation':
