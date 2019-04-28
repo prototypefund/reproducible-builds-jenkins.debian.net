@@ -361,6 +361,7 @@ if [ -f /etc/debian_version ] ; then
 				bzr
 				git-svn
 				fdroidserver/stretch-backports
+				linux-headers-amd64
 				mercurial
 				python3-asn1crypto/stretch-backports
 				python3-babel
