@@ -173,7 +173,7 @@ cleanup_all() {
 
 show_preseed() {
 	qemu_url="$1"
-	jenkins_url="$(echo $qemu_url|sed -s 's#10\.0\.2\.1#127.0.0.1#g')"
+	jenkins_url="$(echo $qemu_url|sed -s 's#10\.0\.2\.1#jenkins.debian.net#g')" # these used to be different...
 	outside_url="$(echo $qemu_url|sed -s 's#10\.0\.2\.1#jenkins.debian.net#g')"
 	echo "Preseeding from $outside_url:"
 	echo
