@@ -187,7 +187,7 @@ bootstrap_system() {
 	echo "Doing g-i installation test for $NAME now."
 	# qemu related variables (incl kernel+initrd) - display first, as we grep for this in the process list
 	QEMU_OPTS="-display vnc=$DISPLAY -enable-kvm -cpu host"
-	QEMU_WEBSERVER=http://10.0.2.1/
+	QEMU_WEBSERVER=https://10.0.2.1/
 	QEMU_NET_OPTS="-net nic,vlan=0 -net user,vlan=0,host=10.0.2.1,dhcpstart=10.0.2.2,dns=10.0.2.254"
 	# preseeding related variables
 	PRESEEDCFG="preseed.cfg"
