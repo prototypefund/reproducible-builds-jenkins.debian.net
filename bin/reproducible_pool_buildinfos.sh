@@ -111,9 +111,9 @@ do_day(){
 }
 
 loop_through_all(){
-	for YEAR in $(seq 2019 -1 2016) ; do
-		for MONTH in $(seq -w 12 -1 01) ; do
-			for DAY in $(seq -w 31 -1 01) ; do
+	for YEAR in $(seq 2016 2019) ; do
+		for MONTH in $(seq -w 01 12) ; do
+			for DAY in $(seq -w 01 31) ; do
 				do_day
 			done
 		done
