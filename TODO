@@ -92,6 +92,11 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 <Ramereth> we currently have it running all the time on all physical nodes
 ----
 
+=== upgrades to buster
+
+* only done on osuosl174 yet. 
+** so we can drop hosts/osuosl-build174-amd64/etc/apt/sources.list once hosts/common/... has buster
+
 ==== proper backup
 
 * postponed til we run on .debian.org
