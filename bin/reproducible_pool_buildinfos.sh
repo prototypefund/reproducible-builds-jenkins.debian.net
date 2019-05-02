@@ -140,6 +140,7 @@ if [ -s $PROBLEMS ] ; then
 	echo
 	cat $PROBLEMS
 	cat $PROBLEMS >> $BASEPATH/buildinfo-problems
+	rm $PROBLEMS
 	exit 1
 else
 	rm $PROBLEMS
