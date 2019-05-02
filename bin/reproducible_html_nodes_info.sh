@@ -27,7 +27,7 @@ explain_nodes() {
 		osuosl171)	write_page "<br /><small>(r-b OpenWrt, NetBSD, Coreboot builds)</small>" ;;
 		osuosl172)	write_page "<br /><small>(r-b OpenWrt, Coreboot builds)</small>" ;;
 		osuosl173)	write_page "<br /><small>(r-b Debian rebuilder)</small>" ;;
-		osuosl174)	write_page "<br /><small>(TBD - setup in progress)</small>" ;;
+		osuosl174)	write_page "<br /><small>(r-b openSUSE)</small>" ;;
 		*)		write_page "<br /><small>(r-b Debian builds)</small>" ;;
 	esac
 }

@@ -121,7 +121,7 @@ user_host_groups['lynxis','osuosl-build172-amd64']="$sudo_groups"
 user_host_groups['lynxis','jenkins']="jenkins"
 user_host_groups['hans','osuosl-build168-amd64']="$sudo_groups"
 user_host_groups['vagrant','*']="$sudo_groups"
-
+user_host_groups['bernhard','osuosl-build174-amd64']="$sudo_groups"
 
 u_shell['mattia']='/bin/zsh'
 u_shell['lynxis']='/bin/fish'
@@ -285,9 +285,11 @@ if [ -f /etc/debian_version ] ; then
 			vim 
 			zsh
 			"
-		# needed for rebuilding Debian (using .buildinfo files)
 		case $HOSTNAME in
+			# needed for rebuilding Debian (using .buildinfo files)
 			osuosl-build173-amd64) DEBS="$DEBS libdpkg-perl libwww-mechanize-perl sbuild" ;;
+			# needed for opensuse openbuildservice
+			osuosl-build174-amd64) DEBS="$DEBS osc obs-build qemu-kvm libjson-perl libxml-simple-perl bsdtar" ;;
 			*) ;;
 		esac
 		# install squid / apache2 on a few nodes only
