@@ -779,5 +779,5 @@ if __name__ == '__main__':
         # build the kgb message text
         message = 'Scheduled in ' + '+'.join(SUITES) + ' at ' + datetime.now().strftime("%Y-%m-%d %H:%M:%S") + ':\n' + message + '\n'
         log.info(message)
-        with open('/var/log/jenkins/reproducible-scheduler.log', 'w') as logfile:
+        with open('/var/log/jenkins/reproducible-scheduler.log', 'a') as logfile:
             logfile.write(message)
