@@ -74,7 +74,6 @@ do_day(){
 			echo "on no $MONTHPATH/$DAY/$FILE does not exist, exiting."
 			exit 1
 		elif [ -e $FULLTARGET ] ; then
-
 			if [ ! -e "$FULLTARGET.0" ] ; then
 				ln -s $MONTHPATH/$DAY/$FILE $FULLTARGET.0
 				echo "$MONTHPATH/$DAY/$FILE linked from $FULLTARGET.0"
@@ -82,13 +81,22 @@ do_day(){
 			elif [ "$(readlink -f $FULLTARGET.0)" = "$MONTHPATH/$DAY/$FILE" ] ; then
 				# also ignoring this
 				:
+		else
+			# so far we found three such cases...
+			if [ ! -e "$FULLTARGET.1" ] ; then
+				ln -s $MONTHPATH/$DAY/$FILE $FULLTARGET.1
+				echo "$MONTHPATH/$DAY/$FILE linked from $FULLTARGET.1"
+				let COUNTER+=1
+			elif [ "$(readlink -f $FULLTARGET.1)" = "$MONTHPATH/$DAY/$FILE" ] ; then
+				# also ignoring this
+				:
 			else
-				echo "oh no $FULLTARGET.0 also exists and thus we don't know what to do, thus ignoring." >> $PROBLEMS
+				# so far, no such case has been found
+				echo "oh no $FULLTARGET.1 also exists and thus we don't know what to do, thus ignoring." >> $PROBLEMS
 				echo "$MONTHPATH/$DAY/$FILE is the source of the problem" >> $PROBLEMS
 				ls -l $FULLTARGET >> $PROBLEMS
 				ls -l $FULLTARGET.0 >> $PROBLEMS
 				echo >> $PROBLEMS
-				#exit 1
 			fi
 		fi
 	done
@@ -123,6 +131,9 @@ fi
 
 if [ -s $PROBLEMS ] ; then
 	echo problems stored in $PROBLEMS
+	cat $PROBLEMS
+	cat $PROBLEMS >> $BASEPATH/buildinfo-problems
+	exit 1
 else
 	rm $PROBLEMS
 fi
