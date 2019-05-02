@@ -120,8 +120,13 @@ loop_through_all(){
 	done
 }
 
-if [ -n "$1" ] ; then
+if [ -n "$1" ] && [ -z "$2" ] ; then
 	loop_through_all
+elif [ -n "$1" ] && [ -n "$2" ] && [ -n "$3" ] ; then
+	YEAR=$1
+	MONTH=$2
+	DAY=$3
+	do_day
 else
 	do_day
 	YEAR="$(date -u -d '1 day ago' +%Y)"
