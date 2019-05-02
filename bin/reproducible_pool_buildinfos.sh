@@ -131,7 +131,8 @@ else
 fi
 
 if [ -s $PROBLEMS ] ; then
-	echo problems stored in $PROBLEMS
+	echo "Problems found, please investigate:"
+	echo
 	cat $PROBLEMS
 	cat $PROBLEMS >> $BASEPATH/buildinfo-problems
 	exit 1
