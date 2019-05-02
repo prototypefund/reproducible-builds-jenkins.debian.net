@@ -81,22 +81,23 @@ do_day(){
 			elif [ "$(readlink -f $FULLTARGET.0)" = "$MONTHPATH/$DAY/$FILE" ] ; then
 				# also ignoring this
 				:
-		else
-			# so far we found three such cases...
-			if [ ! -e "$FULLTARGET.1" ] ; then
-				ln -s $MONTHPATH/$DAY/$FILE $FULLTARGET.1
-				echo "$MONTHPATH/$DAY/$FILE linked from $FULLTARGET.1"
-				let COUNTER+=1
-			elif [ "$(readlink -f $FULLTARGET.1)" = "$MONTHPATH/$DAY/$FILE" ] ; then
-				# also ignoring this
-				:
 			else
-				# so far, no such case has been found
-				echo "oh no $FULLTARGET.1 also exists and thus we don't know what to do, thus ignoring." >> $PROBLEMS
-				echo "$MONTHPATH/$DAY/$FILE is the source of the problem" >> $PROBLEMS
-				ls -l $FULLTARGET >> $PROBLEMS
-				ls -l $FULLTARGET.0 >> $PROBLEMS
-				echo >> $PROBLEMS
+				# so far we found three such cases...
+				if [ ! -e "$FULLTARGET.1" ] ; then
+					ln -s $MONTHPATH/$DAY/$FILE $FULLTARGET.1
+					echo "$MONTHPATH/$DAY/$FILE linked from $FULLTARGET.1"
+					let COUNTER+=1
+				elif [ "$(readlink -f $FULLTARGET.1)" = "$MONTHPATH/$DAY/$FILE" ] ; then
+					# also ignoring this
+					:
+				else
+					# so far, no such case has been found
+					echo "oh no $FULLTARGET.1 also exists and thus we don't know what to do, thus ignoring." >> $PROBLEMS
+					echo "$MONTHPATH/$DAY/$FILE is the source of the problem" >> $PROBLEMS
+					ls -l $FULLTARGET >> $PROBLEMS
+					ls -l $FULLTARGET.0 >> $PROBLEMS
+					echo >> $PROBLEMS
+				fi
 			fi
 		fi
 	done
