@@ -16,20 +16,26 @@
 YEAR="$(date -u +%Y)"
 MONTH="$(date -u +%m)"
 DAY="$(date -u +%d)"
-cd /srv/ftp-master.debian.org/buildinfo/
+TARGETHOST="profitbricks-build7-amd64.debian.net"
+TARGETDIR="/var/lib/jenkins/userContent/reproducible/debian/ftp-master.debian.org/buildinfo"
+SOURCEDIR="/srv/ftp-master.debian.org/buildinfo/"
 
 rsync_day(){
-	rsync -e ssh -av $YEAR/$MONTH/$DAY jenkins@profitbricks-build7-amd64.debian.net:/var/lib/jenkins/userContent/reproducible/debian/ftp-master.debian.org/buildinfo/$YEAR/$MONTH/
+	rsync -e ssh -av $YEAR/$MONTH/$DAY jenkins@$TARGETHOST:$TARGETDIR/$YEAR/$MONTH/
 }
 
 rsync_month(){
-	rsync -e ssh -av $YEAR/$MONTH jenkins@profitbricks-build7-amd64.debian.net:/var/lib/jenkins/userContent/reproducible/debian/ftp-master.debian.org/buildinfo/$YEAR/
+	rsync -e ssh -av $YEAR/$MONTH jenkins@$TARGETHOST:$TARGETDIR/$YEAR/
 }
 
 rsync_year(){
-	rsync -e ssh -av $YEAR jenkins@profitbricks-build7-amd64.debian.net:/var/lib/jenkins/userContent/reproducible/debian/ftp-master.debian.org/buildinfo/
+	rsync -e ssh -av $YEAR jenkins@$TARGETHOST:$TARGETDIR/
 }
 
+#
+# main
+#
+cd $SOURCEDIR
 if [ -n "$1" ] ; then
 	for i in $(seq 2016 $YEAR) ; do
 		rsync_year
