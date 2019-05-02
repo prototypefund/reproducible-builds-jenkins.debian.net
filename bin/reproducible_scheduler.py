@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 #
 # Copyright © 2015-2018 Mattia Rizzolo <mattia@mapreri.org>
-# Copyright © 2015-2018 Holger Levsen <holger@layer-acht.org>
+# Copyright © 2015-2019 Holger Levsen <holger@layer-acht.org>
 # Based on reproducible_scheduler.sh © 2014-2015 Holger Levsen <holger@layer-acht.org>
 # Licensed under GPL-2
 #
@@ -777,14 +777,7 @@ if __name__ == '__main__':
         log.info('Arch %s scheduled at %s.', arch, datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
     if message != '':
         # build the kgb message text
-        message = 'Scheduled in ' + '+'.join(SUITES) + ':\n' + message
+        message = 'Scheduled in ' + '+'.join(SUITES) + ' at ' + datetime.now().strftime("%Y-%m-%d %H:%M:%S") + ':\n' + message + '\n'
         log.info(message)
-        msg = MIMEText(message)
-        mail_from = 'jenkins@jenkins.debian.net'
-        mail_to = 'qa-jenkins-scm@lists.alioth.debian.org'
-        msg['From'] = mail_from
-        msg['To'] = mail_to
-        msg['Subject'] = 'packages scheduled for reproducible Debian'
-        s = smtplib.SMTP('localhost')
-        s.sendmail(mail_from, [mail_to], msg.as_string())
-        s.quit()
+        with open('/var/log/jenkins/reproducible-scheduler.log', 'w') as logfile:
+            logfile.write(message)

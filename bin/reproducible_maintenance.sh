@@ -643,6 +643,7 @@ if [ "$HOSTNAME" = "$MAINNODE" ] && [ $(date -u +%H) -eq 0 ]  ; then
 		/var/log/jenkins/reproducible-race-conditions.log
 		/var/log/jenkins/reproducible-diskspace-issues.log
 		/var/log/jenkins/reproducible-remote-error.log
+		/var/log/jenkins/reproducible-scheduler.log
 		/var/log/jenkins/reproducible-env-changes.log
 		/var/log/jenkins/reproducible-submit2buildinfo.debian.net.log
 		/var/log/postgresql/postgresql-9.6-main.log
