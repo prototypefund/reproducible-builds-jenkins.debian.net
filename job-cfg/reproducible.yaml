@@ -727,6 +727,7 @@
                 - 'pool_buildinfos':
                     my_description: 'Link files for buildinfos.debian.net from date to pool structure'
                     my_hname: 'profitbricks7'
+                    my_disabled: true
                     my_timed: '10 1,4,7,10,13,16,19,22 * * *'
             my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
             my_hname: ''
