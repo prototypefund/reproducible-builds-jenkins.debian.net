@@ -220,7 +220,7 @@ if [ "$HOSTNAME" = "$MAINNODE" ] ; then
 		else
 			MESSAGE="$SICK has health problems and has temporarily been marked as offline."
 		fi
-		irc_message debian-reproducible "$MESSAGE To make this permanent, edit jenkins-home/offline_nodes in git."
+		irc_message reproducible-builds "$MESSAGE To make this permanent, edit jenkins-home/offline_nodes in git."
 	fi
 	rm -f $DUMMY_FILE
 fi
