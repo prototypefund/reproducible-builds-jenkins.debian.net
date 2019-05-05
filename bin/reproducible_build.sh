@@ -587,7 +587,7 @@ EOF
 	else
 		echo "BUILDDIR=/build" >> "$TMPCFG"
 	fi
-	if [ "$SRCPACKAGE" = "debian-installer" ]; then
+	if [ "$SRCPACKAGE" = "debian-installer" -o "$SRCPACKAGE" = "debian-installer-netboot-images" ] ; then
 		# d-i needs to access to a debian-archive.  this is not possible in
 		# pbuilder, so grant complete network access to it.
 		echo "USENETWORK=yes" >> "$TMPCFG"
@@ -662,7 +662,7 @@ EOF
 	else
 		echo "BUILDDIR=/build" >> "$TMPCFG"
 	fi
-	if [ "$SRCPACKAGE" = "debian-installer" ]; then
+	if [ "$SRCPACKAGE" = "debian-installer" -o "$SRCPACKAGE" = "debian-installer-netboot-images" ] ; then
 		# d-i needs to access to a debian-archive.  this is not possible in
 		# pbuilder, so grant complete network access to it.
 		echo "USENETWORK=yes" >> "$TMPCFG"
