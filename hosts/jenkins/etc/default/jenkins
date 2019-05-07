@@ -32,6 +32,7 @@ JAVA_ARGS="$JAVA_ARGS -XX:+UseG1GC "
 
 # make jenkins listen on IPv4 address
 #JAVA_ARGS="-Djava.net.preferIPv4Stack=true"
+JAVA_ARGS="$JAVA_ARGS -Dhudson.DNSMultiCast.disabled=true"
 
 PIDFILE=/var/run/$NAME/$NAME.pid
 
