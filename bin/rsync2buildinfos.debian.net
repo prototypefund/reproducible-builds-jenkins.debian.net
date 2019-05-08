@@ -19,7 +19,7 @@ DAY="$(date -u +%d)"
 TARGETHOST="profitbricks-build7-amd64.debian.net"
 TARGETDIR="/var/lib/jenkins/userContent/reproducible/debian/ftp-master.debian.org/buildinfo"
 SOURCEDIR="/srv/ftp-master.debian.org/buildinfo/"
-LOG="~/rsync-$YEAR-$MONTH-$DAY.log"
+LOG=~/rsync-$YEAR-$MONTH-$DAY.log
 
 rsync_day(){
 	echo "$(date -u) - rsyncing .buildinfo files for $YEAR/$MONTH/$DAY..." >> $LOG
@@ -61,7 +61,7 @@ else
 	DAY="$(date -u -d '1 day ago' +%d)"
 	rsync_day
 	# output yesterdays logfile if this hasn't been done yet
-	OLDLOG="~/rsync-$YEAR-$MONTH-$DAY.log"
+	OLDLOG=~/rsync-$YEAR-$MONTH-$DAY.log
 	if [ -f "$OLDLOG" ] ; then
 		cat $OLDLOG
 		echo "$(date -u) - $OLDLOG flushed via cron output." >> $LOG
