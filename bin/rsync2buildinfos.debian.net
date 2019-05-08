@@ -9,7 +9,7 @@
 ### this is running on coccia.debian.org via holger's crontab:	###
 ###								###
 ### # m h  dom mon dow   command				###
-### 0 1,7,13,19 * * *  ~holger/rsync2buildinfos.debian.net     ###
+### 0 */2 * * *  ~holger/rsync2buildinfos.debian.net   ###
 ###								###
 ###################################################################
 
