@@ -60,6 +60,7 @@ else
 	MONTH="$(date -u -d '1 day ago' +%m)"
 	DAY="$(date -u -d '1 day ago' +%d)"
 	rsync_day
+	echo "======================================================================" >> $LOG
 	# output yesterdays logfile if this hasn't been done yet
 	OLDLOG="$HOME/rsync-$YEAR-$MONTH-$DAY.log"
 	if [ -f "$OLDLOG" ] ; then
