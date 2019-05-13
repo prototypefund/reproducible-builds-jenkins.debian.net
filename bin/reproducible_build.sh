@@ -597,7 +597,7 @@ EOF
 	sudo timeout -k 18.1h 18h /usr/bin/ionice -c 3 /usr/bin/nice \
 	  /usr/sbin/pbuilder --build \
 		--configfile $TMPCFG \
-		--debbuildopts "-b --buildinfo-id=${ARCH}" \
+		--debbuildopts "-b" \
 		--basetgz /var/cache/pbuilder/$SUITE-reproducible-base.tgz \
 		--buildresult $TMPDIR/b1 \
 		--logfile b1/build.log \
@@ -684,7 +684,7 @@ EOF
 		/usr/sbin/pbuilder --build \
 			--configfile $TMPCFG \
 			--hookdir /etc/pbuilder/rebuild-hooks \
-			--debbuildopts "-b --buildinfo-id=${ARCH}" \
+			--debbuildopts "-b" \
 			--basetgz /var/cache/pbuilder/$SUITE-reproducible-base.tgz \
 			--buildresult $TMPDIR/b2 \
 			--logfile b2/build.log \
