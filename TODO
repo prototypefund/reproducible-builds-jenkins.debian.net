@@ -92,6 +92,17 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 <Ramereth> we currently have it running all the time on all physical nodes
 ----
 
+=== Debian rebuilder
+
+* run jenkins job on pb7 (=buildinfos.d.n)
+* keep data in sqlite on pb7
+** table shoud have these fields:
+** src-pkg, binary-pkg, sha1 of .deb on ftp.d.o, sha1 of .buildinfo file (signed), sha1 of .buildinfo file (unsigned or signature stripped), signature type, name of .buildinfo file (from ftp.d.o)
+*** and either architecture of .deb or filename of .deb (as that includes the architecture)
+* export data as .json via https
+* import data on jenkins
+* schedule/trigger rebuilds on osuosl173, put data in sqlite on pb7
+
 === upgrades to buster
 
 * only done on osuosl174 yet. 
