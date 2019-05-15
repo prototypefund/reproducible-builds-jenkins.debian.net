@@ -636,6 +636,7 @@ fi
 if [ -f jenkins-nodes-home/authorized_keys.$HOSTNAME ] ; then
 	cat jenkins-nodes-home/authorized_keys.$HOSTNAME | sudo tee -a /var/lib/jenkins/.ssh/authorized_keys
 fi
+sudo -u jenkins cp jenkins-home/gitconfig /var/lib/jenkins/.gitconfig
 sudo -u jenkins cp jenkins-home/ssh_config.in /var/lib/jenkins/.ssh/config
 nodes/gen_ssh_config | sudo -u jenkins tee -a /var/lib/jenkins/.ssh/config > /dev/null
 nodes/gen_known_host_file | sudo tee /etc/ssh/ssh_known_hosts > /dev/null
@@ -696,14 +697,6 @@ if [ "$HOSTNAME" = "jenkins" ] || [ "$HOSTNAME" = "jenkins-test-vm" ] ; then
 		fi
 	done
 	explain "jenkins jobs updated."
-fi
-
-#
-# configure git for jenkins
-#
-if [ "$(sudo su - jenkins -c 'git config --get user.email')" != "jenkins@jenkins.debian.net" ] ; then
-	sudo su - jenkins -c "git config --global user.email jenkins@jenkins.debian.net"
-	sudo su - jenkins -c "git config --global user.name Jenkins"
 fi
 
 #
