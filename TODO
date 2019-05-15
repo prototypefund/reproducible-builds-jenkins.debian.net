@@ -94,6 +94,7 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 
 === Debian rebuilder
 
+* prototype only dealing with buster and amd64 (and arch all packages)
 * run jenkins job on pb7 (=buildinfos.d.n)
 * keep data in sqlite on pb7
 ** table shoud have these fields:
