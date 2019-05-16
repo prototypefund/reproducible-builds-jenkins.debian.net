@@ -51,7 +51,7 @@
           my_trigger: '{name}_buster'
           my_origin_triggers: &default_git_triggers
             - pollscm:
-                cron: '* H/15 * * *'
+                cron: 'H/15 * * * *'
       - buster: &distro_defaults_buster
           my_trigger: '{name}_stretch'
       - stretch: &distro_defaults_stretch {}
