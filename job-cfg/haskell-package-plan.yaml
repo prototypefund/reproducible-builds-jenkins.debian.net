@@ -29,6 +29,7 @@
           fail-on-error: 'false'
       - email:
           recipients: '{my_recipients}'
+      - gitlab-notifier: {}
       - plot:
           - title: Stats
             yaxis: Packages
@@ -64,8 +65,8 @@
     defaults: haskell-package-plan
     name: '{name}'
     triggers:
-      - pollscm:
-          cron: '*/6 * * * *'
+      - gitlab:
+          secret-token: '{{AQAAABAAAAAw9eKwPNjgxpBaIGFw7ENyGiFn/g86pUHU1Bj2FhgMZ/BNIUJFbUUx7Tp2JubWJVEZl4EufkudMPewFSM6rZk9Kg==}}'
       - timed: '0 16 * * *'    # every day at 16:00 UTC
 
 - project:
