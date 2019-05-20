@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 # generally interesting: BUILD_* JENKINS_* JOB_* but most is in BUILD_URL, so:
 export | egrep "(BUILD_URL=)"
 TMPFILE=$(mktemp)
