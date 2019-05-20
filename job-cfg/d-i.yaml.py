@@ -262,6 +262,7 @@ def jobspec_manual(key, name, desc, defaults=None,
                              lang, fmt, po] if p != '']
     j = {'scm': [{'git': {
                 'url': 'https://salsa.debian.org/installer-team/installation-guide.git',
+                'wipe-workspace': False,
                 'branches': ['master'], 'basedir': 'manual'}}],
          'project-type': 'freestyle',
          'builders': [{'shell': ' '.join(shell_cmd)}],
