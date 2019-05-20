@@ -163,34 +163,16 @@ jobs = [
 ]
 
 if "jenkins-test-vm" == os.uname()[1]:
-    pkgs = [ 'debian-installer', 'preseed', 'debootstrap', 'debian-installer-utils', 'rootskel' ]
-    jobs = [ '{name}_build-group' ]
-
-def scm_svn(po, inc_regs=None):
-    if inc_regs is None:
-        inc_regs = [ os.path.join('/trunk/manual/',
-                                  'po' if po else '', '{lang}', '.*') ]
-
-    return [{'svn':
-             {'excluded-commit-messages': '',
-              'url': 'svn://anonscm.debian.org/svn/d-i/trunk',
-              'basedir': '.',
-              'workspaceupdater': 'update',
-              'included-regions': inc_regs,
-              'excluded-users': '',
-              'exclusion-revprop-name': '',
-              'excluded-regions': '',
-              'viewvc-url': 'http://anonscm.debian.org/viewvc/d-i/trunk'}}]
-
-
-manual_includes = [ '/trunk/manual/debian/.*', '/trunk/manual/po/.*', '/trunk/manual/doc/.*', '/trunk/manual/scripts/.*' ]
+    pkgs = ['debian-installer', 'preseed', 'debootstrap', 'debian-installer-utils', 'rootskel']
+    jobs = ['{name}_build-group']
 
 desc_str = {
     'html': (
         'Builds the {langname} html version of the installation-guide '
-        'for all architectures. Triggered by SVN commits to '
-        '<code>svn://anonscm.debian.org/svn/d-i/trunk/manual{popath}/{lang}/'
-        '</code>. After successful build '
+        'for all architectures. Triggered by Git commits to '
+        '<a href="https://salsa.debian.org/installer-team/installation-guide">'
+        'https://salsa.debian.org/installer-team/installation-guide</a>. '
+        'After successful build '
         '<a href="https://jenkins.debian.net/job/d-i_manual_{lang}_pdf">'
         'd-i_manual_{lang}_pdf</a> is triggered.'),
     'pdf': (
@@ -200,10 +182,11 @@ desc_str = {
         '<a href="https://jenkins.debian.net/job/d-i_manual_{lang}_html">'
         'd-i_manual_{lang}_html</a>.'),
     'instguide': (
-        'Builds the installation-guide package. Triggered by SVN commits to '
-        '<code>svn://anonscm.debian.org/svn/d-i/</code> '
-        'matching these patterns: <pre>' + str(manual_includes) + '</pre>')
-    }
+        'Builds the installation-guide package. Triggered by Git commits to '
+        '<a href="https://salsa.debian.org/installer-team/installation-guide">'
+        'https://salsa.debian.org/installer-team/installation-guide</a>.'
+    )
+}
 
 
 def lr(keep):
@@ -272,12 +255,14 @@ def jtmpl(act, target, fmt=None, po=''):
     return {'job-template': {'name': '_'.join(n), 'defaults': '-'.join(d)}}
 
 
-def jobspec_svn(key, name, desc, defaults=None,
-                priority=120, logkeep=None, trigger=None, publishers=None,
-                lang='', fmt='', po='', inc_regs=None):
+def jobspec_manual(key, name, desc, defaults=None,
+                   priority=120, logkeep=None, trigger=None, publishers=None,
+                   lang='', fmt='', po=''):
     shell_cmd = [p for p in ['/srv/jenkins/bin/d-i_manual.sh',
                              lang, fmt, po] if p != '']
-    j = {'scm': scm_svn(po=po, inc_regs=inc_regs),
+    j = {'scm': [{'git': {
+                'url': 'https://salsa.debian.org/installer-team/installation-guide.git',
+                'branches': ['master']}}],
          'project-type': 'freestyle',
          'builders': [{'shell': ' '.join(shell_cmd)}],
          'properties': prop(priority=priority),
@@ -337,7 +322,8 @@ for f in ['html', 'pdf']:
         if po != '':
             n.append(po)
         data.append(
-            jobspec_svn(key='defaults',
+            jobspec_manual(
+                        key='defaults',
                         name='-'.join(n),
                         lang='{lang}',
                         fmt=f,
@@ -348,20 +334,21 @@ for f in ['html', 'pdf']:
                         logkeep=90))
         templs.append(jtmpl(act='manual', target='{lang}', fmt=f, po=po))
 
-data.append(gen_default( name='{name}-{act}'))
+data.append(gen_default(name='{name}-{act}'))
 
 templs.append(jtmpl(act='{act}', target='{pkg}'))
 data.extend(templs)
 
 data.append(
-    jobspec_svn(key='job-template',
+    jobspec_manual(
+                key='job-template',
                 defaults='d-i',
                 name='{name}_manual',
                 desc=desc_str['instguide'],
                 trigger='{trg}',
                 priority=125,
                 publishers=[publ_email(irc='debian-boot')],
-                inc_regs=manual_includes))
+    ))
 
 data.append(
     {'job-template': {
