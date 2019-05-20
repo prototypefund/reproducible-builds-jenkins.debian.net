@@ -117,6 +117,9 @@ def is_target_in_distro(distro, target):
     # parl-desktop* and design-desktop* packages only exist since stretch
     elif distro in ('jessie') and (target[:12] == 'parl-desktop' or target[:14] == 'design-desktop'):
         return False
+    # parl-desktop* packages have been removed from stretch.
+    elif distro in ('stretch') and target[:12] == 'parl-desktop':
+        return False
     # education-desktop-lxqt, education-primaryschool and education-video packages only exist since buster
     elif distro in ('jessie', 'stretch') and target in ('education-desktop-lxqt', 'education-primaryschool', 'education-video'):
         return False
