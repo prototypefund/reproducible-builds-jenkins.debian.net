@@ -69,20 +69,11 @@ if [ "${0:0:5}" != "/tmp/" ] ; then
 		#	for BLOCKER in 869155 867695 ; do
 		#		abort_if_bug_is_still_open $BLOCKER
 		#	done ;;
-		chroot-installation_sid_install_parl*|chroot-installation_buster_install_parl-*)
-			abort_if_bug_is_still_open 886676 ;;
 		chroot-installation_buster_install_design*)
 			# technically these two bugs dont affect design-desktop
 			# but just a depends of it, however I don't think it's likely
 			# design-desktop will enter buster without these two bugs being fixed
-			abort_if_bug_is_still_open 890754
-			abort_if_bug_is_still_open 879034 ;;
-		chroot-installation_sid_install_design-desktop-graphics)
-			abort_if_bug_is_still_open 910812 ;;
-		chroot-installation_stretch_install_education-mathematics_upgrade_to_buster)
-			abort_if_bug_is_still_open 910819 ;;
-		chroot-installation_sid_*education-ltsp*|chroot-installation_buster_*education-ltsp*)
-			abort_if_bug_is_still_open 917633 ;;
+			abort_if_bug_is_still_open 890754 ;;
 		chroot-installation_stretch_install_education-desktop-gnome_upgrade_to_buster|chroot-installation_stretch_install_education-desktop-xfce_upgrade_to_buster|chroot-installation_stretch_install_education-networked_upgrade_to_buster)
 			abort_if_bug_is_still_open 928429 ;;
 		*) ;;
