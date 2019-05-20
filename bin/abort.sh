@@ -3,7 +3,7 @@
 set -e
 
 # generally interesting: BUILD_* JENKINS_* JOB_* but most is in BUILD_URL, so:
-export | grep -E "(BUILD_URL=)"
+export | grep -E "(BUILD_URL=)" || :
 TMPFILE=$(mktemp)
 trap 'rm "$TMPFILE"' EXIT
 
