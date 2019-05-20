@@ -83,6 +83,8 @@ if [ "${0:0:5}" != "/tmp/" ] ; then
 			abort_if_bug_is_still_open 910819 ;;
 		chroot-installation_sid_*education-ltsp*|chroot-installation_buster_*education-ltsp*)
 			abort_if_bug_is_still_open 917633 ;;
+		chroot-installation_stretch_install_education-desktop-gnome_upgrade_to_buster|chroot-installation_stretch_install_education-desktop-xfce_upgrade_to_buster|chroot-installation_stretch_install_education-networked_upgrade_to_buster)
+			abort_if_bug_is_still_open 928429 ;;
 		*) ;;
 	esac
 	# mktemp some place for us...
