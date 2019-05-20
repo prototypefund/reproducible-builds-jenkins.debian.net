@@ -61,7 +61,7 @@ if [ "${0:0:5}" != "/tmp/" ] ; then
 	if [ -n "$JOB_NAME" ] ; then
 		WHOAREWE=$JOB_NAME
 	else
-		WHOAREWE=${SSH_ORIGINAL_COMMAND}
+		WHOAREWE=${SSH_ORIGINAL_COMMAND/%\ */}
 	fi
 	# abort certain jobs if we know they will fail due to certain bugs…
 	case $WHOAREWE in
