@@ -23,7 +23,8 @@ jobs-names.txt: $(OUTS)
 	sed -n 's/^INFO:jenkins_jobs.builder:Job name:  //p' $(OUTS) > $@
 
 zombie-names.txt: jobs-names.txt ~jenkins/jobs/
-	ls ~jenkins/jobs/ | grep -f jobs-names.txt -F -v > $@
+	ls ~jenkins/jobs/ | grep -f jobs-names.txt -F -x -v > $@
+	@if [ -s $@ ]; then echo "@@ ZOMBIE FOUND: @@" ; cat $@ ; fi
 
 clean:
-	-rm $(OUTPUTS)
+	-$(RM) $(OUTPUTS)
