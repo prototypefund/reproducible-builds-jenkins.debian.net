@@ -173,7 +173,11 @@ if [ "$HOSTNAME" = "$MAINNODE" ] ; then
 		esac
 		touch -d "$FORCE_DATE" $DUMMY_FILE
 		case $NODE_ARCH in
-			amd64)	NODE="profitbricks-build${NODE_ALIAS#profitbricks}-amd64.debian.net" ;;
+			amd64)
+				case "$NODE_ALIAS" in
+					(profitbricks*) NODE="profitbricks-build${NODE_ALIAS#profitbricks}-amd64.debian.net" ;;
+					(osuosl*) NODE="osuosl-build${NODE_ALIAS#osuosl}-amd64.debian.net" ;;
+				esac ;;
 			i386)	NODE="profitbricks-build${NODE_ALIAS#profitbricks}-i386.debian.net" ;;
 			arm64)	NODE="codethink-sled${NODE_ALIAS#codethink}-arm64.debian.net" ;;
 			armhf)	NODE="${NODE_ALIAS}-armhf-rb.debian.net" ;;
