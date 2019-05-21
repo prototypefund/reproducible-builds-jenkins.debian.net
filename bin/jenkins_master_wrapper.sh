@@ -75,6 +75,11 @@ ssh -o "BatchMode = yes" $NODE_NAME "$PARAMS" || {
 	printf "\nSSH EXIT CODE: %s\n" $RETVAL
 }
 
+if [ "$RETVAL" -eq 123 ]; then
+	# special code passed returned by the remote abort.sh
+	exec /srv/jenkins/bin/abort.sh
+fi
+
 # grab artifacts and tidy up at the other end
 if [ "$RETRIEVE_ARTIFACTS" = "yes" ] ; then
 	RESULTS="$WORKSPACE/workspace/$JOB_NAME/results"
