@@ -4,7 +4,7 @@
 
 # There doesn't seem to be any better way to figure out the agent name
 # from here, let's just hope all WORKSPACE have been set correctly
-NODE_NAME="$(basename ${WORKSPACE})"
+NODE_NAME="$(basename "${WORKSPACE}")"
 
 echo "Starting agent.jar for ${NODE_NAME}..."
 
@@ -17,5 +17,6 @@ if [ -f "$f" ]; then
 fi
 
 echo "This jenkins agent.jar will run as PID $$."
-export JAVA_ARGS="-Xms1G -Xmx2G"
+JAVA_ARGS="-Xms1G -Xmx2G"
+# shellcheck disable=SC2086
 exec java $JAVA_ARGS -jar /var/lib/jenkins/agent.jar
