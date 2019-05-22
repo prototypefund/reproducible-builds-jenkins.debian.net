@@ -229,7 +229,7 @@ if [ "$HOSTNAME" = "$MAINNODE" ] ; then
 	rm -f $DUMMY_FILE
 fi
 
-echo "$(date -u) - updating the schroots and pbuilder now..."
+echo "$(date -u) - updating the chdists, schroots and pbuilder now..."
 # use host architecture (only)
 ARCH=$(dpkg --print-architecture)
 # use host apt proxy configuration for pbuilder
