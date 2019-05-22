@@ -94,6 +94,9 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 === Debian rebuilder
 
 * prototype only dealing with buster and amd64 (and arch all packages)
+** this is true for the rebuilder part, but .buildinfo files for all Debian architectures should be tracked in the db
+** also treat the base suite archive and its security, update and backports archives seperatly
+** good examples: piuparts (arch and any), d-e-i (udeb), d-e-c (all only), emacs (epoch)
 * run jenkins job on pb7 (=buildinfos.d.n)
 * keep data in sqlite on pb7
 ** table shoud have these fields:
