@@ -67,7 +67,7 @@ build_nodes_health_page() {
 			if [ "$NODE" = "profitbricks-build6-i386.debian.net" ] ; then
 				# pb9 	rebootstrap jobs
 				# pb10	chroot jobs
-				REPRODUCIBLE_NODES="$REPRODUCIBLE_NODES profitbricks-build9-amd64.debian.net profitbricks-build10-amd64.debian.net"
+				REPRODUCIBLE_NODES="$REPRODUCIBLE_NODES profitbricks-build7-amd64.debian.net profitbricks-build9-amd64.debian.net profitbricks-build10-amd64.debian.net"
 			fi
 		done
 		for NODE in $REPRODUCIBLE_NODES ; do
