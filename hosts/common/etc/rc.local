@@ -69,7 +69,7 @@ echo "$(date -u) - system was rebooted" | mail -s "$MESSAGE" root
 # notify jenkins reboots on irc
 #
 if [ "$(hostname)" = "jenkins" ] ; then
-	for channel in debian-qa debian-reproducible ; do
+	for channel in debian-qa reproducible-builds ; do
 		kgb-client --conf /srv/jenkins/kgb/$channel.conf --relay-msg "$MESSAGE"
 	done
 fi
