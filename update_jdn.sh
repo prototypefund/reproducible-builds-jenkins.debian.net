@@ -244,7 +244,6 @@ if [ -f /etc/debian_version ] ; then
 			bsd-mailx
 			curl
 			debian-archive-keyring
-			debootstrap/stretch-backports
 			cdebootstrap-
 			devscripts
 			eatmydata
@@ -259,14 +258,10 @@ if [ -f /etc/debian_version ] ; then
 			lsof
 			molly-guard
 			moreutils
-			munin-node/stretch-backports
-			munin-plugins-core/stretch-backports
-			munin-plugins-extra/stretch-backports
 			needrestart
 			netcat-traditional
 			ntp
 			ntpdate
-			pbuilder/stretch-backports
 			pigz 
 			postfix
 			procmail
@@ -285,6 +280,23 @@ if [ -f /etc/debian_version ] ; then
 			vim 
 			zsh
 			"
+		case $HOSTNAME in
+			# running buster already
+			osuosl-build174-amd64) DEBS="$DEBS
+				debootstrap
+				munin-node
+				munin-plugins-core
+				munin-plugins-extra
+				pbuilder
+				" ;;
+			*) DEBS="$DEBS
+				debootstrap/stretch-backports
+				munin-node/stretch-backports
+				munin-plugins-core/stretch-backports
+				munin-plugins-extra/stretch-backports
+				pbuilder/stretch-backports
+				" ;;
+		esac
 		case $HOSTNAME in
 			# needed for rebuilding Debian (using .buildinfo files)
 			osuosl-build173-amd64) DEBS="$DEBS libdpkg-perl libwww-mechanize-perl sbuild" ;;
