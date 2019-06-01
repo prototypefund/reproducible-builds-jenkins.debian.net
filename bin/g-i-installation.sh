@@ -177,7 +177,7 @@ show_preseed() {
 	outside_url="$(echo $qemu_url|sed -s 's#10\.0\.2\.1#jenkins.debian.net#g')"
 	echo "Preseeding from $outside_url:"
 	echo
-	curl -s "$jenkins_url" | grep -v ^# | grep -v "^$"
+	curl -s -L "$jenkins_url" | grep -v ^# | grep -v "^$"
 }
 
 bootstrap_system() {
