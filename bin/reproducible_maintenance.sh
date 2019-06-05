@@ -311,6 +311,24 @@ for s in $SUITES ; do
 done
 set -e
 
+# for alpine
+set +e
+case $HOSTNAME in
+	osuosl-build169*|osuosl-build170*|jenkins)
+		echo "$(date -u) - updating alpine schroot now."
+		schroot --directory /tmp -c source:jenkins-reproducible-alpine -u root -- apk update
+		RESULT=$?
+		if [ $RESULT -eq 1 ] ; then
+			echo "Warning: failed to update alpine schroot."
+			DIRTY=true
+		else
+			echo "$(date -u) - updating alpine schroot done."
+		fi
+		;;
+	*)	;;
+esac
+set -e
+
 # for Arch Linux
 set +e
 case $HOSTNAME in
