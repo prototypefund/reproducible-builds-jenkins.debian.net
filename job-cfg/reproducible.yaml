@@ -692,6 +692,18 @@
                     my_timed: '42 23 * * 4'
                     my_recipients: 'jenkins+reproducible-builds qa-jenkins-scm@lists.alioth.debian.org'
                     my_shell: '/srv/jenkins/bin/reproducible_freebsd.sh'
+                - 'setup_schroot_alpine_jenkins':
+                    my_description: 'Setup an alpine schroot to test alpine packages for reproducibility.'
+                    my_timed: '42 23 1 1 *'
+                    my_shell: '/srv/jenkins/bin/reproducible_setup_alpine_schroot.sh'
+                - 'setup_schroot_alpine_osuosl169':
+                    my_description: 'Setup an alpine schroot to test alpine packages for reproducibility.'
+                    my_timed: '42 23 1 1 *'
+                    my_hname: 'osuosl169'
+                - 'setup_schroot_alpine_osuosl170':
+                    my_description: 'Setup an alpine schroot to test alpine packages for reproducibility.'
+                    my_timed: '42 23 1 1 *'
+                    my_hname: 'osuosl170'
                 - 'setup_schroot_archlinux_jenkins':
                     my_description: 'Setup an Arch Linux schroot to test Arch Linux packages for reproducibility.'
                     my_timed: '42 23 1 1 *'

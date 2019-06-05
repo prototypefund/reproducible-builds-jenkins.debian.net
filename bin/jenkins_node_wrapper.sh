@@ -139,6 +139,8 @@ elif [[ "$*" =~ ^reproducible_netbsd ]] ; then
 	exec /srv/jenkins/bin/reproducible_netbsd.sh ; croak "Exec failed";
 elif [[ "$*" =~ ^reproducible_freebsd ]] ; then
 	exec /srv/jenkins/bin/reproducible_freebsd.sh ; croak "Exec failed";
+elif [[ "$*" =~ ^reproducible_setup_schroot_alpine ]] ; then
+	exec /srv/jenkins/bin/reproducible_setup_alpine_schroot.sh ; croak "Exec failed";
 elif [[ "$*" =~ ^reproducible_setup_schroot_archlinux ]] ; then
 	exec /srv/jenkins/bin/reproducible_setup_archlinux_schroot.sh ; croak "Exec failed";
 elif [[ "$*" =~ ^reproducible_fdroid_build_apps ]] ; then
