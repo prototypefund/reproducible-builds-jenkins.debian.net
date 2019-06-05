@@ -29,13 +29,13 @@ bootstrap() {
 		exit 1
 	fi
 
-	rm -f "$LATEST_MINIROOT"
+	rm -f "./$LATEST_MINIROOT"
 
 	echo "$(date -u) - downloading alpine minirootfs"
 	curl -fO "$ALPINE_MIRROR/$LATEST_MINIROOT"
 
 	echo "$(date -u) - extracting alpine minirootfs"
-	sudo tar xzf "$LATEST_MINIROOT" -C "$SCHROOT_BASE/$TARGET.new"
+	sudo tar xzf "./$LATEST_MINIROOT" -C "$SCHROOT_BASE/$TARGET.new"
 
 	if [ -d "$SCHROOT_BASE/$TARGET" ]; then
 		mv "$SCHROOT_BASE/$TARGET" "$SCHROOT_BASE/$TARGET.old"
@@ -43,7 +43,7 @@ bootstrap() {
 	fi
 	mv "$SCHROOT_BASE/$TARGET.new" "$SCHROOT_BASE/$TARGET"
 
-	rm -f "$LATEST_MINIROOT"
+	rm -f "./$LATEST_MINIROOT"
 
 	# write the schroot config
 	echo "$(date -u ) - writing schroot configuration for $TARGET."
