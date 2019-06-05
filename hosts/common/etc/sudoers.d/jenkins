@@ -9,7 +9,7 @@ jenkins ALL=  \
 	/bin/chmod +x /chroots/*, \
 	/bin/tar -c --exclude ./sys/\* --exclude ./proc/\* -f /schroots/*, \
         /bin/tar xzf archlinux-bootstrap-*tar.gz -C /schroots, \
-        /bin/tar xzf ./alpine-minirootfs-*.tar.gz -C /schroots/alpine.new, \
+        /bin/tar xzf ./alpine-minirootfs-*.tar.gz -C /schroots/reproducible-alpine.new, \
 	/usr/sbin/chroot /schroots/*, \
 	/usr/sbin/chroot /chroots/*, \
 	/usr/sbin/chroot /media/*, \
