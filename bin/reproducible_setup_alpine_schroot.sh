@@ -35,6 +35,7 @@ bootstrap() {
 	curl -fO "$ALPINE_MIRROR/$LATEST_MINIROOT"
 
 	echo "$(date -u) - extracting alpine minirootfs"
+	mkdir -p "$SCHROOT_BASE/$TARGET.new"
 	sudo tar xzf "./$LATEST_MINIROOT" -C "$SCHROOT_BASE/$TARGET.new"
 
 	if [ -d "$SCHROOT_BASE/$TARGET" ]; then
