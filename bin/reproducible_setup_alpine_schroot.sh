@@ -82,6 +82,9 @@ echo "==========================================================================
 echo "Setting up schroot $TARGET on $HOSTNAME"...
 echo "============================================================================="
 
+# fix permissions
+$ROOTCMD chmod 0755 /
+
 # configure proxy everywhere
 sudo tee "$SCHROOT_BASE/$TARGET/etc/profile.d/proxy.sh" <<-__END__
 	export http_proxy=$http_proxy
