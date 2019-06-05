@@ -97,7 +97,7 @@ sudo tee "$SCHROOT_BASE/$TARGET/etc/profile.d/proxy.sh" <<-__END__
 	__END__
 
 # install sdk
-$ROOTCMD apk add alpine-sdk
+$ROOTCMD apk add alpine-sdk gnupg
 
 # configure sudo
 echo 'jenkins ALL= NOPASSWD: /sbin/apk *' | $ROOTCMD tee -a /etc/sudoers
