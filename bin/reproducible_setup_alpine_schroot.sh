@@ -113,7 +113,6 @@ fi
 $USERCMD gpg --check-trustdb # first run will create ~/.gnupg/gpg.conf
 echo "keyserver-options auto-key-retrieve" | tee -a "$SCHROOT_BASE/$TARGET/var/lib/jenkins/.gnupg/gpg.conf"
 
-$ROOTCMD addgroup jenkins abuild
 $USERCMD abuild-keygen -a -i -n
 
 # Disable SSL verification for future builds
