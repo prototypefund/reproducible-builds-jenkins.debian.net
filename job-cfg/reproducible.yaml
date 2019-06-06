@@ -565,6 +565,10 @@
                 - 'alpine_scheduler':
                     my_description: 'Scheduler for alpine reproducibility tests'
                     my_timed: '0 H/4 * * *'
+                - 'archlinux_json':
+                    my_description: 'Generate https://tests.reproducible-builds.org/archlinux/reproducible.json for Arch Linux.'
+                    my_timed: '1 H/2 * * *'
+                    my_shell: "/srv/jenkins/bin/reproducible_json.py --distro archlinux"
                 - 'html_archlinux':
                     my_description: 'Build webpages for Arch Linux reproducibility tests'
                     my_timed: '15,45 * * * *'
