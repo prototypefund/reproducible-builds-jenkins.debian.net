@@ -1,0 +1,82 @@
+Developing jenkins.debian.net
+========================
+:Author:           Holger Levsen
+:Authorinitials:   holger
+:EMail:            holger@layer-acht.org
+:Status:           working, in progress
+:lang:             en
+:Doctype:          article
+:License:          GPLv2
+
+
+=== Setup of standalone tests.reproducible-builds.org for development
+
+If you'd like to run tests.repoducible-builds.org without the rest of the jenkins set up, here are some necessary steps. Note that most of these steps are performed in the update_jdn.sh script, so if you have a test system it might be simpler to just run it.
+
+Your clone of the jenkins git (https://salsa.debian.org/qa/jenkins.debian.net) will be referred to as $JENKINSGIT.
+
+==== Dependencies, users, directories and files
+
+Some dependencies:
+----
+sudo apt install python3 python3-psycopg2 python3-rpy2 python3-yaml sqlite3 dctrl-tools
+----
+
+Create a user jenkins for testing. Create the following directories:
+----
+sudo mkdir -p /var/lib/jenkins/userContent/reproducible/ /srv/reproducible-results/ /srv/workspace /schroots /chroots
+----
+
+Create the following symlinks:
+----
+ln -s $JENKINSGIT/bin /srv/jenkins/bin/ 
+ln -s $JENKINSGIT/userContent/reproducible/static /var/lib/jenkins/userContent/reproducible/static/
+----
+
+Additional, give user jenkins write access to the root $JENKINSGIT directory and following directory trees:
+
+* /srv/reproducible-results/...
+* /var/lib/jenkins/...
+* /srv/workspace/...
+* $JENKINSGIT/userContent/...
+* $JENKINSGIT/bin/...
+
+==== Database
+
+Get a recent copy of the database from:
+----
+wget https://tests.reproducible-builds.org/reproducible.sql.xz
+----
+
+The database is kept using PostgreSQL and initialised by running /srv/jenkins/bin/reproducible_db_maintenance.py manually as the jenkins user.
+
+==== Websites scripts
+
+The $JENKINSGIT/bin/reproducible_html_*.py and $JENKINSGIT/bin/reproducible_html_*.sh scripts produce the debian pages and you probably want to run all of them at least once. Below are the requirements for some scripts.
+
+All webpages will be served out of /var/lib/jenkins/userContent/reproducible and you need to point a webserver to this directory. Build the reproducible dashboard for debian with the $JENKINSGIT/bin/reproducible_html_dashboard.sh, and navigate to <host>/debian/reproducible.html in your browser.
+
+*Requirements for $JENKINSGIT/bin/reproducible_html_dashboard.sh*
+
+Before running, create the following directories and files:
+----
+sudo mkdir /srv/reproducible-results/node-information/
+for i in i386 amd64 arm64 armhf ; do touch /srv/reproducible-results/node-information/dummy_$i ; done
+----
+
+And run the following script as user jenkins:
+----
+$JENKINSGIT/bin/reproducible_html_repository_comparison.sh
+----
+
+*Requirements for $JENKINSGIT/bin/reproducible_html_notes.py*
+
+This script construct pages that contain notes about the ongoing status and causes of nondeterminism for a package. These pages can be accessed at <host>/debian/notes/<package>_note.html
+
+First, clone the notes git repo:
+git clone https://salsa.debian.org/reproducible-builds/reproducible-notes
+
+Create symlinks for the the files *packages.yml* and *issues.yml* in your $JENKINSGIT/bin/ directory.
+
+// vim: set filetype=asciidoc:
+
