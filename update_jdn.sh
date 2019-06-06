@@ -607,6 +607,10 @@ fi
 # add some users to groups after packages have been installed
 if ! $UP2DATE ; then
 	case $HOSTNAME in
+		osuosl-build170-amd64)
+			sudo addgroup --system --gid 300 abuild
+			sudo adduser jenkins abuild
+			;;
 		osuosl-build173-amd64)		sudo adduser jenkins sbuild ;;
 		*) 				;;
 	esac
