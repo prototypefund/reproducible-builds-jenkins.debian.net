@@ -97,7 +97,7 @@ sudo tee "$SCHROOT_BASE/$TARGET/etc/profile.d/proxy.sh" <<-__END__
 	__END__
 
 # install sdk
-$ROOTCMD apk add alpine-sdk gnupg
+$ROOTCMD apk add alpine-sdk lua-aports gnupg
 
 # configure sudo
 echo 'jenkins ALL= NOPASSWD: /sbin/apk *' | $ROOTCMD tee -a /etc/sudoers
@@ -117,6 +117,9 @@ echo "keyserver-options auto-key-retrieve" | tee -a "$SCHROOT_BASE/$TARGET/var/l
 if [ "$HOSTNAME" = "osuosl-build170-amd64" ] ; then
 	export GIT_SSL_NO_VERIFY=1
 fi
+
+echo "$(date -u) - cloning aports repo"
+$USERCMD git clone https://git.alpinelinux.org/aports.git /var/lib/jenkins/aports
 
 echo "============================================================================="
 echo "schroot $TARGET set up successfully in $SCHROOT_BASE/$TARGET - exiting now."

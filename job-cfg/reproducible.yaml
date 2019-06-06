@@ -562,11 +562,14 @@
                     my_description: 'Generate https://reproducible.debian.net/userContent/reproducible.json for consumption by tracker.debian.org.'
                     my_timed: '1 H/2 * * *'
                     my_shellext: ".py"
+                - 'alpine_scheduler':
+                    my_description: 'Scheduler for alpine reproducibility tests'
+                    my_timed: '0 H/4 * * *'
                 - 'html_archlinux':
                     my_description: 'Build webpages for Arch Linux reproducibility tests'
                     my_timed: '15,45 * * * *'
                 - 'archlinux_scheduler':
-                    my_description: 'Scheduler for for Arch Linux reproducibility tests'
+                    my_description: 'Scheduler for Arch Linux reproducibility tests'
                     my_timed: '0 H/4 * * *'
                 - 'html_fedora-23_x86_64':
                     my_description: 'Build a simple webpage for Fedora 23 reproducibility tests'

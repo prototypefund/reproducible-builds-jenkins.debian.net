@@ -55,6 +55,11 @@ mkdir -p "$DEBIAN_BASE"
 # existing usertags in the Debian BTS
 USERTAGS="toolchain infrastructure timestamps fileordering buildpath username hostname uname randomness buildinfo cpu signatures environment umask ftbfs locale"
 
+# common settings for testing alpine
+ALPINE_REPOS="main community"
+ALPINE_PKGS=/srv/reproducible-results/alpine_pkgs
+ALPINE_BASE="$BASE/alpine"
+
 # common settings for testing Arch Linux
 ARCHLINUX_REPOS="core extra multilib community"
 ARCHLINUX_PKGS=/srv/reproducible-results/archlinux_pkgs
