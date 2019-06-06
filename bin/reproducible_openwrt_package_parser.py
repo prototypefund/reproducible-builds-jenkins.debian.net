@@ -1,5 +1,6 @@
 #!/usr/bin/env python
-# Copyright Alexander Couzens <lynxis@fe80.eu> 2018
+# -*- coding: utf-8 -*-
+# Copyright Alexander Couzens <lynxis@fe80.eu> 2018, 2019
 #
 # under the GPL2
 #
@@ -78,88 +79,109 @@ def insert_into_db(result, suite='trunk'):
     same, alone_a, alone_b, differ = result
 
     distributions = db_table('distributions')
-    results = db_table('results')
-    sources = db_table('sources')
+    results_tbl = db_table('results')
+    sources_tbl = db_table('sources')
 
     distro_id = query_db(
         select([distributions.c.id]).where(distributions.c.name == 'openwrt')
         )[0][0]
 
-    # Delete all old data
-    transaction = conn_db.begin()
-    d = results.delete(results.c.package_id.in_(
-        select([sources.c.id]).select_from(sources).where(sources.c.distribution == distro_id)
-    ))
-    query_db(d)
-    d = sources.delete(sources.c.distribution == distro_id)
-    query_db(d)
-    transaction.commit()
-
-    # create new data
-    pkgs = []
-    pkgs_b = {}
+    src_pkgs = []
+    build_pkgs = {}
     now = datetime.now()
+
+    # query for a source package with name, version
+    query_src_pkg = select(
+        [sources_tbl.c.id, sources_tbl.c.name, sources_tbl.c.version,
+         sources_tbl.c.suite, sources_tbl.c.architecture]
+    ).select_from(
+        sources_tbl.join(distributions)
+    ).where(
+        and_(
+            distributions.c.name == 'openwrt',
+            sources_tbl.c.name == bindparam('name'),
+            sources_tbl.c.version == bindparam('version')
+        )
+    )
+
+    query_results_pkg = select(
+        [results_tbl.c.id]
+    ).where(results_tbl.c.package_id == bindparam('package_id'))
 
     def insert_pkg_list(pkg_list, state, timestamp):
         # Add new data
-        for pkg in same:
-            p = {
-                'name': pkg['Package'],
-                'version': pkg['Version'],
+        for pkg in pkg_list:
+            entry = pkg_list[pkg][0]
+            package = {
+                'name': pkg,
+                'version': entry['Version'],
                 'suite': suite,
-                'architecture': pkg['Architecture'],
+                'architecture': entry['Architecture'],
                 'distribution': distro_id
             }
-            pkgs.append(p)
+            src_pkgs.append(package)
             data = {
-                'status': pkg['status'],
+                'status': state,
                 'build_date': timestamp,
                 'build_duration': 2342,
             }
-            pkgs_b[(pkg['package'], pkg['version'])] = data
+            build_pkgs[(entry['package'], entry['version'])] = data
 
+    # parse the pkg lists into our structure
     insert_pkg_list(same, "reproducible", now)
     insert_pkg_list(alone_a, "FTBFS on B", now)
     insert_pkg_list(alone_b, "FTBFS on A", now)
     insert_pkg_list(differ, "unreproducible", now)
 
-    log.info('Injecting new source packages…')
-    transaction = conn_db.begin()
-    conn_db.execute(sources.insert(), pkgs)
-    transaction.commit()
+    # import new source packages if they are not yet present
+    new_src_pkgs = []
+    for pkg in src_pkgs:
+        db_pkg = query_db(query_src_pkg.params({'name': pkg['name'], 'version': pkg['version']}))
+        if db_pkg:
+            continue
+        new_src_pkgs.append(pkg)
+
+    if new_src_pkgs:
+        log.info('Found new source packages. Adding to the database')
+        transaction = conn_db.begin()
+        conn_db.execute(sources_tbl.insert(), new_src_pkgs)
+        transaction.commit()
 
     log.info('Injecting build results…')
-    cur_pkgs = select(
-        [sources.c.id, sources.c.name, sources.c.version,
-         sources.c.suite, sources.c.architecture]
-    ).select_from(
-        sources.join(distributions)
-    ).where(
-        and_(
-            distributions.c.name == 'openwrt',
-            sources.c.suite == bindparam('suite'),
-            sources.c.architecture == bindparam('arch')
-        )
-    )
-    cur_pkgs = query_db(cur_pkgs.params({'suite': 'factory', 'arch': 'x86_64'}))
+    results = []
+    for pkg in build_pkgs:
+        # pkg = ("<package_name>", "<package_version>"
+        data = build_pkgs[pkg]
 
-    builds = []
-    for pkg in cur_pkgs:
-        # (id, name, version, suite, architecture)
-        data = pkgs_b[(pkg[1], pkg[2])]
-        p = {
-            'package_id': pkg[0],
-            'version': pkg[2],
-            'status': pkg['status'],
+        # search for the source package
+        db_pkg = query_db(query_src_pkg.params({'name': pkg[0], 'version': pkg[1]}))
+        if not db_pkg:
+            log.warning("Could not find the source package for %s version %s", pkg[0], pkg[1])
+            continue
+        db_pkg = db_pkg[0]
+
+        # search results and remove it
+        result_pkg = query_db(query_results_pkg.params({'package_id': db_pkg[0]}))
+        if result_pkg:
+            transaction = conn_db.begin()
+            query_db(results_tbl.delete(results_tbl.c.package_id == db_pkg[0]))
+            transaction.commit()
+
+        bin_pkg = {
+            'package_id': db_pkg[0],
+            'version': pkg[1],
+            'status': data['status'],
             'build_date': data['build_date'],
             'build_duration': data['build_duration'],
             'job': 'external',
         }
-        builds.append(p)
-    if builds:
+        results.append(bin_pkg)
+
+    # add new results
+    if results:
         transaction = conn_db.begin()
-        conn_db.execute(results.insert(), builds)
-    transaction.commit()
+        conn_db.execute(results_tbl.insert(), results)
+        transaction.commit()
 
 def example():
     import io
