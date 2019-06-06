@@ -97,7 +97,7 @@ sudo tee "$SCHROOT_BASE/$TARGET/etc/profile.d/proxy.sh" <<-__END__
 	__END__
 
 # install sdk
-$ROOTCMD apk add alpine-sdk lua-aports gnupg
+$ROOTCMD apk add alpine-sdk lua-aports gnupg bash
 
 # configure sudo
 echo 'jenkins ALL= NOPASSWD: /sbin/apk *' | $ROOTCMD tee -a /etc/sudoers
@@ -112,6 +112,9 @@ if [ "$HOSTNAME" = "osuosl-build170-amd64" ] ; then
 fi
 $USERCMD gpg --check-trustdb # first run will create ~/.gnupg/gpg.conf
 echo "keyserver-options auto-key-retrieve" | tee -a "$SCHROOT_BASE/$TARGET/var/lib/jenkins/.gnupg/gpg.conf"
+
+$ROOTCMD addgroup jenkins abuild
+$USERCMD abuild-keygen -a -i -n
 
 # Disable SSL verification for future builds
 if [ "$HOSTNAME" = "osuosl-build170-amd64" ] ; then
