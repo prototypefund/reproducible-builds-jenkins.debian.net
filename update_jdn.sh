@@ -427,6 +427,7 @@ if [ -f /etc/debian_version ] ; then
 				ip2host
 				jekyll
 				jenkins-job-builder/stretch-backports
+				jq
 				kgb-client
 				libcap2-bin 
 				libfile-touch-perl 
