@@ -117,11 +117,11 @@ $USERCMD abuild-keygen -a -n
 
 # Disable SSL verification for future builds
 if [ "$HOSTNAME" = "osuosl-build170-amd64" ] ; then
-	export GIT_SSL_NO_VERIFY=1
+	GIT_OPTIONS='GIT_SSL_NO_VERIFY=1'
 fi
 
 echo "$(date -u) - cloning aports repo"
-$USERCMD git clone https://git.alpinelinux.org/aports.git /var/lib/jenkins/aports
+$USERCMD sh -c "$GIT_OPTIONS git clone https://git.alpinelinux.org/aports.git /var/lib/jenkins/aports"
 
 echo "============================================================================="
 echo "schroot $TARGET set up successfully in $SCHROOT_BASE/$TARGET - exiting now."
