@@ -385,7 +385,7 @@ remote_build 1 ${NODE1}
 if [ ! -z "$(ls $TMPDIR/b1/$SRCPACKAGE/*.apk 2>/dev/null|| true)" ] ; then
 	remote_build 2 ${NODE2}
 	cd $TMPDIR/b1/$SRCPACKAGE
-	for ARTIFACT in *.pkg.tar.xz ; do
+	for ARTIFACT in *.apk ; do
 		[ -f $ARTIFACT ] || continue
 		echo "$(date -u) - comparing results now."
 		if diff -q $TMPDIR/b1/$SRCPACKAGE/$ARTIFACT $TMPDIR/b2/$SRCPACKAGE/$ARTIFACT ; then
