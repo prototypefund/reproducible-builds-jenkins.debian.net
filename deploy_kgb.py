@@ -33,6 +33,7 @@ channels = [
     {'name': 'reproducible-builds', 'id': 'reproducible-builds'},
     {'name': 'openwrt-devel', 'id': 'openwrt-devel'},
     {'name': 'archlinux-reproducible', 'id': 'archlinux-reproducible'},
+    {'name': 'alpine-reproducible', 'id': 'alpine-reproducible'},
 ]
 
 template = """repo-id: '{repo_id}'
