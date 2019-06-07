@@ -132,7 +132,7 @@ first_build() {
 	schroot --begin-session --session-name=$SESSION -c jenkins-reproducible-alpine
 	#schroot --run-session -c $SESSION --directory /tmp -u root -- ln -sfT dash /usr/bin/sh
 	echo "MAKEFLAGS=-j$NUM_CPU" | schroot --run-session -c $SESSION --directory /tmp -u root -- tee -a /etc/abuild.conf
-	schroot --run-session -c $SESSION --directory /tmp -- cp -vr "/aports/$REPOSITORY/$SRCPACKAGE" "$BUILDDIR"
+	schroot --run-session -c $SESSION --directory /tmp -- cp -vr "/var/lib/jenkins/aports/$REPOSITORY/$SRCPACKAGE" "$BUILDDIR"
 	# modify timezone, LANG, LC_ALL in the 1st build.
 	schroot --run-session -c $SESSION --directory /tmp -- tee -a /var/lib/jenkins/.bashrc <<-__END__
 	export TZ="/usr/share/zoneinfo/Etc/GMT+12"
@@ -203,7 +203,7 @@ second_build() {
 	echo "============================================================================="
 	schroot --begin-session --session-name=$SESSION -c jenkins-reproducible-alpine
 	echo "MAKEFLAGS=-j$NEW_NUM_CPU" | schroot --run-session -c $SESSION --directory /tmp -u root -- tee -a /etc/abuild.conf
-	schroot --run-session -c $SESSION --directory /tmp -- cp -vr "/aports/$REPOSITORY/$SRCPACKAGE" "$BUILDDIR"
+	schroot --run-session -c $SESSION --directory /tmp -- cp -vr "/var/lib/jenkins/aports/$REPOSITORY/$SRCPACKAGE" "$BUILDDIR"
 	# add more variations in the 2nd build: TZ (differently), LANG, LC_ALL, umask
 	schroot --run-session -c $SESSION --directory /tmp -- tee -a /var/lib/jenkins/.bashrc <<-__END__
 	export TZ="/usr/share/zoneinfo/Etc/GMT-14"
