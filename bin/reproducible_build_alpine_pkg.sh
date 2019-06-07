@@ -464,7 +464,7 @@ echo "$(date -u) - $REPRODUCIBLE_URL/alpine/$REPOSITORY/$SRCPACKAGE/ updated."
 # force update of HTML snipplet in reproducible_html_alpine.sh
 [ ! -f $BASE/alpine/$REPOSITORY/$SRCPACKAGE/pkg.state ] || rm $BASE/alpine/$REPOSITORY/$SRCPACKAGE/pkg.state
 HTML_BUFFER=''
-create_pkg_html
+create_alpine_pkg_html
 update_pkg_in_db
 
 cd
