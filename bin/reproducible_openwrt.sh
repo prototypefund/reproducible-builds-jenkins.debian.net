@@ -246,10 +246,10 @@ openwrt_build_toolchain() {
 	echo "$(date -u) - Building the toolchain."
 	echo "============================================================================="
 
-	OPTIONS="-j $NUM_CPU IGNORE_ERRORS=ym BUILD_LOG=1"
+	OPTIONS=('-j' "$NUM_CPU" 'IGNORE_ERRORS=n m y' 'BUILD_LOG=1')
 
-	ionice -c 3 make $OPTIONS tools/install
-	ionice -c 3 make $OPTIONS toolchain/install
+	ionice -c 3 make "${OPTIONS[@]}" tools/install
+	ionice -c 3 make "${OPTIONS[@]}" toolchain/install
 }
 
 # RUN - b1 or b2. b1 means first run, b2 second
@@ -258,7 +258,7 @@ openwrt_compile() {
 	local RUN=$1
 	local TARGET=$2
 
-	OPTIONS="-j $NUM_CPU IGNORE_ERRORS=ym BUILD_LOG=1"
+	OPTIONS=('-j' "$NUM_CPU" 'IGNORE_ERRORS=n m y' 'BUILD_LOG=1')
 
 	# make $RUN more human readable
 	[ "$RUN" = "b1" ] && RUN="first"
@@ -267,7 +267,7 @@ openwrt_compile() {
 	echo "============================================================================="
 	echo "$(date -u) - Building OpenWrt ${OPENWRT_VERSION} ($TARGET) - $RUN build run."
 	echo "============================================================================="
-	ionice -c 3 $MAKE $OPTIONS
+	ionice -c 3 $MAKE "${OPTIONS[@]}"
 
 	openwrt_strip_metadata_signature "$PWD"
 }
