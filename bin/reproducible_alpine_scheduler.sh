@@ -40,7 +40,7 @@ update_alpine_repositories() {
 	> "$ALPINE_PKGS"_full_pkgbase_list
 	for REPO in $ALPINE_REPOS ; do
 		schroot --run-session -c $SESSION --directory /var/lib/jenkins/aports/$REPO -- ap dump-json | \
-			jq -r 'to_entries|.[]|"\(.key) \(.value.pkgver)-\(.value.pkgrel)"' | \
+			jq -r 'to_entries|.[]|"\(.key) \(.value.pkgver)-r\(.value.pkgrel)"' | \
 			while read pkgname version; do
 				printf '%s %s %s\n' "$REPO" "$pkgname" "$version"
 			done | sort -u -R >> "$ALPINE_PKGS"_full_pkgbase_list

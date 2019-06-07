@@ -148,7 +148,7 @@ first_build() {
 	if [ -n "$epoch" ] ; then
 		epoch="$epoch:"
 	fi
-	VERSION="$epoch$pkgver-$pkgrel"
+	VERSION="$epoch$pkgver-r$pkgrel"
 	echo $VERSION > $TMPDIR/b1/$SRCPACKAGE/build1.version
 	# nicely run abuild with a timeout of $TIMEOUT hours
 	timeout -k $TIMEOUT.1h ${TIMEOUT}h /usr/bin/ionice -c 3 /usr/bin/nice \
@@ -220,7 +220,7 @@ second_build() {
 	if [ -n "$epoch" ] ; then
 		epoch="$epoch:"
 	fi
-	VERSION="$epoch$pkgver-$pkgrel"
+	VERSION="$epoch$pkgver-r$pkgrel"
 	echo $VERSION > $TMPDIR/b2/$SRCPACKAGE/build2.version
 	# nicely run abuild with a timeout of $TIMEOUT hours
 	timeout -k $TIMEOUT.1h ${TIMEOUT}h /usr/bin/ionice -c 3 /usr/bin/nice \
