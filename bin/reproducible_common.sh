@@ -996,7 +996,7 @@ include_icon(){
 			PNG=weather-storm;;
 		FTBR_*)
 			PNG=weather-showers-scattered ALT=unreproducible ;;
-		GOOD)
+		reproducible)
 			PNG=weather-clear ALT=reproducible ;;
 	esac
 	echo "       <img src=\"/userContent/static/$PNG.png\" alt=\"$ALT icon\" /> $TEXT" >> $HTML_BUFFER
@@ -1120,7 +1120,7 @@ create_pkg_html() {
 			include_icon $STATE "$buffer_message"
 		fi
 	else
-		local STATE=GOOD
+		local STATE=reproducible
 		local SOME_GOOD=false
 		for ARTIFACT in $(cd $ARCHLINUX_PKG_PATH/ ; ls *.pkg.tar.xz.html) ; do
 			if [ -z "$(echo $ARTIFACT | grep $VERSION)" ] ; then
@@ -1297,7 +1297,7 @@ create_alpine_pkg_html() {
 			include_icon $STATE "$buffer_message"
 		fi
 	else
-		local STATE=GOOD
+		local STATE=reproducible
 		local SOME_GOOD=false
 		for ARTIFACT in $(cd $ALPINE_PKG_PATH/ ; ls *.apk.html) ; do
 			if [ -z "$(echo $ARTIFACT | grep $VERSION)" ] ; then

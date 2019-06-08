@@ -688,6 +688,9 @@ schema_updates = {
         "INSERT INTO distributions (name) VALUES "
         "('openwrt')"
     ],
+    43: [
+        "UPDATE results SET status='reproducible' WHERE status='GOOD'"
+    ],
 }
 
 

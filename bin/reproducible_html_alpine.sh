@@ -26,7 +26,7 @@ common_init "$@"
 get_state_from_counter() {
 	local counter=$1
 	case $counter in
-		0)	STATE=GOOD ;;
+		0)	STATE=reproducible ;;
 		1)	STATE=FTBR ;;
 		2)	STATE=FTBFS ;;
 		3)	STATE=DEPWAIT ;;
@@ -185,7 +185,7 @@ alpine_page_footer(){
 
 alpine_repostats_table(){
 	write_page "    <table><tr><th>repository</th><th>all source packages</th>"
-	write_page "     <th><a href='/alpine/state_GOOD.html'>reproducible</a></th>"
+	write_page "     <th><a href='/alpine/state_reproducible.html'>reproducible</a></th>"
 	write_page "     <th><a href='/alpine/state_FTBR.html'>unreproducible</a></th>"
 	write_page "     <th><a href='/alpine/state_FTBFS.html'>failing to build</a></th>"
 	write_page "     <th><a href='/alpine/state_DEPWAIT.html'>in depwait state</a></th>"
@@ -248,7 +248,7 @@ repository_pages(){
 }
 
 state_pages(){
-	for STATE in FTBFS FTBR DEPWAIT 404 GOOD BLACKLISTED UNKNOWN ; do
+	for STATE in FTBFS FTBR DEPWAIT 404 reproducible BLACKLISTED UNKNOWN ; do
 		PAGE=state_$STATE.html
 		TITLE="Reproducible alpine, packages in state $STATE"
 		alpine_page_header
@@ -305,7 +305,7 @@ state_pages(){
 repository_state_pages(){
 	for REPOSITORY in $ALPINE_REPOS ; do
 		SUITE="alpine_$REPOSITORY"
-		for STATE in FTBFS FTBR DEPWAIT 404 GOOD BLACKLISTED UNKNOWN ; do
+		for STATE in FTBFS FTBR DEPWAIT 404 reproducible BLACKLISTED UNKNOWN ; do
 			PAGE=state_${REPOSITORY}_$STATE.html
 			TITLE="Reproducible alpine, packages in $REPOSITORY in state $STATE"
 			alpine_page_header
