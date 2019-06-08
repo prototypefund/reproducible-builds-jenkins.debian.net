@@ -689,7 +689,8 @@ schema_updates = {
         "('openwrt')"
     ],
     43: [
-        "UPDATE results SET status='reproducible' WHERE status='GOOD'"
+        "UPDATE results SET status='reproducible' WHERE status='GOOD'",
+        "UPDATE results SET status='blacklisted' WHERE status='BLACKLISTED'"
     ],
 }
 

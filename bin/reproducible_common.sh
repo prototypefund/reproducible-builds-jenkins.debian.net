@@ -986,7 +986,7 @@ include_icon(){
 	local PNG=
 	ALT=${ALT,,}
 	case $STATE in
-		BLACKLISTED)
+		blacklisted)
 			PNG=error;;
 		DEPWAIT_*)
 			PNG=weather-snow;;
@@ -1106,7 +1106,7 @@ create_pkg_html() {
 				WHERE s.architecture='x86_64'
 				AND s.name='$SRCPACKAGE'
 				AND s.suite='archlinux_$REPOSITORY';")
-			if [ "$STATE" = "BLACKLISTED" ] ; then
+			if [ "$STATE" = "blacklisted" ] ; then
 				buffer_message='blacklisted'
 			else
 				STATE=UNKNOWN
@@ -1283,7 +1283,7 @@ create_alpine_pkg_html() {
 				WHERE s.architecture='x86_64'
 				AND s.name='$SRCPACKAGE'
 				AND s.suite='alpine_$REPOSITORY';")
-			if [ "$STATE" = "BLACKLISTED" ] ; then
+			if [ "$STATE" = "blacklisted" ] ; then
 				buffer_message='blacklisted'
 			else
 				STATE=UNKNOWN

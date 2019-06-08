@@ -121,7 +121,7 @@ update_archlinux_repositories() {
 							AND s.architecture='x86_64'
 							AND s.name='$PKG'
 							AND s.suite='$SUITE';")
-						if [ "$PKG_STATUS" = "BLACKLISTED" ] ; then
+						if [ "$PKG_STATUS" = "blacklisted" ] ; then
 							echo "$PKG is blacklisted, so not scheduling it."
 							continue
 						else
@@ -199,7 +199,7 @@ update_archlinux_repositories() {
 			FROM sources AS s JOIN results AS r ON s.id = r.package_id
 			WHERE s.distribution=$DISTROID
 			AND s.architecture='x86_64'
-			AND r.status != 'BLACKLISTED'
+			AND r.status != 'blacklisted'
 			AND r.build_date < '$MINDATE'
 			AND s.id NOT IN (SELECT schedule.package_id FROM schedule)
 			GROUP BY s.id, s.name

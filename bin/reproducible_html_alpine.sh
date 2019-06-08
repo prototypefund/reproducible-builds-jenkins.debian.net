@@ -31,7 +31,7 @@ get_state_from_counter() {
 		2)	STATE=FTBFS ;;
 		3)	STATE=DEPWAIT ;;
 		4)	STATE=404 ;;
-		5)	STATE=BLACKLISTED ;;
+		5)	STATE=blacklisted ;;
 		6)	STATE=UNKNOWN ;;
 	esac
 }
@@ -62,7 +62,7 @@ repostats(){
 		NR_FTBFS=$(query_db "SELECT count(*) FROM sources AS s JOIN results AS r ON s.id=r.package_id WHERE s.distribution=$DISTROID AND s.architecture='x86_64' AND s.suite='$SUITE' AND r.status LIKE 'FTBFS_%';")
 		NR_DEPWAIT=$(query_db "SELECT count(*) FROM sources AS s JOIN results AS r ON s.id=r.package_id WHERE s.distribution=$DISTROID AND s.architecture='x86_64' AND s.suite='$SUITE' AND r.status LIKE 'DEPWAIT_%';")
 		NR_404=$(query_db "SELECT count(*) FROM sources AS s JOIN results AS r ON s.id=r.package_id WHERE s.distribution=$DISTROID AND s.architecture='x86_64' AND s.suite='$SUITE' AND r.status LIKE '404_%';")
-		NR_BLACKLISTED=$(query_db "SELECT count(*) FROM sources AS s JOIN results AS r ON s.id=r.package_id WHERE s.distribution=$DISTROID AND s.architecture='x86_64' AND s.suite='$SUITE' AND r.status='BLACKLISTED';")
+		NR_BLACKLISTED=$(query_db "SELECT count(*) FROM sources AS s JOIN results AS r ON s.id=r.package_id WHERE s.distribution=$DISTROID AND s.architecture='x86_64' AND s.suite='$SUITE' AND r.status='blacklisted';")
 		NR_UNKNOWN=$(query_db "SELECT count(*) FROM sources AS s JOIN results AS r ON s.id=r.package_id WHERE s.distribution=$DISTROID AND  s.architecture='x86_64' AND s.suite='$SUITE' AND r.status LIKE 'UNKNOWN_%';")
 		NR_UNTESTED=$(query_db "SELECT count(s.name) FROM sources AS s WHERE s.architecture='x86_64' AND s.distribution=$DISTROID AND s.suite='$SUITE' AND s.id NOT IN (SELECT package_id FROM results)")
 		if [ $NR_UNTESTED -ne 0 ] ; then
@@ -190,7 +190,7 @@ alpine_repostats_table(){
 	write_page "     <th><a href='/alpine/state_FTBFS.html'>failing to build</a></th>"
 	write_page "     <th><a href='/alpine/state_DEPWAIT.html'>in depwait state</a></th>"
 	write_page "     <th><a href='/alpine/state_404.html'>download problems</a></th>"
-	write_page "     <th><a href='/alpine/state_BLACKLISTED.html'>blacklisted</a></th>"
+	write_page "     <th><a href='/alpine/state_blacklisted.html'>blacklisted</a></th>"
 	write_page "     <th><a href='/alpine/state_UNKNOWN.html'>unknown state</a></th></tr>"
 	cat $HTML_REPOSTATS >> $PAGE
 	write_page "    </table>"
@@ -248,7 +248,7 @@ repository_pages(){
 }
 
 state_pages(){
-	for STATE in FTBFS FTBR DEPWAIT 404 reproducible BLACKLISTED UNKNOWN ; do
+	for STATE in FTBFS FTBR DEPWAIT 404 reproducible blacklisted UNKNOWN ; do
 		PAGE=state_$STATE.html
 		TITLE="Reproducible alpine, packages in state $STATE"
 		alpine_page_header
@@ -305,7 +305,7 @@ state_pages(){
 repository_state_pages(){
 	for REPOSITORY in $ALPINE_REPOS ; do
 		SUITE="alpine_$REPOSITORY"
-		for STATE in FTBFS FTBR DEPWAIT 404 reproducible BLACKLISTED UNKNOWN ; do
+		for STATE in FTBFS FTBR DEPWAIT 404 reproducible blacklisted UNKNOWN ; do
 			PAGE=state_${REPOSITORY}_$STATE.html
 			TITLE="Reproducible alpine, packages in $REPOSITORY in state $STATE"
 			alpine_page_header
