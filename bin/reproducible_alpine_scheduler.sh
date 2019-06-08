@@ -111,8 +111,8 @@ update_alpine_repositories() {
 					PKG_ID=$(query_db "SELECT id FROM sources WHERE distribution=$DISTROID AND name='$PKG' AND suite='$SUITE' AND architecture='$ARCH';")
 					query_db "INSERT INTO schedule (package_id, date_scheduled) VALUES ('${PKG_ID}', '$DATE');"
 				elif [ "$VERSION" != "$version" ] ; then
-					VERCMP="$(schroot --run-session -c $SESSION --directory /var/tmp -- vercmp $version $VERSION || true)"
-					if [ "$VERCMP" = "1" ] ; then
+					VERCMP="$(schroot --run-session -c $SESSION --directory /var/tmp -- apk version -t $version $VERSION || true)"
+					if [ "$VERCMP" = ">" ] ; then
 						# known package with new version, so update db and schedule
 						query_db "UPDATE sources SET version = '$version' WHERE name = '$PKG' AND suite = '$SUITE' AND architecture='$ARCH' AND distribution=$DISTROID;"
 						PKG_STATUS=$(query_db "SELECT r.status FROM results AS r
@@ -137,7 +137,7 @@ update_alpine_repositories() {
 								echo " $PKG (package_id: ${PKG_ID}) already scheduled, not scheduling again."
 							fi
 						fi
-					elif [ "$VERCMP" = "-1" ] ; then
+					elif [ "$VERCMP" = "<" ] ; then
 						# our version is higher than what's in the repo because we build trunk
 						echo "$REPO/$pkgbase $VERSION in db is higher than $version in repo because we build trunk."
 					else
