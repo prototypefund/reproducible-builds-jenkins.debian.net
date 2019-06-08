@@ -358,6 +358,18 @@ write_page_intro() {
 		local PROJECTURL="https://github.com/freebsd/freebsd.git"
 		local BUILD_ENVIRONMENT=", which via ssh triggers a build on a FreeBSD 11.2 system"
 		local BRANCH="master"
+	elif [ "$1" = "alpine" ] ; then
+		local PROJECTNAME="alpine"
+		write_page "        <p><em>Reproducible $PROJECTNAME</em> is an effort to apply this to $PROJECTNAME. Thus $PROJECTNAME packages are build twice, with a few variations added and then the resulting packages from the two builds are compared using <a href=\"https://tracker.debian.org/diffoscope\">diffoscope</a>."
+		write_page "   Please note that this is still at an early stage. Also there are more variations expected to be seen in the wild."
+		write_page "Missing bits for <em>testing</em> alpine:<ul>"
+		write_page " <li>cross references to <a href=\"https://tests.reproducible-builds.org/debian/index_issues.html\">Debian notes</a> - and having alpine specific notes.</li>"
+		write_page "</ul></p>"
+		write_page "<p>Missing bits for alpine:<ul>"
+		write_page " <li>code needs to be written to compare the packages built twice here against newly built packages from the Official alpine repositories.</li>"
+		write_page " <li>user tools, for users to verify all of this easily.</li>"
+		write_page "</ul></p>"
+		write_page "<p>If you want to help out or discuss reproducible builds in $PROJECTNAME, please join #alpine-reproducible on freenode.</p>"
 	elif [ "$1" = "Arch Linux" ] ; then
 		local PROJECTNAME="Arch Linux"
 		write_page "        <p><em>Reproducible $PROJECTNAME</em> is an effort to apply this to $PROJECTNAME. Thus $PROJECTNAME packages are build twice, with a few variations added and then the resulting packages from the two builds are compared using <a href=\"https://tracker.debian.org/diffoscope\">diffoscope</a>."

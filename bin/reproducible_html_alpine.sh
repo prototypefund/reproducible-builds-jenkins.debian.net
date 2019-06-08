@@ -167,8 +167,8 @@ alpine_page_header(){
 	    <link rel='stylesheet' href='global.css' type='text/css' media='all' />
 	  </head>
 	  <body>
-	    <div id="archnavbar">
-		    <div id="logo"></div>
+	    <div id="logo">
+	        <img src="alpinelinux-logo.svg" alt="">
 	    </div>
 	    <div class="content">
 	      <h1><a href='/alpine/'>Reproducible alpine</a>?!</h1>

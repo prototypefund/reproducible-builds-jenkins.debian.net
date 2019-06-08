@@ -1,0 +1,97 @@
+body {
+  color: #526066;
+  font: 100% sans-serif;
+  line-height: 1.3em;
+  min-width: 650px;
+  margin: 0;
+  padding: 0;
+}
+
+.content {
+  margin: 0 auto;
+  text-align: left;
+  width: 95%;
+  max-width: 1600px;
+}
+
+#logo {
+  padding: 1em;
+  border-bottom: 1px solid #ccc;
+}
+
+#page_footer {
+  font-size: 0.7em;
+  margin: 0 auto;
+  text-align: center;
+  width: 95%;
+}
+
+#footer_separator {
+  border-top: 1px dotted #bbb;
+  margin: 10px 1%;
+}
+
+a {
+  text-decoration: none;
+}
+
+a:link {
+  color: #07b;
+}
+
+a:visited {
+  color: #1a4964;
+}
+
+a:hover, a:visited:hover {
+  text-decoration: underline;
+}
+
+table {
+  background: #ecf2f5 none repeat scroll 0 0;
+  border: 1px solid #bcd;
+  margin-bottom: 1.5em;
+  padding: 0.65em;
+  width: 100%;
+  font-size: 0.90em;
+  border-collapse: collapse;
+}
+
+table tr td,
+table th {
+  padding: 0.35em 0.90em;
+  text-align: left;
+  white-space: nowrap;
+}
+
+table th {
+  background: rgb(217, 230, 236) none repeat scroll 0 0;
+  border-bottom: 1px solid #bcd;
+}
+
+table tr:hover {
+  background-color: rgb(228, 237, 241)
+}
+
+table tr td {
+  border-top: 1px dotted #bcd;
+}
+
+#variation th:first-child {
+  width: 23%;
+}
+
+img {
+	vertical-align: middle;
+	max-width: 100%;
+	height: auto;
+}
+
+img.halfview {
+	max-width: 49%;
+}
+
+img.overview {
+	max-width: 24%;
+}
+
