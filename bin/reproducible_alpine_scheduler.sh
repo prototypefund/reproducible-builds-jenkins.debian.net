@@ -111,7 +111,7 @@ update_alpine_repositories() {
 					PKG_ID=$(query_db "SELECT id FROM sources WHERE distribution=$DISTROID AND name='$PKG' AND suite='$SUITE' AND architecture='$ARCH';")
 					query_db "INSERT INTO schedule (package_id, date_scheduled) VALUES ('${PKG_ID}', '$DATE');"
 				elif [ "$VERSION" != "$version" ] ; then
-					VERCMP="$(schroot --run-session -c $SESSION --directory /var/tmp -- apk version -t $version $VERSION || true)"
+					VERCMP="$(schroot --run-session -c $SESSION --directory /var/tmp -- /sbin/apk version -t $version $VERSION || true)"
 					if [ "$VERCMP" = ">" ] ; then
 						# known package with new version, so update db and schedule
 						query_db "UPDATE sources SET version = '$version' WHERE name = '$PKG' AND suite = '$SUITE' AND architecture='$ARCH' AND distribution=$DISTROID;"
