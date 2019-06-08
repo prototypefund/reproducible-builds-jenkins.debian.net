@@ -572,6 +572,10 @@
                     my_description: 'Generate https://tests.reproducible-builds.org/archlinux/reproducible.json for Arch Linux.'
                     my_timed: '1 H/2 * * *'
                     my_shell: "/srv/jenkins/bin/reproducible_json.py --distro archlinux"
+                - 'archlinux_html_pages':
+                    my_description: 'Generate https://tests.reproducible-builds.org/archlinux/$suite html pages'
+                    my_timed: 'H H * * H'
+                    my_shell: 'cd /srv/jenkins/bin/ && ./reproducible_html_indexes.py --distro archlinux && ./reproducible_html_all_packages.py --distro archlinux --ignore-missing-files'
                 - 'html_archlinux':
                     my_description: 'Build webpages for Arch Linux reproducibility tests'
                     my_timed: '15,45 * * * *'
