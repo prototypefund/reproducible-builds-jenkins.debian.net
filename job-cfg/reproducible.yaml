@@ -562,6 +562,9 @@
                     my_description: 'Generate https://reproducible.debian.net/userContent/reproducible.json for consumption by tracker.debian.org.'
                     my_timed: '1 H/2 * * *'
                     my_shellext: ".py"
+                - 'html_alpine':
+                    my_description: 'Build webpages for alpine reproducibility tests'
+                    my_timed: '15,45 * * * *'
                 - 'alpine_scheduler':
                     my_description: 'Scheduler for alpine reproducibility tests'
                     my_timed: '0 H/4 * * *'
