@@ -261,6 +261,7 @@ build_job_health_page() {
 	FILTER[9]="(le_netbsd|le_freebsd)"
 	FILTER[10]="fdroid"
 	FILTER[11]="fedora"
+	FILTER[11]="alpine"
 	echo "$(date -u) - starting to write $PAGE page."
 	write_page_header $VIEW "Job health overview"
 	write_page "<p style=\"clear:both;\">"
@@ -270,6 +271,7 @@ build_job_health_page() {
 		for JOB in $(cd ~/jobs ; ls -1d reproducible_* | egrep "${FILTER[$CATEGORY]}" | cut -d '_' -f2- | sort ) ; do
 			SHORTNAME="$(echo $JOB \
 				| sed 's#archlinux_##' \
+				| sed 's#alpine_##' \
 				| sed 's#builder_fedora#builder#' \
 				| sed 's#_x86_64##' \
 				| sed 's#_from_git_master#_git#' \
@@ -278,6 +280,7 @@ build_job_health_page() {
 				| sed 's#create_##' \
 				| sed 's#fdroid_build_##' \
 				| sed 's#html_archlinux#html#' \
+				| sed 's#html_alpine#html#' \
 				| sed 's#html_##' \
 				| sed 's#builds_##' \
 				| sed 's#_diffoscope_amd64##' \
