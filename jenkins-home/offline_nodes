@@ -17,6 +17,9 @@
 
 # Also see https://pad.sfconservancy.org/p/rb-build-nodes-keep
 
+# Disk failure
+odxu4b-armhf-rb.debian.net
+
 ## temporary problems
 
 # Down here nodes are automtically added by the maintenance job when they have
