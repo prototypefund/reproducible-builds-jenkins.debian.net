@@ -43,10 +43,24 @@ Additional, give user jenkins write access to the root $JENKINSGIT directory and
 
 ==== Database
 
-Get a recent copy of the database from:
+The reproducible build setup uses a PostgreSQL database to store the results, scheduling and status. The schema view here https://tests.reproducible-builds.org/reproducibledb.html
+
+Create a PostgreSQL database named 'reproducibledb' then either import a backup
+from tests.reproducible-builds.org:
+
 ----
 wget https://tests.reproducible-builds.org/reproducible.sql.xz
+xz -d reproducible.sql.xz
+psql reproducibledb < reproducible.sql
 ----
+
+Or create an empty database with only a bare schema:
+
+-----
+python3 bin/reproducible_db_maintenance.py
+-----
+
+If the database model changes, a migration should be created in the maintenance script called 'reproducible_db_maintenance.py'
 
 The database is kept using PostgreSQL and initialised by running /srv/jenkins/bin/reproducible_db_maintenance.py manually as the jenkins user.
 
