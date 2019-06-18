@@ -32,10 +32,5 @@ if [ "$HOSTNAME" = "profitbricks-build5-amd64" ] || [ "$HOSTNAME" = "profitbrick
    [ "$HOSTNAME" = "profitbricks-build15-amd64" ] || [ "$HOSTNAME" = "profitbricks-build16-i386" ] || \
    [ "$HOSTNAME" = "codethink-sled9-arm64" ] || [ "$HOSTNAME" = "codethink-sled11-arm64" ] || \
    [ "$HOSTNAME" = "codethink-sled13-arm64" ] || [ "$HOSTNAME" = "codethink-sled15-arm64" ] ; then
-	case "$PBUILDER_OPERATION" in
-		create)
-			APTGETOPT=(-o Acquire::Check-Valid-Until="false")
-			;;
-		*)	;;
-	esac
+	APTGETOPT=(-o Acquire::Check-Valid-Until="false")
 fi
