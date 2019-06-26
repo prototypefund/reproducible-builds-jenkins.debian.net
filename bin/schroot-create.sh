@@ -75,11 +75,9 @@ fi
 
 
 robust_chroot_apt() {
-	set +e
 	sudo chroot $SCHROOT_TARGET apt-get $@ | tee $TMPLOG
 	local RESULT=$(egrep 'Failed to fetch.*(Unable to connect to|Connection failed|Size mismatch|Cannot initiate the connection to|Bad Gateway|Service Unavailable)' $TMPLOG || true)
-	set -e
-	if [ ! -z "$RESULT" ] ; then
+	if [ ! -z "$RESULT" ] || [ "${PIPESTATUS[0]}" -ne 0 ] ; then
 		echo "$(date -u) - 'apt-get $@' failed, sleeping 5min before retrying..."
 		sleep 5m
 		sudo chroot $SCHROOT_TARGET apt-get $@ || ( echo "$(date -u ) - 2nd 'apt-get $@' failed, giving up..." ; exit 1 )
@@ -92,11 +90,9 @@ bootstrap() {
 	echo force-unsafe-io > "$SCHROOT_TARGET/etc/dpkg/dpkg.cfg.d/02dpkg-unsafe-io"
 
 	echo "Bootstraping $SUITE into $SCHROOT_TARGET now."
-	set +e
 	sudo debootstrap $SUITE $SCHROOT_TARGET $MIRROR | tee $TMPLOG
 	local RESULT=$(egrep "E: (Couldn't download packages|Invalid Release signature)" $TMPLOG || true)
-	set -e
-	if [ ! -z "$RESULT" ] ; then
+	if [ ! -z "$RESULT" ] || [ "${PIPESTATUS[0]}" -ne 0 ] ; then
 		echo "$(date -u) - initial debootstrap failed, sleeping 5min before retrying..."
 		sudo rm -rf --one-file-system $SCHROOT_TARGET
 		sleep 5m
