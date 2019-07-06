@@ -19,7 +19,7 @@ explain_nodes() {
 		jenkins)	;;
 		profitbricks7)	write_page "<br /><small>(buildinfos.debian.net)</small>" ;;
 		profitbricks9)	write_page "<br /><small>(jenkins.d.n rebootstrap jobs)</small>" ;;
-		profitbricks10)	write_page "<br /><small>(jenkins.d.n chroot-installation jobs)</small>" ;;
+		profitbricks10)	write_page "<br /><small>(jenkins.d.n chroot-installation jobs and http-proxy)</small>" ;;
 		osuosl167)	write_page "<br /><small>(http-proxy for osuosl nodes)</small>" ;;
 		osuosl168)	write_page "<br /><small>(r-b F-Droid builds)</small>" ;;
 		osuosl169)	write_page "<br /><small>(r-b Archlinux builds)</small>" ;;
@@ -28,6 +28,8 @@ explain_nodes() {
 		osuosl172)	write_page "<br /><small>(r-b OpenWrt, Coreboot builds)</small>" ;;
 		osuosl173)	write_page "<br /><small>(r-b Debian rebuilder)</small>" ;;
 		osuosl174)	write_page "<br /><small>(r-b openSUSE)</small>" ;;
+		profitbricks1)	write_page "<br /><small>(r-b Debian builds and http-proxy)</small>" ;;
+		codethink16)	write_page "<br /><small>(r-b Debian builds and http-proxy)</small>" ;;
 		*)		write_page "<br /><small>(r-b Debian builds)</small>" ;;
 	esac
 }
