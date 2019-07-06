@@ -23,6 +23,9 @@ odxu4b-armhf-rb.debian.net
 # hw issues.  codethink is on it.
 codethink-sled14-arm64.debian.net
 
+# requires a manual fsck, and check the disk health
+cbxi4a-armhf-rb.debian.net
+
 ## temporary problems
 
 # Down here nodes are automatically added by the maintenance job when they have
