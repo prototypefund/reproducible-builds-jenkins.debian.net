@@ -24,6 +24,8 @@ odxu4b-armhf-rb.debian.net
 codethink-sled14-arm64.debian.net
 
 ## temporary problems
+opi2c-armhf-rb.debian.net
+cbxi4a-armhf-rb.debian.net
 
 # Down here nodes are automatically added by the maintenance job when they have
 # been failing their health check for too long.
