@@ -692,6 +692,26 @@ schema_updates = {
         "UPDATE results SET status='reproducible' WHERE status='GOOD'",
         "UPDATE results SET status='blacklisted' WHERE status='BLACKLISTED'"
     ],
+    44: [  # copy buster packages (includng results) in bullseye
+        """INSERT INTO sources (name, version, suite, architecture, notify_maintainer, distribution)
+            SELECT name, version, 'bullseye', architecture, notify_maintainer, distribution
+            FROM sources
+            WHERE suite = 'buster'""",
+        """WITH bullseye AS (
+                SELECT id, name, suite, architecture, version
+                FROM sources WHERE suite = 'bullseye'),
+            sr AS (
+                SELECT s.name, s.architecture, r.version, r.status,
+                    r.build_date, r.build_duration, r.node1, r.node2, r.job
+                FROM sources AS s JOIN results AS r ON s.id=r.package_id
+                WHERE s.suite = 'buster')
+            INSERT INTO results (package_id, version, status, build_date,
+                    build_duration, node1, node2, job)
+                SELECT b.id, sr.version, sr.status, sr.build_date,
+                    sr.build_duration, sr.node1, sr.node2, sr.job
+                FROM bullseye AS b JOIN sr ON b.name=sr.name
+                    AND b.architecture=sr.architecture""",
+    ],
 }
 
 
