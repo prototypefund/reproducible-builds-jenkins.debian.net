@@ -34,7 +34,7 @@ CHPATH=/srv/reproducible-results/chdist
 mkdir -p "$CHPATH"
 
 # Debian suites being tested
-SUITES="stretch buster unstable experimental"
+SUITES="stretch buster bullseye unstable experimental"
 # Debian architectures being tested
 ARCHS="amd64 i386 arm64 armhf"
 

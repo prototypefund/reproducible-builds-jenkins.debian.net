@@ -415,6 +415,9 @@
                 - 'setup_pbuilder_buster':
                     my_description: 'Setup pbuilder for reproducible builds of packages from buster as described in https://wiki.debian.org/ReproducibleBuilds#Usage_example'
                     my_timed: '23 8 * * *'
+                - 'setup_pbuilder_bullseye':
+                    my_description: 'Setup pbuilder for reproducible builds of packages from bullseye as described in https://wiki.debian.org/ReproducibleBuilds#Usage_example'
+                    my_timed: '23 9 * * *'
                 - 'setup_pbuilder_unstable':
                     my_description: 'Setup pbuilder for reproducible builds of packages from unstable as described in https://wiki.debian.org/ReproducibleBuilds#Usage_example'
                     my_timed: '42 7 * * *'
@@ -471,17 +474,18 @@
                     my_description: 'Setup schroot for running diffoscope in a unstable environment (this is needed to be able to correctly investigate haskell binaries...)'
                     my_timed: '42 0 * * *'
                     my_shell: '/srv/jenkins/bin/schroot-create.sh reproducible reproducible-unstable-diffoscope unstable diffoscope locales-all'
-                    my_disabled: false
                 - 'stretch_diffoscope':
                     my_description: 'Setup schroot for running diffoscope in a stretch environment (this is needed to be able to correctly investigate haskell binaries...)'
                     my_timed: '23 0 * * *'
                     my_shell: '/srv/jenkins/bin/schroot-create.sh reproducible reproducible-stretch-diffoscope stretch diffoscope locales-all'
-                    my_disabled: false
                 - 'buster_diffoscope':
                     my_description: 'Setup schroot for running diffoscope in a buster environment (this is needed to be able to correctly investigate haskell binaries...)'
                     my_timed: '23 0 * * *'
                     my_shell: '/srv/jenkins/bin/schroot-create.sh reproducible reproducible-buster-diffoscope buster diffoscope locales-all'
-                    my_disabled: false
+                - 'bullseye_diffoscope':
+                    my_description: 'Setup schroot for running diffoscope in a bullseye environment (this is needed to be able to correctly investigate haskell binaries...)'
+                    my_timed: '23 0 * * *'
+                    my_shell: '/srv/jenkins/bin/schroot-create.sh reproducible reproducible-bullseye-diffoscope bullseye diffoscope locales-all'
             my_description: 'Setup {my_distro} schroot for fetching source packages for the builder jobs.'
             my_shell: '/srv/jenkins/bin/schroot-create.sh reproducible reproducible-{my_distro} {my_distro}'
             my_hname:
