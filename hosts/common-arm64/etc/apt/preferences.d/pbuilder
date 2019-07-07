@@ -9,3 +9,12 @@ Pin-Priority: 990
 Package: *
 Pin: release o=Debian Backports
 Pin-Priority: -1
+
+
+Package: debian-archive-keyring
+Pin: release n=eoan
+Pin-Priority: 990
+
+Package: *
+Pin: release n=eoan
+Pin-Priority: -1
