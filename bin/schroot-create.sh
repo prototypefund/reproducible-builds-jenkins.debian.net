@@ -69,8 +69,13 @@ if [ "$SUITE" = "experimental" ] ; then
 	EXTRA_SOURCES[0]="deb $MIRROR experimental main"
 	EXTRA_SOURCES[1]="deb-src $MIRROR experimental main"
 elif [ "$SUITE" != "unstable" ] && [ "$SUITE" != "sid" ] ; then
-	EXTRA_SOURCES[6]="deb http://security.debian.org $SUITE/updates main"
-	EXTRA_SOURCES[7]="deb-src http://security.debian.org $SUITE/updates main"
+	if [ "$SUITE" = "stretch" ] || [ "$SUITE" = "buster" ] ; then
+		EXTRA_SOURCES[6]="deb http://security.debian.org $SUITE/updates main"
+		EXTRA_SOURCES[7]="deb-src http://security.debian.org $SUITE/updates main"
+	else
+		EXTRA_SOURCES[6]="deb http://security.debian.org ${SUITE}-security main"
+		EXTRA_SOURCES[7]="deb-src http://security.debian.org ${SUITE}-security main"
+	fi
 fi
 
 
