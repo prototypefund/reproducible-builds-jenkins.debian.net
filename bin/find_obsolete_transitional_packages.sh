@@ -10,8 +10,8 @@
 if [ -z "$1" ] ; then
 	echo "Call $(basename $0) [bug] NEXT SUITE1 SUITE2 SUITE3"
 	echo "         bug to enter manual mode"
-	echo "         NEXT suite which is being developed, eg 'buster'"
-	echo "         SUITE1/2/3: suites to look at, eg. 'jessie stretch sid'"
+	echo "         NEXT suite which is being developed, eg 'bullseye'"
+	echo "         SUITE1/2/3: suites to look at, eg. 'stretch buster sid'"
 	exit 0
 fi
 
@@ -23,8 +23,8 @@ else
 	#normally defined in common-functions.sh
 	export MIRROR=http://deb.debian.org/debian
 	#for quicker development:
-	#PACKAGES[0]=/home/schroots/jessie/var/lib/apt/lists/deb.debian.org_debian_dists_jessie_main_binary-amd64_Packages
-	#PACKAGES[1]=/var/lib/apt/lists/deb.debian.org_debian_dists_stretch_main_binary-amd64_Packages
+	#PACKAGES[0]=/home/schroots/stretch/var/lib/apt/lists/deb.debian.org_debian_dists_stretch_main_binary-amd64_Packages
+	#PACKAGES[1]=/var/lib/apt/lists/deb.debian.org_debian_dists_buster_main_binary-amd64_Packages
 	#PACKAGES[2]=/home/schroots/sid/var/lib/apt/lists/deb.debian.org_debian_dists_sid_main_binary-amd64_Packages
 fi
 
@@ -47,13 +47,13 @@ fi
 
 LANG="en_EN.UTF-8"
 ARCH=amd64
-NEXT="$1"		# buster
+NEXT="$1"		# bullseye
 shift
-SUITES="$@" 		# jessie stretch sid
-OLDSTABLE="jessie"
-STABLE="stretch"
-if [ "$NEXT" != "buster" ] ; then
-	echo "This script needs more changes to work on other suites than buster…"
+SUITES="$@" 		# stretch buster sid
+OLDSTABLE="stretch"
+STABLE="buster"
+if [ "$NEXT" != "bullseye" ] ; then
+	echo "This script needs more changes to work on other suites than bullseye…"
 	echo "Not many, but a very few."
 	exit 1
 fi
@@ -190,7 +190,7 @@ fi
 echo
 echo "Found $BAD_COUNTER bad packages (=transitional dummy package in $OLDSTABLE, $STABLE and sid) and $GOOD_COUNTER removed transitional packages (=doesn't exist in sid) plus we know about $BUGGED_COUNTER open bugs about obsolete transitional packages."
 
-echo "In the future, this script should probably complain about transitional packages in stretch and buster, and suggest to file wishlist bugs for those. Though probably it's more useful to file wishlist bugs against packages depending on those, first (or do both)… and should those latter be normal severity?"
+echo "In the future, this script should probably complain about transitional packages in buster and bullseye, and suggest to file wishlist bugs for those. Though probably it's more useful to file wishlist bugs against packages depending on those, first (or do both)… and should those latter be normal severity?"
 
 echo
 if [ "${BASEPATH:0:5}" = "/tmp/" ] ; then
