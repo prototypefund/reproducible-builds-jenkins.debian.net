@@ -258,6 +258,8 @@ update_pkg_set_specific() {
 			# see https://cloud.debian.org/images/cloud/
 			if [ "$SUITE" = "stretch" ] ; then
 				URL="https://cloud.debian.org/images/cloud/OpenStack/current-9/debian-9-openstack-amd64-packages.list"
+			elif [ "$SUITE" = "buster" ] ; then
+				URL="https://cloud.debian.org/images/cloud/OpenStack/current-10/debian-10-openstack-amd64-packages.list"
 			else
 				URL="https://cloud.debian.org/images/cloud/OpenStack/testing/debian-testing-openstack-amd64-packages.list"
 			fi
@@ -541,6 +543,7 @@ for SUITE in $SUITES ; do
 		continue
 	elif [ "$SUITE" = "stretch" ] ; then
 		# let's not update the stretch pkg sets anymore
+		# FIXME: once the reproducible_create_meta_pkg_sets job has been run succesful again, dont update package sets for buster anymore
 		continue
 	fi
 	echo "============================================================================="
