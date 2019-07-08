@@ -29,7 +29,7 @@ set -e
 #   - one job run tests one package.
 #   - use same debuild options possible? or try all sane options?
 #   - submit .buildinfo file to b.d.n and then fetch the json again.
-#   - debootstrap stretch and upgrade from there?
+#   - debootstrap buster and upgrade from there?
 # - this is all amd64 only for a start
 
 RELEASE=buster
