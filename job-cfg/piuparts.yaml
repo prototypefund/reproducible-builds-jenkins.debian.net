@@ -87,10 +87,6 @@
 
 - job-template:
     defaults: piuparts-tests
-    name: '{name}_testsuite_jessie'
-
-- job-template:
-    defaults: piuparts-tests
     name: '{name}_testsuite_stretch'
 
 - job-template:
@@ -99,11 +95,11 @@
 
 - job-template:
     defaults: piuparts-tests
-    name: '{name}_testsuite_sid'
+    name: '{name}_testsuite_bullseye'
 
 - job-template:
-    defaults: piuparts-builds
-    name: '{name}_build_jessie'
+    defaults: piuparts-tests
+    name: '{name}_testsuite_sid'
 
 - job-template:
     defaults: piuparts-builds
@@ -112,6 +108,10 @@
 - job-template:
     defaults: piuparts-builds
     name: '{name}_build_buster'
+
+- job-template:
+    defaults: piuparts-builds
+    name: '{name}_build_bullseye'
 
 - job-template:
     defaults: piuparts-builds
@@ -127,7 +127,12 @@
             my_origin_triggers:
               - pollscm:
                   cron: ''
-            my_trigger: 'piuparts_testsuite_buster, piuparts_build_sid'
+            my_trigger: 'piuparts_testsuite_bullseye, piuparts_build_sid'
+        - '{name}_testsuite_bullseye':
+            my_distro: 'bullseye'
+            my_shell: 'make check'
+            my_description: 'run testsuite from piuparts develop branch on buster.'
+            my_trigger: 'piuparts_testsuite_buster'
         - '{name}_testsuite_buster':
             my_distro: 'buster'
             my_shell: 'make check'
@@ -137,11 +142,16 @@
             my_distro: 'stretch backports'
             my_shell: 'make check'
             my_description: 'run testsuite from piuparts develop branch on stretch with backports enabled.'
-            my_trigger: 'piuparts_testsuite_jessie'
+            my_trigger: ''
         - '{name}_build_sid':
             my_distro: 'sid'
             my_shell: 'debuild -uc -us'
             my_description: 'build the piuparts develop branch on sid.'
+            my_trigger: 'piuparts_build_bullseye'
+        - '{name}_build_bullseye':
+            my_distro: 'bullseye'
+            my_shell: 'debuild -uc -us'
+            my_description: 'build the piuparts develop branch on buster.'
             my_trigger: 'piuparts_build_buster'
         - '{name}_build_buster':
             my_distro: 'buster'
