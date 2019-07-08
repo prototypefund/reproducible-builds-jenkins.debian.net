@@ -541,9 +541,8 @@ for SUITE in $SUITES ; do
 	if [ "$SUITE" = "experimental" ] ; then
 		# no pkg sets in experimental
 		continue
-	elif [ "$SUITE" = "stretch" ] ; then
-		# let's not update the stretch pkg sets anymore
-		# FIXME: once the reproducible_create_meta_pkg_sets job has been run succesful again, dont update package sets for buster anymore
+	elif [ "$SUITE" = "stretch" ] || [ "$SUITE" = "buster" ] ; then
+		# let's not update the stretch or buster pkg sets anymore
 		continue
 	fi
 	echo "============================================================================="
