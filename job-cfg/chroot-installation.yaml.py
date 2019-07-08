@@ -10,20 +10,23 @@ base_distros = [
     'jessie',
     'stretch',
     'buster',
+    'bullseye',
     'sid',
     ]
 
 distro_upgrades = {
     'jessie':  'stretch',
     'stretch':  'buster',
-    'buster': 'sid',
+    'buster': 'bullseye',
+    'bullseye': 'sid',
     }
 
 # deb.debian.org runs mirror updates at 03:25, 09:25, 15:25 and 21:25 UTC and usually they run 10m...
 trigger_times = {
     'jessie':  '30 16 1 */2 *',
     'stretch':  '30 10 7,28 * *',
-    'buster': '30 10 */3 * *',
+    'buster': '30 10 4,11,18,25 * *',
+    'bullseye': '30 10 */3 * *',
     'sid':     '30 4 * * *',
     }
 
@@ -103,10 +106,10 @@ def is_target_in_distro(distro, target):
     if distro in ('jessie') and target in ('education-ltsp-server', 'education-roaming-workstation'):
         return False
     # education-thin-client-server is obsolete since stretch…
-    elif distro in ('sid', 'buster', 'stretch') and target == 'education-thin-client-server':
+    elif distro not in ('jessie') and target == 'education-thin-client-server':
         return False
     # education-services is obsolete since buster…
-    elif distro in ('sid', 'buster') and target == 'education-services':
+    elif distro not in ('jessie', 'stretch') and target == 'education-services':
         return False
     # lxqt is only available since stretch
     elif distro in ('jessie') and target == 'lxqt':
@@ -153,7 +156,7 @@ def get_view(target, distro):
     if target == 'haskell':
         return 'haskell'
     elif target[:10] == 'education-':
-        if distro in ('jessie', 'stretch'):
+        if distro in ('stretch', 'buster'):
             return 'edu_stable'
         else:
             return 'edu_devel'
