@@ -797,36 +797,44 @@ create_debian_png_from_table() {
 		# compatibility with postgres
 		query_to_csv "SELECT stats.datum,
 			 COALESCE(reproducible_stretch,0) AS reproducible_stretch,
+			 COALESCE(reproducible_bullseye,0) AS reproducible_bullseye,
 			 COALESCE(reproducible_buster,0) AS reproducible_buster,
 			 COALESCE(reproducible_unstable,0) AS reproducible_unstable,
 			 COALESCE(reproducible_experimental,0) AS reproducible_experimental,
 			 COALESCE(FTBR_stretch,0) AS FTBR_stretch,
 			 COALESCE(FTBR_buster,0) AS FTBR_buster,
+			 COALESCE(FTBR_bullseye,0) AS FTBR_bullseye,
 			 COALESCE(FTBR_unstable,0) AS FTBR_unstable,
 			 COALESCE(FTBR_experimental,0) AS FTBR_experimental,
 			 COALESCE(FTBFS_stretch,0) AS FTBFS_stretch,
 			 COALESCE(FTBFS_buster,0) AS FTBFS_buster,
+			 COALESCE(FTBFS_bullseye,0) AS FTBFS_bullseye,
 			 COALESCE(FTBFS_unstable,0) AS FTBFS_unstable,
 			 COALESCE(FTBFS_experimental,0) AS FTBFS_experimental,
 			 COALESCE(other_stretch,0) AS other_stretch,
 			 COALESCE(other_buster,0) AS other_buster,
+			 COALESCE(other_bullseye,0) AS other_bullseye,
 			 COALESCE(other_unstable,0) AS other_unstable,
 			 COALESCE(other_experimental,0) AS other_experimental
 			FROM (SELECT s.datum,
 			 COALESCE((SELECT e.reproducible FROM stats_builds_per_day AS e WHERE s.datum=e.datum AND suite='stretch' $WHERE_EXTRA),0) AS reproducible_stretch,
 			 COALESCE((SELECT e.reproducible FROM stats_builds_per_day AS e WHERE s.datum=e.datum AND suite='buster' $WHERE_EXTRA),0) AS reproducible_buster,
+			 COALESCE((SELECT e.reproducible FROM stats_builds_per_day AS e WHERE s.datum=e.datum AND suite='bullseye' $WHERE_EXTRA),0) AS reproducible_bullseye,
 			 COALESCE((SELECT e.reproducible FROM stats_builds_per_day AS e WHERE s.datum=e.datum AND suite='unstable' $WHERE_EXTRA),0) AS reproducible_unstable,
 			 COALESCE((SELECT e.reproducible FROM stats_builds_per_day AS e WHERE s.datum=e.datum AND suite='experimental' $WHERE_EXTRA),0) AS reproducible_experimental,
 			 (SELECT e.FTBR FROM stats_builds_per_day e WHERE s.datum=e.datum AND suite='stretch' $WHERE_EXTRA) AS FTBR_stretch,
 			 (SELECT e.FTBR FROM stats_builds_per_day e WHERE s.datum=e.datum AND suite='buster' $WHERE_EXTRA) AS FTBR_buster,
+			 (SELECT e.FTBR FROM stats_builds_per_day e WHERE s.datum=e.datum AND suite='bullseye' $WHERE_EXTRA) AS FTBR_bullseye,
 			 (SELECT e.FTBR FROM stats_builds_per_day e WHERE s.datum=e.datum AND suite='unstable' $WHERE_EXTRA) AS FTBR_unstable,
 			 (SELECT e.FTBR FROM stats_builds_per_day e WHERE s.datum=e.datum AND suite='experimental' $WHERE_EXTRA) AS FTBR_experimental,
 			 (SELECT e.FTBFS FROM stats_builds_per_day e WHERE s.datum=e.datum AND suite='stretch' $WHERE_EXTRA) AS FTBFS_stretch,
 			 (SELECT e.FTBFS FROM stats_builds_per_day e WHERE s.datum=e.datum AND suite='buster' $WHERE_EXTRA) AS FTBFS_buster,
+			 (SELECT e.FTBFS FROM stats_builds_per_day e WHERE s.datum=e.datum AND suite='bullseye' $WHERE_EXTRA) AS FTBFS_bullseye,
 			 (SELECT e.FTBFS FROM stats_builds_per_day e WHERE s.datum=e.datum AND suite='unstable' $WHERE_EXTRA) AS FTBFS_unstable,
 			 (SELECT e.FTBFS FROM stats_builds_per_day e WHERE s.datum=e.datum AND suite='experimental' $WHERE_EXTRA) AS FTBFS_experimental,
 			 (SELECT e.other FROM stats_builds_per_day e WHERE s.datum=e.datum AND suite='stretch' $WHERE_EXTRA) AS other_stretch,
 			 (SELECT e.other FROM stats_builds_per_day e WHERE s.datum=e.datum AND suite='buster' $WHERE_EXTRA) AS other_buster,
+			 (SELECT e.other FROM stats_builds_per_day e WHERE s.datum=e.datum AND suite='bullseye' $WHERE_EXTRA) AS other_bullseye,
 			 (SELECT e.other FROM stats_builds_per_day e WHERE s.datum=e.datum AND suite='unstable' $WHERE_EXTRA) AS other_unstable,
 			 (SELECT e.other FROM stats_builds_per_day e WHERE s.datum=e.datum AND suite='experimental' $WHERE_EXTRA) AS other_experimental
 			 FROM stats_builds_per_day AS s $WHERE2_EXTRA GROUP BY s.datum) as stats
@@ -850,8 +858,9 @@ create_debian_png_from_table() {
 		case "$SUITE" in
 			stretch)	COLORS=40 ;;
 			buster)		COLORS=41 ;;
-			unstable)	COLORS=42 ;;
-			experimental)	COLORS=43 ;;
+			bullseye)	COLORS=42 ;;
+			unstable)	COLORS=43 ;;
+			experimental)	COLORS=44 ;;
 		esac
 	fi
 	local WIDTH=1920
