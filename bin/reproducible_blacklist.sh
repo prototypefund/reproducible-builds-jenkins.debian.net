@@ -74,7 +74,7 @@ case $SUITE in
 	sid) 	echo "WARNING: sid has been renamed to unstable."
 		SUITE=unstable
 		;;
-	stretch|buster|unstable|experimental) ;;
+	stretch|buster|bullseye|unstable|experimental) ;;
 	*)	echo "$SUITE is not a valid suite".
 		explain_syntax
 		exit 1
