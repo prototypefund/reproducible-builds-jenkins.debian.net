@@ -645,7 +645,7 @@ echo "$(date -u) - Checking for files with bad permissions."
 # automatically fix rbuild files with wrong permissions...
 # (we know it happens (very rarely) but... shrugs.)
 [ ! -d $DEBIAN_BASE/rbuild ] || find $DEBIAN_BASE/rbuild ! -perm 644 -type f -exec chmod -v 644 {} \; 2>/dev/null|| true
-BADPERMS=$(find $DEBIAN_BASE/{buildinfo,dbd,artifacts,stretch,buster,unstable,experimental,rb-pkg} ! -perm 644 -type f 2>/dev/null|| true)
+BADPERMS=$(find $DEBIAN_BASE/{buildinfo,dbd,artifacts,stretch,buster,bullseye,unstable,experimental,rb-pkg} ! -perm 644 -type f 2>/dev/null|| true)
 if [ ! -z "$BADPERMS" ] ; then
     DIRTY=true
     echo
