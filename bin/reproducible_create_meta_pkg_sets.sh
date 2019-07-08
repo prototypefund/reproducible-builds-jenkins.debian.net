@@ -422,7 +422,8 @@ update_pkg_set_specific() {
 			;;
 		maint_debian-accessibility)
 			# debian-accessibility@l.d.o maintainers
-			grep-dctrl -sPackage -n -FMaintainer,Uploaders debian-accessibility@lists.debian.org $SOURCES > $TMPFILE
+			grep-dctrl -sPackage -n -FMaintainer,Uploaders debian-accessibility@lists.debian.org $SOURCES > $TMPFILE || true
+			grep-dctrl -sPackage -n -FMaintainer,Uploaders pkg-a11y-devel@lists.alioth.debian.org $SOURCES >> $TMPFILE || true
 			;;
 		maint_debian-boot)
 			# debian-boot@l.d.o maintainers
