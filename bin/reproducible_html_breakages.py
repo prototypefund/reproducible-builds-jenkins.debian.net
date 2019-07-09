@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 #
-# Copyright © 2015-2018 Mattia Rizzolo <mattia@mapreri.org>
+# Copyright © 2015-2019 Mattia Rizzolo <mattia@mapreri.org>
 # Copyright © 2016-2018 Holger Levsen <holger@layer-acht.org>
 #
 # Licensed under GPL-2
@@ -28,6 +28,7 @@ from rblib.const import (
     HISTORY_PATH, RB_PKG_PATH, DBD_PATH, DBDTXT_PATH, DBDJSON_PATH,
     BUILDINFO_PATH, LOGS_PATH, DIFFS_PATH, RBUILD_PATH,
 )
+
 
 def unrep_with_dbd_issues():
     log.info('running unrep_with_dbd_issues check...')
@@ -60,11 +61,12 @@ def unrep_with_dbd_issues():
                 sources_without_dbd.add(pkg)
     return without_dbd, bad_dbd, sources_without_dbd
 
+
 def count_pkgs(pkgs_to_count=[]):
     counted_pkgs = []
     for pkg, version, suite, arch in pkgs_to_count:
-         if pkg not in counted_pkgs:
-             counted_pkgs.append(pkg)
+        if pkg not in counted_pkgs:
+            counted_pkgs.append(pkg)
     return len(counted_pkgs)
 
 
@@ -172,12 +174,18 @@ def alien_log(directory=None):
                 rversion = ''   # continue towards the "bad file" path
             if strip_epoch(rversion) != version:
                 try:
-                    if os.path.getmtime('/'.join([root, file]))<time.time()-86400:
+                    if os.path.getmtime('/'.join([root, file])) < time.time()-86400:
                         os.remove('/'.join([root, file]))
-                        log.warning('/'.join([root, file]) + ' should not be there and and was older than a day so it was removed.')
+                        log.warning('%s should not be there and was older than a day so it was removed',
+                                    '/'.join([root, file]))
                     else:
                         bad_files.append('/'.join([root, file]))
-                        log.info('/'.join([root, file]) + ' should not be there, but is also less than 24h old and will probably soon be gone. Probably diffoscope is running on that package right now.')
+                        log.info(
+                            '%s should not be there, but is also less than 24h '
+                            'old and will probably soon be gone. Probably '
+                            'diffoscope is running on that package right now.',
+                            '/'.join([root, file])
+                        )
                 except FileNotFoundError:
                     pass  # that bad file is already gone.
     return bad_files
@@ -210,12 +218,15 @@ def alien_buildinfo():
                 rversion = ''   # continue towards the "bad file" path
             if strip_epoch(rversion) != version:
                 try:
-                    if os.path.getmtime('/'.join([root, file]))<time.time()-86400:
+                    if os.path.getmtime('/'.join([root, file])) < time.time()-86400:
                         os.remove('/'.join([root, file]))
-                        log.warning('/'.join([root, file]) + ' should not be there and and was older than a day so it was removed.')
+                        log.warning('%s should not be there and and was older than a day so it was removed.',
+                                    '/'.join([root, file]))
                     else:
                         bad_files.append('/'.join([root, file]))
-                        log.info('/'.join([root, file]) + ' should not be there, but is also less than 24h old and will probably soon be gone.')
+                        log.info('%s should not be there, but is also less than'
+                                 ' 24h old and will probably soon be gone.',
+                                 '/'.join([root, file]))
                 except FileNotFoundError:
                     pass  # that bad file is already gone.
     return bad_files
@@ -284,6 +295,7 @@ def _gen_packages_html(header, pkgs):
         html += '</pre></p>\n'
     return html
 
+
 def _gen_files_html(header, entries):
     html = ''
     if entries:
@@ -294,6 +306,7 @@ def _gen_files_html(header, entries):
             html += tab + entry + '\n'
         html += '</pre></p>\n'
     return html
+
 
 def create_breakages_graph(png_file, main_label):
     png_fullpath = os.path.join(DISTRO_BASE, png_file)
@@ -332,12 +345,16 @@ def update_stats_breakages(diffoscope_timeouts, diffoscope_crashes):
     if not result:
         insert = "INSERT INTO stats_breakages VALUES ('{date}', " + \
                  "'{diffoscope_timeouts}', '{diffoscope_crashes}')"
-        query_db(insert.format(date=YESTERDAY, diffoscope_timeouts=diffoscope_timeouts, diffoscope_crashes=diffoscope_crashes))
+        query_db(insert.format(
+            date=YESTERDAY,
+            diffoscope_timeouts=diffoscope_timeouts,
+            diffoscope_crashes=diffoscope_crashes
+        ))
         log.info("Updating db table stats_breakages on %s with %s timeouts and %s crashes.",
                  YESTERDAY, diffoscope_timeouts, diffoscope_crashes)
     else:
         log.debug("Not updating db table stats_breakages as it already has data for %s.",
-                 YESTERDAY)
+                  YESTERDAY)
 
 
 def gen_html():
@@ -357,35 +374,36 @@ def gen_html():
     html += '<br> <a href="/debian/' + png_file + '"><img src="/debian/'
     html += png_file + '" alt="' + main_label + '"></a>'
     # link artifacts
-    html += '<br/> <a href="https://tests.reproducible-builds.org/debian/artifacts/">Artifacts diffoscope crashed</a> on are available for 48h for download.'
+    html += '<br/> <a href="https://tests.reproducible-builds.org/debian/artifacts/">'
+    html += 'Artifacts diffoscope crashed</a> on are available for 48h for download.'
 
     html += _gen_packages_html('are marked as FTBR, but there is no ' +
-                         'diffoscope output - so probably diffoscope ' +
-                         'crashed:', without_dbd)
+                               'diffoscope output - so probably diffoscope ' +
+                               'crashed:', without_dbd)
     html += _gen_packages_html('are marked as FTBR, but their ' +
-                         'diffoscope output does not seem to be an html ' +
-                         'file - so probably diffoscope ran into a ' +
-                         'timeout:', bad_dbd)
+                               'diffoscope output does not seem to be an html ' +
+                               'file - so probably diffoscope ran into a ' +
+                               'timeout:', bad_dbd)
     # files that should not be there (e.g. removed packages without cleanup)
     html += '<h2>Breakage on jenkins.debian.net</h2>'
     html += _gen_files_html('log files that should not be there (and which will be deleted once they are older than 24h):',
-                         entries=alien_log())
+                            entries=alien_log())
     html += _gen_files_html('diffoscope files that should not be there:',
-                         entries=alien_dbd())
+                            entries=alien_dbd())
     html += _gen_files_html('rb-pkg pages that should not be there:',
-                         entries=alien_rbpkg())
+                            entries=alien_rbpkg())
     html += _gen_files_html('buildinfo files that should not be there (and which will be deleted once they are older than 24h):',
-                         entries=alien_buildinfo())
+                            entries=alien_buildinfo())
     html += _gen_files_html('history pages that should not be there and thus have been removed:',
-                         entries=alien_history())
+                            entries=alien_history())
     # diffoscope reports where they shouldn't be
     html += _gen_packages_html('are not marked as FTBR, but they ' +
-                         'have a diffoscope file:', not_unrep_with_dbd_file())
+                               'have a diffoscope file:', not_unrep_with_dbd_file())
     # missing files
     html += _gen_packages_html('have been built but don\'t have a buildlog:',
-                         lack_rbuild())
+                               lack_rbuild())
     html += _gen_packages_html('have been built but don\'t have a .buildinfo file:',
-                         lack_buildinfo())
+                               lack_buildinfo())
     return html
 
 
