@@ -690,7 +690,7 @@ schema_updates = {
         "INSERT INTO distributions (name) VALUES "
         "('openwrt')"
     ],
-    43: [
+    43: [  # Arch Linux should use the same stati as Debian
         "UPDATE results SET status='reproducible' WHERE status='GOOD'",
         "UPDATE results SET status='blacklisted' WHERE status='BLACKLISTED'"
     ],
@@ -713,6 +713,10 @@ schema_updates = {
                     sr.build_duration, sr.node1, sr.node2, sr.job
                 FROM bullseye AS b JOIN sr ON b.name=sr.name
                     AND b.architecture=sr.architecture""",
+    ],
+    45: [  # fixup #43
+        "UPDATE stats_build SET status='reproducible' WHERE status='GOOD'",
+        "UPDATE stats_build SET status='blacklisted' WHERE status='BLACKLISTED'"
     ],
 }
 
