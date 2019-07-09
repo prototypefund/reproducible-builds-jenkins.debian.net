@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 #
 # Copyright © 2015-2018 Mattia Rizzolo <mattia@mapreri.org>
-# Copyright © 2015 Holger Levsen <holger@layer-acht.org>
+# Copyright © 2015-2019 Holger Levsen <holger@layer-acht.org>
 # Based on various reproducible_* files © 2014-2015 Holger Levsen <holger@layer-acht.org>
 # Licensed under GPL-2
 #
@@ -23,6 +23,8 @@ from rblib.utils import print_critical_message
 
 now = datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
 
+# the current schema is here:
+#   https://tests.reproducible-builds.org/reproducibledb.html
 
 # the original schema is here
 db_schema = [
