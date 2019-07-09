@@ -231,13 +231,20 @@ sb_profitbricks = {
                 'text': 'Sponsored by Profitbricks',
                 'icon': '/userContent/images/profitbricks-24x24.png'}}
 
+di_throttle = {
+    'throttle': {'max-total': 12,
+                 'max-per-node': 12,
+                 'enabled': 'true',
+                 'option': 'category',
+                 'categories': [ 'd-i' ]}}
 
 def prop(type='manual', priority=None):
     p = [sb_about,
          {'sidebar': {'url': 'https://jenkins.debian.net/view/d-i_'+type+'/',
                       'text': 'debian-installer ' + type + ' jobs',
                       'icon': '/userContent/images/debian-jenkins-24x24.png'}},
-         sb_profitbricks]
+         sb_profitbricks,
+         di_throttle]
     if priority is not None:
         p.append({'priority-sorter': {'priority': str(priority)}})
     return p
