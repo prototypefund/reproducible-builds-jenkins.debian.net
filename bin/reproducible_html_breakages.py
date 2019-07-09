@@ -36,7 +36,8 @@ def unrep_with_dbd_issues():
     sources_without_dbd = set()
     query = '''SELECT s.name, r.version, s.suite, s.architecture
                FROM sources AS s JOIN results AS r ON r.package_id=s.id
-               WHERE r.status='FTBR' AND s.architecture!='x86_64'
+               WHERE r.status='FTBR'
+               AND s.distribution = (SELECT id FROM distributions WHERE name = 'debian')
                ORDER BY s.name ASC, s.suite DESC, s.architecture ASC'''
     results = query_db(query)
     for pkg, version, suite, arch in results:
@@ -73,6 +74,7 @@ def not_unrep_with_dbd_file():
     query = '''SELECT s.name, r.version, s.suite, s.architecture
                FROM sources AS s JOIN results AS r ON r.package_id=s.id
                WHERE r.status != 'FTBR'
+               AND s.distribution = (SELECT id FROM distributions WHERE name = 'debian')
                ORDER BY s.name ASC, s.suite DESC, s.architecture ASC'''
     results = query_db(query)
     for pkg, version, suite, arch in results:
@@ -98,7 +100,7 @@ def lack_rbuild():
     query = '''SELECT s.name, r.version, s.suite, s.architecture
                FROM sources AS s JOIN results AS r ON r.package_id=s.id
                WHERE r.status NOT IN ('blacklisted', '')
-               AND s.architecture != 'x86_64'
+               AND s.distribution = (SELECT id FROM distributions WHERE name = 'debian')
                ORDER BY s.name ASC, s.suite DESC, s.architecture ASC'''
     results = query_db(query)
     for pkg, version, suite, arch in results:
@@ -118,7 +120,7 @@ def lack_buildinfo():
                FROM sources AS s JOIN results AS r ON r.package_id=s.id
                WHERE r.status NOT IN
                 ('blacklisted', 'NFU', 'FTBFS', 'timeout', 'depwait', 'E404')
-               AND s.architecture != 'x86_64'
+               AND s.distribution = (SELECT id FROM distributions WHERE name = 'debian')
                ORDER BY s.name ASC, s.suite DESC, s.architecture ASC'''
     results = query_db(query)
     for pkg, version, suite, arch in results:
