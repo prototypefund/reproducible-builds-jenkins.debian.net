@@ -163,7 +163,7 @@ build_jenkins_job_health_page() {
 	FILTER[1]="udd"
 	FILTER[2]="lintian"
 	FILTER[3]="piuparts"
-	FILTER[4]="debian-policy"
+	FILTER[4]="policy_"
 	FILTER[5]="debsums"
 	FILTER[6]="dpkg"
 	FILTER[7]="transitional"
@@ -185,7 +185,8 @@ build_jenkins_job_health_page() {
 	FILTER[23]="g-i-installation_.*presentation"
 	FILTER[24]="g-i-installation_.*rescue"
 	FILTER[25]="g-i-installation_debian-edu_stretch"
-	FILTER[26]="debian-archive-keyring"
+	FILTER[26]="g-i-installation_debian.*hurd"
+	FILTER[27]="debian-archive-keyring"
 	numfilters=${#FILTER[@]}
 	let numfilters-=1	# that's what you get when you start counting from 0
 	write_page "<!DOCTYPE html><html lang=\"en\"><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">"
