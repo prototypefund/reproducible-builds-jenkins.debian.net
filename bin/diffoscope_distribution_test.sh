@@ -68,7 +68,12 @@ check_github_macports() {
 check_whohas() {
 	# the following is "broken" (but good enough for now)
 	# as sort doesn't do proper version comparison
-	DIFFOSCOPE_IN_WHOHAS=$(whohas -d $DISTRIBUTION diffoscope | grep -v "href=" | awk '{print $3}' | sort -n | tail -1)
+	case $DISTRIBUTION in
+		Arch)	DIFFOSCOPE_IN_WHOHAS=$(whohas -d $DISTRIBUTION diffoscope | grep -v "href=" | awk '{print $2}' | cut -d '>' -f2 | cut -d '<' -f1 | sort -n | tail -1)
+			;;
+		*)	DIFFOSCOPE_IN_WHOHAS=$(whohas -d $DISTRIBUTION diffoscope | grep -v "href=" | awk '{print $3}' | sort -n | tail -1)
+			;;
+	esac
 	echo
 	echo
 	if [ "$DIFFOSCOPE_IN_DEBIAN" = "$DIFFOSCOPE_IN_WHOHAS" ] ; then
