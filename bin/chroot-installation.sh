@@ -215,11 +215,7 @@ case $1 in
 			SPECIFIC="libreoffice virt-manager mplayer chromium"
 			FIREFOX="iceweasel"
 			;;
-	buster)		DISTRO="buster"
-			SPECIFIC="libreoffice virt-manager mplayer chromium"
-			FIREFOX="firefox-esr"
-			;;
-	sid)		DISTRO="sid"
+	buster|bullseye|sid)	DISTRO="$1"
 			SPECIFIC="libreoffice virt-manager mplayer chromium"
 			FIREFOX="firefox firefox-esr"
 			;;
@@ -291,7 +287,7 @@ fi
 
 if [ "$3" != "" ] ; then
 	case $3 in
-		jessie|stretch|buster|sid)	upgrade2 $3;;
+		jessie|stretch|buster|bullseye|sid)	upgrade2 $3;;
 		*)		echo "unsupported distro." ; exit 1 ;;
 	esac
 fi
