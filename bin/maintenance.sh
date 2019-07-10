@@ -185,7 +185,7 @@ build_jenkins_job_health_page() {
 	FILTER[23]="g-i-installation_.*presentation"
 	FILTER[24]="g-i-installation_.*rescue"
 	FILTER[25]="g-i-installation_debian-edu_stretch"
-	FILTER[26]="g-i-installation_debian.*hurd"
+	FILTER[26]="g-i-installation_.*hurd"
 	FILTER[27]="debian-archive-keyring"
 	numfilters=${#FILTER[@]}
 	let numfilters-=1	# that's what you get when you start counting from 0
