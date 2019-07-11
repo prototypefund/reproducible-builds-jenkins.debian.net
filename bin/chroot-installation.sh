@@ -217,7 +217,11 @@ case $1 in
 			;;
 	buster|bullseye|sid)	DISTRO="$1"
 			SPECIFIC="libreoffice virt-manager mplayer chromium"
-			FIREFOX="firefox firefox-esr"
+			if [ "$DISTRO" = "sid" ] ; then
+				FIREFOX="firefox firefox-esr"
+			else
+				FIREFOX="firefox-esr"
+			fi
 			;;
 	*)		echo "unsupported distro."
 			exit 1
