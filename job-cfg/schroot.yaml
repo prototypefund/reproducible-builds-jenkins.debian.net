@@ -58,7 +58,7 @@
         builders:
                 - shell: 'schroot --directory /root -u root -c source:jenkins-{my_schroot} -- apt-get update'
                 - shell: 'schroot --directory /root -u root -c source:jenkins-{my_schroot} -- apt-get -y -u dist-upgrade'
-                - shell: 'schroot --directory /root -u root -c source:jenkins-{my_schroot} -- apt-get --purge autoremove'
+                - shell: 'schroot --directory /root -u root -c source:jenkins-{my_schroot} -- apt-get -y --purge autoremove'
 
 - job-template:
         defaults: schroot-create
