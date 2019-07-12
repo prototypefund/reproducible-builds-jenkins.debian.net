@@ -161,14 +161,14 @@ if [ "$HOSTNAME" = "$MAINNODE" ] ; then
 			reproducible_node_health_check_*)
 				NODE_ALIAS=$(echo $i | cut -d '_' -f6)
 				NODE_ARCH=$(echo $i | cut -d '_' -f5)
-				FORCE_DATE=$(date -u -d "2 hour ago" '+%Y-%m-%d %H:%M')
-				MAXDIFF=8
+				FORCE_DATE=$(date -u -d "3 hour ago" '+%Y-%m-%d %H:%M')
+				MAXDIFF=12
 				;;
 			reproducible_maintenance_*)
 				NODE_ALIAS=$(echo $i | cut -d '_' -f4)
 				NODE_ARCH=$(echo $i | cut -d '_' -f3)
-				FORCE_DATE=$(date -u -d "5 hour ago" '+%Y-%m-%d %H:%M')
-				MAXDIFF=2
+				FORCE_DATE=$(date -u -d "8 hour ago" '+%Y-%m-%d %H:%M')
+				MAXDIFF=3
 				;;
 		esac
 		touch -d "$FORCE_DATE" $DUMMY_FILE
