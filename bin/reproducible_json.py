@@ -59,7 +59,7 @@ for row in result:
     output.append(pkg)
 
     # tracker.d.o should only care about results in testing
-    if pkg['suite'] == 'buster':
+    if pkg['suite'] == 'bullseye':
 
         package = pkg['package']
         if package in crossarch:
