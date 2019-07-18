@@ -796,13 +796,6 @@
 
         - '{name}_{otherproject_git}':
             otherproject_git:
-                - 'reprotest_from_git_master':
-                    my_description: 'Build reprotest Debian package from git branch master.'
-                    my_timed: '42 23 1 1 *'
-                    my_gitrepo: 'https://salsa.debian.org/reproducible-builds/reprotest.git'
-                    my_gitbranches: 'origin/master'
-                    my_shell: '/srv/jenkins/bin/chroot-run.sh sid debuild -uc -us'
-                    my_parse_rules: '/srv/jenkins/logparse/debian-pkg-ci.rules'
                 - 'disorderfs_from_git_master':
                     my_description: 'Build disorderfs Debian package from git branch master.'
                     my_timed: '42 23 1 1 *'
