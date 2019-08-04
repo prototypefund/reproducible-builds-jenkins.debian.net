@@ -657,7 +657,7 @@ EOF
 	# build path is only varied on unstable and experimental
 	if [ "${SUITE}" = "unstable" ] || [ "$SUITE" = "experimental" ]; then
 		local src_dir_name="$(perl -mDpkg::Source::Package -e '$_ = Dpkg::Source::Package->new(filename => $ARGV[0])->get_basename; s/_/-/g; print' -- "${SRCPACKAGE}_${EVERSION}.dsc")"
-		echo "BUILDDIR=/build/$src_dir_name" >> "$TMPCFG"
+		echo "BUILDDIR=/build/2/$src_dir_name" >> "$TMPCFG"
 		echo "BUILDSUBDIR=2nd" >> "$TMPCFG"
 	else
 		echo "BUILDDIR=/build" >> "$TMPCFG"
