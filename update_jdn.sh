@@ -282,7 +282,7 @@ if [ -f /etc/debian_version ] ; then
 			"
 		case $HOSTNAME in
 			# running buster already
-			osuosl-build174-amd64) DEBS="$DEBS
+			osuosl*) DEBS="$DEBS
 				debootstrap
 				munin-node
 				munin-plugins-core
@@ -370,20 +370,20 @@ if [ -f /etc/debian_version ] ; then
 		# needed to run fdroid jobs
 		case $HOSTNAME in
 			osuosl-build168-amd64) DEBS="$DEBS
-				androguard/stretch-backports
+				androguard
 				android-sdk
 				bzr
 				git-svn
-				fdroidserver/stretch-backports
+				fdroidserver
 				linux-headers-amd64
 				mercurial
-				python3-asn1crypto/stretch-backports
+				python3-asn1crypto
 				python3-babel
-				python3-mwclient/stretch-backports
+				python3-mwclient
 				python3-setuptools
 				subversion
-				vagrant/stretch-backports
-				virtualbox/stretch-backports"
+				vagrant
+				virtualbox
 			;;
 			*) ;;
 		esac
@@ -506,7 +506,8 @@ if [ -f /etc/debian_version ] ; then
 			sudo apt install linux-image-amd64:amd64
 		elif [ "$HOSTNAME" = "osuosl-build169-amd64" ] || [ "$HOSTNAME" = "osuosl-build170-amd64" ] ; then
 			# Arch Linux builds latest stuff which sometimes (eg, currentlt Qt) needs newer kernel to build...
-			sudo apt install linux-image-amd64/stretch-backports || true # backport kernels are frequently uninstallable...
+			#sudo apt install linux-image-amd64/stretch-backports || true # backport kernels are frequently uninstallable...
+			:
 		fi
 		# don't (re-)install pbuilder if it's on hold
 		if [ "$(dpkg-query -W -f='${db:Status-Abbrev}\n' pbuilder)" != "hi " ] ; then
