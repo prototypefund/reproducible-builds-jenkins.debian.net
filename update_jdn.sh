@@ -363,7 +363,8 @@ if [ -f /etc/debian_version ] ; then
 				tree
 				unzip
 				util-linux
-				zlib1g-dev"
+				zlib1g-dev
+				"
 			;;
 			*) ;;
 		esac
@@ -384,6 +385,7 @@ if [ -f /etc/debian_version ] ; then
 				subversion
 				vagrant
 				virtualbox
+				"
 			;;
 			*) ;;
 		esac
@@ -487,7 +489,8 @@ if [ -f /etc/debian_version ] ; then
 				xtightvncviewer
 				xvfb
 				xvkbd
-				zutils"
+				zutils
+				"
 		else
 			MASTERDEBS=""
 		fi

@@ -93,7 +93,7 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 
 === Debian rebuilder
 
-* prototype only dealing with buster and amd64 (and arch all packages)
+* prototype only dealing with bullseye and amd64 (and arch all packages)
 ** this is true for the rebuilder part, but .buildinfo files for all Debian architectures should be tracked in the db
 ** also treat the base suite archive and its security, update and backports archives seperatly
 *** store hash of processed Packages file and only process a Packages file if it has an unknown hash -> good for suites which are not updated often
@@ -110,7 +110,7 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 
 === upgrades to buster
 
-* only done on osuosl174 yet. 
+* only done on some nodes yet. 
 ** so we can drop hosts/osuosl-build174-amd64/etc/apt/sources.list once hosts/common/... has buster
 
 ==== proper backup
