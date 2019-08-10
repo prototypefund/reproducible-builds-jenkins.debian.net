@@ -40,7 +40,7 @@ if [ -x /usr/bin/disorderfs ] ; then
 	echo -n "Moving $BUILDDIR to /tmp/disorderfs and mounting this as $BUILDDIR via the fuse disorderfs…"
 	mknod -m 666 /dev/fuse c 10 229
 	mv "$BUILDDIR" /tmp/disorderfs
-	mkdir "$BUILDDIR"
+	mkdir -p "$BUILDDIR"
 	disorderfs --multi-user=yes /tmp/disorderfs "$BUILDDIR"
 	echo " done."
 else
