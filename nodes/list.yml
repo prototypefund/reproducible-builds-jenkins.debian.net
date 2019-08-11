@@ -15,7 +15,7 @@
   keys:
     - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFez9q/k1rxbsQ2odoGTvThfyi+TlYTKNagNsjTcQrYA root@profitbricks-build2-i386
 - hostname: profitbricks-build5-amd64.debian.net
-  ip: 85.184.249.46
+  ip: 85.184.249.130
   keys:
     - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJIxI1NQOcSv4GZqBcixQ2hA/nTGxsxMc9N5UUjuR3V2 root@debian
 - hostname: profitbricks-build6-i386.debian.net
