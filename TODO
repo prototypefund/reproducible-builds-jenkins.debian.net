@@ -108,10 +108,6 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 * import data on jenkins
 * schedule/trigger rebuilds on osuosl173, put data in sqlite on pb7
 
-=== upgrades to buster
-
-* only done on some nodes yet. 
-** so we can drop hosts/osuosl-build174-amd64/etc/apt/sources.list once hosts/common/... has buster
 
 ==== proper backup
 

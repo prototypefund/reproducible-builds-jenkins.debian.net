@@ -281,15 +281,9 @@ if [ -f /etc/debian_version ] ; then
 			zsh
 			"
 		case $HOSTNAME in
-			# running buster already
-			osuosl*|profitbricks*) DEBS="$DEBS
-				debootstrap
-				munin-node
-				munin-plugins-core
-				munin-plugins-extra
-				pbuilder
-				" ;;
-			*) DEBS="$DEBS
+			codethink*)
+				# install debootstrap from stretch-backports on ubuntu nodes as since 20180927 debootstrap 1.0.78+nmu1ubuntu1.6 cannot install sid anymore
+				DEBS="$DEBS
 				debootstrap/stretch-backports
 				munin-node/stretch-backports
 				munin-plugins-core/stretch-backports
@@ -318,12 +312,6 @@ if [ -f /etc/debian_version ] ; then
 				kgb-client
 				python3-yaml" ;;
 			*) ;;
-		esac
-		# install debootstrap from stretch-backports on ubuntu nodes as since 20180927 debootstrap 1.0.78+nmu1ubuntu1.6 cannot install sid anymore
-		case $HOSTNAME in
-			codethink*) DEBS="$DEBS
-				debootstrap/stretch-backports" ;;
-			*) 	;;
 		esac
 		# needed to run the 2nd reproducible builds nodes in the future...
 		case $HOSTNAME in
@@ -428,7 +416,7 @@ if [ -f /etc/debian_version ] ; then
 				imagemagick 
 				ip2host
 				jekyll
-				jenkins-job-builder/stretch-backports
+				jenkins-job-builder
 				jq
 				kgb-client
 				libcap2-bin 
@@ -440,7 +428,7 @@ if [ -f /etc/debian_version ] ; then
 				moreutils 
 				mr 
 				mtr-tiny 
-				munin/stretch-backports
+				munin
 				ntp 
 				obfs4proxy
 				openbios-ppc 
@@ -479,7 +467,7 @@ if [ -f /etc/debian_version ] ; then
 				shorewall6 
 				sqlite3 
 				syslinux
-				systemd/stretch-backports
+				systemd
 				thin-provisioning-tools
 				tor
 				vncsnapshot 
