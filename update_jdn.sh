@@ -382,7 +382,7 @@ if [ -f /etc/debian_version ] ; then
 			DEBS="$DEBS postfix-pcre"
 			# only needed on the main node
 		elif [ "$HOSTNAME" = "jenkins" ] ; then
-			DEBS="$DEBS ffmpeg libav-tools python3-popcon dose-extra"
+			DEBS="$DEBS ffmpeg python3-popcon dose-extra"
 		fi
 		# mock is needed to build fedora
 		if [ "$HOSTNAME" = "osuosl-build171-amd64" ] || [ "$HOSTNAME" = "osuosl-build172-amd64" ] || [ "$HOSTNAME" = "jenkins" ] ; then
@@ -449,8 +449,8 @@ if [ -f /etc/debian_version ] ; then
 				python3-yaml
 				python-arpy 
 				python-hachoir-metadata 
-				python-imaging 
 				python-lzma 
+				python-pil
 				python-pip 
 				python-setuptools 
 				python-twisted 
