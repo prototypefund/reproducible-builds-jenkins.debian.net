@@ -282,7 +282,7 @@ if [ -f /etc/debian_version ] ; then
 			"
 		case $HOSTNAME in
 			# running buster already
-			osuosl*|*i386*) DEBS="$DEBS
+			osuosl*|profitbricks*) DEBS="$DEBS
 				debootstrap
 				munin-node
 				munin-plugins-core
@@ -502,7 +502,8 @@ if [ -f /etc/debian_version ] ; then
 		# - this is done as a seperate step as bpo kernels are frequently uninstallable when upgraded on bpo
 		if [ "$HOSTNAME" = "profitbricks-build5-amd64" ] || [ "$HOSTNAME" = "profitbricks-build15-amd64" ] \
 			|| [ "$HOSTNAME" = "osuosl-build172-amd64" ] ; then
-			sudo apt install linux-image-amd64/stretch-backports || true # backport kernels are frequently uninstallable...
+			#sudo apt install linux-image-amd64/stretch-backports || true # backport kernels are frequently uninstallable...
+			:
 		elif [ "$HOSTNAME" = "profitbricks-build6-i386" ] || [ "$HOSTNAME" = "profitbricks-build16-i386" ] \
 			|| [ "$HOSTNAME" = "profitbricks-build2-i386" ] || [ "$HOSTNAME" = "profitbricks-build12-i386" ] ; then
 			# we dont vary the kernel on i386 atm, see #875990 + #876035
