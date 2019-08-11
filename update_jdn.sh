@@ -433,7 +433,7 @@ if [ -f /etc/debian_version ] ; then
 				obfs4proxy
 				openbios-ppc 
 				openbios-sparc 
-				openjdk-8-jre 
+				openjdk-11-jre-headless
 				pandoc
 				postgresql
 				postgresql-autodoc
