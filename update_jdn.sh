@@ -282,7 +282,7 @@ if [ -f /etc/debian_version ] ; then
 			"
 		case $HOSTNAME in
 			# running buster already
-			osuosl*) DEBS="$DEBS
+			osuosl*|*i386*) DEBS="$DEBS
 				debootstrap
 				munin-node
 				munin-plugins-core
