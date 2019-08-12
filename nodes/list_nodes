@@ -4,6 +4,6 @@ import os
 import yaml
 
 with open(os.path.join(os.path.dirname(__file__), 'list.yml')) as f:
-    d = yaml.load(f)
+    d = yaml.safe_load(f)
     for host in d:
         print(host['hostname'])
