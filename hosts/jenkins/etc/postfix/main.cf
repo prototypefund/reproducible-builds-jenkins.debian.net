@@ -11,16 +11,6 @@ append_dot_mydomain = no
 readme_directory = /usr/share/doc/postfix
 html_directory = /usr/share/doc/postfix/html
 
-# TLS parameters
-smtpd_tls_cert_file=/etc/ssl/certs/ssl-cert-snakeoil.pem
-smtpd_tls_key_file=/etc/ssl/private/ssl-cert-snakeoil.key
-smtpd_use_tls=yes
-smtpd_tls_session_cache_database = btree:${data_directory}/smtpd_scache
-smtp_tls_session_cache_database = btree:${data_directory}/smtp_scache
-
-# See /usr/share/doc/postfix/TLS_README.gz in the postfix-doc package for
-# information on enabling SSL in the smtp client.
-
 smtpd_relay_restrictions = permit_mynetworks permit_sasl_authenticated permit_auth_destination reject
 myhostname = jenkins.debian.net
 alias_maps = hash:/etc/aliases
@@ -28,9 +18,21 @@ alias_database = hash:/etc/aliases
 myorigin = /etc/mailname
 mydestination = jenkins.debian.net, reproducible.debian.net, localhost.debian.net, localhost
 relayhost = 
-#mynetworks = 127.0.0.0/8 [::ffff:127.0.0.0]/104 [::1]/128
-mynetworks = 127.0.0.0/8
+mynetworks = 127.0.0.0/8 [::ffff:127.0.0.0]/104 [::1]/128
 mailbox_size_limit = 0
 recipient_delimiter = +
 inet_interfaces = all
 mailbox_command = /usr/bin/procmail -a "$EXTENSION"
+
+# TLS parameters
+smtpd_tls_cert_file=/etc/ssl/certs/ssl-cert-snakeoil.pem
+smtpd_tls_key_file=/etc/ssl/private/ssl-cert-snakeoil.key
+smtpd_tls_ask_ccert = yes
+smtp_tls_security_level = may
+smtpd_tls_security_level = may
+smtp_tls_loglevel = 1
+smtpd_tls_loglevel = 1
+smtpd_tls_session_cache_database = btree:${data_directory}/smtpd_scache
+smtp_tls_session_cache_database = btree:${data_directory}/smtp_scache
+smtp_tls_CAfile = /etc/ssl/certs/ca-certificates.crt
+smtpd_tls_received_header = yes
