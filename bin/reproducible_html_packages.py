@@ -182,7 +182,7 @@ def gen_suitearch_details(package, version, suite, arch, status, spokenstatus,
         context['buildlogs'] = {}
         if build.build2 and build.logdiff:
             context['buildlogs']['build2_uri'] = build.build2.url
-            context['buildlogs']['build2_size'] = build.build2.size
+            context['buildlogs']['build2_size'] = sizeof_fmt(build.build2.size)
             context['buildlogs']['diff_uri'] = build.logdiff.url
         else:
             log.error('Either {} or {} is missing'.format(
