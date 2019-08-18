@@ -82,7 +82,7 @@
     name: lintian-tests
     my_git_url: 'https://salsa.debian.org/lintian/lintian'
     my_recipients: 'jenkins+debian-qa lintian-maint@debian.org'
-    my_shell: 'timeout 6h debian/rules runtests'
+    my_shell: 'timeout 1h debian/rules runtests'
     my_description: 'Debian/Lintian testsuite'
     my_distro:
       - sid:
@@ -105,7 +105,7 @@
     name: debian-archive-keyring-tests
     my_git_url: 'https://salsa.debian.org/release-team/debian-archive-keyring'
     my_recipients: 'jenkins+debian-qa debian-release@lists.debian.org'
-    my_shell: 'timeout 6h dpkg-buildpackage -us -uc -tc'
+    my_shell: 'timeout 1h dpkg-buildpackage -us -uc -tc'
     my_description: 'debian-archive-keyring testsuite'
     my_distro:
       - sid: *distro_defaults_sid
