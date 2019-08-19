@@ -55,6 +55,10 @@ TMPLOG=$(mktemp --tmpdir=$TMPDIR schroot-create-XXXXXXXX)
 cleanup() {
 	cd
 	if [ -d "$SCHROOT_TARGET" ]; then
+		local i
+		for i in $(findmnt -l -c | awk '{print $1}' | grep "^$SCHROOT_TARGET"); do
+			sudo umount "$i"
+		done
 		sudo rm -rf --one-file-system "$SCHROOT_TARGET" || ( echo "Warning: $SCHROOT_TARGET could not be fully removed during cleanup." ; ls "$SCHROOT_TARGET" -la )
 	fi
 	rm -f "$TMPLOG"
@@ -149,9 +153,7 @@ bootstrap() {
 
 	robust_chroot_apt update
 	if [ -n "$1" ] ; then
-		for d in proc ; do
-			sudo mount --bind /$d $SCHROOT_TARGET/$d
-		done
+		sudo mount --bind /proc $SCHROOT_TARGET/proc
 		set -x
 		robust_chroot_apt update
 		# first, (if), install diffoscope with all recommends...
@@ -183,10 +185,7 @@ bootstrap() {
 			sudo chroot $SCHROOT_TARGET dpkg -l diffoscope
 			echo
 		fi
-		# umount in reverse order than how they were mounted earlier
-		for d in proc ; do
-			sudo umount -l $SCHROOT_TARGET/$d
-		done
+		sudo umount -l $SCHROOT_TARGET/proc
 		# configure sudo inside just like outside
 		echo "jenkins    ALL=NOPASSWD: ALL" | sudo tee -a $SCHROOT_TARGET/etc/sudoers.d/jenkins >/dev/null
 		sudo chroot $SCHROOT_TARGET chown root.root /etc/sudoers.d/jenkins
