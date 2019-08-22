@@ -505,6 +505,9 @@ update_pkg_set_specific() {
 		maint_pkg-php-pear)
 			# pkg-php-pear
 			grep-dctrl -sPackage -n -FMaintainer,Uploaders pkg-php-pear@lists.alioth.debian.org $SOURCES > $TMPFILE
+			grep-dctrl -sPackage -n -FMaintainer,Uploaders team+pkg-php@tracker.debian.org $SOURCES >> $TMPFILE
+			# pkg-horde
+			grep-dctrl -sPackage -n -FMaintainer,Uploaders team+debian-horde-team@tracker.debian.org $SOURCES >> $TMPFILE
 			;;
 		maint_pkg-ruby-extras-maintainers)
 			# pkg-ruby-extras-maintainers
