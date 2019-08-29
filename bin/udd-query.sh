@@ -38,8 +38,7 @@ multiarch_versionskew() {
 				release='$DISTRO' AND
 				multi_arch='same' AND
 					architecture IN ('amd64', 'arm64', 'armel', 'armhf', 'i386',
-					'kfreebsd-amd64', 'kfreebsd-i386', 'mips', 'mipsel',
-					'mips64el', 'powerpc', 'ppc64el', 's390x')
+					'mipsel', 'mips64el', 'ppc64el', 's390x')
 				ORDER BY source) AS all_versions
 				GROUP BY source, package
 				HAVING count(*) > 1
