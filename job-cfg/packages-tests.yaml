@@ -48,11 +48,13 @@
           regular-expression: '^ERROR: Error cloning remote repo'
     my_default_distro_matrix: &distros_defaults
       - sid: &distro_defaults_sid
-          my_trigger: '{name}_buster'
+          my_trigger: '{name}_bullseye'
           my_origin_triggers: &default_git_triggers
             - pollscm:
                 cron: '15,30,45,60 * * * *'
-      - buster: &distro_defaults_buster
+      - bullseye: &distro_defaults_bullseye
+          my_trigger: '{name}_buster'
+      - buster: &distro_defaults_buster {}
           my_trigger: '{name}_stretch'
       - stretch: &distro_defaults_stretch {}
 
@@ -90,7 +92,11 @@
           my_origin_triggers:
             - gitlab:
                 secret-token: '{{AQAAABAAAAAwUn9vCBPUfLVePuJ0YzGIefo56GNDCX04sk6uDaZRv9lXSlGM1xzrj3Lap8neBcCtFzq6OoqwTUKfRQggb6tu4Q==}}'
+      - bullseye:
+          <<: *distro_defaults_bullseye
       - buster:
+          <<: *distro_defaults_buster
+      - buster-backports:
           <<: *distro_defaults_buster
           my_trigger: '{name}_stretch-backports'
       - stretch:
@@ -109,8 +115,8 @@
     my_description: 'debian-archive-keyring testsuite'
     my_distro:
       - sid: *distro_defaults_sid
-      - buster: *distro_defaults_buster
-      - stretch: {}
+      - bullseye: *distro_defaults_bullseye
+      - buster: {}
     jobs:
       - simple
 
@@ -122,7 +128,7 @@
     my_description: 'Debian/Debsums testsuite'
     my_distro:
       - sid: *distro_defaults_sid
-      - buster: *distro_defaults_buster
-      - stretch: {}
+      - bullseye: *distro_defaults_bullseye
+      - buster: {}
     jobs:
       - simple
