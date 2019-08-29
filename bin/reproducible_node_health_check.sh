@@ -164,6 +164,13 @@ if ! systemctl is-system-running > /dev/null; then
     DIRTY=true
 fi
 
+# checks only for the main node
+#
+if [ "$HOSTNAME" = "$MAINNODE" ] ; then
+	jenkins_zombie_check
+	jenkins_logsize_check
+fi
+
 #
 # finally
 #

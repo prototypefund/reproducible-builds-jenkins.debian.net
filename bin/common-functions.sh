@@ -227,6 +227,7 @@ jenkins_zombie_check() {
 	#
 	ZOMBIES=$(ls -1d /var/lib/jenkins/jobs/* | egrep 'strip-nondeterminism|reprotest|reproducible_(builder_(amd64|i386|armhf|arm64)|setup_(pbuilder|schroot)_testing)|chroot-installation_wheezy|aptdpkg|odc2a|stretch_install_education-thin-client-server|jessie_multiarch_versionskew|dpkg_stretch_find_trigger_cycles|sid_install_education-services|buster_install_education-services|lvc|chroot-installation_stretch_.*_upgrade_to_sid|piuparts_.*_jessie|udd_stretch|d-i_pu-build|debsums-tests_stretch|debian-archive-keyring-tests_stretch' || true)
 	if [ ! -z "$ZOMBIES" ] ; then
+		DIRTY=true
 		figlet 'zombies!!!'
 		echo "Warning, rise of the jenkins job zombies has started again, these jobs should not exist:"
 		for z in $ZOMBIES ; do
@@ -243,11 +244,13 @@ jenkins_logsize_check() {
 	# and we don't yet know why, so let's monitor this for now.
 	JENKINSLOG="$(find /var/log/jenkins -name jenkins.log -size +42G)"
 	if [ -z "JENKINSLOG" ] ; then
+		figlet 'jenkins.log size'
 		echo "Warning, jenkins.log is larger than 42G, please fix, erroring out now."
 		exit 1
 	else
 		JENKINSLOG="$(find /var/log/jenkins -name jenkins.log -size +23G)"
 		if [ -z "JENKINSLOG" ] ; then
+			DIRTY=true
 			figlet 'jenkins.log size'
 			echo "Warning, jenkins.log is larger than 23G, please do something…"
 		fi
