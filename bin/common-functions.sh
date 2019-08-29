@@ -256,3 +256,8 @@ jenkins_logsize_check() {
 		fi
 	fi
 }
+
+jenkins_bugs_check() {
+	jenkins_zombie_check
+	jenkins_logsize_check
+}

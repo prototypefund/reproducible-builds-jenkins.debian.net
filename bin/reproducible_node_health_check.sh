@@ -167,8 +167,7 @@ fi
 # checks only for the main node
 #
 if [ "$HOSTNAME" = "$MAINNODE" ] ; then
-	jenkins_zombie_check
-	jenkins_logsize_check
+	jenkins_bugs_check
 fi
 
 #

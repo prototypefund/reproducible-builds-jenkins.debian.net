@@ -792,8 +792,7 @@ explain "$(date) - finished deployment."
 # some final checks only for the jenkins
 #
 if [ "$HOSTNAME" = "jenkins" ] ; then
-	jenkins_zombie_check
-	jenkins_logsize_check
+	jenkins_bugs_check
 	explain "$(date) - done checking for known jenkins bugs."
 fi
 
