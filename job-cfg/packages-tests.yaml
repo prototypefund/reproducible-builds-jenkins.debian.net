@@ -54,7 +54,7 @@
                 cron: '15,30,45,60 * * * *'
       - bullseye: &distro_defaults_bullseye
           my_trigger: '{name}_buster'
-      - buster: &distro_defaults_buster {}
+      - buster: &distro_defaults_buster 
           my_trigger: '{name}_stretch'
       - stretch: &distro_defaults_stretch {}
 
