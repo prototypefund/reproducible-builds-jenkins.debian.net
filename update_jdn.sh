@@ -817,6 +817,7 @@ if [ "$HOSTNAME" = "jenkins" ] ; then
 			echo "Warning, jenkins.log is larger than 23G, please do something…"
 		fi
 	fi
+	explain "$(date) - done checking for known jenkins bugs."
 fi
 
 
