@@ -167,6 +167,7 @@ fi
 # checks only for the main node
 #
 if [ "$HOSTNAME" = "$MAINNODE" ] ; then
+	echo "$(date -u) - checking for known jenkins problems..."
 	jenkins_bugs_check
 fi
 
