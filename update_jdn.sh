@@ -25,6 +25,9 @@
 
 set -e
 
+# prevent failure on first run...
+[ ! -f /srv/jenkins/bin/common-functions.sh ] || . /srv/jenkins/bin/common-functions.sh
+
 BASEDIR="$(dirname "$(readlink -e $0)")"
 STAMP=/var/log/jenkins/update-jenkins.stamp
 # The $@ below means that command line args get passed on to j-j-b
@@ -789,35 +792,8 @@ explain "$(date) - finished deployment."
 # some final checks only for the jenkins
 #
 if [ "$HOSTNAME" = "jenkins" ] ; then
-	#
-	# sometimes deleted jobs come back as zombies
-	# and we dont know why and when that happens,
-	# so just report those zombies here.
-	#
-	ZOMBIES=$(ls -1d /var/lib/jenkins/jobs/* | egrep 'strip-nondeterminism|reprotest|reproducible_(builder_(amd64|i386|armhf|arm64)|setup_(pbuilder|schroot)_testing)|chroot-installation_wheezy|aptdpkg|odc2a|stretch_install_education-thin-client-server|jessie_multiarch_versionskew|dpkg_stretch_find_trigger_cycles|sid_install_education-services|buster_install_education-services|lvc|chroot-installation_stretch_.*_upgrade_to_sid|piuparts_.*_jessie|udd_stretch|d-i_pu-build|debsums-tests_stretch|debian-archive-keyring-tests_stretch' || true)
-	if [ ! -z "$ZOMBIES" ] ; then
-		figlet 'zombies!!!'
-		echo "Warning, rise of the jenkins job zombies has started again, these jobs should not exist:"
-		for z in $ZOMBIES ; do
-
-			echo $(basename $z)
-		done
-		echo
-	fi
-	#
-	# /var/log/jenkins/jenkins.log sometimes grows very fast
-	# and we don't yet know why, so let's monitor this for now.
-	JENKINSLOG="$(find /var/log/jenkins -name jenkins.log -size +42G)"
-	if [ -z "JENKINSLOG" ] ; then
-		echo "Warning, jenkins.log is larger than 42G, please fix, erroring out now."
-		exit 1
-	else
-		JENKINSLOG="$(find /var/log/jenkins -name jenkins.log -size +23G)"
-		if [ -z "JENKINSLOG" ] ; then
-			figlet 'jenkins.log size'
-			echo "Warning, jenkins.log is larger than 23G, please do something…"
-		fi
-	fi
+	jenkins_zombie_check
+	jenkins_logsize_check
 	explain "$(date) - done checking for known jenkins bugs."
 fi
 
