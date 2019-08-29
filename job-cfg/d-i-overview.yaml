@@ -55,7 +55,6 @@
       - kfreebsd-i386
       - mips
       - mipsel
-      - powerpc
       - ppc64el
       - s390x
     jobs:
