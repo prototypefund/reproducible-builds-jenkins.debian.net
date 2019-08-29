@@ -613,7 +613,7 @@ schema_updates = {
         for t in ("sources", "stats_pkg_state", "stats_builds_per_day",
                   "stats_builds_age", "stats_meta_pkg_state", "stats_build")
     ],
-    32: [  # copy stretch packages (includng results) in buster
+    32: [  # copy stretch packages (including results) in buster
         """INSERT INTO sources (name, version, suite, architecture, notify_maintainer)
             SELECT name, version, 'buster', architecture, notify_maintainer
             FROM sources
@@ -694,7 +694,7 @@ schema_updates = {
         "UPDATE results SET status='reproducible' WHERE status='GOOD'",
         "UPDATE results SET status='blacklisted' WHERE status='BLACKLISTED'"
     ],
-    44: [  # copy buster packages (includng results) in bullseye
+    44: [  # copy buster packages (including results) in bullseye
         """INSERT INTO sources (name, version, suite, architecture, notify_maintainer, distribution)
             SELECT name, version, 'bullseye', architecture, notify_maintainer, distribution
             FROM sources
