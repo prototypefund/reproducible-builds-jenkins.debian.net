@@ -26,7 +26,7 @@
 set -e
 
 # prevent failure on first run...
-[ ! -f /srv/jenkins/bin/common-functions.sh ] || source /srv/jenkins/bin/common-functions.sh
+[ ! -f /srv/jenkins/bin/common-functions.sh ] || . /srv/jenkins/bin/common-functions.sh
 
 BASEDIR="$(dirname "$(readlink -e $0)")"
 STAMP=/var/log/jenkins/update-jenkins.stamp
@@ -796,9 +796,9 @@ if [ "$HOSTNAME" = "jenkins" ] ; then
 	explain "$(date) - done checking for known jenkins bugs."
 fi
 
-#
+
+
 # finally!
-#
 case $HOSTNAME in
 	# set time back to the future
 	profitbricks-build5-amd64|profitbricks-build6-i386|profitbricks-build15-amd64|profitbricks-build16-i386)
