@@ -116,7 +116,10 @@
     my_distro:
       - sid: *distro_defaults_sid
       - bullseye: *distro_defaults_bullseye
-      - buster: {}
+      - buster: *distro_defaults_buster
+      - stretch: {}
+          <<: *distro_defaults_stretch
+          my_disabled: true
     jobs:
       - simple
 
@@ -129,6 +132,9 @@
     my_distro:
       - sid: *distro_defaults_sid
       - bullseye: *distro_defaults_bullseye
-      - buster: {}
+      - buster: *distro_defaults_buster
+      - stretch: {}
+          <<: *distro_defaults_stretch
+          my_disabled: true
     jobs:
       - simple
