@@ -7,7 +7,6 @@ import string
 
 
 base_distros = [
-    'jessie',
     'stretch',
     'buster',
     'bullseye',
@@ -15,7 +14,6 @@ base_distros = [
     ]
 
 distro_upgrades = {
-    'jessie':  'stretch',
     'stretch':  'buster',
     'buster': 'bullseye',
     'bullseye': 'sid',
@@ -23,8 +21,7 @@ distro_upgrades = {
 
 # deb.debian.org runs mirror updates at 03:25, 09:25, 15:25 and 21:25 UTC and usually they run 10m...
 trigger_times = {
-    'jessie':  '30 16 1 */2 *',
-    'stretch':  '30 10 7,28 * *',
+    'stretch':  '30 10 1 */2 *',
     'buster': '30 10 4,11,18,25 * *',
     'bullseye': '30 10 */3 * *',
     'sid':     '30 4 * * *',
@@ -84,7 +81,6 @@ all_targets = [
    'education-services',
    'education-standalone',
    'education-thin-client',
-   'education-thin-client-server',
    'education-roaming-workstation',
    'education-video',
    'education-workstation',
@@ -102,29 +98,17 @@ all_targets = [
 # not all packages are available in all distros
 #
 def is_target_in_distro(distro, target):
-    # education-ltsp-server and education-roaming-workstation are only available since stretch…
-    if distro in ('jessie') and target in ('education-ltsp-server', 'education-roaming-workstation'):
-        return False
-    # education-thin-client-server is obsolete since stretch…
-    elif distro not in ('jessie') and target == 'education-thin-client-server':
-        return False
     # education-services is obsolete since buster…
-    elif distro not in ('jessie', 'stretch') and target == 'education-services':
-        return False
-    # lxqt is only available since stretch
-    elif distro in ('jessie') and target == 'lxqt':
+    if distro not in ('stretch') and target == 'education-services':
         return False
     # education-lang-* packages only exist in stretch
     elif distro not in ('stretch') and target[:15] == 'education-lang-':
-        return False
-    # parl-desktop* and design-desktop* packages only exist since stretch
-    elif distro in ('jessie') and (target[:12] == 'parl-desktop' or target[:14] == 'design-desktop'):
         return False
     # parl-desktop* packages have been removed from stretch.
     elif distro in ('stretch') and target[:12] == 'parl-desktop':
         return False
     # education-desktop-lxqt, education-primaryschool and education-video packages only exist since buster
-    elif distro in ('jessie', 'stretch') and target in ('education-desktop-lxqt', 'education-primaryschool', 'education-video'):
+    elif distro in ('stretch') and target in ('education-desktop-lxqt', 'education-primaryschool', 'education-video'):
         return False
     return True
 
