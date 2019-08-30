@@ -156,7 +156,7 @@ node_save_logs() {
 save_openwrt_results() {
 	local RUN=$1
 
-	# first save all images and target specific packages
+	# first save all images and target specific packages #FIXME: include feeds.buildinfo and version.buildinfo
 	pushd bin/targets
 	for target in * ; do
 		pushd "$target" || continue
