@@ -1,5 +1,6 @@
 jenkins ALL=  \
 	NOPASSWD: /usr/sbin/debootstrap *, \
+	/bin/systemctl reset-failed, \
 	/usr/bin/tee /schroots/*, \
 	/usr/bin/tee -a /schroots/*, \
 	/usr/bin/tee /etc/schroot/chroot.d/jenkins*, \

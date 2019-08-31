@@ -1,5 +1,6 @@
 jenkins ALL=  \
 	NOPASSWD: /usr/sbin/debootstrap *, \
+	/bin/systemctl reset-failed, \
 	/usr/sbin/chroot /chroots/*, \
 	/bin/rm -rf --one-file-system /chroots/*, \
 	/bin/umount -l /chroots/*, \
