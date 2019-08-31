@@ -314,7 +314,7 @@ update_pkg_set_specific() {
 				convert_from_deb822_into_source_packages_only
 				# also add the packages maintained by the team
 				# (maybe add the depends of those packages too?)
-				grep-dctrl -sPackage -n -FMaintainer,Uploaders pkg-mate-team@lists.alioth.debian.org $SOURCES >> $TMPFILE
+				grep-dctrl -sPackage -n -FMaintainer,Uploaders debian-mate@lists.debian.org $SOURCES >> $TMPFILE
 			fi
 			;;
 		xfce)	# xfce and everything it depends on
