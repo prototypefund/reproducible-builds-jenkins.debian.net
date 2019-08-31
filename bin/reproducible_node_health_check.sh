@@ -157,11 +157,17 @@ fi
 #
 echo "$(date -u) - checking whether all services are running fine..."
 if ! systemctl is-system-running > /dev/null; then
-    systemctl status|head -5
-    echo "Warning: systemd is reporting errors:"
-    systemctl list-units --state=error,failed
-    echo "Manual cleanup needed. If only old sessions are gone, use 'systemctl reset-failed' to cleanup state. Else probably some services actually need a restart."
-    DIRTY=true
+	if [ -n "$(systemctl list-units --state=error,failed | grep pbuilder_build)" ] ; then
+		echo "$(date -u) - resetting failed services (once) as some failed pbuilder_build have been found..."
+	        sudo systemctl reset-failed
+	fi
+	if ! systemctl is-system-running > /dev/null; then
+		systemctl status|head -5
+		echo "Warning: systemd is reporting errors:"
+		systemctl list-units --state=error,failed
+		echo "Manual cleanup needed. If only old sessions are gone, use 'systemctl reset-failed' to cleanup state. Else probably some services actually need a restart."
+		DIRTY=true
+	fi
 fi
 
 # checks only for the main node
