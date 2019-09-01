@@ -16,15 +16,13 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 
 === Installed software that makes jenkins.debian.net run
 
-link:https://jenkins.debian.net[jenkins.debian.net] runs Debian jessie.
+link:https://jenkins.debian.net[jenkins.debian.net] runs Debian Buster.
 
 === Jenkins
 
 Currently running the long term support .deb from jenkins-ci.org.
 
 Jenkins is installed using 'deb http://pkg.jenkins-ci.org/debian-stable binary/' into '/etc/apt/sources.list.d/jenkins.list' and `apt-get update && apt-get install jenkins`.
-
-We would prefer to run a jenkins package from jessie-backports.
 
 ==== Jenkins plugins
 
