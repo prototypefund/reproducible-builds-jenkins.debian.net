@@ -532,10 +532,6 @@ Development of these tests has stopped. In future we will use https://openqa.deb
 
 * have a job to trigger such a rebuild on AWS?
 
-=== Test them all
-
-* build packages from all team repos on alioth with jenkins-debian-glue on team request (eg, via a .txt file in a git.repo) for specific branches (which shall also be automated, eg. to be able to only have jessie+sid branches build, but not all other branches.)
-
 == Debian Packaging related
 
 This setup should come as a Debian source package...
