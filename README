@@ -44,18 +44,6 @@ These jobs are deprecated, in future we will use https://openqa.debian.net inste
 
 Installation tests with g-i, the graphical version of d-i, the debian-installer.
 
-* 'g-i-installation_debian_sid_daily-rescue'
-** boot of rescue system with daily build sid image
-
-* 'g-i-installation_debian_sid_daily-lxde' and '-xfce' and '-kfreebsd' and '-hurd'
-** sid installation of Xfce/LXDE desktop with daily build sid image
-
-* 'g-i-installation_debian_jessie_lxde','-xfce','-kde' and '-gnome' and '-kfreebsd'
-** jessie installation of Xfce/LXDE/KDE desktop and kfreebsd install with weekly build jessie image
-
-* 'g-i-installation_debian_wheezy_lxde','-xfce','-kde' and '-gnome' and '-kfreebsd'
-** wheezy installation of Xfce/LXDE/KDE desktop and kfreebsd install with wheezy release image
-
 === debian-installer jobs
 
 * 'd_i_build_$source_package'
@@ -68,7 +56,7 @@ Installation tests with g-i, the graphical version of d-i, the debian-installer.
 ** while this job is triggered on commits, the SCM is only polled every 15min to see if there are new commits.
 
 * 'd_i_manual_$language_html'
-** builds a language (on jessie) on every commit of svn/trunk/manual/$LANG with `make languages=$LANG architectures=amd64 formats=html`.
+** builds a language (on buster) on every commit of svn/trunk/manual/$LANG with `make languages=$LANG architectures=amd64 formats=html`.
 ** while these jobs are triggered on commits, the SCM is only polled every 15min to see if there are new commits.
 ** on successful build, 'd_i_manual_$lang_pdf' is triggered.
 
@@ -81,24 +69,24 @@ Installation tests inside chroot environments.
 
 * 'chroot-installation_maintenance_$distro':
 ** make sure chroots have been cleaned up properly
-** runs daily at 05:00 UTC and triggers the $distro specific bootstrap job on success
-** wheezy is only triggered on the 4th day and 18th of each month (as it was released on the 4th)
+** sid jobs are run daily at 04:30 UTC and triggers the $distro specific bootstrap job on success
+** testing jobs are run every 3 days, stable ones once a week, old stable twice a month.
 * $distro-bootstrap jobs:
 ** just `debootstrap $distro` (install a base Debian distribution $distro)
-** there is one job for *sid*, one for *wheezy* and one for *jessie*: 'chroot-installation_sid_bootstrap', 'chroot-installation_wheezy_bootstrap' and 'chroot-installation_jessie_bootstrap'
+** there is one job for *sid*, one for *bullseye* and one for *buster*: 'chroot-installation_sid_bootstrap', 'chroot-installation_bullseye_bootstrap' and 'chroot-installation_buster_bootstrap'
 ** on successful run of the bootstrap job, six $distro-install(+upgrade) jobs are triggered.
 
 * $distro-install jobs (and $distro-install+upgrade jobs):
 ** `debootstrap $distro`, install a *$set_of_packages* (and upgrade to *$2nd_distro*)
-** these $set_of_packages exist: 'gnome', 'kde', 'kde-full', 'lxde', 'lxqt', 'xfc', 'full_desktop' (all six desktops plus `vlc evince iceweasel chromium cups build-essential devscripts wine texlive-full asciidoc vim emacs` and (`libreoffice virt-manager mplayer` (stretch/sid) and 'develop'
+** severeal sets with different packages exist.
 *** install is done with `apt-get install`, except for 'develop' where `apt-get build-dep` is used to install the build dependencies of these packages.
-** Then there are also all the corresponding upgrade jobs, eg 'chroot-installation_wheezy_install_gnome_upgrade_to_jessie'
+** Then there are also all the corresponding upgrade jobs, eg 'chroot-installation_buster_install_gnome_upgrade_to_bullseye'
 
 === Debian Edu related jobs
 
 * All Debian Edu related jobs can be seen at these two URLs:
-** https://jenkins.debian.net/view/edu_devel/ about Debian Edu Jessie
-** https://jenkins.debian.net/view/edu_stable/ about Debian Edu Wheezy
+** https://jenkins.debian.net/view/edu_devel/ about Debian Edu Buster
+** https://jenkins.debian.net/view/edu_stable/ about Debian Edu Stretch
 
 * Then there are three types of jobs:
 ** 'g-i-installation_$(distro)_$(profile)':
@@ -114,7 +102,7 @@ Installation tests inside chroot environments.
 === qa.debian.org related jobs
 
 * There are jobs for lintian and for piuparts:
-** they simply run a build and/or the tests of the master branch of their git repository on every commit against sid. If that succeeds, the same source will be built on stretch, then on jessie and - in the lintian case only - also for wheezy.
+** they simply run a build and/or the tests of the master branch of their git repository on every commit against sid. If that succeeds, the same source will be built on bullseye, then on buster and - in the lintian case only - also for stretch-backports.
 * There are also jobs related to link:https://udd.debian.org[UDD]:
 ** they check for multiarch version screws in various suites or issues with orphaned packages without the correct the relevant bug.
 *** the UDD schema is available at https://udd.debian.org/schema/udd.html
