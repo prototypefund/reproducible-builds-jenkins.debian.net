@@ -220,7 +220,6 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 ** have redundant $PATH entries (`/bin:/bin:…`)
 ** vary the length of the build paths (/build/first vs /build/second), only once the unreproducibilities caused by different build paths are solved
 ** vary the init system: sysv and systemd
-** vary (with) usrmerge and without (needs debootstrap from jessie-backports) once #843073 is fixed (#810499 might be relevant as well)
 ** vary SSD/HDD on i386?
 ** vary temp dir variables such as TMP/TMPDIR/TEMP/TEMPDIR/MAGICK_TMPDIR
 ** maybe vary build with pbuilder and sbuild (but maybe only useful with different setup jobs only…)
