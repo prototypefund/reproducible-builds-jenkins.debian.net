@@ -206,11 +206,6 @@ trap cleanup_all INT TERM EXIT
 
 LXQT="lxqt"
 case $1 in
-	jessie)		DISTRO="jessie"
-			SPECIFIC="libreoffice virt-manager mplayer2 chromium"
-			LXQT="" # not present in jessie
-			FIREFOX="iceweasel"
-			;;
 	stretch)	DISTRO="stretch"
 			SPECIFIC="libreoffice virt-manager mplayer chromium"
 			FIREFOX="iceweasel"
@@ -249,14 +244,7 @@ if [ "$2" != "" ] ; then
 				;;
 		qt4)		install_binary_packages qt4 qt4-x11 qtwebkit
 				;;
-		qt5)		# qt5 is >=jessie…
-				if [ "$DISTRO" = "jessie" ] ; then
-					# only in jessie, removed for stretch
-					QT_EXTRA="qtquick1-opensource-src"
-				else
-					QT_EXTRA=""
-				fi
-				install_binary_packages qt5 qtbase-opensource-src qtchooser qtimageformats-opensource-src qtx11extras-opensource-src qtscript-opensource-src qtxmlpatterns-opensource-src qtdeclarative-opensource-src qtconnectivity-opensource-src qtsensors-opensource-src qtlocation-opensource-src qtwebkit-opensource-src qtwebkit-examples-opensource-src qttools-opensource-src qtdoc-opensource-src qtgraphicaleffects-opensource-src qtquickcontrols-opensource-src qtserialport-opensource-src qtsvg-opensource-src qtmultimedia-opensource-src qtenginio-opensource-src qtwebsockets-opensource-src qttranslations-opensource-src qtcreator $QT_EXTRA
+		qt5)		install_binary_packages qt5 qtbase-opensource-src qtchooser qtimageformats-opensource-src qtx11extras-opensource-src qtscript-opensource-src qtxmlpatterns-opensource-src qtdeclarative-opensource-src qtconnectivity-opensource-src qtsensors-opensource-src qtlocation-opensource-src qtwebkit-opensource-src qtwebkit-examples-opensource-src qttools-opensource-src qtdoc-opensource-src qtgraphicaleffects-opensource-src qtquickcontrols-opensource-src qtserialport-opensource-src qtsvg-opensource-src qtmultimedia-opensource-src qtenginio-opensource-src qtwebsockets-opensource-src qttranslations-opensource-src qtcreator
 				;;
 		full_desktop)	install_packages full_desktop $FULL_DESKTOP
 				;;
@@ -265,8 +253,6 @@ if [ "$2" != "" ] ; then
 		developer)	install_build_depends developer $FULL_DESKTOP
 				;;
 		debconf-video)	case $1 in
-					jessie)		install_packages ack-grep htop iftop iotop moreutils tmux vnstat icecast2 mplayer vlc cu
-					;;
 					stretch)	install_packages ack-grep htop iftop iotop moreutils tmux vnstat icecast2 mplayer vlc cu voctomix voctomix-outcasts
 					;;
 					sid)		install_packages ack-grep htop iftop iotop moreutils tmux vnstat icecast2 mplayer vlc cu voctomix voctomix-outcasts # hdmi2usb-mode-switch hdmi2usb-udev
@@ -291,7 +277,7 @@ fi
 
 if [ "$3" != "" ] ; then
 	case $3 in
-		jessie|stretch|buster|bullseye|sid)	upgrade2 $3;;
+		stretch|buster|bullseye|sid)	upgrade2 $3;;
 		*)		echo "unsupported distro." ; exit 1 ;;
 	esac
 fi
