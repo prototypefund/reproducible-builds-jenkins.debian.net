@@ -4,7 +4,8 @@
 # released under the GPLv=2
 
 #
-# run with "bug" as first parameter for interactive mode which will fire up mutt for 10 buggy packages
+# run with "bug" as first parameter for interactive mode which will fire up mutt for $MAX buggy packages
+MAX=20
 #
 #
 if [ -z "$1" ] ; then
@@ -126,7 +127,6 @@ echo
 
 # interactive mode
 if $MANUAL_MODE ; then
-	MAX=20
 	NR=0
 	echo "Entering manual mode, filing $MAX bugs."
 	for PKG in $BAD ; do
