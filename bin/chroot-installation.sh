@@ -252,14 +252,7 @@ if [ "$2" != "" ] ; then
 				;;
 		developer)	install_build_depends developer $FULL_DESKTOP
 				;;
-		debconf-video)	case $1 in
-					stretch)	install_packages ack-grep htop iftop iotop moreutils tmux vnstat icecast2 mplayer vlc cu voctomix voctomix-outcasts
-					;;
-					sid)		install_packages ack-grep htop iftop iotop moreutils tmux vnstat icecast2 mplayer vlc cu voctomix voctomix-outcasts # hdmi2usb-mode-switch hdmi2usb-udev
-					;;
-				esac
-				;;
-		education-lang-da|education-lang-he|education-lang-ja|education-lang-no|education-lang-zh-tw)	install_packages "Debian Edu task" $2 $2-desktop	# only in stretch, removed for buster
+		debconf-video)	install_packages ack-grep htop iftop iotop moreutils tmux vnstat icecast2 mplayer vlc cu voctomix voctomix-outcasts hdmi2usb-mode-switch hdmi2usb-udev
 				;;
 		education-lang-*)	install_packages "Debian Edu task" $2	# only in stretch, removed for buster
 				;;
