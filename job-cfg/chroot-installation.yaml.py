@@ -58,16 +58,6 @@ all_targets = [
    'education-geography',
    'education-graphics',
    'education-language',
-   'education-lang-da',
-   'education-lang-de',
-   'education-lang-es',
-   'education-lang-fr',
-   'education-lang-he',
-   'education-lang-it',
-   'education-lang-ja',
-   'education-lang-no',
-   'education-lang-se',
-   'education-lang-zh-tw',
    'education-laptop',
    'education-logic-games',
    'education-ltsp-server',
@@ -100,9 +90,6 @@ all_targets = [
 def is_target_in_distro(distro, target):
     # education-services is obsolete since buster…
     if distro not in ('stretch') and target == 'education-services':
-        return False
-    # education-lang-* packages only exist in stretch
-    elif distro not in ('stretch') and target[:15] == 'education-lang-':
         return False
     # parl-desktop* packages have been removed from stretch.
     elif distro in ('stretch') and target[:12] == 'parl-desktop':
