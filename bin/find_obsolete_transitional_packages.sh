@@ -158,9 +158,7 @@ Severity: normal
 user: qa.debian.org@packages.debian.org
 usertags: transitional
 
-Please drop the transitional package $PKG (from the source
-package $SRC) for $NEXT,
-as it has been released with $OLDSTABLE and $STABLE already.
+$(echo "Please drop the transitional package $PKG (from the source package $SRC) for $NEXT, as it has been released with $OLDSTABLE and $STABLE already." | fold -s)
 
 $VERBOSE
 
