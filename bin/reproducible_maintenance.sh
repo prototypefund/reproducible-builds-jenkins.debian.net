@@ -433,7 +433,7 @@ if [ "$HOSTNAME" = "$MAINNODE" ] ; then
 	# (ignore "*None.rbuild.log" because these are build which were just started)
 	# this job runs every 4h
 	echo "$(date -u) - Rescheduling failed builds due to network issues."
-	FAILED_BUILDS=$(find $DEBIAN_BASE/rbuild -type f ! -name "*None.rbuild.log" ! -mmin +300 -exec zgrep -l -E 'E: Failed to fetch.*(Unable to connect to|Connection failed|Size mismatch|Cannot initiate the connection to|Bad Gateway|Service Unavailable)' {} \; || true)
+	FAILED_BUILDS=$(find $DEBIAN_BASE/rbuild -type f ! -name "*None.rbuild.log" ! -mmin +300 -exec zgrep -l -E 'E: Failed to fetch.*(Unable to connect to|Connection failed|Size mismatch|Cannot initiate the connection to|Bad Gateway|Service Unavailable)' {} \; 2>/dev/null || true)
 	if [ ! -z "$FAILED_BUILDS" ] ; then
 		echo
 		echo "The following builds have failed due to network problems and will be rescheduled now:"
@@ -465,7 +465,7 @@ if [ "$HOSTNAME" = "$MAINNODE" ] ; then
 	# (ignore "*None.rbuild.log" because these are build which were just started)
 	# this job runs every 4h
 	echo "$(date -u) - Rescheduling failed builds due to diffoscope schroot issues."
-	FAILED_BUILDS=$(find $DEBIAN_BASE/rbuild -type f ! -name "*None.rbuild.log" ! -mmin +300 -exec zgrep -l -F 'E: 10mount: error: Directory' {} \; || true)
+	FAILED_BUILDS=$(find $DEBIAN_BASE/rbuild -type f ! -name "*None.rbuild.log" ! -mmin +300 -exec zgrep -l -F 'E: 10mount: error: Directory' {} \; 2>/dev/null|| true)
 	if [ ! -z "$FAILED_BUILDS" ] ; then
 		echo
 		echo "Warning: The following builds have failed due to diffoscope schroot problems and will be rescheduled now:"
@@ -538,7 +538,7 @@ if [ "$HOSTNAME" = "$MAINNODE" ] ; then
 				WHERE name='$PKGNAME' AND suite='$SUITE' AND architecture='$ARCH'"
 			query_db "$QUERY"
 			cd $DEBIAN_BASE
-			find rb-pkg/$SUITE/$ARCH rbuild/$SUITE/$ARCH dbd/$SUITE/$ARCH dbdtxt/$SUITE/$ARCH buildinfo/$SUITE/$ARCH logs/$SUITE/$ARCH logdiffs/$SUITE/$ARCH -name "${PKGNAME}_*" | xargs -r rm -v || echo "Warning: couldn't delete old files from ${PKGNAME} in $SUITE/$ARCH"
+			find rb-pkg/$SUITE/$ARCH rbuild/$SUITE/$ARCH dbd/$SUITE/$ARCH dbdtxt/$SUITE/$ARCH buildinfo/$SUITE/$ARCH logs/$SUITE/$ARCH logdiffs/$SUITE/$ARCH -name "${PKGNAME}_*" 2>/dev/null | xargs -r rm -v || echo "Warning: couldn't delete old files from ${PKGNAME} in $SUITE/$ARCH"
 		done
 		cd - > /dev/null
 	fi
@@ -548,7 +548,7 @@ if [ "$HOSTNAME" = "$MAINNODE" ] ; then
 	# delete jenkins html logs from reproducible_builder_(fedora|archlinux)* jobs as they are mostly redundant
 	# (they only provide the extended value of parsed console output, which we dont need here.)
 	#
-	OLDSTUFF=$(find /var/lib/jenkins/jobs/reproducible_builder_* -maxdepth 3 -mtime +0 -name log_content.html  -exec rm -v {} \; | wc -l)
+	OLDSTUFF=$(find /var/lib/jenkins/jobs/reproducible_builder_* -maxdepth 3 -mtime +0 -name log_content.html  -exec rm -v {} \; 2>/dev/null | wc -l)
 	if [ ! -z "$OLDSTUFF" ] ; then
 		echo
 		echo "Removed $OLDSTUFF jenkins html logs."
