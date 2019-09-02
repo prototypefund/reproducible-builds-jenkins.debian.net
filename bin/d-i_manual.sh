@@ -1,7 +1,7 @@
 #!/bin/bash
 # vim: set noexpandtab:
 
-# Copyright 2012-2018 Holger Levsen <holger@layer-acht.org>
+# Copyright 2012-2019 Holger Levsen <holger@layer-acht.org>
 #           © 2018 Mattia Rizzolo <mattia@debian.org>
 # released under the GPLv=2
 
@@ -23,10 +23,6 @@ cleanup_workspace() {
 	if [ -d .git ] ; then
 		echo "git status:"
 		git status
-	elif [ -f .svn ] ; then
-		echo "svn status:"
-		svn status
-		svn stat --no-ignore
 	fi
 }
 
@@ -74,7 +70,7 @@ EOF
 	# publish and cleanup
 	#
 	CHANGES=$(ls /var/cache/pbuilder/result/${SOURCE}_*changes)
-	publish_changes_to_userContent $CHANGES debian-boot "svn-r$SVN_REVISION"
+	publish_changes_to_userContent $CHANGES debian-boot "git commit $(git describe --always)"
 	echo
 	cat $CHANGES
 	echo
