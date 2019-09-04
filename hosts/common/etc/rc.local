@@ -26,8 +26,8 @@ send_back_to_the_future() {
 	fi
 	# set fake date
 	date --set="+398 days +6 hours + 23 minutes"
-	# finally report success
-	echo "$(date -u) - system is running in the future now" | mail -s "$(hostname -f) in the future" root
+	# modify MESSAGE for notification
+	MESSAGE="$MESSAGE in the future"
 }
 
 put_schroots_on_tmpfs() {
@@ -59,20 +59,10 @@ fixup_pbuilder_lockfiles() {
 	rm -f /var/cache/pbuilder/*.tgz.tmp
 }
 
-#
-# init, notify about reboots
-#
+###
+### main
+###
 MESSAGE="$(hostname -f) rebooted"
-echo "$(date -u) - system was rebooted" | mail -s "$MESSAGE" root
-
-#
-# notify jenkins reboots on irc
-#
-if [ "$(hostname)" = "jenkins" ] ; then
-	for channel in debian-qa reproducible-builds ; do
-		kgb-client --conf /srv/jenkins/kgb/$channel.conf --relay-msg "$MESSAGE"
-	done
-fi
 
 #
 # fixup /(dev|run)/shm if needed
@@ -106,6 +96,15 @@ esac
 fixup_pbuilder_lockfiles
 
 #
+# notify jenkins reboots on irc
+#
+if [ "$(hostname)" = "jenkins" ] ; then
+	for channel in debian-qa reproducible-builds ; do
+		kgb-client --conf /srv/jenkins/kgb/$channel.conf --relay-msg "$MESSAGE"
+	done
+fi
+
+#
 # run some hosts in the future
 #
 case $(hostname) in
@@ -122,5 +121,9 @@ case $(hostname) in
 	*)			;;
 esac
 
-echo "$(date -u) - system booted up."
+#
+# notify about reboots
+#
+echo "$(date -u) - system was rebooted." | mail -s "$MESSAGE" root
+
 exit 0
