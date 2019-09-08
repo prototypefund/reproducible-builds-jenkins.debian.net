@@ -149,6 +149,7 @@ fi
 #
 echo "$(date -u) - testing whether we are running the latest kernel..."
 if ! dsa-check-running-kernel ; then
+	echo "Warning: running kernel needs attention!"  # string checked with logparse
 	DIRTY=true
 fi
 
