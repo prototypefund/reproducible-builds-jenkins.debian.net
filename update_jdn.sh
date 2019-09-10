@@ -337,7 +337,6 @@ if [ -f /etc/debian_version ] ; then
 				gawk
 				gcc
 				grep
-				iasl
 				libc6-dev
 				libncurses5-dev
 				libssl-dev

@@ -98,7 +98,7 @@ for i in * ; do
 done
 echo "</table>" >> $TOOLCHAIN_HTML
 echo "<table><tr><th>Debian $(cat /etc/debian_version) package on $(dpkg --print-architecture)</th><th>installed version</th></tr>" >> $TOOLCHAIN_HTML
-for i in gcc g++ make cmake flex bison iasl ; do
+for i in gcc g++ make cmake flex bison ; do
 	echo " <tr><td>$i</td><td>" >> $TOOLCHAIN_HTML
 	dpkg -s $i|grep '^Version'|cut -d " " -f2 >> $TOOLCHAIN_HTML
 	echo " </td></tr>" >> $TOOLCHAIN_HTML
