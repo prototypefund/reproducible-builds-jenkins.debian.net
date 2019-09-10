@@ -336,6 +336,7 @@ if [ -f /etc/debian_version ] ; then
 				g++
 				gawk
 				gcc
+				gnat
 				grep
 				libc6-dev
 				libncurses5-dev
