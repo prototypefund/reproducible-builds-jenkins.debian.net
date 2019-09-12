@@ -105,6 +105,7 @@ for i in gcc g++ make cmake flex bison ; do
 done
 echo "</table>" >> $TOOLCHAIN_HTML
 cd ../../..
+bash util/xcompile/xcompile > .xcompile
 
 echo "============================================================================="
 echo "$(date -u) - Building coreboot ${COREBOOT_VERSION} images - first build run."
