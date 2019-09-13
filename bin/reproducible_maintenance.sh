@@ -715,7 +715,7 @@ if [ "$HOSTNAME" = "$MAINNODE" ] && [ $(date -u +%H) -eq 0 ]  ; then
 		fi
 	done
 	# once a day, send notifications to package maintainers
-	cd /srv/reproducible-results/notification-emails
+	cd $REP_RESULTS/notification-emails
 	for NOTE in $(find . -type f) ; do
 			TMPFILE=$(mktemp --tmpdir=$TEMPDIR maintenance-XXXXXXXXXXXX)
 			PKG=$(basename $NOTE)
