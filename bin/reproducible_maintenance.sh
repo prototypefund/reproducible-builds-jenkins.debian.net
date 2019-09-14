@@ -75,7 +75,7 @@ if [ ! -z "$TOOBIG" ] ; then
 fi
 
 #
-# delete old temp directories
+# delete old temp directories in $REP_RESULTS/rbuild-debian
 #
 echo "$(date -u) - Deleting temp directories in $REP_RESULTS/rbuild-debian, older than 3 days."
 OLDSTUFF=$(find $REP_RESULTS/rbuild-debian -maxdepth 1 -type d -mtime +2 -name "tmp.*" -exec ls -lad {} \; 2>/dev/null|| true)
@@ -117,6 +117,21 @@ if [ -d /srv/workspace/pbuilder/ ] ; then
 		DIRTY=true
 	fi
 fi
+
+#
+# delete old temp directories $REP_RESULTS/(archlinuxrb-build|rbuild-openwrt-results)-????????
+#
+echo "$(date -u) - Deleting temp directories in $REP_RESULTS/rbuild-debian, older than 3 days."
+OLDSTUFF=$(find $REP_RESULTS/ -maxdepth 1 -type d -mtime +2 -regextype awk -regex "$REP_RESULTS/(archlinuxrb-build|rbuild-openwrt-results)-........" -exec ls -lad {} \; 2>/dev/null|| true)
+if [ ! -z "$OLDSTUFF" ] ; then
+	echo
+	echo "Old archlinuxrb-build and rbuild-openwrt-results temp directories found in $REP_RESULTS/"
+	find $REP_RESULTS/ -maxdepth 1 -type d -mtime +2 -regextype awk -regex "$REP_RESULTS/(archlinuxrb-build|rbuild-openwrt-results)-........" -exec rm -rv --one-file-system {} \; || true
+	echo "These old directories have been deleted."
+	echo
+	DIRTY=true
+fi
+
 
 #
 # delete old chroot-installation directories (not related to reproducible builds)
