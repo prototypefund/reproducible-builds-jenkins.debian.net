@@ -12,7 +12,12 @@ common_init "$@"
 
 send_irc_warning() {
 	local WARNING=$1
-	irc_message reproducible-builds "$WARNING"
+	if [ -n "$2" ] ; then
+		local CHANNEL=$2
+	else
+		local CHANNEL"reproducible-builds"
+	fi
+	irc_message $CHANNEL "$WARNING"
 	echo "Warning: $WARNING"
 }
 
@@ -70,8 +75,10 @@ check_whohas() {
 	# as sort doesn't do proper version comparison
 	case $DISTRIBUTION in
 		Arch)	DIFFOSCOPE_IN_WHOHAS=$(whohas -d $DISTRIBUTION diffoscope | grep -v "href=" | awk '{print $2}' | cut -d '>' -f2 | cut -d '<' -f1 | sort -n | tail -1)
+			CHANNEL="archlinux-reproducible"
 			;;
 		*)	DIFFOSCOPE_IN_WHOHAS=$(whohas -d $DISTRIBUTION diffoscope | grep -v "href=" | awk '{print $3}' | sort -n | tail -1)
+			CHANNEL=""
 			;;
 	esac
 	echo
@@ -81,7 +88,7 @@ check_whohas() {
 	elif dpkg --compare-versions "$DIFFOSCOPE_IN_DEBIAN" gt "$DIFFOSCOPE_IN_WHOHAS" ; then
 		echo "Fail: diffoscope in Debian: $DIFFOSCOPE_IN_DEBIAN"
 		echo "Fail: diffoscope in $DISTRIBUTION: $DIFFOSCOPE_IN_WHOHAS"
-		send_irc_warning "It seems diffoscope $DIFFOSCOPE_IN_DEBIAN is not available on $DISTRIBUTION, which only has $DIFFOSCOPE_IN_WHOHAS."
+		send_irc_warning "It seems diffoscope $DIFFOSCOPE_IN_DEBIAN is not available on $DISTRIBUTION, which only has $DIFFOSCOPE_IN_WHOHAS." "$CHANNEL"
 		exit 0
 	elif [ "${DIFFOSCOPE_IN_DEBIAN}-1" = "$DIFFOSCOPE_IN_WHOHAS" ] ; then
 		# archlinux package version can greater than Debian: 52-1 vs 52
