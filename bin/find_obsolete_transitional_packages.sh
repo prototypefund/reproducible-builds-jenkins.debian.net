@@ -170,7 +170,16 @@ EOF
 
 		let NR=$NR+1
 		if [ $NR -eq $MAX ] ; then
-			echo "Filed $MAX bugs, ending."
+			echo -n "Filed $MAX bugs in:"
+			nr=0
+			for i in $BAD ; do
+				echo -n " $i"
+				let nr=$nr+1
+				if [ $nr -eq $MAX ] ; then
+					break
+				fi
+			done
+			echo
 			break
 		fi
 	done
