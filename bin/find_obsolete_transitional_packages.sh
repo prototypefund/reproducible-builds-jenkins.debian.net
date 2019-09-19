@@ -126,7 +126,7 @@ done
 echo
 
 # interactive mode
-if $MANUAL_MODE ; then
+if $MANUAL_MODE && [ -n "$BAD" ] ; then
 	NR=0
 	echo "Entering manual mode, filing $MAX bugs."
 	for PKG in $BAD ; do
@@ -197,7 +197,7 @@ fi
 
 echo
 echo "Found $BAD_COUNTER bad packages (=transitional dummy package in $OLDSTABLE, $STABLE and sid) and $GOOD_COUNTER removed transitional packages (=doesn't exist in sid) plus we know about $BUGGED_COUNTER open bugs about obsolete transitional packages."
-
+echo
 echo "In the future, this script should probably complain about transitional packages in buster and bullseye, and suggest to file wishlist bugs for those. Though probably it's more useful to file wishlist bugs against packages depending on those, first (or do both)… and should those latter be normal severity?"
 
 echo
