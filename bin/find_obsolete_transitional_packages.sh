@@ -170,20 +170,19 @@ EOF
 
 		let NR=$NR+1
 		if [ $NR -eq $MAX ] ; then
-			echo -n "Filed $MAX bugs in:"
-			nr=0
-			for i in $BAD ; do
-				echo -n " $i"
-				let nr=$nr+1
-				if [ $nr -eq $MAX ] ; then
-					break
-				fi
-			done
-			echo
 			break
 		fi
 	done
-
+	echo -n "Filed $NR bugs in:"
+	nr=0
+	for i in $BAD ; do
+		echo -n " $i"
+		let nr=$nr+1
+		if [ $nr -eq $NR ] ; then
+			break
+		fi
+	done
+	echo
 else
 	# non-interactive mode
 	for PKG in $BAD ; do
