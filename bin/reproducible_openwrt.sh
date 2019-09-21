@@ -10,6 +10,7 @@
 # reproducible_lede_common.sh and reproducible_lede.sh
 # (which in turn was based on another variant of reproducible_openwrt.sh)
 
+DEBUG=false
 . /srv/jenkins/bin/common-functions.sh
 common_init "$@"
 
@@ -20,7 +21,6 @@ set -e
 # openwrt configuration
 OPENWRT_GIT_REPO=https://git.openwrt.org/openwrt/openwrt.git
 OPENWRT_GIT_BRANCH=master
-DEBUG=false
 OPENWRT_CONFIG=
 OPENWRT_TARGET=
 
