@@ -375,7 +375,6 @@ if [ -f /etc/debian_version ] ; then
 				python3-setuptools
 				subversion
 				vagrant
-				virtualbox
 				"
 			;;
 			*) ;;
