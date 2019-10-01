@@ -207,14 +207,14 @@ if [ "$HOSTNAME" = "$MAINNODE" ] ; then
 		esac
 		cd $i/builds
 		LAST=$(ls -rt1 | tail -1)
-		GOOD=$(basename $(readlink -f lastSuccessfulBuild))
+		GOOD=$(awk '/^lastSuccessfulBuild/ {print $2}' permalinks)
 		if [ "$LAST" = "$GOOD" ] ; then
 			DIFF=0
 		else
 			let DIFF=$LAST-$GOOD || DIFF=-1
 		fi
 		if [ $DIFF -eq -1 ] ; then
-			echo "Problems analysing $i build logs, ignoring $NODE."
+			echo "Warning: Problems analysing $i build logs, ignoring $NODE."
 		# either the diff is greater than $MAXDIFF (=the last $MAXDIFF job runs failed)
 		# or the last successful run is older than an hour (=a job is still running/hanging)
 		elif [ $DIFF -gt $MAXDIFF ] || [ $LAST -ot $DUMMY_FILE ] ; then
