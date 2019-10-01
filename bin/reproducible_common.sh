@@ -83,9 +83,11 @@ TEMPDIR="/tmp/reproducible"
 mkdir -p "$TEMPDIR"
 
 # create subdirs for suites
-for i in $SUITES ; do
-	mkdir -p "$DEBIAN_BASE/$i"
-done
+if [ "$HOSTNAME" = "jenkins" ] ; then
+	for i in $SUITES ; do
+		mkdir -p "$DEBIAN_BASE/$i"
+	done
+fi
 
 # table names and image names
 TABLE[0]=stats_pkg_state
