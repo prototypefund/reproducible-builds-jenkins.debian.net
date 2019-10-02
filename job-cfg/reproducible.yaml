@@ -505,6 +505,7 @@
                     my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
             my_hname:
                 - 'osuosl171':  { my_arch: 'amd64' }
+                - 'osuosl172':  { my_arch: 'amd64' }
             my_naginator_regex: '^E: Couldn.t download .*/Packages'
 
         - '{name}_{my_task}_{my_arch}_{my_hname}':

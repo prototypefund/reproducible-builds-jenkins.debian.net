@@ -147,7 +147,7 @@ build_nodes_health_page() {
 				URL="https://jenkins.debian.net/view/reproducible/view/Debian_setup_${ARCH}/job/reproducible_setup_schroot_${SUITE}_diffoscope_${ARCH}_${JENKINS_NODENAME}"
 				BADGE="$URL/badge/icon"
 				case $JENKINS_NODENAME in
-					osuosl171)
+					osuosl171|osuosl172)
 						if [ "$SUITE" = "unstable" ]; then
 							write_page "<td><a href='$URL'><img src='$BADGE' /></a></td>"
 						else
