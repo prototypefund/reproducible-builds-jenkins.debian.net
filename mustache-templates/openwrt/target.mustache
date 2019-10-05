@@ -16,10 +16,10 @@
       {{ #images }}
       <tr>
 	  	{{ #repro }}
-        <td><img src="/userContent/reproducible/static/weather-clear.png" alt="reproducible icon" /> {{ name }} ({{ sha256sum }}, {{ size }}K) is reproducible.</td>
+        <td><img src="{{ root }}/static/weather-clear.png" alt="reproducible icon" /> {{ name }} ({{ sha256sum }}, {{ size }}K) is reproducible.</td>
 	  	{{ /repro }}
 	  	{{ ^repro }}
-		<td><a href="/{{ version }}/{{ target }}/{{ name }}.html"><img src="/userContent/reproducible/static/weather-showers-scattered.png" alt="unreproducible icon"> {{ name }}</a> ({{ size }}K) is unreproducible.</td>
+		<td><a href="{{ root }}/{{ version }}/{{ target }}/{{ name }}.html"><img src="{{ root }}/static/weather-showers-scattered.png" alt="unreproducible icon"> {{ name }}</a> ({{ size }}K) is unreproducible.</td>
 	  	{{ /repro }}
       </tr>
       {{ /images }}
@@ -31,7 +31,7 @@
       {{ #packages }}
 	  	{{ ^repro }}
       <tr>
-		<td><a href="/{{ version }}/{{ target }}/{{ name }}.html"><img src="/userContent/reproducible/static/weather-showers-scattered.png" alt="unreproducible icon"> {{ name }}</a> ({{ size }}K) is unreproducible.</td>
+		<td><a href="{{ root }}/{{ version }}/{{ target }}/{{ name }}.html"><img src="{{ root }}/static/weather-showers-scattered.png" alt="unreproducible icon"> {{ name }}</a> ({{ size }}K) is unreproducible.</td>
       </tr>
 	  	{{ /repro }}
       {{ /packages }}
@@ -43,7 +43,7 @@
       {{ #packages }}
 	    {{ #repro }}
 	  <tr>
-        <td><img src="/userContent/reproducible/static/weather-clear.png" alt="reproducible icon" /> {{ name }} ({{ sha256sum }}, {{ size }}K) is reproducible.</td>
+        <td><img src="{{ root }}/static/weather-clear.png" alt="reproducible icon" /> {{ name }} ({{ sha256sum }}, {{ size }}K) is reproducible.</td>
 	  </tr>
 	  	{{ /repro }}
 	  {{ /packages }}

@@ -2,7 +2,9 @@
 # -*- coding: utf-8 -*-
 #
 # Copyright © 2019 Paul Spooren <mail@aparcar.org>
-# Insipred by reproducible_common.sh by © Holger Levsen <holger@layer-acht.org>
+#
+# Inspired by reproducible_common.sh
+#   © Holger Levsen <holger@layer-acht.org>
 #
 # Released under the GPLv2
 
