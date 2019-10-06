@@ -3,7 +3,7 @@
 # Copyright 2012-2014 Holger Levsen <holger@layer-acht.org>
 # multiarch_versionskew UDD query by Stuart Prescott <stuart@debian.org>
 # orphaned_without_o_bug by Johannes Schauer <j.schauer@email.de>
-# released under the GPLv=2
+# released under the GPLv2
 
 DEBUG=false
 . /srv/jenkins/bin/common-functions.sh

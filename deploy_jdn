@@ -4,7 +4,7 @@
 # Copyright 2014-2019 Holger Levsen <holger@layer-acht.org>
 #           ©    2018 Mattia Rizzolo <mattia@debian.org>
 #
-# released under the GPLv=2
+# released under the GPLv2
 #
 # deployment helper for jenkins.debian.net and build nodes
 # (misses freebsd node)

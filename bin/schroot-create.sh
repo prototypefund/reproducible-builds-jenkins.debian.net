@@ -5,7 +5,7 @@
 #           ©      2013 Antonio Terceiro <terceiro@debian.org>
 #           ©      2014 Joachim Breitner <nomeata@debian.org>
 #           © 2015-2018 Mattia Rizzolo <mattia@debian.org>
-# released under the GPLv=2
+# released under the GPLv2
 
 DEBUG=false
 . /srv/jenkins/bin/common-functions.sh

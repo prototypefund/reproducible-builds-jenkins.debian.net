@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Copyright © 2015 Holger Levsen <holger@debian.org>
-# released under the GPLv=2
+# released under the GPLv2
 
 DEBUG=true
 . /srv/jenkins/bin/common-functions.sh

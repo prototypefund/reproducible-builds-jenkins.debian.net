@@ -2,7 +2,7 @@
 
 # Copyright © 2015 Mattia Rizzolo <mattia@mapreri.org>
 # Copyright © 2015-2017 Holger Levsen <holger@mapreri.org>
-# released under the GPLv=2
+# released under the GPLv2
 
 DEBUG=false
 . /srv/jenkins/bin/common-functions.sh

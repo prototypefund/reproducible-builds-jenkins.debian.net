@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Copyright 2014-2016 Holger Levsen <holger@layer-acht.org>
-# released under the GPLv=2
+# released under the GPLv2
 
 DEBUG=false
 . /srv/jenkins/bin/common-functions.sh

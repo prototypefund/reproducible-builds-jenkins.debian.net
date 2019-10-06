@@ -2,7 +2,7 @@
 
 # Copyright 2018 Holger Levsen <holger@layer-acht.org>
 #           2019 kpcyrd <git@rxv.cc>
-# released under the GPLv=2
+# released under the GPLv2
 
 DEBUG=false
 . /srv/jenkins/bin/common-functions.sh

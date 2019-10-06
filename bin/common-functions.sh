@@ -3,7 +3,7 @@
 
 # Copyright 2014-2019 Holger Levsen <holger@layer-acht.org>
 #         © 2018      Mattia Rizzolo <mattia@mapreri.org>
-# released under the GPLv=2
+# released under the GPLv2
 
 common_cleanup() {
 	echo "$(date -u) - $0 stopped running as $TTT, which will now be removed."

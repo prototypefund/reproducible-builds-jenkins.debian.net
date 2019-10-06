@@ -2,7 +2,7 @@
 # vim: set noexpandtab:
 # Copyright 2012-2019 Holger Levsen <holger@layer-acht.org>
 #         ©      2018 Mattia Rizzolo <mattia@debian.org>
-# released under the GPLv=2
+# released under the GPLv2
 
 # puppet / salt / ansible / fai / chef / deployme.app - disclaimer
 # (IOW: this script has been grown in almost 500 commits and it shows…)

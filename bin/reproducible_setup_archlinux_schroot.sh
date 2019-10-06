@@ -4,7 +4,7 @@
 #                2017 kpcyrd <git@rxv.cc>
 #                2017 Mattia Rizzolo <mattia@debian.org>
 #                Juliana Oliveira Rodrigues <juliana.orod@gmail.com>
-# released under the GPLv=2
+# released under the GPLv2
 
 #
 # downloads an archlinux bootstrap chroot archive, then turns it into an schroot,

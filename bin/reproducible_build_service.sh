@@ -2,7 +2,7 @@
 # vim: set noexpandtab:
 
 # Copyright © 2017-2018 Holger Levsen (holger@layer-acht.org)
-# released under the GPLv=2
+# released under the GPLv2
 
 set -e
 

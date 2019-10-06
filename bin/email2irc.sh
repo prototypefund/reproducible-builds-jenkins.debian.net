@@ -2,7 +2,7 @@
 
 # Copyright 2012-2017 Holger Levsen <holger@layer-acht.org>
 #           ©    2018 Mattia Rizzolo <mattia@debian.org>
-# released under the GPLv=2
+# released under the GPLv2
 
 # called by ~jenkins/.procmailrc
 # to turn jenkins email notifications into irc announcements with kgb

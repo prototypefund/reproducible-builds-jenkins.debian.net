@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Copyright 2015-2018 Holger Levsen <holger@layer-acht.org>
-# released under the GPLv=2
+# released under the GPLv2
 
 DEBUG=false
 set -e

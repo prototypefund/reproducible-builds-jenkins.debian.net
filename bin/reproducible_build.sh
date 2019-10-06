@@ -3,7 +3,7 @@
 
 # Copyright 2014-2019 Holger Levsen <holger@layer-acht.org>
 #         © 2015-2018 Mattia Rizzolo <mattia@debian.org>
-# released under the GPLv=2
+# released under the GPLv2
 
 # Exit status of this script:
 # - when run in remote mode:

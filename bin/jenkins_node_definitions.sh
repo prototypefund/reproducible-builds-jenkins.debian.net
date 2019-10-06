@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Copyright 2015-2019 Holger Levsen <holger@layer-acht.org>
-# released under the GPLv=2
+# released under the GPLv2
 
 # define Debian build nodes in use for tests.reproducible-builds.org/debian/
 # 	FIXME: this is used differently in two places,

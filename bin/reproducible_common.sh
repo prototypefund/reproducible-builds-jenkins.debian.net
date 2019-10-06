@@ -3,7 +3,7 @@
 
 # Copyright 2014-2019 Holger Levsen <holger@layer-acht.org>
 #         © 2015-2018 Mattia Rizzolo <mattia@mapreri.org>
-# released under the GPLv=2
+# released under the GPLv2
 #
 # included by all reproducible_*.sh scripts, so be quiet
 set +x

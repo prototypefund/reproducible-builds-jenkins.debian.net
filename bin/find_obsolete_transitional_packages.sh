@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Copyright 2017-2019 Holger Levsen <holger@layer-acht.org>
-# released under the GPLv=2
+# released under the GPLv2
 
 #
 # run with "bug" as first parameter for interactive mode which will fire up mutt for $MAX buggy packages

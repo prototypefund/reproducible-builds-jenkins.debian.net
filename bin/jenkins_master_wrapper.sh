@@ -4,7 +4,7 @@
 # Copyright 2015-2019 Holger Levsen <holger@layer-acht.org>
 #                2016 Phil Hands <phil@hands.com>
 #           2018      Mattia Rizzolo <mattia@debian.org>
-# released under the GPLv=2
+# released under the GPLv2
 # based on an idea by Peter Palfrader (see bin/jenkins_node_wrapper.sh)
 
 set -u

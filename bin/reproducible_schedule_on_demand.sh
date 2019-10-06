@@ -2,7 +2,7 @@
 
 # Copyright 2014,2016 Holger Levsen <holger@layer-acht.org>
 #         © 2015 Mattia Rizzolo <mattia@mapreri.org>
-# released under the GPLv=2
+# released under the GPLv2
 
 set -e
 

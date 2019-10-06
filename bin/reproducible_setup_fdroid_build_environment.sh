@@ -2,7 +2,7 @@
 
 # Copyright © 2015-2018 Holger Levsen <holger@layer-acht.org>
 # Copyright © 2016-2017 Hans-Christoph Steiner (hans@guardianproject.info)
-# released under the GPLv=2
+# released under the GPLv2
 
 #
 #

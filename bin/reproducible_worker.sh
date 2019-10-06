@@ -3,7 +3,7 @@
 
 # Copyright © 2017-2018 Holger Levsen (holger@layer-acht.org)
 #           © 2018 Mattia Rizolo <mattia@debian.org>
-# released under the GPLv=2
+# released under the GPLv2
 
 set -e
 

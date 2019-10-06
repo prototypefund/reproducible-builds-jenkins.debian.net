@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Copyright 2019 Holger Levsen <holger@layer-acht.org>
-# released under the GPLv=2+
+# released under the GPLv2+
 #
 # based on an idea by Vagrant Cascadian <vagrant@debian.org>
 # see https://lists.reproducible-builds.org/pipermail/rb-general/2018-October/001239.html

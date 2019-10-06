@@ -2,7 +2,7 @@
 #
 # Copyright 2014-2018 Holger Levsen <holger@layer-acht.org>
 #
-# released under the GPLv=2
+# released under the GPLv2
 #
 # initial setup for new build nodes
 # - this script must be run as root
