@@ -21,7 +21,7 @@ def parse_packages(package_list_fp):
     packages = []
 
     for line in package_list_fp:
-        if line == '\n' or line == '':
+        if line == '\n':
             parser = email.parser.Parser()
             package = parser.parsestr(linebuffer)
             packages.append(package)
