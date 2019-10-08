@@ -22,6 +22,9 @@ odxu4b-armhf-rb.debian.net
 cbxi4a-armhf-rb.debian.net
 
 ## temporary problems
+ff4a-armhf-rb.debian.net
+wbq0-armhf-rb.debian.net
+
 
 # Down here nodes are automatically added by the maintenance job when they have
 # been failing their health check for too long.
