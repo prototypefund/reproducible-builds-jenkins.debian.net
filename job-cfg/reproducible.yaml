@@ -651,12 +651,12 @@
                     my_description: 'Rebuild an OpenWrt snapshot or a release today.'
                     my_hname: 'osuosl171'
                     my_timed: '0 0 * * H/3'
-                    my_shell: "/srv/jenkins/bin/reproducible_openwrt_rebuild.py"
+                    my_shell: "python3 -u /srv/jenkins/bin/reproducible_openwrt_rebuild.py"
                 - 'openwrt_rebuilder_future':
                     my_description: 'Rebuild an OpenWrt snapshot or a release in the future.'
                     my_hname: 'osuosl172'
                     my_timed: '0 2 * * H/3'
-                    my_shell: "/srv/jenkins/bin/reproducible_openwrt_rebuild.py"
+                    my_shell: "python3 -u /srv/jenkins/bin/reproducible_openwrt_rebuild.py"
             my_shellext: ".sh"
             my_shell: '/srv/jenkins/bin/reproducible_{my_task}{my_shellext}'
             my_hname: ''
