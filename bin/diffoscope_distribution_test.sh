@@ -15,7 +15,7 @@ send_irc_warning() {
 	if [ -n "$2" ] ; then
 		local CHANNEL=$2
 	else
-		local CHANNEL"reproducible-builds"
+		local CHANNEL="reproducible-builds"
 	fi
 	irc_message $CHANNEL "$WARNING"
 	echo "Warning: $WARNING"
