@@ -452,7 +452,16 @@ def diffoscope_multithread():
 def store_results():
     with open(target_dir + "/packages/Packages.manifest") as rebuild_manifest:
         result = show_list_difference(
-            urlopen(download_url + "/packages/Packages.manifest").readlines(),
+            [
+                list(
+                    map(
+                        lambda x: x.decode("utf-8"),
+                        urlopen(
+                            download_url + "/packages/Packages.manifest"
+                        ).readlines(),
+                    )
+                )
+            ],
             rebuild_manifest.readlines(),
         )
         insert_into_db(result, "{}-rebuild".format(version))
