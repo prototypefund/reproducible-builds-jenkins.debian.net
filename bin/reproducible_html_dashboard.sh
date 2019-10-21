@@ -696,7 +696,7 @@ create_performance_page() {
 			if [ $SUITE = "stretch" ] ; then
 				continue
 			else
-				write_page " <a href=\"/debian/$SUITE/$ARCH/${TABLE[2]}.png\"><img src=\"/debian/$SUITE/$ARCH/${TABLE[2]}.png\" class=\"tripleview\" alt=\"age of oldest reproducible build result in $SUITE/$ARCH\"></a>"
+				write_page " <a href=\"/debian/$SUITE/$ARCH/${TABLE[2]}.png\"><img src=\"/debian/$SUITE/$ARCH/${TABLE[2]}.png\" class=\"overview\" alt=\"age of oldest reproducible build result in $SUITE/$ARCH\"></a>"
 			fi
 		done
 		write_page "</p><p style=\"clear:both;\">"
