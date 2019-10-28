@@ -17,7 +17,7 @@
 
 # Also see https://pad.sfconservancy.org/p/rb-build-nodes-keep
 
-# Disk failure
+# OS reinstalled on new disks, needs deploy to be run
 odxu4b-armhf-rb.debian.net
 cbxi4a-armhf-rb.debian.net
 
