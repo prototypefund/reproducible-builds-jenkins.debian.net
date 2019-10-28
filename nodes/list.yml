@@ -150,7 +150,7 @@
   ip: 75.164.186.179
   port: 2239
   keys:
-    - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPGR99RD6NhIag7rqMgwam5LkkSLulax/oNDTFDX/W4d root@cbxi4a
+    - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILh+fMzRWytUpCCp+w08CI9zjlBXvin3AWQEtmi12m9l root@cbxi4a
 - hostname: cbxi4b-armhf-rb.debian.net
   ip: 75.164.186.179
   port: 2240
@@ -220,7 +220,7 @@
   ip: 75.164.186.179
   port: 2232
   keys:
-    - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAII4ysLWXJL7rDYtrHGI/G4knWKo7rfn75NGJj5L37sKc root@odxu4b
+    - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAm+UjYfLUYqjH5sXUq33xjEImKN/UCYIzhsKdcUjQyb root@odxu4b
 - hostname: odxu4c-armhf-rb.debian.net
   ip: 75.164.186.179
   port: 2233
