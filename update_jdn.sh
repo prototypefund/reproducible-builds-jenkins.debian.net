@@ -241,13 +241,14 @@ if [ -f /etc/debian_version ] ; then
 	# install packages we need
 	#
 	if [ $BASEDIR/$0 -nt $STAMP ] || [ ! -f $STAMP ] ; then
-		DEBS=" 
+		DEBS="
 			bash-completion 
 			bc
 			bsd-mailx
 			curl
 			debian-archive-keyring
 			cdebootstrap-
+			debootstrap
 			devscripts
 			eatmydata
 			etckeeper
@@ -261,10 +262,14 @@ if [ -f /etc/debian_version ] ; then
 			lsof
 			molly-guard
 			moreutils
+			munin-node
+			munin-plugins-core
+			munin-plugins-extra
 			needrestart
 			netcat-traditional
 			ntp
 			ntpdate
+			pbuilder
 			pigz 
 			postfix
 			procmail
@@ -277,8 +282,8 @@ if [ -f /etc/debian_version ] ; then
 			stunnel
 			subversion 
 			subversion-tools 
-			systemd-sysv
 			sudo 
+			systemd-sysv
 			unzip 
 			vim 
 			zsh
