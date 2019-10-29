@@ -17,10 +17,6 @@
 
 # Also see https://pad.sfconservancy.org/p/rb-build-nodes-keep
 
-# OS reinstalled on new disks, needs deploy to be run
-odxu4b-armhf-rb.debian.net
-cbxi4a-armhf-rb.debian.net
-
 ## temporary problems
 
 
