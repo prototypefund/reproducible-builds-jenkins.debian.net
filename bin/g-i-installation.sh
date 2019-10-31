@@ -188,7 +188,7 @@ bootstrap_system() {
 	# qemu related variables (incl kernel+initrd) - display first, as we grep for this in the process list
 	QEMU_OPTS="-display vnc=$DISPLAY -enable-kvm -cpu host"
 	QEMU_WEBSERVER=http://10.0.2.1/
-	QEMU_NET_OPTS="-net nic,vlan=0 -net user,vlan=0,host=10.0.2.1,dhcpstart=10.0.2.2,dns=10.0.2.254"
+	QEMU_NET_OPTS="-net nic,name=hub0 -net user,name=hub0,host=10.0.2.1,dhcpstart=10.0.2.2,dns=10.0.2.254"
 	# preseeding related variables
 	PRESEEDCFG="preseed.cfg"
 	PRESEED_PATH=d-i-preseed-cfgs
@@ -255,7 +255,7 @@ bootstrap_system() {
 			EXTRA_APPEND="$EXTRA_APPEND rescue/enable=true"
 			;;
 		debian-edu_*ltsp-server|debian-edu_*combi-server)
-			QEMU_OPTS="$QEMU_OPTS -net nic,vlan=1 -net user,vlan=1"
+			QEMU_OPTS="$QEMU_OPTS -net nic,name=hub1 -net user,name=hub1"
 			EXTRA_APPEND="$EXTRA_APPEND netcfg/choose_interface=auto desktop=xfce"
 			;;
 		*)	;;
@@ -370,10 +370,10 @@ boot_system() {
 		exit 1
 	fi
 	QEMU_OPTS="$QEMU_OPTS -drive file=${FILEPATH},index=0,media=disk,cache=unsafe,format=raw -m $RAMSIZE"
-	QEMU_OPTS="$QEMU_OPTS -net nic,vlan=0 -net user,vlan=0,host=10.0.2.1,dhcpstart=10.0.2.2,dns=10.0.2.254"
+	QEMU_OPTS="$QEMU_OPTS -net nic,name=hub0 -net user,name=hub0,host=10.0.2.1,dhcpstart=10.0.2.2,dns=10.0.2.254"
 	case $NAME in
 		debian-edu_*ltsp-server|debian-edu_*combi-server)
-				QEMU_OPTS="$QEMU_OPTS -net nic,vlan=1 -net user,vlan=1"
+				QEMU_OPTS="$QEMU_OPTS -net nic,name=hub1 -net user,name=hub1"
 				;;
 		*)
 				;;
