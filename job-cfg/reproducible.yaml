@@ -715,10 +715,6 @@
                     my_timed: '42 11 * * 2,4,6'
                     my_openwrt_config: 'CONFIG_TARGET_omap=y'
                     my_openwrt_target: 'omap'
-                - 'openwrt-target-ramips':
-                    my_timed: '42 7 * * 1,3,5'
-                    my_openwrt_config: 'CONFIG_TARGET_ramips=y'
-                    my_openwrt_target: 'ramips'
                 - 'openwrt-target-sunxi':
                     my_timed: '42 7 * * 2,4,6'
                     my_openwrt_config: 'CONFIG_TARGET_sunxi=y'
