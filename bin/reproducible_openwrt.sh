@@ -703,7 +703,7 @@ write_openwrt_page_header
 write_page_intro OpenWrt
 write_page "     <p>"
 write_page "     <ul>"
-for i in ar71xx brcm47xx kirkwoot lantiq mediatek omap ramips sunxi tegra x86 ; do
+for i in ar71xx brcm47xx kirkwood lantiq mediatek omap ramips sunxi tegra x86 ; do
 	write_page "            <li><a href="openwrt_$i.html">$i</a></li>"
 done
 write_page "     </ul>"
