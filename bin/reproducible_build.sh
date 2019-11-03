@@ -670,7 +670,7 @@ EOF
 
 	local pbuilder_options=()
 	case "${SUITE}" in
-		(unstable|experimental|buster)
+		(unstable|experimental|bullseye)
 			pbuilder_options+=(--extrapackages usrmerge)
 			;;
 	esac
