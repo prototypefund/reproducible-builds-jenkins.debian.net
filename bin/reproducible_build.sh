@@ -568,6 +568,15 @@ first_build() {
 	echo "Date:     $(date)"
 	echo "Date UTC: $(date -u)"
 	echo "============================================================================="
+	if [ "${ARCH}" = "armhf" ]; then
+		# Reduce parallelism on armhf systems with a lot of cores to
+		# reduce swapping on highly parallel builds. Also ensure first
+		# build is always an odd number of CPUs for good measure.
+		case $NUM_CPU in
+			2|4) NUM_CPU=3 ;;
+			*) NUM_CPU=5 ;;
+		esac
+	fi
 	local TMPCFG=$(mktemp -t pbuilderrc_XXXX --tmpdir=$TMPDIR)
 	cat > "$TMPCFG" << EOF
 BUILDUSERID=1111
@@ -625,7 +634,15 @@ second_build() {
 	echo "============================================================================="
 	set -x
 	local TMPCFG=$(mktemp -t pbuilderrc_XXXX --tmpdir=$TMPDIR)
-	NEW_NUM_CPU=$NUM_CPU	# on amd64+i386 we vary this based on node choices (by design), on armhf only sometimes.
+	# on amd64+i386 we vary this based on node choices (by design)
+	if [ "${ARCH}" = "armhf" ]; then
+		# Reduce parallelism on armhf systems with a lot of cores to
+		# reduce swapping on highly parallel builds. Keep second build
+		# with even number of cores.
+		case $NUM_CPU in
+			8) NUM_CPU=6 ;;
+		esac
+	fi
 	# differ locale+language depending on the architecture (mostly for readability by different people…)
 	case $ARCH in
 		armhf)	locale=it_CH
