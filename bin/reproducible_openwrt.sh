@@ -717,7 +717,7 @@ publish_page
 #
 PAGE=openwrt/openwrt_$OPENWRT_TARGET.html
 write_openwrt_page_header
-write_page "       <p>$GOOD_IMAGES ($GOOD_PERCENT_IMAGES%) out of $ALL_IMAGES built images and $GOOD_PACKAGES ($GOOD_PERCENT_PACKAGES%) out of $ALL_PACKAGES built packages were reproducible in our test setup."
+write_page "       <p>For <code>$target/$subtarget</code> we could built $GOOD_IMAGES ($GOOD_PERCENT_IMAGES%) out of $ALL_IMAGES images and $GOOD_PACKAGES ($GOOD_PERCENT_PACKAGES%) out of $ALL_PACKAGES packages reproducibly in our test setup."
 write_page "        These tests were last run on $DATE for version ${OPENWRT_VERSION} using ${DIFFOSCOPE}.</p>"
 write_variation_table OpenWrt
 cat "$DBD_HTML" >> "$PAGE"
