@@ -465,7 +465,11 @@ case $1 in
 			node_create_tmpdirs |\
 			node_debug |\
 			node_save_logs |\
-			node_cleanup_tmpdirs) ;; # this is the allowed list
+			node_cleanup_tmpdirs) 	# this is the allowed list
+						echo "####"
+						echo "#### $1"
+						echo "####"
+						;;
 			*)
 				echo "Unsupported remote node function $*"
 				exit 1
