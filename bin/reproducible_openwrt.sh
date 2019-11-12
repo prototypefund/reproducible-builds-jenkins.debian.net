@@ -450,8 +450,6 @@ build_two_times() {
 }
 
 
-
-echo "$0 got called with '$*'"
 # this script is called from positions
 # * it's called from the reproducible_wrapper when running on the master
 # * it's called from reproducible_opewnrt_common when doing remote builds
@@ -467,7 +465,7 @@ case $1 in
 			node_save_logs |\
 			node_cleanup_tmpdirs) 	# this is the allowed list
 						echo "####"
-						echo "#### $1"
+						echo "#### $1 $@"
 						echo "####"
 						;;
 			*)
