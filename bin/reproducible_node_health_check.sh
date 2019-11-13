@@ -90,18 +90,6 @@ if [ $TIMEOUT -ne 0 ] ; then
 fi
 
 #
-# check for correct MTU
-#
-echo "$(date -u) - testing whether the network interfaces MTU is 1500..."
-if [ "$(ip link | sed -n '/LOOPBACK\|NOARP/!s/.* mtu \([0-9]*\) .*/\1/p' | sort -u)" != "1500" ] ; then
-	ip link
-	echo "$(date -u) - network interfaces MTU != 1500 - this is wrong.  => please \`sudo ifconfig eth0 mtu 1500\`"
-	# should probably turn this into a warning if this becomes to annoying
-	echo "Warning: $HOSTNAME has wrong MTU, please tell the jenkins admins to fix this.  (sudo ifconfig eth0 mtu 1500)"
-	DIRTY=true
-fi
-
-#
 # check for correct future
 #
 # (XXX: yes this is hardcoded but meh…)

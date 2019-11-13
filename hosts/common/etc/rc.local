@@ -44,17 +44,6 @@ fixup_shm() {
 	chmod 1777 /dev/shm
 }
 
-fixup_mtu() {
-	# only act on systems which have eth0
-	if ip link show eth0 >/dev/null 2>&1 ; then
-		# if MTU != 1500 set it to 1500
-		if [ -z "$(ip link show eth0 | grep 'eth0:' | grep 'mtu 1500 ' || true)" ] ; then
-			ip link set dev eth0 mtu 1500
-		fi
-		ip link show eth0
-	fi
-}
-
 fixup_pbuilder_lockfiles() {
 	rm -f /var/cache/pbuilder/*.tgz.tmp
 }
@@ -68,10 +57,6 @@ MESSAGE="$(hostname -f) rebooted"
 # fixup /(dev|run)/shm if needed
 #
 fixup_shm
-
-#
-# fixup eth0's MTU if needed
-fixup_mtu
 
 #
 # configure iptables to drop incoming UDP packets
