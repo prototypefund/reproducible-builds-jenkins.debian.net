@@ -93,7 +93,7 @@ if [ "${0:0:5}" != "/tmp/" ] ; then
 	echo "$(date -u) - running $0 (for job $WHOAREWE) on $(hostname), called using \"$@\" as arguments."
 	echo "$(date -u) - actually running \"$(basename $0)\" (md5sum $(md5sum $0|cut -d ' ' -f1)) as \"$TTT\""
 	echo
-	echo "To learn to understand this, git clone https://salsa.debian.org/qa/jenkins.debian.net.git and then have a look at the files README, INSTALL, CONTRIBUTING and maybe TODO."
+	echo "git clone https://salsa.debian.org/qa/jenkins.debian.net.git && less README INSTALL CONTRIBUTING TODO"
 	echo
 	echo "Please send feedback about jenkins to qa-jenkins-dev@lists.alioth.debian.org, or as a bug against the 'jenkins.debian.org' pseudo-package, feedback about specific job results should go to their respective lists and/or the BTS."
 	echo "===================================================================================="
