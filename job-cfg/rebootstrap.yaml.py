@@ -29,7 +29,7 @@ mono_architectures = """
 release_architectures = """
     armel armhf arm64
     i386
-    mips mips64el mipsel
+    mips64el mipsel
     ppc64el
     s390x
     """.split()
