@@ -1,6 +1,6 @@
 Host *
     HashKnownHosts no
-    ControlMaster auto
+    ControlMaster no
     ControlPath ~/.ssh/master-%r@%h:%p
 
 # update_jdn will append here host specific instructions
