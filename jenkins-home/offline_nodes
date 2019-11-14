@@ -2,26 +2,22 @@
 # No builds will be dispatched to those nodes, and the nodes will be marked
 # as offline in the jenkins UI.
 #
-# The code greps for the local hostname, i.e.
-# foobar-armhf
-# codethink-sled23-arm64
-# profitbricks-build42-amd64
+# The code greps for the hostname, i.e.
+# foobar-armhf.debian.net
+# codethink-sled23-arm64.debian.net
+# profitbricks-build42-amd64.debian.net
 #
 # (name coming from the basename of the workspace directory for start-agent.sh
 # and from the list in reproducible_build_service.sh for reproducible_worker.sh)
 #
-# This means one could specify either the FQDN or the local hostname, bearing
-# in mind the FQDN will always match, whereas the shorter variant may stop
-# working.
-
 
 # Also see https://pad.sfconservancy.org/p/rb-build-nodes-keep
 
 ## temporary problems
 
 ## some hw issue we need to investigate and fix
-codethink-sled10-arm64
-codethink-sled13-arm64
+codethink-sled10-arm64.debian.net
+codethink-sled13-arm64.debian.net
 
 # Down here nodes are automatically added by the maintenance job when they have
 # been failing their health check for too long.
