@@ -16,8 +16,6 @@
 ## temporary problems
 
 ## some hw issue we need to investigate and fix
-codethink-sled10-arm64.debian.net
-codethink-sled13-arm64.debian.net
 
 # Down here nodes are automatically added by the maintenance job when they have
 # been failing their health check for too long.
