@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 #
-# Copyright © 2015-2017 Holger Levsen <holger@layer-acht.org>
+# Copyright © 2015-2019 Holger Levsen <holger@layer-acht.org>
 #           © 2018      Mattia Rizzolo <mattia@mapreri.org>
 # based on ~jenkins.d.n:~mattia/status.sh by Mattia Rizzolo <mattia@mapreri.org>
 # Licensed under GPL-2
@@ -166,7 +166,7 @@ def generate_oldies(arch):
     log.info('Building the oldies page for ' + arch + '...')
     title = 'Oldest results on ' + arch
     html = ''
-    for suite in SUITES:
+    for suite in reversed(SUITES):
         query = select([
             sources.c.suite,
             sources.c.architecture,
