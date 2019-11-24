@@ -369,7 +369,6 @@ call_diffoscope_on_changes_files() {
 			--html $TMPDIR/${DBDREPORT} \
 			--text $TMPDIR/$DBDTXT \
 			--json $TMPDIR/$DBDJSON \
-			--max-page-size 1048576 \
 			--profile=- \
 			$TMPDIR/b1/${CHANGES} \
 			$TMPDIR/b2/${CHANGES}" \
