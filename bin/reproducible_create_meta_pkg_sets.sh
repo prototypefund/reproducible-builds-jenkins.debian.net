@@ -396,7 +396,10 @@ update_pkg_set_specific() {
 			# Use the list of binary packages that is shipped with the .iso image for now
 			BASEURL="https://www.pureos.net/download/"
 			echo "Downloading $BASEURL now."
-			URL="$(curl $BASEURL | sed -n -e 's@.*\(https://downloads.puri.sm/.*\)\.hybrid\.iso.*@\1.packages@p')"
+			URL=http://downloads.pureos.net/amber/live/gnome/2019-11-16/pureos-9.0-gnome-live_20191116-amd64.packages
+			# URL has changed and isnt easy to parse anymore
+			# (there is no latest link or such...)
+			# URL="$(curl $BASEURL | sed -n -e 's@.*\(https://downloads.pureos.net/.*\)\.hybrid\.iso.*@\1.packages@p')"
 			if [ -n "$URL" ] ; then
 				echo "Downloading $URL now."
 				# eg. "zlib1g:amd64\t1:1.2.11.dfsg-1"
