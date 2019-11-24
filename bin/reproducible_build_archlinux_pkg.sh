@@ -172,6 +172,7 @@ first_build() {
 	if [ $PRESULT -eq 124 ] ; then
 		echo "$(date -u) - makepkg was killed by timeout after ${TIMEOUT}h." | tee -a $LOG
 	fi
+	set +e
 	schroot --end-session -c $SESSION | tee -a $LOG
 	PRESULT=${PIPESTATUS[0]}
 	if [ $PRESULT -ne 0 ] ; then
@@ -196,6 +197,7 @@ first_build() {
 		fi
 	fi
 	if ! "$DEBUG" ; then set +x ; fi
+	set -e
 }
 
 second_build() {
@@ -259,6 +261,7 @@ second_build() {
 	if [ $PRESULT -eq 124 ] ; then
 		echo "$(date -u) - makepkg was killed by timeout after ${TIMEOUT}h." | tee -a $LOG
 	fi
+	set +e
 	schroot --end-session -c $SESSION | tee -a $LOG
 	PRESULT=${PIPESTATUS[0]}
 	if [ $PRESULT -ne 0 ] ; then
@@ -277,6 +280,7 @@ second_build() {
 		fi
 	fi
 	if ! "$DEBUG" ; then set +x ; fi
+	set -e
 }
 
 remote_build() {
