@@ -438,13 +438,13 @@ if [ ! -z "$(ls $TMPDIR/b1/$SRCPACKAGE/*.pkg.tar.xz 2>/dev/null|| true)" ] ; the
 				echo "</p></body>"
 			) > "$BASE/archlinux/$REPOSITORY/$SRCPACKAGE/$ARTIFACT.html"
 		elif [ -f $TMPDIR/b1/$SRCPACKAGE/$ARTIFACT ] && [ -f $TMPDIR/b2/$SRCPACKAGE/$ARTIFACT ] ; then
-			# run diffoscope on the results
+			echo "$(date -u) - running diffoscope on the results"
 			TIMEOUT="60m"
 			DIFFOSCOPE="$(schroot --directory /tmp -c chroot:jenkins-reproducible-${DBDSUITE}-diffoscope diffoscope -- --version 2>&1)"
 			echo "$(date -u) - Running $DIFFOSCOPE now..."
 			call_diffoscope $SRCPACKAGE $ARTIFACT
 		elif [ -f $TMPDIR/b1/$SRCPACKAGE/$ARTIFACT ] || [ -f $TMPDIR/b2/$SRCPACKAGE/$ARTIFACT ] ; then
-			# one of the two builds failed... delete the other one
+			echo "$(date -u) - one of the two builds failed... delete the other one"
 			( rm $TMPDIR/b1/$SRCPACKAGE/$ARTIFACT || rm $TMPDIR/b1/$SRCPACKAGE/$ARTIFACT ) 2>/dev/null
 		else
 			# some packages define the package version based on the build date
