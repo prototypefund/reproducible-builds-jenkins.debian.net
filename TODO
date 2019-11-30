@@ -318,13 +318,14 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 ** chown -R jenkins:jenkins /srv/
 
 * system maintenance
-** upgraded the VM to FreeBSD 12.0
+** upgraded the VM:
 *** done with: 'freebsd-update upgrade -r 10.2' as root in screen
 *** and with:  'freebsd-update upgrade -r 10.3'
 *** and with:  'freebsd-update upgrade -r 11.0'
 *** and with:  'freebsd-update upgrade -r 11.1'
 *** and with:  'freebsd-update upgrade -r 11.2' followed by 'pkg-static install pkg ; pkg upgrade'
 *** and with:  'freebsd-update upgrade -r 12.0' followed by 'pkg-static install pkg ; pkg upgrade'
+*** and with:  'freebsd-update upgrade -r 12.1' followed by 'pkg-static install pkg ; pkg upgrade'
 
 * online disk resizing howto: https://www.freebsd.org/doc/handbook/disks-growing.html
 
