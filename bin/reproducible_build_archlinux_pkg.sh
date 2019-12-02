@@ -53,7 +53,7 @@ update_pkg_in_db() {
         echo "$QUERY"
 	query_db "$QUERY"
         # unmark build since it's properly finished
-        QUERY="DELETE FROM schedule WHERE package_id='${SRCPKGID}';"
+        QUERY="DELETE FROM schedule WHERE package_id='${SRCPKGID}' and build_type='ci_build';"
         echo "$QUERY"
 	query_db "$QUERY"
 	rm pkg.build_duration pkg.state pkg.version
@@ -68,6 +68,7 @@ choose_package() {
 		FROM schedule AS sch JOIN sources AS s ON sch.package_id=s.id
 		WHERE distribution=$DISTROID
 		AND sch.date_build_started is NULL
+		AND sch.build_type='ci_build'
 		AND s.architecture='$ARCH'
 		ORDER BY date_scheduled LIMIT 10"|sort -R|head -1)
 	if [ -z "$RESULT" ] ; then
@@ -94,12 +95,12 @@ choose_package() {
 	rm -f $BAD_BUILDS
 	# mark build attempt, first test if none else marked a build attempt recently
 	echo "ok, let's check if $SRCPACKAGE is building anywhere yet…"
-	RESULT=$(query_db "SELECT date_build_started FROM schedule WHERE package_id='$SRCPKGID'")
+	RESULT=$(query_db "SELECT date_build_started FROM schedule WHERE package_id='$SRCPKGID' AND build_type='ci_build'")
 	if [ -z "$RESULT" ] ; then
 		echo "ok, $SRCPACKAGE is not building anywhere…"
 		# try to update the schedule with our build attempt, then check no else did it, if so, abort
-		query_db "UPDATE schedule SET date_build_started='$DATE', job='$JOB' WHERE package_id='$SRCPKGID' AND date_build_started IS NULL"
-		RESULT=$(query_db "SELECT date_build_started FROM schedule WHERE package_id='$SRCPKGID' AND date_build_started='$DATE' AND job='$JOB'")
+		query_db "UPDATE schedule SET date_build_started='$DATE', job='$JOB' WHERE package_id='$SRCPKGID' AND build_type='ci_build' AND date_build_started IS NULL"
+		RESULT=$(query_db "SELECT date_build_started FROM schedule WHERE package_id='$SRCPKGID' AND date_build_started='$DATE' AND job='$JOB' AND build_type='ci_build'")
 		if [ -z "$RESULT" ] ; then
 			echo "hm, seems $SRCPACKAGE is building somewhere… failed to update the schedule table with our build ($SRCPKGID, $DATE, $JOB)."
 			handle_race_condition

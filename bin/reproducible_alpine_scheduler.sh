@@ -47,7 +47,7 @@ update_alpine_repositories() {
 	done
 	TOTAL=$(cat ${ALPINE_PKGS}_full_pkgbase_list | wc -l)
 	echo "$(date -u ) - $TOTAL alpine packages are now known to alpine."
-	local total=$(query_db "SELECT count(*) FROM sources AS s JOIN schedule AS sch ON s.id=sch.package_id WHERE s.distribution=$DISTROID AND s.architecture='x86_64' AND sch.date_build_started IS NULL;")
+	local total=$(query_db "SELECT count(*) FROM sources AS s JOIN schedule AS sch ON s.id=sch.package_id WHERE sch.build_type='ci_build' AND s.distribution=$DISTROID AND s.architecture='x86_64' AND sch.date_build_started IS NULL;")
 	echo "$(date -u) - updating alpine repositories, currently $total packages scheduled."
 
 	#
@@ -109,7 +109,7 @@ update_alpine_repositories() {
 					echo "new package found: $REPO/$pkgbase $version "
 					query_db "INSERT into sources (name, version, suite, architecture, distribution) VALUES ('$PKG', '$version', '$SUITE', '$ARCH', $DISTROID);"
 					PKG_ID=$(query_db "SELECT id FROM sources WHERE distribution=$DISTROID AND name='$PKG' AND suite='$SUITE' AND architecture='$ARCH';")
-					query_db "INSERT INTO schedule (package_id, date_scheduled) VALUES ('${PKG_ID}', '$DATE');"
+					query_db "INSERT INTO schedule (package_id, date_scheduled, build_type) VALUES ('${PKG_ID}', '$DATE', 'ci_build');"
 				elif [ "$VERSION" != "$version" ] ; then
 					VERCMP="$(schroot --run-session -c $SESSION --directory /var/tmp -- /sbin/apk version -t $version $VERSION || true)"
 					if [ "$VERCMP" = ">" ] ; then
@@ -129,10 +129,10 @@ update_alpine_repositories() {
 							echo "$REPO/$pkgbase $VERSION is known in the database, but repo now has $version which is newer, so rescheduling... "
 							PKG_ID=$(query_db "SELECT id FROM sources WHERE distribution=$DISTROID AND name='$PKG' AND suite='$SUITE' AND architecture='$ARCH';")
 							echo " SELECT * FROM schedule WHERE package_id = '${PKG_ID}';"
-							SCHEDULED=$(query_db "SELECT * FROM schedule WHERE package_id = '${PKG_ID}';")
+							SCHEDULED=$(query_db "SELECT * FROM schedule WHERE package_id = '${PKG_ID}' AND build_type = 'ci_build';")
 							if [ -z "$SCHEDULED" ] ; then
-								echo " INSERT INTO schedule (package_id, date_scheduled) VALUES ('${PKG_ID}', '$DATE');"
-								query_db "INSERT INTO schedule (package_id, date_scheduled) VALUES ('${PKG_ID}', '$DATE');"
+								echo " INSERT INTO schedule (package_id, date_scheduled, build_type) VALUES ('${PKG_ID}', '$DATE', 'ci_build');"
+								query_db "INSERT INTO schedule (package_id, date_scheduled, build_type) VALUES ('${PKG_ID}', '$DATE', 'ci_build');"
 							else
 								echo " $PKG (package_id: ${PKG_ID}) already scheduled, not scheduling again."
 							fi
@@ -170,12 +170,12 @@ update_alpine_repositories() {
 		AND s.architecture='x86_64'
 		AND (r.status LIKE 'DEPWAIT%' OR r.status LIKE '404%')
 		AND r.build_date < '$MINDATE'
-		AND s.id NOT IN (SELECT package_id FROM schedule)
+		AND s.id NOT IN (SELECT package_id FROM schedule WHERE build_type = 'ci_build')
 		LIMIT $MAX;"
 	local DEPWAIT404=$(query_db "$QUERY")
 	if [ ! -z "$DEPWAIT404" ] ; then
 		for PKG_ID in $DEPWAIT404 ; do
-			QUERY="INSERT INTO schedule (package_id, date_scheduled) VALUES ('${PKG_ID}', '$SCHDATE');"
+			QUERY="INSERT INTO schedule (package_id, date_scheduled, build_type) VALUES ('${PKG_ID}', '$SCHDATE', 'ci_build');"
 			query_db "$QUERY"
 		done
 		echo "$(date -u ) - done scheduling $(echo -n "$DEPWAIT404" | wc -l ) packages in DEPWAIT_ or 404_ states."
@@ -192,7 +192,7 @@ update_alpine_repositories() {
 	local THRESHOLD=600
 	MINDATE=$(date -u +"%Y-%m-%d %H:%M" -d "4 days ago")
 	SCHDATE=$(date -u +"%Y-%m-%d %H:%M" -d "7 days")
-	local CURRENT=$(query_db "SELECT count(*) FROM sources AS s JOIN schedule AS sch ON s.id=sch.package_id WHERE s.distribution=$DISTROID AND s.architecture='x86_64' AND sch.date_build_started IS NULL;")
+	local CURRENT=$(query_db "SELECT count(*) FROM sources AS s JOIN schedule AS sch ON s.id=sch.package_id WHERE sch.build_type='ci_build' AND s.distribution=$DISTROID AND s.architecture='x86_64' AND sch.date_build_started IS NULL;")
 	if [ $CURRENT -le $THRESHOLD ] ; then
 		echo "$(date -u ) - scheduling $MAX old packages."
 		QUERY="SELECT s.id, s.name, max(r.build_date) max_date
@@ -201,13 +201,13 @@ update_alpine_repositories() {
 			AND s.architecture='x86_64'
 			AND r.status != 'blacklisted'
 			AND r.build_date < '$MINDATE'
-			AND s.id NOT IN (SELECT schedule.package_id FROM schedule)
+			AND s.id NOT IN (SELECT schedule.package_id FROM schedule WHERE build_type = 'ci_build')
 			GROUP BY s.id, s.name
 			ORDER BY max_date
 			LIMIT $MAX;"
 		local OLD=$(query_db "$QUERY")
 		for PKG_ID in $(echo -n "$OLD" | cut -d '|' -f1) ; do
-			QUERY="INSERT INTO schedule (package_id, date_scheduled) VALUES ('${PKG_ID}', '$SCHDATE');"
+			QUERY="INSERT INTO schedule (package_id, date_scheduled, build_type) VALUES ('${PKG_ID}', '$SCHDATE', 'ci_build');"
 			query_db "$QUERY"
 		done
 		echo "$(date -u ) - done scheduling $MAX old packages."
@@ -219,7 +219,7 @@ update_alpine_repositories() {
 	# output stats
 	#
 	rm "$ALPINE_PKGS"_full_pkgbase_list
-	total=$(query_db "SELECT count(*) FROM sources AS s JOIN schedule AS sch ON s.id=sch.package_id WHERE s.distribution=$DISTROID AND s.architecture='x86_64' AND sch.date_build_started IS NULL;")
+	total=$(query_db "SELECT count(*) FROM sources AS s JOIN schedule AS sch ON s.id=sch.package_id WHERE sch.build_type = 'ci_build' AND s.distribution=$DISTROID AND s.architecture='x86_64' AND sch.date_build_started IS NULL;")
 	new=$(cat $NEW | wc -l 2>/dev/null|| true)
 	updated=$(cat $UPDATED 2>/dev/null| wc -l || true)
 	old=$(echo -n "$OLD" | wc -l 2>/dev/null|| true)

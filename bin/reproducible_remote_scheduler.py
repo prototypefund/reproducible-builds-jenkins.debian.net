@@ -217,7 +217,7 @@ def rest(scheduling_args, requester, local, suite, arch):
                 AND architecture='{arch}'"""
     query2 = """SELECT p.date_build_started
                 FROM sources AS s JOIN schedule as p ON p.package_id=s.id
-                WHERE p.package_id='{id}'"""
+                WHERE p.package_id='{id}' AND p.build_type='ci_build'"""
     for pkg in set(packages):
         # test whether the package actually exists
         result = query_db(query1.format(pkg=pkg, suite=suite, arch=arch))
@@ -316,6 +316,7 @@ def rest(scheduling_args, requester, local, suite, arch):
                 'save_artifacts': artifacts_value,
                 'notify': str(do_notify),
                 'scheduler': requester,
+                'build_type': 'ci_build',
             })
         else:
             add_to_schedule.append({
@@ -324,6 +325,7 @@ def rest(scheduling_args, requester, local, suite, arch):
                 'save_artifacts': artifacts_value,
                 'notify': str(do_notify),
                 'scheduler': requester,
+                'build_type': 'ci_build',
             })
 
         save_schedule.append({

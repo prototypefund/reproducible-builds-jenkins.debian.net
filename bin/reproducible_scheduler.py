@@ -13,11 +13,9 @@
 import sys
 import lzma
 import deb822
-import smtplib
 import apt_pkg
 from sqlalchemy import sql
 from urllib.request import urlopen
-from email.mime.text import MIMEText
 from datetime import datetime, timedelta
 
 from rblib import query_db, db_table
@@ -449,7 +447,7 @@ def queue_packages(all_pkgs, packages, date):
 
 
 def schedule_packages(packages):
-    pkgs = [{'package_id': x, 'date_scheduled': packages[x]} for x in packages.keys()]
+    pkgs = [{'package_id': x, 'date_scheduled': packages[x], 'build_type': 'ci_build'} for x in packages.keys()]
     log.debug('IDs about to be scheduled: %s', packages.keys())
     if pkgs:
         conn_db.execute(db_table('schedule').insert(), pkgs)
@@ -469,7 +467,7 @@ def query_untested_packages(suite, arch, limit):
                     SELECT sources.id, sources.name FROM sources
                     WHERE sources.suite='{suite}' AND sources.architecture='{arch}'
                     AND sources.id NOT IN
-                       (SELECT schedule.package_id FROM schedule)
+                       (SELECT schedule.package_id FROM schedule AND build_type='ci_build')
                     AND sources.id NOT IN
                        (SELECT results.package_id FROM results)
                     ORDER BY random()
@@ -488,7 +486,7 @@ def query_new_versions(suite, arch, limit):
                AND s.version != r.version
                AND r.status != 'blacklisted'
                AND s.id IN (SELECT package_id FROM results)
-               AND s.id NOT IN (SELECT schedule.package_id FROM schedule)
+               AND s.id NOT IN (SELECT schedule.package_id FROM schedule AND build_type='ci_build')
                GROUP BY s.id, s.name, s.version, r.version
                ORDER BY max_date
                LIMIT {limit}""".format(suite=suite, arch=arch, limit=limit)
@@ -513,7 +511,7 @@ def query_old_ftbfs_versions(suite, arch, limit):
                 AND r.status='FTBFS'
                 AND ( n.bugs = '[]' OR n.bugs IS NULL )
                 AND r.build_date < '{date}'
-                AND s.id NOT IN (SELECT schedule.package_id FROM schedule)
+                AND s.id NOT IN (SELECT schedule.package_id FROM schedule AND build_type='ci_build')
                 GROUP BY s.id, s.name
                 ORDER BY max_date
                 LIMIT {limit}""".format(suite=suite, arch=arch, limit=limit,
@@ -532,7 +530,7 @@ def query_old_depwait_versions(suite, arch, limit):
                 WHERE s.suite='{suite}' AND s.architecture='{arch}'
                 AND r.status='depwait'
                 AND r.build_date < '{date}'
-                AND s.id NOT IN (SELECT schedule.package_id FROM schedule)
+                AND s.id NOT IN (SELECT schedule.package_id FROM schedule AND build_type='ci_build')
                 GROUP BY s.id, s.name
                 ORDER BY max_date
                 LIMIT {limit}""".format(suite=suite, arch=arch, limit=limit,
@@ -552,7 +550,7 @@ def query_old_versions(suite, arch, limit):
                 WHERE s.suite='{suite}' AND s.architecture='{arch}'
                 AND r.status != 'blacklisted'
                 AND r.build_date < '{date}'
-                AND s.id NOT IN (SELECT schedule.package_id FROM schedule)
+                AND s.id NOT IN (SELECT schedule.package_id FROM schedule AND build_type='ci_build')
                 GROUP BY s.id, s.name
                 ORDER BY max_date
                 LIMIT {limit}""".format(suite=suite, arch=arch,
@@ -570,7 +568,7 @@ def query_e404_versions(suite, arch, limit):
                 WHERE s.suite='{suite}' AND s.architecture='{arch}'
                 AND r.status = 'E404'
                 AND r.build_date < '{date}'
-                AND s.id NOT IN (SELECT schedule.package_id FROM schedule)
+                AND s.id NOT IN (SELECT schedule.package_id FROM schedule AND build_type='ci_build')
                 GROUP BY s.id, s.name
                 ORDER BY max_date
                 LIMIT {limit}""".format(suite=suite, arch=arch, limit=limit,
@@ -698,7 +696,7 @@ def schedule_e404_versions(arch, total):
 def scheduler(arch):
     query = "SELECT count(*) " + \
             "FROM schedule AS p JOIN sources AS s ON p.package_id=s.id " + \
-            "WHERE s.architecture='{arch}'"
+            "WHERE s.architecture='{arch}' AND build_type='ci_build'"
     total = int(query_db(query.format(arch=arch))[0][0])
     log.info('==============================================================')
     log.info('Currently scheduled packages in all suites on ' + arch + ': ' + str(total))
@@ -734,7 +732,7 @@ def scheduler(arch):
     for suite in priotized_suite_order:
         query = "SELECT count(*) " \
                 "FROM schedule AS p JOIN sources AS s ON p.package_id=s.id " \
-                "WHERE s.suite='{suite}' AND s.architecture='{arch}'"
+                "WHERE s.suite='{suite}' AND s.architecture='{arch}' AND p.build_type='ci_build'"
         query = query.format(suite=suite, arch=arch)
         now_queued_here[suite] = int(query_db(query)[0][0]) + \
             len(untested[suite]+new[suite]+old[suite])
@@ -783,7 +781,7 @@ if __name__ == '__main__':
     purge_old_pages()
     query = "SELECT count(*) " + \
             "FROM schedule AS p JOIN sources AS s ON s.id=p.package_id " + \
-            "WHERE s.architecture='{}'"
+            "WHERE s.architecture='{}' AND build_type='ci_build'"
     message = ''
     for arch in ARCHS:
         log.info('Scheduling for %s...', arch)

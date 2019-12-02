@@ -718,6 +718,14 @@ schema_updates = {
         "UPDATE stats_build SET status='reproducible' WHERE status='GOOD'",
         "UPDATE stats_build SET status='blacklisted' WHERE status='BLACKLISTED'"
     ],
+    46: [  # crete a build_type field
+        "CREATE TYPE build_type AS ENUM ('verification', 'ci_build')",
+        "ALTER TABLE results ADD COLUMN build_type build_type DEFAULT 'ci_build' NOT NULL",
+        "ALTER TABLE stats_build ADD COLUMN build_type build_type DEFAULT 'ci_build' NOT NULL",
+        "ALTER TABLE schedule ADD COLUMN build_type build_type",
+        "UPDATE schedule SET build_type='ci_build'",
+        "ALTER TABLE schedule ALTER COLUMN build_type SET NOT NULL",
+    ],
 }
 
 

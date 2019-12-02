@@ -35,9 +35,9 @@ for PKG in $PACKAGES ; do
 	echo "Now trying to reschedule $PKG in $SUITE."
 	PKG_ID=$(query_db "SELECT id FROM sources WHERE distribution=$DISTROID AND name='$PKG' AND suite='$SUITE' AND architecture='$ARCH';")
 	if [ ! -z "${PKG_ID}" ] ; then
-		SCHEDULED=$(query_db "SELECT * FROM schedule WHERE package_id = '${PKG_ID}';")
+		SCHEDULED=$(query_db "SELECT * FROM schedule WHERE package_id = '${PKG_ID}' AND build_type = 'ci_build';")
 		if [ -z "$SCHEDULED" ] ; then
-			query_db "INSERT INTO schedule (package_id, date_scheduled) VALUES ('${PKG_ID}', '$DATE');"
+			query_db "INSERT INTO schedule (package_id, date_scheduled, build_type) VALUES ('${PKG_ID}', '$DATE', 'ci_build');"
 			SUCCESS="$SUCCESS $PKG"
 		else
 			echo " $PKG (package_id: ${PKG_ID}) already scheduled, not scheduling again."

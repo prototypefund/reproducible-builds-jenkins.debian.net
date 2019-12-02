@@ -712,7 +712,7 @@ cleanup_pkg_files() {
 }
 
 handle_race_condition() {
-	local RESULT=$(query_db "SELECT job FROM schedule WHERE package_id='$SRCPKGID'")
+	local RESULT=$(query_db "SELECT job FROM schedule WHERE package_id='$SRCPKGID' AND build_type='ci_build'")  # XXX not only ci_build
 	local msg="Package ${SRCPACKAGE} (id=$SRCPKGID) in ${SUITE} on ${ARCH} is probably already building at $RESULT, while this is $BUILD_URL.\n"
 	log_warning "$msg"
 	printf "$(date -u) - $msg" >> /var/log/jenkins/reproducible-race-conditions.log
@@ -727,7 +727,7 @@ handle_race_condition() {
 unregister_build() {
 	# unregister this build so it will immeditiatly tried again
 	if [ -n "$SRCPKGID" ] ; then
-		query_db "UPDATE schedule SET date_build_started = NULL, job = NULL WHERE package_id=$SRCPKGID"
+		query_db "UPDATE schedule SET date_build_started = NULL, job = NULL WHERE package_id=$SRCPKGID AND build_type='ci_build'"  # XXX not only ci_build
 	fi
 	NOTIFY=""
 }
