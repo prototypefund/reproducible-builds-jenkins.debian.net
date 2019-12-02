@@ -207,7 +207,7 @@ update_archlinux_repositories() {
 			LIMIT $MAX;"
 		local OLD=$(query_db "$QUERY")
 		for PKG_ID in $(echo -n "$OLD" | cut -d '|' -f1) ; do
-			QUERY="INSERT INTO schedule (package_id, date_scheduled, build_type) 'ALUES ('${PKG_ID}', '$SCHDATE', 'ci_build');"
+			QUERY="INSERT INTO schedule (package_id, date_scheduled, build_type) VALUES ('${PKG_ID}', '$SCHDATE', 'ci_build');"
 			query_db "$QUERY"
 		done
 		echo "$(date -u ) - done scheduling $MAX old packages."

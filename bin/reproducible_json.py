@@ -55,6 +55,7 @@ crossarch = {}
 crossarchversions = {}
 for row in result:
     pkg = dict(zip(keys, row))
+    pkg['build_date'] = str(pkg['build_date'])
     log.debug(pkg)
     output.append(pkg)
 
