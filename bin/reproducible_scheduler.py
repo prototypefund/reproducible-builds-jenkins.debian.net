@@ -467,7 +467,7 @@ def query_untested_packages(suite, arch, limit):
                     SELECT sources.id, sources.name FROM sources
                     WHERE sources.suite='{suite}' AND sources.architecture='{arch}'
                     AND sources.id NOT IN
-                       (SELECT schedule.package_id FROM schedule AND build_type='ci_build')
+                       (SELECT schedule.package_id FROM schedule WHERE build_type='ci_build')
                     AND sources.id NOT IN
                        (SELECT results.package_id FROM results)
                     ORDER BY random()
