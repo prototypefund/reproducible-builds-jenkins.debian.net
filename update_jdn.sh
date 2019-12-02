@@ -267,6 +267,7 @@ if [ -f /etc/debian_version ] ; then
 			lsof
 			molly-guard
 			moreutils
+			mosh
 			munin-node
 			munin-plugins-core
 			munin-plugins-extra
