@@ -23,7 +23,7 @@ from time import strftime, gmtime
 import shutil
 import json
 
-from reproducible_common import diffoscope_compare, diffoscope_version
+from .rblib.commands import Diffoscope
 from reproducible_openwrt_package_parser import insert_into_db, show_list_difference
 
 # target to be build
@@ -108,7 +108,7 @@ context = {
     "packages_repro_percent": 0,
     "packages_total": 0,
     "today": strftime("%Y-%m-%d", gmtime()),
-    "diffoscope_version": diffoscope_version(),
+    "diffoscope_version": Diffoscope().version(),
     "target": target,
     "images": [],
     "packages": [],
@@ -125,10 +125,10 @@ def diffoscope(origin_name):
         print("Error downloading {}".format(origin_name))
         return
 
-    diffoscope_compare(
+    Diffoscope().compare(
         file_origin.name,
         target_dir + "/" + origin_name,
-        results_target_dir + "/" + origin_name + ".html",
+        html=results_target_dir + "/" + origin_name + ".html",
     )
 
     file_origin.close()
@@ -145,7 +145,7 @@ def get_file(url, path=None):
     print("downloading {}".format(url))
     try:
         content = urlopen(url).read()
-    except:
+    except Exception:
         return 1
 
     if path:
