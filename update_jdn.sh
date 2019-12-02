@@ -122,12 +122,16 @@ user_host_groups['lunar','jenkins']='reproducible'
 user_host_groups['lynxis','osuosl-build171-amd64']="$sudo_groups"
 user_host_groups['lynxis','osuosl-build172-amd64']="$sudo_groups"
 user_host_groups['lynxis','jenkins']="jenkins"
+user_host_groups['kpcyrd','osuosl-build171-amd64']="$sudo_groups"
+user_host_groups['kpcyrd','osuosl-build172-amd64']="$sudo_groups"
+user_host_groups['kpcyrd','jenkins']="jenkins"
 user_host_groups['hans','osuosl-build168-amd64']="$sudo_groups"
 user_host_groups['vagrant','*']="$sudo_groups"
 user_host_groups['bernhard','osuosl-build174-amd64']="$sudo_groups"
 
 u_shell['mattia']='/bin/zsh'
 u_shell['lynxis']='/usr/bin/fish'
+u_shell['kpcyrd']='/bin/bash'
 u_shell['jenkins-adm']='/bin/bash'
 
 # get the users out of the user_host_groups array's index
