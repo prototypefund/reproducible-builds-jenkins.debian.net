@@ -391,7 +391,7 @@ write_build_performance_stats() {
 
 	write_page "</tr><tr><td class=\"left\">packages tested on $DATE</td>"
 	for ARCH in ${ARCHS} ; do
-		RESULT=$(query_db "SELECT COUNT(r.build_date) FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE r.build_date LIKE '%$DATE%' AND s.architecture='$ARCH'")
+		RESULT=$(query_db "SELECT COUNT(r.build_date) FROM results AS r JOIN sources AS s ON r.package_id=s.id WHERE r.build_date::date = '$DATE' AND s.architecture='$ARCH'")
 		write_page "<td>$RESULT</td>"
 	done
 	write_page "</tr><tr><td class=\"left\">packages tested in the last 24h</td>"
