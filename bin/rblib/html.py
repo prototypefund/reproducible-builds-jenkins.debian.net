@@ -25,7 +25,7 @@ tab = '  '
 # take a SHA1 of the css page for style version
 _hasher = hashlib.sha1()
 with open(REPRODUCIBLE_STYLES, 'rb') as f:
-        _hasher.update(f.read())
+    _hasher.update(f.read())
 REPRODUCIBLE_STYLE_SHA1 = _hasher.hexdigest()
 
 # Templates used for creating package pages
@@ -73,8 +73,8 @@ def _gen_suite_arch_nav_context(suite, arch, suite_arch_nav_template=None,
                 's': s,
                 'class': 'current' if s == suite else '',
                 'uri': _renderer.render(suite_arch_nav_template,
-                                       {'distro': conf_distro['distro_root'],
-                                        'suite': s, 'arch': arch})
+                                        {'distro': conf_distro['distro_root'],
+                                         'suite': s, 'arch': arch})
                 if include_suite else '',
             })
 
@@ -85,8 +85,8 @@ def _gen_suite_arch_nav_context(suite, arch, suite_arch_nav_template=None,
                 'a': a,
                 'class': 'current' if a == arch else '',
                 'uri': _renderer.render(suite_arch_nav_template,
-                                       {'distro': conf_distro['distro_root'],
-                                        'suite': suite, 'arch': a}),
+                                        {'distro': conf_distro['distro_root'],
+                                         'suite': suite, 'arch': a}),
             })
     return (suite_list, arch_list)
 
@@ -96,8 +96,9 @@ def create_main_navigation(suite=defaultsuite, arch=defaultarch,
                            displayed_page=None, suite_arch_nav_template=None,
                            ignore_experimental=False, no_suite=None,
                            no_arch=None):
-    suite_list, arch_list = _gen_suite_arch_nav_context(suite, arch,
-            suite_arch_nav_template, ignore_experimental, no_suite, no_arch)
+    suite_list, arch_list = _gen_suite_arch_nav_context(
+            suite, arch, suite_arch_nav_template,
+            ignore_experimental, no_suite, no_arch)
     context = {
         'suite': suite,
         'arch': arch,
