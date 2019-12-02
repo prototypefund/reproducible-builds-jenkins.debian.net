@@ -1213,94 +1213,18 @@ create_alpine_pkg_html() {
 	#
 	#
 	if [ -z "$(cd $ALPINE_PKG_PATH/ ; ls *.apk.html 2>/dev/null)" ] ; then
-		# this horrible if elif elif elif elif...  monster should be replaced
-		# by using pacman's exit code which is possible since sometime in 2018
-
-		# check different states and figure out what the page should look like
-		if find_in_buildlogs '^error: failed to prepare transaction \(conflicting dependencies\)'; then
-			STATE=DEPWAIT_0
-			buffer_message='could not resolve dependencies as there are conflicts'
-		elif find_in_buildlogs '==> ERROR: (Could not resolve all dependencies|.pacman. failed to install missing dependencies)'; then
-			if find_in_buildlogs 'error: failed to init transaction \(unable to lock database\)'; then
-				STATE=DEPWAIT_2
-				buffer_message='pacman could not lock database'
-			else
-				STATE=DEPWAIT_1
-				buffer_message='could not resolve dependencies'
-			fi
-		elif find_in_buildlogs '^error: unknown package: '; then
-			STATE=404_0
-			buffer_message='unknown package'
-		elif find_in_buildlogs '(==> ERROR: Failure while downloading|==> ERROR: One or more PGP signatures could not be verified|==> ERROR: One or more files did not pass the validity check|==> ERROR: Integrity checks \(.*\) differ in size from the source array|==> ERROR: Failure while branching|==> ERROR: Failure while creating working copy|Failed to source PKGBUILD.*PKGBUILD)'; then
-			REASON="download failed"
-			EXTRA_REASON=""
-			STATE=404_0
-			if find_in_buildlogs 'FAILED \(unknown public key'; then
-				STATE=404_6
-				EXTRA_REASON="to verify source with PGP due to unknown public key"
-			elif find_in_buildlogs 'The requested URL returned error: 403'; then
-				STATE=404_2
-				EXTRA_REASON="with 403 - forbidden"
-			elif find_in_buildlogs 'The requested URL returned error: 500'; then
-				STATE=404_4
-				EXTRA_REASON="with 500 - internal server error"
-			elif find_in_buildlogs 'The requested URL returned error: 503'; then
-				STATE=404_5
-				EXTRA_REASON="with 503 - service unavailable"
-			elif find_in_buildlogs '==> ERROR: One or more PGP signatures could not be verified'; then
-				STATE=404_7
-				EXTRA_REASON="to verify source with PGP signatures"
-			elif find_in_buildlogs '(SSL certificate problem: unable to get local issuer certificate|^bzr: ERROR: .SSL: CERTIFICATE_VERIFY_FAILED)'; then
-				STATE=404_1
-				EXTRA_REASON="with SSL problem"
-			elif find_in_buildlogs '==> ERROR: One or more files did not pass the validity check'; then
-				STATE=404_8
-				REASON="downloaded ok but failed to verify source"
-			elif find_in_buildlogs '==> ERROR: Integrity checks \(.*\) differ in size from the source array'; then
-				STATE=404_9
-				REASON="Integrity checks differ in size from the source array"
-			elif find_in_buildlogs 'The requested URL returned error: 404'; then
-				STATE=404_3
-				EXTRA_REASON="with 404 - file not found"
-			elif find_in_buildlogs 'fatal: the remote end hung up unexpectedly'; then
-				STATE=404_A
-				EXTRA_REASON="could not clone git repository"
-			elif find_in_buildlogs 'The requested URL returned error: 504'; then
-				STATE=404_B
-				EXTRA_REASON="with 504 - gateway timeout"
-			elif find_in_buildlogs '==> ERROR: Failure while downloading .* git repo'; then
-				STATE=404_C
-				EXTRA_REASON="from git repo"
-			fi
-			buffer_message="$REASON $EXTRA_REASON"
-		elif find_in_buildlogs '==> ERROR: (install file .* does not exist or is not a regular file|The download program wget is not installed)'; then
-			STATE=FTBFS_0
-			buffer_message='failed to build, requirements not met'
-		elif find_in_buildlogs '==> ERROR: A failure occurred in check'; then
-			STATE=FTBFS_1
-			buffer_message='failed to build while running tests'
-		elif find_in_buildlogs '==> ERROR: (An unknown error has occurred|A failure occurred in (build|package|prepare))'; then
-			STATE=FTBFS_2
-			buffer_message='failed to build'
-		elif find_in_buildlogs 'makepkg was killed by timeout after'; then
-			STATE=FTBFS_3
-			buffer_message='failed to build, killed by timeout'
-		elif find_in_buildlogs '==> ERROR: .* contains invalid characters:'; then
-			STATE=FTBFS_4
-			buffer_message='failed to build, pkg relations contain invalid characters'
+		STATE=$(query_db "SELECT r.status FROM results AS r
+			JOIN sources as s on s.id=r.package_id
+			WHERE s.architecture='x86_64'
+			AND s.name='$SRCPACKAGE'
+			AND s.suite='alpine_$REPOSITORY';")
+		if [ "$STATE" = "blacklisted" ] ; then
+			buffer_message='blacklisted'
 		else
-			STATE=$(query_db "SELECT r.status FROM results AS r
-				JOIN sources as s on s.id=r.package_id
-				WHERE s.architecture='x86_64'
-				AND s.name='$SRCPACKAGE'
-				AND s.suite='alpine_$REPOSITORY';")
-			if [ "$STATE" = "blacklisted" ] ; then
-				buffer_message='blacklisted'
-			else
-				STATE=UNKNOWN
-				buffer_message='probably failed to build from source, please investigate'
-			fi
+			STATE=UNKNOWN
+			buffer_message='probably failed to build from source, please investigate'
 		fi
+
 		# print build failures
 		if [ "$STATE" = "UNKNOWN" ]; then
 			echo "       $buffer_message" >> $HTML_BUFFER
