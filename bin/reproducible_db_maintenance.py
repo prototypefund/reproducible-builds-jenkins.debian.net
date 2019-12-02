@@ -726,6 +726,19 @@ schema_updates = {
         "UPDATE schedule SET build_type='ci_build'",
         "ALTER TABLE schedule ALTER COLUMN build_type SET NOT NULL",
     ],
+    47: [  # turn timestamps into real timestamps
+        "ALTER TABLE {0} ALTER COLUMN {1} TYPE timestamp without time zone "
+        "USING to_timestamp({1}, 'YYYY-MM-DD HH24:MI:SS')".format(i, j) for i, j in (
+            ("results", "build_date"),
+            ("schedule", "date_scheduled"),
+        )] + [
+        "ALTER TABLE {0} ALTER COLUMN datum TYPE date "
+        "USING to_date(datum, 'YYYY-MM-DD')".format(i) for i in (
+            "stats_breakages", "stats_bugs", "stats_builds_age",
+            "stats_builds_per_day", "stats_issues", "stats_meta_pkg_state",
+            "stats_notes", "stats_pkg_state",
+        )
+    ],
 }
 
 
