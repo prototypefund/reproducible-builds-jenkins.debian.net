@@ -88,7 +88,7 @@ def generate_schedule(arch):
         pkg = row[3]
         duration = convert_into_hms_string(row[5])
         avg_duration = convert_into_hms_string(row[6])
-        html += tab + '<tr><td>&nbsp;</td><td>' + row[0] + '</td>'
+        html += tab + '<tr><td>&nbsp;</td><td>' + str(row[0]) + '</td>'
         html += '<td>' + row[1] + '</td><td>' + row[2] + '</td><td><code>'
         html += Package(pkg).html_link(row[1], row[2])
         html += '</code></td><td>'+convert_into_status_html(str(row[4]))+'</td><td>'+duration+'</td><td>' + avg_duration + '</td></tr>\n'
@@ -196,7 +196,7 @@ def generate_oldies(arch):
             html += tab + '<tr><td>&nbsp;</td><td>' + row[0] + '</td>'
             html += '<td>' + row[1] + '</td><td><code>'
             html += Package(pkg).html_link(row[0], row[1])
-            html += '</code></td><td>'+convert_into_status_html(str(row[3]))+'</td><td>' + row[4] + '</td></tr>\n'
+            html += '</code></td><td>'+convert_into_status_html(str(row[3]))+'</td><td>' + str(row[4]) + '</td></tr>\n'
         html += '</table></p>\n'
     destfile = DISTRO_BASE + '/index_' + arch + '_oldies.html'
     desturl = DISTRO_URL + '/index_' + arch + '_oldies.html'
