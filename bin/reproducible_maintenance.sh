@@ -332,6 +332,7 @@ case $HOSTNAME in
 	osuosl-build169*|osuosl-build170*|jenkins)
 		echo "$(date -u) - updating alpine schroot now."
 		schroot --directory /tmp -c source:jenkins-reproducible-alpine -u root -- apk update
+		schroot --directory /tmp -c source:jenkins-reproducible-alpine -u root -- apk upgrade
 		RESULT=$?
 		if [ $RESULT -eq 1 ] ; then
 			echo "Warning: failed to update alpine schroot."
