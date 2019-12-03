@@ -164,8 +164,110 @@ echo "$(date -u) - cloning aports repo"
 $USERCMD sh -c "$GIT_OPTIONS git clone --depth=1 https://git.alpinelinux.org/aports.git /var/lib/jenkins/aports"
 
 # build and install a patched abuild
-# FIXME: this abuild patch crap and must go
-$USERCMD sh -c "cd /var/lib/jenkins/aports/main/abuild && base64 -d | git apply - && PATH='/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin' abuild -r && sudo /sbin/apk add --allow-untrusted ~/packages/main/x86_64/abuild-3.5.0_rc2-r1.apk && git checkout ." 
+$USERCMD sh -c "cd /var/lib/jenkins/aports/main/abuild && git apply - && PATH='/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin' abuild -r && sudo /sbin/apk add --allow-untrusted ~/packages/main/x86_64/abuild-3.5.0_rc2-r1.apk && git checkout ." <<-__END__
+diff --git a/main/abuild/0002-repro.patch b/main/abuild/0002-repro.patch
+new file mode 100644
+index 00000000..46778406
+--- /dev/null
++++ b/main/abuild/0002-repro.patch
+@@ -0,0 +1,77 @@
++commit b514a4e56d4d17da53bbe5a2d203f616f9a9f371
++Author: kpcyrd <git@rxv.cc>
++Date:   Mon Dec 2 18:09:56 2019 +0100
++
++    abuild: set fixed atime and ctime in tar
++
++diff --git a/abuild.in b/abuild.in
++index 5654d8f..644dea8 100644
++--- a/abuild.in
+++++ b/abuild.in
++@@ -1579,7 +1579,11 @@ create_apks() {
++ 		# normalize timestamps
++ 		find . -exec touch -h -d "@$SOURCE_DATE_EPOCH" {} +
++ 
++-		tar --xattrs -f - -c "$@" | abuild-tar --hash | $gzip -9 >"$dir"/data.tar.gz
+++		tar --xattrs \
+++			--format=posix \
+++			--pax-option=exthdr.name=%d/PaxHeaders/%f,atime:=0,ctime:=0 \
+++			--mtime="@${SOURCE_DATE_EPOCH}" \
+++			-f - -c "$@" | abuild-tar --hash | $gzip -n -9 >"$dir"/data.tar.gz
++ 
++ 		msg "Create checksum..."
++ 		# append the hash for data.tar.gz
++@@ -1589,8 +1593,12 @@ create_apks() {
++ 
++ 		# control.tar.gz
++ 		cd "$dir"
++-		tar -f - -c $(cat "$dir"/.metafiles) | abuild-tar --cut \
++-			| $gzip -9 > control.tar.gz
+++		tar \
+++			--format=posix \
+++			--pax-option=exthdr.name=%d/PaxHeaders/%f,atime:=0,ctime:=0 \
+++			--mtime="@${SOURCE_DATE_EPOCH}" \
+++			-f - -c $(cat "$dir"/.metafiles) | abuild-tar --cut \
+++			| $gzip -n -9 > control.tar.gz
++ 		abuild-sign -q control.tar.gz || exit 1
++ 
++ 		msg "Create $apk"
++@@ -1724,7 +1732,7 @@ default_doc() {
++ 			fi
++ 		done
++ 
++-		[ $islink -eq 0 ] && $gzip -9 "$name"
+++		[ $islink -eq 0 ] && $gzip -n -9 "$name"
++ 	done
++ 
++ 	rm -f "$subpkgdir/usr/share/info/dir"
++
++commit 80ca5bbd896146c885403835061aaccad13cbebb
++Author: kpcyrd <git@rxv.cc>
++Date:   Tue Dec 3 21:31:44 2019 +0100
++
++    abuild: explicitly sort apk content
++
++diff --git a/abuild.in b/abuild.in
++index 644dea8..add61a6 100644
++--- a/abuild.in
+++++ b/abuild.in
++@@ -1577,13 +1577,15 @@ create_apks() {
++ 		fi
++ 
++ 		# normalize timestamps
++-		find . -exec touch -h -d "@$SOURCE_DATE_EPOCH" {} +
+++		find "$@" -exec touch -h -d "@$SOURCE_DATE_EPOCH" {} +
++ 
++-		tar --xattrs \
+++		# explicitly sort package content
+++		find "$@" -print0 | LC_ALL=C sort -z | tar --xattrs \
++ 			--format=posix \
++ 			--pax-option=exthdr.name=%d/PaxHeaders/%f,atime:=0,ctime:=0 \
++ 			--mtime="@${SOURCE_DATE_EPOCH}" \
++-			-f - -c "$@" | abuild-tar --hash | $gzip -n -9 >"$dir"/data.tar.gz
+++			--no-recursion --null -T - \
+++			-f - -c | abuild-tar --hash | $gzip -n -9 >"$dir"/data.tar.gz
++ 
++ 		msg "Create checksum..."
++ 		# append the hash for data.tar.gz
+diff --git a/main/abuild/APKBUILD b/main/abuild/APKBUILD
+index c8b9a30a..d311e609 100644
+--- a/main/abuild/APKBUILD
++++ b/main/abuild/APKBUILD
+@@ -22,6 +22,7 @@ options="suid !check"
+ pkggroups="abuild"
+ source="https://dev.alpinelinux.org/archive/abuild/abuild-$_ver.tar.xz
+ 	0001-abuild-fix-applying-patches-from-https.patch
++	0002-repro.patch
+ 	"
+ 
+ builddir="$srcdir/$pkgname-$_ver"
+@@ -70,4 +71,5 @@ _rootbld() {
+ }
+ 
+ sha512sums="7c317d75f8fa64ac2a0674873edc937bcd8fb3d322e5cdf10874fe5ec87fec0ebe3a1d29d50e919376b10135d252659372ffb62e08418158146734fd13f46602  abuild-3.5.0_rc2.tar.xz
+-7b565481a85a7094a9f61f39ee44ba3c1f3d5bfeed7a5279c57c14447e94f65b613d56d26d197639ab280745e48c51ff7915fd0570a570d29dd7e2490b298dc7  0001-abuild-fix-applying-patches-from-https.patch"
++7b565481a85a7094a9f61f39ee44ba3c1f3d5bfeed7a5279c57c14447e94f65b613d56d26d197639ab280745e48c51ff7915fd0570a570d29dd7e2490b298dc7  0001-abuild-fix-applying-patches-from-https.patch
++451b420fb09877b188f293bb5240d2c222e90722d28d05dee558c833461f2d6c40db772ae2fe5c9dff1aa8534f360e0d1d6e907da64db7919cae53a59acbeff0  0002-repro.patch"
+__END__
 
 echo "============================================================================="
 echo "schroot $TARGET set up successfully in $SCHROOT_BASE/$TARGET - exiting now."
