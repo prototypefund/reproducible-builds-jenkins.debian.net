@@ -164,6 +164,7 @@ echo "$(date -u) - cloning aports repo"
 $USERCMD sh -c "$GIT_OPTIONS git clone --depth=1 https://git.alpinelinux.org/aports.git /var/lib/jenkins/aports"
 
 # build and install a patched abuild
+# FIXME: this abuild patch crap and must go
 $USERCMD sh -c "cd /var/lib/jenkins/aports/main/abuild && base64 -d | git apply - && PATH='/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin' abuild -r && sudo /sbin/apk add --allow-untrusted ~/packages/main/x86_64/abuild-3.5.0_rc2-r1.apk && git checkout ." <<-__END__
 ZGlmZiAtLWdpdCBhL21haW4vYWJ1aWxkLzAwMDItcmVwcm8ucGF0Y2ggYi9tYWluL2FidWlsZC8w
 MDAyLXJlcHJvLnBhdGNoCm5ldyBmaWxlIG1vZGUgMTAwNjQ0CmluZGV4IDAwMDAwMDAwLi40Njc3
