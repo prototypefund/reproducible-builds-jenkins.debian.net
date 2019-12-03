@@ -53,41 +53,41 @@ update_alpine_repositories() {
 	#
 	# remove packages which are gone (only when run between 21:00 and 23:59)
 	#
-#	if [ $(date +'%H') -gt 21 ] ; then
-#		REMOVED=0
-#		REMOVE_LIST=""
-#		for REPO in $ALPINE_REPOS ; do
-#			echo "$(date -u ) - dropping removed packages from filesystem in repository '$REPO':"
-#			for i in $(find $BASE/alpine/$REPO -type d -wholename "$BASE/alpine/$REPO/*" | sort) ; do
-#				PKG=$(basename $i)
-#				if ! grep -q "$REPO $PKG" ${ALPINE_PKGS}_full_pkgbase_list > /dev/null ; then
-#					# we could check here whether a package is currently building,
-#					# and if so defer the pkg removal. (but I think this is pointless,
-#					# as we are unlikely to kill that build, so meh, let it finish
-#					# and fail to update the db, because the package is gone...)
-#					let REMOVED=$REMOVED+1
-#					REMOVE_LIST="$REMOVE_LIST $REPO/$PKG"
-#					rm -r --one-file-system $BASE/alpine/$REPO/$PKG
-#					echo "$(date -u) - $REPO/$PKG removed as it's gone from the alpine repositories."
-#					SUITE="alpine_$REPO"
-#					PKG_ID=$(query_db "SELECT id FROM sources WHERE distribution=$DISTROID AND name='$PKG' AND suite='$SUITE' AND architecture='$ARCH';")
-#					if [ -n "${PKG_ID}" ] ; then
-#						query_db "DELETE FROM results WHERE package_id='${PKG_ID}';"
-#						query_db "DELETE FROM schedule WHERE package_id='${PKG_ID}';"
-#						query_db "DELETE FROM sources WHERE id='${PKG_ID}';"
-#						echo "$(date -u) - $SUITE $PKG removed from database."
-#					else
-#						echo "$(date -u) - $SUITE $PKG not found in database."
-#					fi
-#				fi
-#			done
-#		done
-#		MESSAGE="Deleted $REMOVED packages: $REMOVE_LIST"
-#		echo -n "$(date -u ) - "
-#		if [ $REMOVED -ne 0 ] ; then
-#			irc_message alpine-reproducible "$MESSAGE"
-#		fi
-#	fi
+	if [ $(date +'%H') -gt 21 ] ; then
+		REMOVED=0
+		REMOVE_LIST=""
+		for REPO in $ALPINE_REPOS ; do
+			echo "$(date -u ) - dropping removed packages from filesystem in repository '$REPO':"
+			for i in $(find $BASE/alpine/$REPO -type d -wholename "$BASE/alpine/$REPO/*" | sort) ; do
+				PKG=$(basename $i)
+				if ! grep -q "$REPO $PKG" ${ALPINE_PKGS}_full_pkgbase_list > /dev/null ; then
+					# we could check here whether a package is currently building,
+					# and if so defer the pkg removal. (but I think this is pointless,
+					# as we are unlikely to kill that build, so meh, let it finish
+					# and fail to update the db, because the package is gone...)
+					let REMOVED=$REMOVED+1
+					REMOVE_LIST="$REMOVE_LIST $REPO/$PKG"
+					rm -r --one-file-system $BASE/alpine/$REPO/$PKG
+					echo "$(date -u) - $REPO/$PKG removed as it's gone from the alpine repositories."
+					SUITE="alpine_$REPO"
+					PKG_ID=$(query_db "SELECT id FROM sources WHERE distribution=$DISTROID AND name='$PKG' AND suite='$SUITE' AND architecture='$ARCH';")
+					if [ -n "${PKG_ID}" ] ; then
+						query_db "DELETE FROM results WHERE package_id='${PKG_ID}';"
+						query_db "DELETE FROM schedule WHERE package_id='${PKG_ID}';"
+						query_db "DELETE FROM sources WHERE id='${PKG_ID}';"
+						echo "$(date -u) - $SUITE $PKG removed from database."
+					else
+						echo "$(date -u) - $SUITE $PKG not found in database."
+					fi
+				fi
+			done
+		done
+		MESSAGE="Deleted $REMOVED packages: $REMOVE_LIST"
+		echo -n "$(date -u ) - "
+		if [ $REMOVED -ne 0 ] ; then
+			irc_message alpine-reproducible "$MESSAGE"
+		fi
+	fi
 
 	#
 	# schedule packages
