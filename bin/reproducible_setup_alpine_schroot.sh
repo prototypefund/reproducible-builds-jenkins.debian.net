@@ -109,6 +109,7 @@ if [ "$HOSTNAME" = "osuosl-build170-amd64" ] ; then
 	# workaround for certificates that aren't valid in the future.
 	# we might need to replace this with a mitm proxy in the future
 	echo "insecure" | tee -a "$SCHROOT_BASE/$TARGET/var/lib/jenkins/.curlrc"
+	GIT_OPTIONS='GIT_SSL_NO_VERIFY=1'
 fi
 $USERCMD gpg --check-trustdb # first run will create ~/.gnupg/gpg.conf
 echo "keyserver-options auto-key-retrieve" | tee -a "$SCHROOT_BASE/$TARGET/var/lib/jenkins/.gnupg/gpg.conf"
@@ -158,11 +159,6 @@ QxUzJuRNWSonBQ32FDQmcVfZOoTI4mQMDkqKt6dhxiqycX1/R3m9LsE8IlIhoQ99
 wQIDAQAB
 -----END PUBLIC KEY-----
 __END__
-
-# Disable SSL verification for future builds
-if [ "$HOSTNAME" = "osuosl-build170-amd64" ] ; then
-	GIT_OPTIONS='GIT_SSL_NO_VERIFY=1'
-fi
 
 echo "$(date -u) - cloning aports repo"
 $USERCMD sh -c "$GIT_OPTIONS git clone --depth=1 https://git.alpinelinux.org/aports.git /var/lib/jenkins/aports"
