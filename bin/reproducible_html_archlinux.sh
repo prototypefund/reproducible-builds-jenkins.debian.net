@@ -53,7 +53,7 @@ repostats(){
 	for REPOSITORY in $ARCHLINUX_REPOS ; do
 		echo "$(date -u) - starting to analyse build results for '$REPOSITORY'."
 		# prepare stats per repository
-		SUITE="archlinux_$REPOSITORY"
+		SUITE="$REPOSITORY"
 		TOTAL=$(query_db "SELECT count(*) FROM sources AS s WHERE s.distribution=$DISTROID AND s.architecture='x86_64' AND s.suite='$SUITE';")
 		TESTED=$(query_db "SELECT count(*) FROM sources AS s JOIN results AS r ON s.id=r.package_id WHERE s.distribution=$DISTROID AND s.architecture='x86_64' AND s.suite='$SUITE';")
 		NR_GOOD=$(query_db "SELECT count(*) FROM sources AS s JOIN results AS r ON s.id=r.package_id WHERE s.distribution=$DISTROID AND s.architecture='x86_64' AND s.suite='$SUITE' AND r.status='reproducible';")

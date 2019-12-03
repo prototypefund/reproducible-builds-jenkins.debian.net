@@ -23,7 +23,7 @@ fi
 
 DATE="$(date -u +'%Y-%m-%d %H:%M' -d '21 days ago')"
 REPOSITORY=$1
-SUITE=archlinux_$REPOSITORY
+SUITE=$REPOSITORY
 ARCH=x86_64
 shift
 PACKAGES="$@"

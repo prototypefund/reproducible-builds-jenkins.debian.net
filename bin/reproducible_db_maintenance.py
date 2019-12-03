@@ -739,6 +739,16 @@ schema_updates = {
             "stats_notes", "stats_pkg_state",
         )
     ],
+    48: [  # normalize archlinux's suite names
+        "UPDATE sources SET suite='core' WHERE suite='archlinux_core'",
+        "UPDATE sources SET suite='extra' WHERE suite='archlinux_extra'",
+        "UPDATE sources SET suite='community' WHERE suite='archlinux_community'",
+        "UPDATE sources SET suite='multilib' WHERE suite='archlinux_multilib'",
+        "UPDATE stats_build SET suite='core' WHERE suite='archlinux_core'",
+        "UPDATE stats_build SET suite='extra' WHERE suite='archlinux_extra'",
+        "UPDATE stats_build SET suite='community' WHERE suite='archlinux_community'",
+        "UPDATE stats_build SET suite='multilib' WHERE suite='archlinux_multilib'",
+    ],
 }
 
 

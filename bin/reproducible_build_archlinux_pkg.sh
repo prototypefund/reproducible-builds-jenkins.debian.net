@@ -36,7 +36,7 @@ update_pkg_in_db() {
 	BUILD_DURATION="$(cat pkg.build_duration)"
 	BUILD_STATE=$(cat pkg.state)
 	BUILD_VERSION="$(cat pkg.version)"
-	SUITE="archlinux_$REPOSITORY"
+	SUITE="$REPOSITORY"
 	local SRCPKGID=$(query_db "SELECT id FROM sources WHERE distribution=$DISTROID AND name='$SRCPACKAGE' AND suite='$SUITE' AND architecture='$ARCH';")
 	if [ -z "${SRCPKGID}" ] ; then
 	        echo "${SRCPKGID} empty, ignoring $REPOSITORY/$SRCPACKAGE, failing hard."
