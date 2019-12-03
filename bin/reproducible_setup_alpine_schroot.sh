@@ -113,12 +113,12 @@ fi
 $USERCMD gpg --check-trustdb # first run will create ~/.gnupg/gpg.conf
 echo "keyserver-options auto-key-retrieve" | tee -a "$SCHROOT_BASE/$TARGET/var/lib/jenkins/.gnupg/gpg.conf"
 
-$USERCMD mkdir -vp "$SCHROOT_BASE/$TARGET/var/lib/jenkins/.abuild"
-$USERCMD tee "$SCHROOT_BASE/$TARGET/var/lib/jenkins/.abuild/abuild.conf" <<-__END__
+mkdir -vp "$SCHROOT_BASE/$TARGET/var/lib/jenkins/.abuild"
+tee "$SCHROOT_BASE/$TARGET/var/lib/jenkins/.abuild/abuild.conf" <<-__END__
 PACKAGER_PRIVKEY="/var/lib/jenkins/.abuild/build-5de527c8.rsa"
 __END__
 # ci keys, do not use for anything important
-$USERCMD tee "$SCHROOT_BASE/$TARGET/var/lib/jenkins/.abuild/build-5de527c8.rsa" <<-__END__
+tee "$SCHROOT_BASE/$TARGET/var/lib/jenkins/.abuild/build-5de527c8.rsa" <<-__END__
 -----BEGIN RSA PRIVATE KEY-----
 MIIEogIBAAKCAQEAq95i4RZ4GfLLne18xmPSwvE9vcoIISAIbJAsjz9XR+d552TS
 u7rJF3JDIbWqQ53u4P4dvPHxK3wO657KtfBjM1lf8KJbdaE993AYGdbbVbTnak5h
@@ -147,7 +147,7 @@ IKDt71BfGgXZHy1AKMv+0x1Wk2hOXC2fSxG46lIPD0msR2207+c7ZgVuyARmSDO3
 Y/5yyssrctGJ8bNs+++uUhr8yG9CXBG9uSG3gvtCXxOgwg43lTk=
 -----END RSA PRIVATE KEY-----
 __END__
-$USERCMD tee "$SCHROOT_BASE/$TARGET/var/lib/jenkins/.abuild/build-5de527c8.rsa.pub" <<-__END__
+tee "$SCHROOT_BASE/$TARGET/var/lib/jenkins/.abuild/build-5de527c8.rsa.pub" <<-__END__
 -----BEGIN PUBLIC KEY-----
 MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAq95i4RZ4GfLLne18xmPS
 wvE9vcoIISAIbJAsjz9XR+d552TSu7rJF3JDIbWqQ53u4P4dvPHxK3wO657KtfBj
