@@ -749,6 +749,12 @@ schema_updates = {
         "UPDATE stats_build SET suite='community' WHERE suite='archlinux_community'",
         "UPDATE stats_build SET suite='multilib' WHERE suite='archlinux_multilib'",
     ],
+    49: [  # create a dsources view
+        """CREATE VIEW dsources AS
+            SELECT s.id AS package_id, s.name, s.version, s.suite,
+                s.architecture, s.notify_maintainer, d.name AS distribution
+            FROM sources s JOIN distributions d on s.distribution=d.id""",
+    ],
 }
 
 
