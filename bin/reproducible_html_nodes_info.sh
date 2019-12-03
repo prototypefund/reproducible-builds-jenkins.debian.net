@@ -26,7 +26,7 @@ explain_nodes() {
 		osuosl170)	write_page "<br /><small>(r-b Archlinux builds)</small>" ;;
 		osuosl171)	write_page "<br /><small>(r-b OpenWrt, NetBSD, Coreboot builds)</small>" ;;
 		osuosl172)	write_page "<br /><small>(r-b OpenWrt, Coreboot builds)</small>" ;;
-		osuosl173)	write_page "<br /><small>(r-b Debian rebuilder)</small>" ;;
+		osuosl173)	write_page "<br /><small>(r-b Debian / Archlinux rebuilder)</small>" ;;
 		osuosl174)	write_page "<br /><small>(r-b openSUSE)</small>" ;;
 		profitbricks1)	write_page "<br /><small>(r-b Debian builds and http-proxy)</small>" ;;
 		codethink16)	write_page "<br /><small>(r-b Debian builds and http-proxy)</small>" ;;

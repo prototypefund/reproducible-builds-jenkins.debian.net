@@ -510,7 +510,7 @@ if [ -f /etc/debian_version ] ; then
 			|| [ "$HOSTNAME" = "profitbricks-build2-i386" ] || [ "$HOSTNAME" = "profitbricks-build12-i386" ] ; then
 			# we dont vary the kernel on i386 atm, see #875990 + #876035
 			sudo apt install linux-image-amd64:amd64
-		elif [ "$HOSTNAME" = "osuosl-build169-amd64" ] || [ "$HOSTNAME" = "osuosl-build170-amd64" ] ; then
+		elif [ "$HOSTNAME" = "osuosl-build169-amd64" ] || [ "$HOSTNAME" = "osuosl-build170-amd64" ] || [ "$HOSTNAME" = "osuosl-build173-amd64" ]; then
 			# Arch Linux builds latest stuff which sometimes (eg, currentlt Qt) needs newer kernel to build...
 			sudo apt install linux-image-amd64/buster-backports || true # backport kernels are frequently uninstallable...
 			:
@@ -614,7 +614,8 @@ fi
 # add some users to groups after packages have been installed
 if ! $UP2DATE ; then
 	case $HOSTNAME in
-		jenkins|osuosl-build169-amd64|osuosl-build170-amd64)
+		jenkins|osuosl-build169-amd64|osuosl-build170-amd64||osuosl-build173-amd64)
+			# for building Archlinux
 			sudo addgroup --system --gid 300 abuild
 			sudo adduser jenkins abuild
 			;;

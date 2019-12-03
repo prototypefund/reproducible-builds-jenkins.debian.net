@@ -777,6 +777,10 @@
                     my_description: 'Setup an Arch Linux schroot to test Arch Linux packages for reproducibility.'
                     my_timed: '42 23 1 1 *'
                     my_hname: 'osuosl170'
+                - 'setup_schroot_archlinux_osuosl173':
+                    my_description: 'Setup an Arch Linux schroot to test Arch Linux packages for reproducibility.'
+                    my_timed: '42 23 1 1 *'
+                    my_hname: 'osuosl173'
                 - 'setup_mock_fedora-23_x86_64_jenkins':
                     my_description: 'Setup mock for fedora-23 on X86_64 to test .rpm packages for reproducibility.'
                     my_timed: '42 23 1 1 *'
