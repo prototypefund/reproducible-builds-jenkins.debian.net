@@ -165,7 +165,7 @@ if [ "$HOSTNAME" = "osuosl-build170-amd64" ] ; then
 fi
 
 echo "$(date -u) - cloning aports repo"
-$USERCMD sh -c "$GIT_OPTIONS git clone https://git.alpinelinux.org/aports.git /var/lib/jenkins/aports"
+$USERCMD sh -c "$GIT_OPTIONS git clone --depth=1 https://git.alpinelinux.org/aports.git /var/lib/jenkins/aports"
 
 # build and install a patched abuild
 $USERCMD sh -c "cd /var/lib/jenkins/aports/main/abuild && base64 -d | git apply - && abuild -r && apk add ~/packages/main/x86_64/abuild-3.5.0_rc2-r1.apk && git checkout ." <<-__END__
