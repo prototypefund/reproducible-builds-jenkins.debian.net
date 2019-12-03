@@ -371,7 +371,7 @@ recent_builds_page(){
 				WHERE s.distribution=$DISTROID
 				AND s.architecture='x86_64'
 				AND r.build_date > '$MAXDATE'")
-	write_page "<h2>$RECENT builds of Archlinux packages in the last 24h</h2>"
+	write_page "<h2>$RECENT builds of alpine packages in the last 24h</h2>"
 	include_pkg_table_header_in_page
 	STATE_PKGS=$(query_db "SELECT s.name, s.suite FROM sources AS s
 				JOIN results AS r
@@ -402,7 +402,7 @@ currently_scheduled_page(){
 			WHERE s.distribution=$DISTROID
 			AND s.architecture='x86_64'
 			AND sch.date_build_started IS NULL")
-	write_page "<h2>Currently $TESTED scheduled builds of Archlinux packages</h2>"
+	write_page "<h2>Currently $TESTED scheduled builds of alpine packages</h2>"
 	write_page "    <table><tr><th>source package</th><th>repository</th><th>version</th><th>scheduled</th></tr>"
 	STATE_PKGS=$(query_db "SELECT s.name, s.suite, s.version, sch.date_scheduled
 			FROM sources AS s
