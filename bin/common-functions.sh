@@ -118,7 +118,7 @@ else
 				export MIRROR=http://cdn-fastly.deb.debian.org/debian ;;
 			codethink*)
 				export MIRROR=http://cdn-fastly.deb.debian.org/debian ;;
-			spectrum)
+			spectrum|warren)  # warren is mattia's laptop
 				export MIRROR=none ;;
 			*)
 				echo "unsupported host, exiting." ; exit 1 ;;
@@ -141,6 +141,7 @@ else
 			export http_proxy="http://10.0.0.15:8000/" ;;
 		spectrum)
 			export http_proxy="http://127.0.0.1:3128" ;;
+		warren) : ;;  # warren is mattia's laptop
 		*)
 			echo "unsupported host, exiting." ; exit 1 ;;
 	esac
