@@ -201,13 +201,14 @@ second_build() {
 	local FUTURE_STATE="disabled"
 	if [ "$(hostname)" = "osuosl-build170-amd64" ] ; then
 		FUTURE_STATE="enabled"
+		GIT_OPTIONS='GIT_SSL_NO_VERIFY=1'
 	fi
 	echo "Future:            $FUTURE_STATE"
 	echo "SOURCE_DATE_EPOCH: $SOURCE_DATE_EPOCH"
 	echo "============================================================================="
 	schroot --begin-session --session-name=$SESSION -c jenkins-reproducible-alpine
 	echo "MAKEFLAGS=-j$NEW_NUM_CPU" | schroot --run-session -c $SESSION --directory /tmp -u root -- tee -a /etc/abuild.conf
-	schroot --run-session -c $SESSION --directory "/var/lib/jenkins/aports" -- git pull
+	schroot --run-session -c $SESSION --directory "/var/lib/jenkins/aports" -- sh -c "$GIT_OPTIONS git pull"
 	# add more variations in the 2nd build: TZ (differently), LANG, LC_ALL, umask
 	schroot --run-session -c $SESSION --directory /tmp -- tee -a /var/lib/jenkins/.bashrc <<-__END__
 	export TZ="/usr/share/zoneinfo/Etc/GMT-14"
