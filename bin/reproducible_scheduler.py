@@ -486,7 +486,7 @@ def query_new_versions(suite, arch, limit):
                AND s.version != r.version
                AND r.status != 'blacklisted'
                AND s.id IN (SELECT package_id FROM results)
-               AND s.id NOT IN (SELECT schedule.package_id FROM schedule AND build_type='ci_build')
+               AND s.id NOT IN (SELECT schedule.package_id FROM schedule WHERE build_type='ci_build')
                GROUP BY s.id, s.name, s.version, r.version
                ORDER BY max_date
                LIMIT {limit}""".format(suite=suite, arch=arch, limit=limit)
@@ -511,7 +511,7 @@ def query_old_ftbfs_versions(suite, arch, limit):
                 AND r.status='FTBFS'
                 AND ( n.bugs = '[]' OR n.bugs IS NULL )
                 AND r.build_date < '{date}'
-                AND s.id NOT IN (SELECT schedule.package_id FROM schedule AND build_type='ci_build')
+                AND s.id NOT IN (SELECT schedule.package_id FROM schedule WHERE build_type='ci_build')
                 GROUP BY s.id, s.name
                 ORDER BY max_date
                 LIMIT {limit}""".format(suite=suite, arch=arch, limit=limit,
@@ -530,7 +530,7 @@ def query_old_depwait_versions(suite, arch, limit):
                 WHERE s.suite='{suite}' AND s.architecture='{arch}'
                 AND r.status='depwait'
                 AND r.build_date < '{date}'
-                AND s.id NOT IN (SELECT schedule.package_id FROM schedule AND build_type='ci_build')
+                AND s.id NOT IN (SELECT schedule.package_id FROM schedule WHERE build_type='ci_build')
                 GROUP BY s.id, s.name
                 ORDER BY max_date
                 LIMIT {limit}""".format(suite=suite, arch=arch, limit=limit,
@@ -550,7 +550,7 @@ def query_old_versions(suite, arch, limit):
                 WHERE s.suite='{suite}' AND s.architecture='{arch}'
                 AND r.status != 'blacklisted'
                 AND r.build_date < '{date}'
-                AND s.id NOT IN (SELECT schedule.package_id FROM schedule AND build_type='ci_build')
+                AND s.id NOT IN (SELECT schedule.package_id FROM schedule WHERE build_type='ci_build')
                 GROUP BY s.id, s.name
                 ORDER BY max_date
                 LIMIT {limit}""".format(suite=suite, arch=arch,
@@ -568,7 +568,7 @@ def query_e404_versions(suite, arch, limit):
                 WHERE s.suite='{suite}' AND s.architecture='{arch}'
                 AND r.status = 'E404'
                 AND r.build_date < '{date}'
-                AND s.id NOT IN (SELECT schedule.package_id FROM schedule AND build_type='ci_build')
+                AND s.id NOT IN (SELECT schedule.package_id FROM schedule WHERE build_type='ci_build')
                 GROUP BY s.id, s.name
                 ORDER BY max_date
                 LIMIT {limit}""".format(suite=suite, arch=arch, limit=limit,
