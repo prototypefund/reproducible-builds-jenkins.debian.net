@@ -121,6 +121,7 @@ first_build() {
 	echo "Date:           $(date -u)"
 	echo "============================================================================="
 	local SESSION="alpine-$SRCPACKAGE-$(basename $TMPDIR)"
+	local SRCDIR="/var/lib/jenkins/aports/$REPOSITORY/$SRCPACKAGE"
 	local BUILDDIR="/tmp/alpine-$SRCPACKAGE-$(basename $TMPDIR)"
 	local LOG=$TMPDIR/b1/$SRCPACKAGE/build1.log
 	local FUTURE_STATE="disabled"
@@ -134,7 +135,6 @@ first_build() {
 	#schroot --run-session -c $SESSION --directory /tmp -u root -- ln -sfT dash /usr/bin/sh
 	echo "MAKEFLAGS=-j$NUM_CPU" | schroot --run-session -c $SESSION --directory /tmp -u root -- tee -a /etc/abuild.conf
 	schroot --run-session -c $SESSION --directory "/var/lib/jenkins/aports" -- git pull
-	schroot --run-session -c $SESSION --directory /tmp -- cp -vr "/var/lib/jenkins/aports/$REPOSITORY/$SRCPACKAGE" "$BUILDDIR"
 	# modify timezone, LANG, LC_ALL in the 1st build.
 	schroot --run-session -c $SESSION --directory /tmp -- tee -a /var/lib/jenkins/.bashrc <<-__END__
 	export TZ="/usr/share/zoneinfo/Etc/GMT+12"
@@ -154,7 +154,7 @@ first_build() {
 	echo $VERSION > $TMPDIR/b1/$SRCPACKAGE/build1.version
 	# nicely run abuild with a timeout of $TIMEOUT hours
 	timeout -k $TIMEOUT.1h ${TIMEOUT}h /usr/bin/ionice -c 3 /usr/bin/nice \
-		schroot --run-session -c $SESSION --directory "$BUILDDIR" -- bash -l -c "abuild -rP $BUILDDIR 2>&1" | tee -a $LOG
+		schroot --run-session -c $SESSION --directory "$SRCDIR" -- bash -l -c "abuild -rP $BUILDDIR 2>&1" | tee -a $LOG
 	PRESULT=${PIPESTATUS[0]}
 	if [ $PRESULT -eq 124 ] ; then
 		echo "$(date -u) - abuild was killed by timeout after ${TIMEOUT}h." | tee -a $LOG
@@ -193,6 +193,7 @@ second_build() {
 	echo "Date:           $(date -u)"
 	echo "============================================================================="
 	local SESSION="alpine-$SRCPACKAGE-$(basename $TMPDIR)"
+	local SRCDIR="/var/lib/jenkins/aports/$REPOSITORY/$SRCPACKAGE"
 	local BUILDDIR="/tmp/alpine-$SRCPACKAGE-$(basename $TMPDIR)"
 	local LOG=$TMPDIR/b2/$SRCPACKAGE/build2.log
 	NEW_NUM_CPU=$(echo $NUM_CPU-1|bc)
@@ -205,7 +206,6 @@ second_build() {
 	echo "============================================================================="
 	schroot --begin-session --session-name=$SESSION -c jenkins-reproducible-alpine
 	echo "MAKEFLAGS=-j$NEW_NUM_CPU" | schroot --run-session -c $SESSION --directory /tmp -u root -- tee -a /etc/abuild.conf
-	schroot --run-session -c $SESSION --directory /tmp -- cp -vr "/var/lib/jenkins/aports/$REPOSITORY/$SRCPACKAGE" "$BUILDDIR"
 	# add more variations in the 2nd build: TZ (differently), LANG, LC_ALL, umask
 	schroot --run-session -c $SESSION --directory /tmp -- tee -a /var/lib/jenkins/.bashrc <<-__END__
 	export TZ="/usr/share/zoneinfo/Etc/GMT-14"
@@ -226,7 +226,7 @@ second_build() {
 	echo $VERSION > $TMPDIR/b2/$SRCPACKAGE/build2.version
 	# nicely run abuild with a timeout of $TIMEOUT hours
 	timeout -k $TIMEOUT.1h ${TIMEOUT}h /usr/bin/ionice -c 3 /usr/bin/nice \
-		schroot --run-session -c $SESSION --directory "$BUILDDIR" -- bash -l -c "abuild -rP $BUILDDIR 2>&1" | tee -a $LOG
+		schroot --run-session -c $SESSION --directory "$SRCDIR" -- bash -l -c "abuild -rP $BUILDDIR 2>&1" | tee -a $LOG
 	PRESULT=${PIPESTATUS[0]}
 	if [ $PRESULT -eq 124 ] ; then
 		echo "$(date -u) - abuild was killed by timeout after ${TIMEOUT}h." | tee -a $LOG
