@@ -508,8 +508,7 @@ if [ "$HOSTNAME" = "$MAINNODE" ] ; then
 	QUERY="
 		SELECT s.id, s.name, p.date_scheduled, p.date_build_started
 			FROM schedule AS p JOIN sources AS s ON p.package_id=s.id
-			WHERE p.date_scheduled != ''
-			AND p.date_build_started IS NOT NULL
+			WHERE p.date_build_started IS NOT NULL
 			AND p.date_build_started < '$DATE'
 			ORDER BY p.date_scheduled
 		"
