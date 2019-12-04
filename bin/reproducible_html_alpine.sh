@@ -57,7 +57,7 @@ repostats(){
 		SUITE="alpine_$REPOSITORY"
 		TOTAL=$(query_db "SELECT count(*) FROM sources AS s WHERE s.distribution=$DISTROID AND s.architecture='x86_64' AND s.suite='$SUITE';")
 		TESTED=$(query_db "SELECT count(*) FROM sources AS s JOIN results AS r ON s.id=r.package_id WHERE s.distribution=$DISTROID AND s.architecture='x86_64' AND s.suite='$SUITE';")
-		NR_GOOD=$(query_db "SELECT count(*) FROM sources AS s JOIN results AS r ON s.id=r.package_id WHERE s.distribution=$DISTROID AND s.architecture='x86_64' AND s.suite='$SUITE' AND r.status='GOOD';")
+		NR_GOOD=$(query_db "SELECT count(*) FROM sources AS s JOIN results AS r ON s.id=r.package_id WHERE s.distribution=$DISTROID AND s.architecture='x86_64' AND s.suite='$SUITE' AND r.status='reproducible';")
 		NR_FTBR=$(query_db "SELECT count(*) FROM sources AS s JOIN results AS r ON s.id=r.package_id WHERE s.distribution=$DISTROID AND s.architecture='x86_64' AND s.suite='$SUITE' AND r.status LIKE 'FTBR_%';")
 		NR_FTBFS=$(query_db "SELECT count(*) FROM sources AS s JOIN results AS r ON s.id=r.package_id WHERE s.distribution=$DISTROID AND s.architecture='x86_64' AND s.suite='$SUITE' AND r.status LIKE 'FTBFS_%';")
 		NR_DEPWAIT=$(query_db "SELECT count(*) FROM sources AS s JOIN results AS r ON s.id=r.package_id WHERE s.distribution=$DISTROID AND s.architecture='x86_64' AND s.suite='$SUITE' AND r.status LIKE 'DEPWAIT_%';")
