@@ -1213,16 +1213,30 @@ create_alpine_pkg_html() {
 	#
 	#
 	if [ -z "$(cd $ALPINE_PKG_PATH/ ; ls *.apk.html 2>/dev/null)" ] ; then
-		STATE=$(query_db "SELECT r.status FROM results AS r
-			JOIN sources as s on s.id=r.package_id
-			WHERE s.architecture='x86_64'
-			AND s.name='$SRCPACKAGE'
-			AND s.suite='alpine_$REPOSITORY';")
-		if [ "$STATE" = "blacklisted" ] ; then
-			buffer_message='blacklisted'
+		if find_in_buildlogs '^warning: spurious network error (2 tries remaining): [60] SSL peer certificate or SSH remote key was not OK; class=Net'; then
+			STATE=404_1
+			REASON="download failed with SSL problem"
+		elif find_in_buildlogs '^npm ERR! code CERT_HAS_EXPIRED'; then
+			STATE=404_1
+			REASON="download failed with SSL problem"
+		elif find_in_buildlogs "^>>> ERROR: $SRCPACKAGE: build failed"; then
+			STATE=FTBFS_0
+			buffer_message='failed to build'
+		elif find_in_buildlogs "^>>> ERROR: $SRCPACKAGE: check failed"; then
+			STATE=FTBFS_1
+			buffer_message='failed to build while running tests'
 		else
-			STATE=UNKNOWN
-			buffer_message='probably failed to build from source, please investigate'
+			STATE=$(query_db "SELECT r.status FROM results AS r
+				JOIN sources as s on s.id=r.package_id
+				WHERE s.architecture='x86_64'
+				AND s.name='$SRCPACKAGE'
+				AND s.suite='alpine_$REPOSITORY';")
+			if [ "$STATE" = "blacklisted" ] ; then
+				buffer_message='blacklisted'
+			else
+				STATE=UNKNOWN
+				buffer_message='probably failed to build from source, please investigate'
+			fi
 		fi
 
 		# print build failures
