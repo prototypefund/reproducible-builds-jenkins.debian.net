@@ -22,8 +22,8 @@ explain_nodes() {
 		profitbricks10)	write_page "<br /><small>(jenkins.d.n chroot-installation jobs and http-proxy)</small>" ;;
 		osuosl167)	write_page "<br /><small>(http-proxy for osuosl nodes)</small>" ;;
 		osuosl168)	write_page "<br /><small>(r-b F-Droid builds)</small>" ;;
-		osuosl169)	write_page "<br /><small>(r-b Archlinux builds)</small>" ;;
-		osuosl170)	write_page "<br /><small>(r-b Archlinux builds)</small>" ;;
+		osuosl169)	write_page "<br /><small>(r-b Alpine, Archlinux builds)</small>" ;;
+		osuosl170)	write_page "<br /><small>(r-b Alpine, Archlinux builds)</small>" ;;
 		osuosl171)	write_page "<br /><small>(r-b OpenWrt, NetBSD, Coreboot builds)</small>" ;;
 		osuosl172)	write_page "<br /><small>(r-b OpenWrt, Coreboot builds)</small>" ;;
 		osuosl173)	write_page "<br /><small>(r-b Debian / Archlinux rebuilder)</small>" ;;
