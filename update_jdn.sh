@@ -282,6 +282,7 @@ if [ -f /etc/debian_version ] ; then
 			psmisc
 			python3-psycopg2 
 			python3-yaml
+			ripgrep
 			schroot 
 			screen
 			slay
