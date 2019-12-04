@@ -291,6 +291,7 @@ if [ -f /etc/debian_version ] ; then
 			subversion-tools 
 			sudo 
 			systemd-sysv
+			tmux
 			unzip 
 			vim 
 			zsh
