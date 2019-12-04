@@ -614,7 +614,7 @@ fi
 # add some users to groups after packages have been installed
 if ! $UP2DATE ; then
 	case $HOSTNAME in
-		jenkins|osuosl-build169-amd64|osuosl-build170-amd64||osuosl-build173-amd64)
+		jenkins|osuosl-build169-amd64|osuosl-build170-amd64|osuosl-build173-amd64)
 			# for building Archlinux
 			sudo addgroup --system --gid 300 abuild
 			sudo adduser jenkins abuild
