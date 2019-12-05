@@ -1140,6 +1140,7 @@ create_pkg_html() {
 				continue
 			elif [ ! -z "$(grep 'build reproducible in our test framework' $ARCHLINUX_PKG_PATH/$ARTIFACT)" ] ; then
 				SOME_GOOD=true
+				STATE=reproducible
 				include_icon $STATE "<a href=\"/archlinux/$REPOSITORY/$SRCPACKAGE/$ARTIFACT\">${ARTIFACT:0:-5}</a> is reproducible in our current test framework<br />"
 			else
 				# change $STATE unless we have found .buildinfo differences already...
@@ -1255,6 +1256,7 @@ create_alpine_pkg_html() {
 				continue
 			elif [ ! -z "$(grep 'build reproducible in our test framework' $ALPINE_PKG_PATH/$ARTIFACT)" ] ; then
 				SOME_GOOD=true
+				STATE=reproducible
 				include_icon $STATE "<a href=\"/alpine/$REPOSITORY/$SRCPACKAGE/$ARTIFACT\">${ARTIFACT:0:-5}</a> is reproducible in our current test framework<br />"
 			else
 				# change $STATE unless we have found .buildinfo differences already...
