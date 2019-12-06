@@ -222,7 +222,7 @@ repository_pages(){
 		TITLE="Reproducible archlinux $REPOSITORY ?!"
 		archlinux_page_header
 		archlinux_repostats_table
-		SUITE="archlinux_$REPOSITORY"
+		SUITE="$REPOSITORY"
 		TESTED=$(query_db "SELECT count(*) FROM sources AS s
 					JOIN results AS r
 					ON s.id=r.package_id
@@ -271,7 +271,7 @@ state_pages(){
 		write_page "<h2>$TESTED packages in $STATE state</h2>"
 		include_pkg_table_header_in_page
 		for REPOSITORY in $ARCHLINUX_REPOS ; do
-			SUITE="archlinux_$REPOSITORY"
+			SUITE="$REPOSITORY"
 			STATE_PKGS=$(query_db "SELECT s.name FROM sources AS s
 					JOIN results AS r
 					ON s.id=r.package_id
@@ -303,7 +303,7 @@ state_pages(){
 
 repository_state_pages(){
 	for REPOSITORY in $ARCHLINUX_REPOS ; do
-		SUITE="archlinux_$REPOSITORY"
+		SUITE="$REPOSITORY"
 		for STATE in FTBFS FTBR DEPWAIT 404 reproducible blacklisted UNKNOWN ; do
 			PAGE=state_${REPOSITORY}_$STATE.html
 			TITLE="Reproducible archlinux, packages in $REPOSITORY in state $STATE"
@@ -382,7 +382,7 @@ recent_builds_page(){
 				DESC")
 	for LINE in ${STATE_PKGS} ; do
 		SRCPACKAGE=$(echo "$LINE" | cut -d "|" -f1)
-		REPOSITORY=$(echo "$LINE" | cut -d "|" -f2 | sed 's#archlinux_##')
+		REPOSITORY=$(echo "$LINE" | cut -d "|" -f2)
 		include_pkg_html_in_page
 	done
 	write_page "    </table>"
@@ -415,7 +415,7 @@ currently_scheduled_page(){
 	IFS=$'\012'
 	for LINE in ${STATE_PKGS} ; do
 		SRCPACKAGE=$(echo "$LINE" | cut -d "|" -f1)
-		REPOSITORY=$(echo "$LINE" | cut -d "|" -f2 | sed 's#archlinux_##')
+		REPOSITORY=$(echo "$LINE" | cut -d "|" -f2)
 		VERSION=$(echo "$LINE" | cut -d "|" -f3)
 		SCH_DATE=$(echo "$LINE" | cut -d "|" -f4-)
 		write_page "     <tr><td>$SRCPACKAGE</td><td>$REPOSITORY</td><td>$VERSION</td><td>$SCH_DATE</td></tr>"
