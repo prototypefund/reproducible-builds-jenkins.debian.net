@@ -218,7 +218,7 @@ jenkins_zombie_check() {
 	# and we dont know why and when that happens,
 	# so just report those zombies here.
 	#
-	ZOMBIES=$(ls -1d /var/lib/jenkins/jobs/* | egrep 'strip-nondeterminism|reprotest|reproducible_(builder_(amd64|i386|armhf|arm64)|setup_(pbuilder|schroot)_testing)|chroot-installation_wheezy|aptdpkg|odc2a|stretch_install_education-thin-client-server|jessie_multiarch_versionskew|dpkg_stretch_find_trigger_cycles|sid_install_education-services|buster_install_education-services|lvc|chroot-installation_stretch_.*_upgrade_to_sid|piuparts_.*_jessie|udd_stretch|d-i_pu-build|debsums-tests_stretch|debian-archive-keyring-tests_stretch|chroot-installation_jessie|chroot-installation_.*education-lang-|kirkwoot' || true)
+	ZOMBIES=$(ls -1d /var/lib/jenkins/jobs/* | egrep 'strip-nondeterminism|reprotest|reproducible_(builder_(amd64|i386|armhf|arm64)|setup_(pbuilder|schroot)_testing)|chroot-installation_wheezy|aptdpkg|odc2a|stretch_install_education-thin-client-server|jessie_multiarch_versionskew|dpkg_stretch_find_trigger_cycles|sid_install_education-services|buster_install_education-services|lvc|chroot-installation_stretch_.*_upgrade_to_sid|piuparts_.*_jessie|udd_stretch|d-i_pu-build|debsums-tests_stretch|debian-archive-keyring-tests_stretch|chroot-installation_jessie|chroot-installation_.*education-lang-|kirkwoot|rebootstrap_.*_gcc[5-8]($|_)' || true)
 	if [ ! -z "$ZOMBIES" ] ; then
 		DIRTY=true
 		figlet 'zombies!!!'
