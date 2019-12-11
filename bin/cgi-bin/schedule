@@ -50,6 +50,7 @@ def validate(form):
         'notify-on-start',
     )
     known_opts2 = (
+        'distro',
         'message',
         'status',
         'issue',
