@@ -72,8 +72,8 @@ choose_package() {
 		AND s.architecture='$ARCH'
 		ORDER BY date_scheduled LIMIT 10"|sort -R|head -1)
 	if [ -z "$RESULT" ] ; then
-		echo "No packages scheduled, sleeping 30m."
-		sleep 30m
+		echo "No packages scheduled, sleeping 90m."
+		sleep 90m
 		exit 0
 	fi
 	SUITE=$(echo $RESULT|cut -d "|" -f1)
