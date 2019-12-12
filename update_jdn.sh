@@ -282,7 +282,6 @@ if [ -f /etc/debian_version ] ; then
 			psmisc
 			python3-psycopg2 
 			python3-yaml
-			ripgrep
 			schroot 
 			screen
 			slay
@@ -306,6 +305,8 @@ if [ -f /etc/debian_version ] ; then
 				munin-plugins-extra/stretch-backports
 				pbuilder/stretch-backports
 				" ;;
+			*)	# not available in Ubuntu 16.04:
+				DEBS="$DEBS ripgrep"
 		esac
 		case $HOSTNAME in
 			# needed for rebuilding Debian (using .buildinfo files)
