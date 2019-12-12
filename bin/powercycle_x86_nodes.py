@@ -3,6 +3,15 @@
 # Copyright 2019 Holger Levsen <holger@layer-acht.org>
 # released under the GPLv2
 
+#
+# This script helps powercycling x86 nodes at profitbricks/ionos.
+#
+# It needs an account and expects the environment variables
+# IONOS_USERNAME and IONOS_PASSWORD to be set accordingly.
+#
+# Then it expects node numbers or 'jenkins' as params.
+#
+
 import os
 import sys
 import json
@@ -18,7 +27,6 @@ log.addHandler(_ch)
 log.setLevel(logging.INFO)
 # log.setLevel(logging.DEBUG)
 
-# expects node numbers or 'jenkins' as params...
 nodes = []
 for argument in sys.argv[1:]:
     try:
@@ -29,6 +37,12 @@ for argument in sys.argv[1:]:
             nodes.append(argument)
         else:
             log.error("Unrecognized node: %s", argument)
+            print("This script helps powercycling x86 nodes at profitbricks/IONOS.")
+
+            print()
+            print("It needs an account and expects the environment variables IONOS_USERNAME and IONOS_PASSWORD to be set accordingly.")
+            print()
+            print("Then it expects node numbers or 'jenkins' as params.")
             sys.exit(1)
     else:
         name = "build" + str(node)
