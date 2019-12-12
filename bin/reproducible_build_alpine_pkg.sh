@@ -4,7 +4,7 @@
 #           2017-2019 kpcyrd <git@rxv.cc>
 # released under the GPLv2
 
-DEBUG=true
+DEBUG=false
 . /srv/jenkins/bin/common-functions.sh
 common_init "$@"
 
