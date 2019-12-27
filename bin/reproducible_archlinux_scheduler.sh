@@ -267,8 +267,6 @@ update_archlinux_repositories() {
 			msg_depwait404=""
 		fi
 		MESSAGE="${message}${msg_old}${msg_depwait404}, for $total scheduled out of $TOTAL."
-		# the next 3 lines could maybe do some refactoring. but then, all of this should be rewritten in python using templates...
-		DISTROID=$(query_db "SELECT id FROM distributions WHERE name='archlinux'")
 		MAXDATE="$(date -u +'%Y-%m-%d %H:%M' -d '4 hours ago')"
 		RECENT=$(query_db "SELECT count(s.name) FROM sources AS s
 				JOIN results AS r
