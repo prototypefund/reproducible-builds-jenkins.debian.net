@@ -9,7 +9,7 @@ ok /^dpkg-genbuildinfo: warning/
 ok /^dpkg-buildpackage: warning/
 
 # autoconf doesn't support this, but it's passed by dh_auto_configure by default
-ok /^configure: WARNING: unrecognized options: --disable-maintainer-mode$/
+ok /^configure: WARNING: unrecognized options: --disable-(maintainer-mode|silent-rules)$/
 
 # make get https://jenkins.debian.net/job/d-i_build_console-setup/ build nicely
 ok /^WARNING: U.{5}: can not be positioned properly/
