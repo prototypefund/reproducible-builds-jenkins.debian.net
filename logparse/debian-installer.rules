@@ -43,6 +43,9 @@ ok /^dpkg: warning: unable to delete old directory/
 ok /^dpkg: warning: trying to overwrite .+, which is also in package/
 ok /^dpkg-genchanges: warning: the current version .+ is earlier than the previous one/
 
+# this comes from the installing build-deps step, ignore
+ok /^update-rc.d: warning: start and stop actions are no longer supported; falling back to defaults$/
+
 # match line starting with 'error ', case-insensitive
 error /(?i)^error /
 
@@ -59,4 +62,3 @@ warning /WARNING/
 
 # create a quick access link to lines in the report containing 'INFO'
 info /^INFO.*/
-
