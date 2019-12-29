@@ -28,6 +28,7 @@ langs = [
     {'hu': {'langname': 'Hungarian'}},
     {'ja': {'langname': 'Japanese'}},
     {'ko': {'langname': 'Korean'}},
+    {'nb': {'langname': 'Norwegian Bokmål'}},
     {'nl': {'langname': 'Dutch'}},
     {'nn': {'langname': 'Norwegian Nynorsk'}},
     {'pt': {'langname': 'Portuguese'}},
@@ -35,6 +36,7 @@ langs = [
     {'ru': {'langname': 'Russian'}},
     {'sv': {'langname': 'Swedish'}},
     {'tl': {'langname': 'Tagalog'}},
+    {'uk': {'langname': 'Ukrainian'}},
     {'vi': {'langname': 'Vietnamese'}},
     {'zh_CN': {'langname': 'Chinese (zh_CN)'}},
     {'zh_TW': {'langname': 'Chinese (zh_TW)'}}
