@@ -602,12 +602,18 @@ EOF
 		# pbuilder, so grant complete network access to it.
 		echo "USENETWORK=yes" >> "$TMPCFG"
 	fi
+	DEBBUILDOPTS="-b"
+	if [ "${ARCH}" = "armhf" ] && [ "${SRCPACKAGE}" = "u-boot" ]; then
+		# u-boot dependencies for arch:all on armhf are not available,
+		# as it uses cross-compilers for several architectures.
+		DEBBUILDOPTS="-B"
+	fi
 	set +e
 	# remember to change the sudoers setting if you change the following command
 	sudo timeout -k 18.1h 18h /usr/bin/ionice -c 3 /usr/bin/nice \
 	  /usr/sbin/pbuilder --build \
 		--configfile $TMPCFG \
-		--debbuildopts "-b" \
+		--debbuildopts "$DEBBUILDOPTS" \
 		--basetgz /var/cache/pbuilder/$SUITE-reproducible-base.tgz \
 		--buildresult $TMPDIR/b1 \
 		--logfile b1/build.log \
@@ -692,7 +698,13 @@ EOF
 			pbuilder_options+=(--extrapackages usrmerge)
 			;;
 	esac
-
+	DEBBUILDOPTS="-b"
+	if [ "${ARCH}" = "armhf" ] && [ "${SRCPACKAGE}" = "u-boot" ]; then
+		# u-boot dependencies for arch:all on armhf are not
+		# available, as it uses cross-compilers for several
+		# architectures.
+		DEBBUILDOPTS="-B"
+	fi
 	set +e
 	# remember to change the sudoers setting if you change the following command
 	# (the 2nd build gets a longer timeout trying to make sure the first build
@@ -702,7 +714,7 @@ EOF
 		/usr/sbin/pbuilder --build \
 			--configfile $TMPCFG \
 			--hookdir /etc/pbuilder/rebuild-hooks \
-			--debbuildopts "-b" \
+			--debbuildopts "$DEBBUILDOPTS" \
 			--basetgz /var/cache/pbuilder/$SUITE-reproducible-base.tgz \
 			--buildresult $TMPDIR/b2 \
 			--logfile b2/build.log \
