@@ -603,10 +603,12 @@ EOF
 		echo "USENETWORK=yes" >> "$TMPCFG"
 	fi
 	DEBBUILDOPTS="-b"
+	BINARYTARGET=""
 	if [ "${ARCH}" = "armhf" ] && [ "${SRCPACKAGE}" = "u-boot" ]; then
 		# u-boot dependencies for arch:all on armhf are not available,
 		# as it uses cross-compilers for several architectures.
 		DEBBUILDOPTS="-B"
+		BINARYTARGET="--binary-arch"
 	fi
 	set +e
 	# remember to change the sudoers setting if you change the following command
@@ -614,6 +616,7 @@ EOF
 	  /usr/sbin/pbuilder --build \
 		--configfile $TMPCFG \
 		--debbuildopts "$DEBBUILDOPTS" \
+		$BINARYTARGET \
 		--basetgz /var/cache/pbuilder/$SUITE-reproducible-base.tgz \
 		--buildresult $TMPDIR/b1 \
 		--logfile b1/build.log \
@@ -699,11 +702,13 @@ EOF
 			;;
 	esac
 	DEBBUILDOPTS="-b"
+	BINARYTARGET=""
 	if [ "${ARCH}" = "armhf" ] && [ "${SRCPACKAGE}" = "u-boot" ]; then
 		# u-boot dependencies for arch:all on armhf are not
 		# available, as it uses cross-compilers for several
 		# architectures.
 		DEBBUILDOPTS="-B"
+		BINARYTARGET="--binary-arch"
 	fi
 	set +e
 	# remember to change the sudoers setting if you change the following command
@@ -715,6 +720,7 @@ EOF
 			--configfile $TMPCFG \
 			--hookdir /etc/pbuilder/rebuild-hooks \
 			--debbuildopts "$DEBBUILDOPTS" \
+			$BINARYTARGET \
 			--basetgz /var/cache/pbuilder/$SUITE-reproducible-base.tgz \
 			--buildresult $TMPDIR/b2 \
 			--logfile b2/build.log \
