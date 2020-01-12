@@ -108,6 +108,7 @@ elif [ "$1" = "jenkins" ] ; then
 			c14|cs14)	HOSTS+=(codethink-sled14-arm64.debian.net) ;;
 			c15|cs15)	HOSTS+=(codethink-sled15-arm64.debian.net) ;;
 			c16|cs16)	HOSTS+=(codethink-sled16-arm64.debian.net) ;;
+			bbx15) HOSTS+=(bbx15-armhf-rb.debian.net) ;;
 			armhf|amd64|i386|arm64)	 HOSTS+=($(echo "${ALL_HOSTS[@]}" | sed -e 's# #\n#g' | grep "$i")) ;;
 			*) 	if ping -c 1 "$i" ; then HOSTS+=("$i") ; fi ;;
 		esac
