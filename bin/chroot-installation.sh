@@ -100,6 +100,9 @@ echo "deb-src $MIRROR $1 main" > /etc/apt/sources.list.d/$1-src.list
 apt-get update
 # Preseeding man-db/auto-update to false
 echo "man-db man-db/auto-update boolean false" | debconf-set-selections
+# configure dpkg to use unsafe io for faster installs
+mkdir -p /etc/dpkg/dpkg.cfg.d
+echo force-unsafe-io > /etc/dpkg/dpkg.cfg.d/02dpkg-unsafe-io
 set +x
 EOF
 }
@@ -166,8 +169,6 @@ bootstrap() {
 	set -x
 	sudo mmdebstrap $1 $CHROOT_TARGET $MIRROR
 	set +x
-	mkdir -p "$CHROOT_TARGET/etc/dpkg/dpkg.cfg.d"
-	echo force-unsafe-io > "$CHROOT_TARGET/etc/dpkg/dpkg.cfg.d/02dpkg-unsafe-io"
 	prepare_bootstrap $1
 	execute_ctmpfile
 }
