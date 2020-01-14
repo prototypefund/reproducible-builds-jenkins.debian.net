@@ -1,7 +1,7 @@
 #!/bin/bash
 # vim: set noexpandtab:
 
-# Copyright 2012-2019 Holger Levsen <holger@layer-acht.org>
+# Copyright 2012-2020 Holger Levsen <holger@layer-acht.org>
 #           2018      Mattia Rizzolo <mattia@debian.org>
 # released under the GPLv2
 
@@ -167,7 +167,7 @@ bootstrap() {
 
 	echo "Bootstraping $1 into $CHROOT_TARGET now."
 	set -x
-	sudo debootstrap $1 $CHROOT_TARGET $MIRROR
+	sudo mmdebstrap $1 $CHROOT_TARGET $MIRROR
 	set +x
 	prepare_bootstrap $1
 	execute_ctmpfile
