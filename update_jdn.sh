@@ -306,7 +306,7 @@ if [ -f /etc/debian_version ] ; then
 				pbuilder/stretch-backports
 				" ;;
 			*)	# not available in Ubuntu 16.04:
-				DEBS="$DEBS ripgrep"
+				DEBS="$DEBS ripgrep mmdebstrap"
 		esac
 		case $HOSTNAME in
 			# needed for rebuilding Debian (using .buildinfo files)
