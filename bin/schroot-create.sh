@@ -108,11 +108,14 @@ bootstrap() {
 	fi
 	rm -f $TMPLOG
 
+	# configure policy-rc.d to not start services
 	echo -e '#!/bin/sh\nexit 101'              | sudo tee   $SCHROOT_TARGET/usr/sbin/policy-rc.d >/dev/null
 	sudo chmod +x $SCHROOT_TARGET/usr/sbin/policy-rc.d
+	# configure proxy
 	if [ ! -z "$http_proxy" ] ; then
 		echo "Acquire::http::Proxy \"$http_proxy\";" | sudo tee    $SCHROOT_TARGET/etc/apt/apt.conf.d/80proxy >/dev/null
 	fi
+	# configure dpkg to be faster
 	echo force-unsafe-io | sudo tee "$SCHROOT_TARGET/etc/dpkg/dpkg.cfg.d/02dpkg-unsafe-io"
 
 	# configure the APT sources
