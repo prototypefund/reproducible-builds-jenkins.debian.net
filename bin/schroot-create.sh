@@ -109,11 +109,11 @@ bootstrap() {
 	rm -f $TMPLOG
 
 	# configure policy-rc.d to not start services
-	echo -e '#!/bin/sh\nexit 101'              | sudo tee   $SCHROOT_TARGET/usr/sbin/policy-rc.d >/dev/null
+	echo -e '#!/bin/sh\nexit 101' | sudo tee $SCHROOT_TARGET/usr/sbin/policy-rc.d >/dev/null
 	sudo chmod +x $SCHROOT_TARGET/usr/sbin/policy-rc.d
 	# configure proxy
 	if [ ! -z "$http_proxy" ] ; then
-		echo "Acquire::http::Proxy \"$http_proxy\";" | sudo tee    $SCHROOT_TARGET/etc/apt/apt.conf.d/80proxy >/dev/null
+		echo "Acquire::http::Proxy \"$http_proxy\";" | sudo tee $SCHROOT_TARGET/etc/apt/apt.conf.d/80proxy >/dev/null
 	fi
 	# configure dpkg to be faster
 	echo force-unsafe-io | sudo tee "$SCHROOT_TARGET/etc/dpkg/dpkg.cfg.d/02dpkg-unsafe-io"
@@ -125,7 +125,7 @@ bootstrap() {
 	deb-src $MIRROR $SUITE main
 	__END__
 	for i in $(seq 0 7) ; do
-		[ -z "${EXTRA_SOURCES[$i]}" ] || echo "${EXTRA_SOURCES[$i]}"                     | sudo tee -a $SCHROOT_TARGET/etc/apt/sources.list >/dev/null
+		[ -z "${EXTRA_SOURCES[$i]}" ] || echo "${EXTRA_SOURCES[$i]}" | sudo tee -a $SCHROOT_TARGET/etc/apt/sources.list >/dev/null
 	done
 
 	# Misc configuration for a building-aimed chroot
@@ -169,13 +169,13 @@ bootstrap() {
 		# try to use diffoscope from experimental if available
 		if ([ "$SUITE" != "unstable" ] && [ "$SUITE" != "experimental" ]) && [ "$1" = "diffoscope" ] ; then
 			# always try to use diffoscope from unstable on stretch/buster
-			echo "deb $MIRROR unstable main"        | sudo tee -a $SCHROOT_TARGET/etc/apt/sources.list > /dev/null
+			echo "deb $MIRROR unstable main" | sudo tee -a $SCHROOT_TARGET/etc/apt/sources.list > /dev/null
 			robust_chroot_apt update
 			# install diffoscope from unstable without re-adding all recommends...
 			sudo chroot $SCHROOT_TARGET apt-get install -y -t unstable --no-install-recommends diffoscope || echo "Warning: diffoscope from unstable is uninstallable at the moment."
 		fi
 		if [ "$SUITE" != "experimental" ] && [ "$1" = "diffoscope" ] ; then
-			echo "deb $MIRROR experimental main"        | sudo tee -a $SCHROOT_TARGET/etc/apt/sources.list > /dev/null
+			echo "deb $MIRROR experimental main" | sudo tee -a $SCHROOT_TARGET/etc/apt/sources.list > /dev/null
 			robust_chroot_apt update
 			# install diffoscope from experimental without re-adding all recommends...
 			sudo chroot $SCHROOT_TARGET apt-get install -y -t experimental --no-install-recommends diffoscope || echo "Warning: diffoscope from experimental is uninstallable at the moment."
