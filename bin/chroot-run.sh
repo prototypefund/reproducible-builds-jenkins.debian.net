@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Copyright 2012-2018 Holger Levsen <holger@layer-acht.org>
+# Copyright 2012-2020 Holger Levsen <holger@layer-acht.org>
 # Copyright      2013 Antonio Terceiro <terceiro@debian.org>
 # released under the GPLv2
 
@@ -70,23 +70,20 @@ chmod 755 "$CHROOT_TARGET"
 export CURDIR=$(pwd)
 
 bootstrap() {
-	mkdir -p "$CHROOT_TARGET/etc/dpkg/dpkg.cfg.d"
-	echo force-unsafe-io > "$CHROOT_TARGET/etc/dpkg/dpkg.cfg.d/02dpkg-unsafe-io"
-
 	local TMPLOG=$(mktemp -p $CHROOT_BASE/ chroot-run-$DISTRO.XXXXXXXXX)
 	echo "$(date -u ) - bootstraping $DISTRO into $CHROOT_TARGET now."
 	set +e
-	sudo debootstrap $BOOTSTRAP_OPTIONS $DISTRO $CHROOT_TARGET $MIRROR | tee $TMPLOG
+	sudo mmdebstrap $BOOTSTRAP_OPTIONS $DISTRO $CHROOT_TARGET $MIRROR | tee $TMPLOG
 	local RESULT=$(egrep "E: (Couldn't download (packages|dists)|Invalid Release signature)" $TMPLOG || true )
 	rm $TMPLOG
 	set -e
 	if [ ! -z "$RESULT" ] ; then
-	        echo "$(date -u) - initial debootstrap failed, sleeping 5min before retrying..."
+	        echo "$(date -u) - initial bootstrap failed, sleeping 5min before retrying..."
 	        sudo rm -rf --one-file-system $CHROOT_TARGET
 	        sleep 5m
-	        if ! sudo debootstrap $BOOTSTRAP_OPTIONS $DISTRO $CHROOT_TARGET $MIRROR ; then
+	        if ! sudo mmdebstrap $BOOTSTRAP_OPTIONS $DISTRO $CHROOT_TARGET $MIRROR ; then
 			SLEEPTIME="30m"
-			echo "$(date -u ) - debootstrap failed, slowing down, sleeping $SLEEPTIME now..."
+			echo "$(date -u ) - bootstrap failed, slowing down, sleeping $SLEEPTIME now..."
 			sleep $SLEEPTIME
 			exit 1
 		fi
