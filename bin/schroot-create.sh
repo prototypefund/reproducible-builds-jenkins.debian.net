@@ -97,14 +97,23 @@ robust_chroot_apt() {
 
 bootstrap() {
 	echo "Bootstraping $SUITE into $SCHROOT_TARGET now."
-	sudo mmdebstrap $SUITE $SCHROOT_TARGET $MIRROR | tee $TMPLOG
+	if which mmdebstrap ; then
+		# not available on Ubuntu 16.04 LTS
+		DEBOOTSTRAP=mmdebstrap
+	else
+		DEBOOTSTRAP=deboostrap
+		# configure dpkg to be faster (mmdebstrap expects an empty directory and is fast by design)
+		mkdir -p "$SCHROOT_TARGET/etc/dpkg/dpkg.cfg.d"
+		echo force-unsafe-io > "$SCHROOT_TARGET/etc/dpkg/dpkg.cfg.d/02dpkg-unsafe-io"
+	fi
+	sudo $DEBOOTSTRAP $SUITE $SCHROOT_TARGET $MIRROR | tee $TMPLOG
 	local rt="${PIPESTATUS[0]}"
 	local RESULT=$(egrep "E: (Couldn't download packages|Invalid Release signature)" $TMPLOG || true)
 	if [ ! -z "$RESULT" ] || [ "$rt" -ne 0 ]; then
 		echo "$(date -u) - initial bootstrap failed, sleeping 5min before retrying..."
 		sudo rm -rf --one-file-system $SCHROOT_TARGET
 		sleep 5m
-		sudo mmdebstrap $SUITE $SCHROOT_TARGET $MIRROR || ( echo "$(date -u ) - 2nd bootstrap failed, giving up..." ; exit 1 )
+		sudo $DEBOOTSTRAP $SUITE $SCHROOT_TARGET $MIRROR || ( echo "$(date -u ) - 2nd bootstrap failed, giving up..." ; exit 1 )
 	fi
 	rm -f $TMPLOG
 
