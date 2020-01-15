@@ -1,7 +1,7 @@
 #!/bin/bash
 # vim: set noexpandtab:
 
-# Copyright © 2012-2019 Holger Levsen <holger@layer-acht.org>
+# Copyright © 2012-2020 Holger Levsen <holger@layer-acht.org>
 #           ©      2013 Antonio Terceiro <terceiro@debian.org>
 #           ©      2014 Joachim Breitner <nomeata@debian.org>
 #           © 2015-2018 Mattia Rizzolo <mattia@debian.org>
@@ -96,18 +96,15 @@ robust_chroot_apt() {
 }
 
 bootstrap() {
-	mkdir -p "$SCHROOT_TARGET/etc/dpkg/dpkg.cfg.d"
-	echo force-unsafe-io > "$SCHROOT_TARGET/etc/dpkg/dpkg.cfg.d/02dpkg-unsafe-io"
-
 	echo "Bootstraping $SUITE into $SCHROOT_TARGET now."
-	sudo debootstrap $SUITE $SCHROOT_TARGET $MIRROR | tee $TMPLOG
+	sudo mmdebstrap $SUITE $SCHROOT_TARGET $MIRROR | tee $TMPLOG
 	local rt="${PIPESTATUS[0]}"
 	local RESULT=$(egrep "E: (Couldn't download packages|Invalid Release signature)" $TMPLOG || true)
 	if [ ! -z "$RESULT" ] || [ "$rt" -ne 0 ]; then
-		echo "$(date -u) - initial debootstrap failed, sleeping 5min before retrying..."
+		echo "$(date -u) - initial bootstrap failed, sleeping 5min before retrying..."
 		sudo rm -rf --one-file-system $SCHROOT_TARGET
 		sleep 5m
-		sudo debootstrap $SUITE $SCHROOT_TARGET $MIRROR || ( echo "$(date -u ) - 2nd debootstrap failed, giving up..." ; exit 1 )
+		sudo mmdebstrap $SUITE $SCHROOT_TARGET $MIRROR || ( echo "$(date -u ) - 2nd bootstrap failed, giving up..." ; exit 1 )
 	fi
 	rm -f $TMPLOG
 
@@ -116,6 +113,7 @@ bootstrap() {
 	if [ ! -z "$http_proxy" ] ; then
 		echo "Acquire::http::Proxy \"$http_proxy\";" | sudo tee    $SCHROOT_TARGET/etc/apt/apt.conf.d/80proxy >/dev/null
 	fi
+	echo force-unsafe-io | sudo tee "$SCHROOT_TARGET/etc/dpkg/dpkg.cfg.d/02dpkg-unsafe-io"
 
 	# configure the APT sources
 	sudo tee "$SCHROOT_TARGET/etc/apt/sources.list" > /dev/null <<-__END__
