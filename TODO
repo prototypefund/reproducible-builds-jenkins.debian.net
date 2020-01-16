@@ -155,6 +155,8 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 
 === Debian reproducible builds
 
+* stop testing stretch while preserving old results
+** TODO: remove special casing of stretch in scheduler...
 * get rid off "set -x # # to debug diffoscoppe/schroot problems"
 ** add check if package to be build has been blacklisted since scheduling and abort
 ** on SIGTERM, also cleanup on remote build nodes there! (via ssh &)
