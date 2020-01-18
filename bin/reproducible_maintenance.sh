@@ -412,6 +412,12 @@ echo "$(date -u) - Removing schroots older than 3 days."
 regex="/schroots/(reproducible-.+-[0-9]{1,5}|schroot-install-.+)"
 OLDSTUFF=$(find /schroots/ -maxdepth 1 -type d -regextype posix-extended -regex "$regex" -mtime +2 -exec ls -lad {} \; || true)
 if [ ! -z "$OLDSTUFF" ] ; then
+	# try to unmount mounts first
+	for MP in $(find /schroots/ -maxdepth 1 -type d -regextype posix-extended -regex "$regex" -mtime +2 ) ; do
+		if [ -d $MP/proc ] ; then
+			sudo umount -l $MP/proc 2>/dev/null
+		fi
+	done
 	echo
 	echo "schroots older than 3 days found in /schroots, which will be deleted:"
 	find /schroots/ -maxdepth 1 -type d -regextype posix-extended -regex "$regex" -mtime +2 -exec sudo rm -rf --one-file-system {} \; || true
