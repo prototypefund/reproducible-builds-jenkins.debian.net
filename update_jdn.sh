@@ -784,21 +784,6 @@ EOF
 fi
 
 #
-# There's always some work left...
-#	echo FIXME is ignored so check-jobs scripts can output templates requiring manual work
-#
-if [ "$HOSTNAME" = "jenkins" ] || [ "$HOSTNAME" = "jenkins-test-vm" ] ; then
-	TMPFILE=$(mktemp)
-	rgrep FI[X]ME $BASEDIR/* | grep -v $BASEDIR/TODO | grep -v echo > $TMPFILE || true
-	if [ -s $TMPFILE ] ; then
-		echo
-		cat $TMPFILE
-		echo
-	fi
-	rm -f $TMPFILE
-fi
-
-#
 # almost finally…
 #
 sudo touch $STAMP	# so on the next run, only configs newer than this file will be updated
