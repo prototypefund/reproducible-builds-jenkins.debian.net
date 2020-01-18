@@ -897,31 +897,31 @@
                 - 'alpine':
                     my_num: 2
                     op_descname: 'an alpine'
-                    my_disabled: false
+                    my_disabled: true
                 - 'alpine':
                     my_num: 3
                     op_descname: 'an alpine'
-                    my_disabled: false
+                    my_disabled: true
                 - 'alpine':
                     my_num: 4
                     op_descname: 'an alpine'
-                    my_disabled: false
+                    my_disabled: true
                 - 'alpine':
                     my_num: 5
                     op_descname: 'an alpine'
-                    my_disabled: false
+                    my_disabled: true
                 - 'alpine':
                     my_num: 6
                     op_descname: 'an alpine'
-                    my_disabled: false
+                    my_disabled: true
                 - 'alpine':
                     my_num: 7
                     op_descname: 'an alpine'
-                    my_disabled: false
+                    my_disabled: true
                 - 'alpine':
                     my_num: 8
                     op_descname: 'an alpine'
-                    my_disabled: false
+                    my_disabled: true
                 - 'archlinux':
                     my_num: 1
                     op_descname: 'an Arch Linux'
