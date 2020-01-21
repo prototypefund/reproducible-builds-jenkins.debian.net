@@ -149,7 +149,7 @@ if [ "$HOSTNAME" = "osuosl-build170-amd64" ] ; then
 	export GIT_SSL_NO_VERIFY=1
 fi
 
-$ROOTCMD sed -i 's/^#PACKAGER\s*=.*/PACKAGER="Reproducible Arch Linux tests"/' /etc/makepkg.conf
+$ROOTCMD sed -i 's/^#PACKAGER\s*=.*/PACKAGER="Reproducible Arch Linux tests <reproducible@archlinux.org>"/' /etc/makepkg.conf
 
 $ROOTCMD sed -i "s|^#XferCommand = /usr/bin/curl |XferCommand = /usr/bin/curl --proxy $http_proxy |" /etc/pacman.conf
 if [ "$HOSTNAME" = "osuosl-build170-amd64" ] ; then
