@@ -1030,7 +1030,7 @@ create_pkg_html() {
 
 	echo "     <tr>" >> $HTML_BUFFER
 	echo "      <td>$REPOSITORY</td>" >> $HTML_BUFFER
-	echo "      <td>$SRCPACKAGE</td>" >> $HTML_BUFFER
+	echo "      <td><a href=\"https://www.archlinux.org/packages/$REPOSITORY/x86_64/$SRCPACKAGE/\">$SRCPACKAGE</a></td>" >> $HTML_BUFFER
 	echo "      <td>$VERSION</td>" >> $HTML_BUFFER
 	echo "      <td>" >> $HTML_BUFFER
 	#
