@@ -1,7 +1,7 @@
 #!/bin/bash
 # vim: set noexpandtab:
 
-# Copyright 2014-2019 Holger Levsen <holger@layer-acht.org>
+# Copyright 2014-2020 Holger Levsen <holger@layer-acht.org>
 #         © 2015 Mattia Rizzolo <mattia@mapreri.org>
 # released under the GPLv2
 
@@ -566,10 +566,10 @@ create_dashboard_page() {
 	local TD_PKG_SID_FTBR="<tr><td class=\"left\">&nbsp;&nbsp;- unreproducible ones</a></td><td></td>"
 	local TD_PKG_SID_FTBFS="<tr><td class=\"left\">&nbsp;&nbsp;- failing to build</a></td><td></td>"
 	local TD_PKG_SID_ISSUES="<tr><td class=\"left\">packages in unstable which need to be fixed</td><td></td>"
-	local TD_PKG_BUSTER_NOISSUES="<tr><td class=\"left\">packages in buster with issues but without identified ones</td><td></td>"
-	local TD_PKG_BUSTER_FTBR="<tr><td class=\"left\">&nbsp;&nbsp;- unreproducible ones</a></td><td></td>"
-	local TD_PKG_BUSTER_FTBFS="<tr><td class=\"left\">&nbsp;&nbsp;- failing to build</a></td><td></td>"
-	local TD_PKG_BUSTER_ISSUES="<tr><td class=\"left\">packages in buster which need to be fixed</td><td></td>"
+	local TD_PKG_BULLSEYE_NOISSUES="<tr><td class=\"left\">packages in bullseye with issues but without identified ones</td><td></td>"
+	local TD_PKG_BULLSEYE_FTBR="<tr><td class=\"left\">&nbsp;&nbsp;- unreproducible ones</a></td><td></td>"
+	local TD_PKG_BULLSEYE_FTBFS="<tr><td class=\"left\">&nbsp;&nbsp;- failing to build</a></td><td></td>"
+	local TD_PKG_BULLSEYE_ISSUES="<tr><td class=\"left\">packages in bullseye which need to be fixed</td><td></td>"
 	for ARCH in ${ARCHS} ; do
 		SUITE="unstable"
 		gather_suite_arch_stats
@@ -582,24 +582,24 @@ create_dashboard_page() {
 		RESULT=$(query_db "SELECT COUNT(*) FROM (SELECT s.id FROM sources AS s JOIN results AS r ON r.package_id=s.id WHERE r.status='FTBFS' AND s.id NOT IN (SELECT package_id FROM notes) AND s.suite='$SUITE' AND s.architecture='$ARCH') tmp")
 		TD_PKG_SID_FTBFS="$TD_PKG_SID_FTBFS<td>$RESULT / $(echo "scale=1 ; ($RESULT*100/$COUNT_TOTAL)" | bc)%</td>"
 
-		SUITE="buster"
+		SUITE="bullseye"
 		gather_suite_arch_stats
-		TD_PKG_BUSTER_ISSUES="$TD_PKG_BUSTER_ISSUES<td>$(echo $COUNT_BAD + $COUNT_UGLY |bc) / $(echo $PERCENT_BAD + $PERCENT_UGLY|bc)%</td>"
+		TD_PKG_BULLSEYE_ISSUES="$TD_PKG_BULLSEYE_ISSUES<td>$(echo $COUNT_BAD + $COUNT_UGLY |bc) / $(echo $PERCENT_BAD + $PERCENT_UGLY|bc)%</td>"
 		RESULT=$(query_db "SELECT COUNT(*) FROM (SELECT s.id FROM sources AS s JOIN results AS r ON r.package_id=s.id WHERE r.status IN ('FTBR', 'FTBFS', 'blacklisted') AND s.id NOT IN (SELECT package_id FROM notes) AND s.suite='$SUITE' AND s.architecture='$ARCH') tmp")
-		TD_PKG_BUSTER_NOISSUES="$TD_PKG_BUSTER_NOISSUES<td><a href=\"/debian/$SUITE/$ARCH/index_no_notes.html\">$RESULT</a> / $(echo "scale=1 ; ($RESULT*100/$COUNT_TOTAL)" | bc)%</td>"
+		TD_PKG_BULLSEYE_NOISSUES="$TD_PKG_BULLSEYE_NOISSUES<td><a href=\"/debian/$SUITE/$ARCH/index_no_notes.html\">$RESULT</a> / $(echo "scale=1 ; ($RESULT*100/$COUNT_TOTAL)" | bc)%</td>"
 		RESULT=$(query_db "SELECT COUNT(*) FROM (SELECT s.id FROM sources AS s JOIN results AS r ON r.package_id=s.id WHERE r.status='FTBR' AND s.id NOT IN (SELECT package_id FROM notes) AND s.suite='$SUITE' AND s.architecture='$ARCH') tmp")
-		TD_PKG_BUSTER_FTBR="$TD_PKG_BUSTER_FTBR<td>$RESULT / $(echo "scale=1 ; ($RESULT*100/$COUNT_TOTAL)" | bc)%</td>"
+		TD_PKG_BULLSEYE_FTBR="$TD_PKG_BULLSEYE_FTBR<td>$RESULT / $(echo "scale=1 ; ($RESULT*100/$COUNT_TOTAL)" | bc)%</td>"
 		RESULT=$(query_db "SELECT COUNT(*) FROM (SELECT s.id FROM sources AS s JOIN results AS r ON r.package_id=s.id WHERE r.status='FTBFS' AND s.id NOT IN (SELECT package_id FROM notes) AND s.suite='$SUITE' AND s.architecture='$ARCH') tmp")
-		TD_PKG_BUSTER_FTBFS="$TD_PKG_BUSTER_FTBFS<td>$RESULT / $(echo "scale=1 ; ($RESULT*100/$COUNT_TOTAL)" | bc)%</td>"
+		TD_PKG_BULLSEYE_FTBFS="$TD_PKG_BULLSEYE_FTBFS<td>$RESULT / $(echo "scale=1 ; ($RESULT*100/$COUNT_TOTAL)" | bc)%</td>"
 	done
 	write_page "$TD_PKG_SID_NOISSUES</tr>"
 	write_page "$TD_PKG_SID_FTBR</tr>"
 	write_page "$TD_PKG_SID_FTBFS</tr>"
 	write_page "$TD_PKG_SID_ISSUES</tr>"
-	write_page "$TD_PKG_BUSTER_NOISSUES</tr>"
-	write_page "$TD_PKG_BUSTER_FTBR</tr>"
-	write_page "$TD_PKG_BUSTER_FTBFS</tr>"
-	write_page "$TD_PKG_BUSTER_ISSUES</tr>"
+	write_page "$TD_PKG_BULLSEYE_NOISSUES</tr>"
+	write_page "$TD_PKG_BULLSEYE_FTBR</tr>"
+	write_page "$TD_PKG_BULLSEYE_FTBFS</tr>"
+	write_page "$TD_PKG_BULLSEYE_ISSUES</tr>"
 	ARCH="amd64"
 	SUITE="unstable"
 
