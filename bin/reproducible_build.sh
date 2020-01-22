@@ -664,8 +664,8 @@ second_build() {
 		i386)	locale=de_CH
 			language=de
 			;;
-		*)	locale=fr_CH
-			language=fr
+		*)	locale=et_EE
+			language=et
 			;;
 	esac
 	cat > "$TMPCFG" << EOF
