@@ -134,6 +134,7 @@ filtered_issues = (
     'ftbfs_in_jenkins_setup',
     'ftbfs_build-indep_not_build_on_some_archs',
     'ftbfs_due_to_f-file-prefix-map',
+    'ffile_prefix_map_passed_to_clang',
 )
 filter_query = ''
 for issue in filtered_issues:
