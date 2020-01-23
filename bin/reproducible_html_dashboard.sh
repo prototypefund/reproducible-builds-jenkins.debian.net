@@ -438,6 +438,9 @@ write_suite_arch_table() {
 	write_icon
 	write_page "blacklisted</th></tr>"
 	for SUITE in $SUITES ; do
+		if [ "$SUITE" = "stretch" ] ; then
+			continue
+		fi
 		for ARCH in ${ARCHS} ; do
 			gather_suite_arch_stats
 			write_page "<tr><td class=\"left\"><a href=\"/debian/$SUITE/$ARCH\">$SUITE/$ARCH</a></td><td>$AMOUNT"
@@ -541,6 +544,9 @@ create_dashboard_page() {
 	# write suite graphs
 	for ARCH in ${ARCHS} ; do
 		for SUITE in $SUITES ; do
+			if [ "$SUITE" = "stretch" ] ; then
+				continue
+			fi
 			write_page " <a href=\"/debian/$SUITE/$ARCH\"><img src=\"/debian/$SUITE/$ARCH/${TABLE[0]}.png\" class=\"overview\" alt=\"$SUITE/$ARCH stats\"></a>"
 		done
 		SUITE="unstable"
@@ -695,9 +701,8 @@ create_performance_page() {
 		for SUITE in $SUITES ; do
 			if [ $SUITE = "stretch" ] ; then
 				continue
-			else
-				write_page " <a href=\"/debian/$SUITE/$ARCH/${TABLE[2]}.png\"><img src=\"/debian/$SUITE/$ARCH/${TABLE[2]}.png\" class=\"overview\" alt=\"age of oldest reproducible build result in $SUITE/$ARCH\"></a>"
 			fi
+			write_page " <a href=\"/debian/$SUITE/$ARCH/${TABLE[2]}.png\"><img src=\"/debian/$SUITE/$ARCH/${TABLE[2]}.png\" class=\"overview\" alt=\"age of oldest reproducible build result in $SUITE/$ARCH\"></a>"
 		done
 		write_page "</p><p style=\"clear:both;\">"
 	done
