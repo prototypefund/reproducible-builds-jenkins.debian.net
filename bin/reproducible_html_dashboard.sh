@@ -514,7 +514,7 @@ write_meta_pkg_graphs_links () {
 	write_page "<p style=\"clear:both;\"><center>"
 	for i in $(seq 1 ${#META_PKGSET[@]}) ; do
 		THUMB=${TABLE[6]}_${META_PKGSET[$i]}-thumbnail.png
-		if [ ! -f $DEBIAN_BASE/$SUITE/$ARCH/$THUMB ] ; then
+		if [ -f $DEBIAN_BASE/$SUITE/$ARCH/$THUMB ] ; then
 			LABEL="Reproducibility status for packages in $SUITE/$ARCH from '${META_PKGSET[$i]}'"
 			write_page "<a href=\"/debian/$SUITE/$ARCH/pkg_set_${META_PKGSET[$i]}.html\"  title=\"$LABEL\"><img src=\"/debian/$SUITE/$ARCH/$THUMB\" class=\"metaoverview\" alt=\"$LABEL\"></a>"
 		fi
