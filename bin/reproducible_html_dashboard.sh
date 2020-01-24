@@ -412,6 +412,7 @@ write_build_performance_stats() {
 # write suite/arch table
 #
 write_suite_arch_table() {
+	local SUITES="$@"
 	local SUITE=""
 	local ARCH=""
 	write_page "<p>"
@@ -438,9 +439,6 @@ write_suite_arch_table() {
 	write_icon
 	write_page "blacklisted</th></tr>"
 	for SUITE in $SUITES ; do
-		if [ "$SUITE" = "stretch" ] ; then
-			continue
-		fi
 		for ARCH in ${ARCHS} ; do
 			gather_suite_arch_stats
 			write_page "<tr><td class=\"left\"><a href=\"/debian/$SUITE/$ARCH\">$SUITE/$ARCH</a></td><td>$AMOUNT"
@@ -540,7 +538,7 @@ create_dashboard_page() {
 	ARCH="amd64"
 	echo "$(date -u) - starting to write $PAGE page."
 	write_page_header $VIEW "Overview of various statistics about reproducible builds"
-	write_suite_arch_table
+	write_suite_arch_table buster bullseye unstable experimental # this is a bit suboptimal but an easy way to exclude stretch from $SUITES
 	# write suite graphs
 	for ARCH in ${ARCHS} ; do
 		for SUITE in $SUITES ; do
@@ -653,7 +651,7 @@ create_oldsuites_page() {
 	ARCH="amd64"
 	echo "$(date -u) - starting to write $PAGE page."
 	write_page_header $VIEW "Overview of old suites"
-	write_suite_arch_table
+	write_suite_arch_table stretch
 	# write suite graphs
 	for ARCH in ${ARCHS} ; do
 		write_page " <a href=\"/debian/$SUITE/$ARCH\"><img src=\"/debian/$SUITE/$ARCH/${TABLE[0]}.png\" class=\"overview\" alt=\"$SUITE/$ARCH stats\"></a>"
