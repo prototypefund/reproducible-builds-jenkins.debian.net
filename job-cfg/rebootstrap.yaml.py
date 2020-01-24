@@ -11,7 +11,7 @@ architectures = """
    """.split()
 
 mono_architectures = """
-    armel armhf arm64 arm64ilp32
+    armel armhf arm64
     musl-linux-armhf musl-linux-arm64
     alpha
     hppa
