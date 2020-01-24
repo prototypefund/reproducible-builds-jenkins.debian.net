@@ -644,6 +644,44 @@ create_dashboard_page() {
 }
 
 #
+# create oldsuites page
+#
+create_oldsuites_page() {
+	VIEW=oldsuites
+	PAGE=index_${VIEW}.html
+	SUITE="stretch"
+	ARCH="amd64"
+	echo "$(date -u) - starting to write $PAGE page."
+	write_page_header $VIEW "Overview of old suites"
+	write_suite_arch_table
+	# write suite graphs
+	for ARCH in ${ARCHS} ; do
+		write_page " <a href=\"/debian/$SUITE/$ARCH\"><img src=\"/debian/$SUITE/$ARCH/${TABLE[0]}.png\" class=\"overview\" alt=\"$SUITE/$ARCH stats\"></a>"
+		if [ "$ARCH" = "amd64" ] ; then
+			write_meta_pkg_graphs_links
+		fi
+	done
+	write_page "</p><p style=\"clear:both;\">"
+	for ARCH in ${ARCHS} ; do
+		write_page " <a href=\"/debian/$SUITE/$ARCH/${TABLE[2]}.png\"><img src=\"/debian/$SUITE/$ARCH/${TABLE[2]}.png\" class=\"overview\" alt=\"age of oldest reproducible build result in $SUITE/$ARCH\"></a>"
+	done
+	ARCH="amd64"
+	write_page "</p><p style=\"clear:both;\">"
+	write_page "And finally there are also graphs about the oldest build in stretch for "
+	for ARCH in ${ARCHS} ; do
+		comma_comma_and ${ARCH}
+		write_page "<a href=\"/debian/$SUITE/$ARCH/${TABLE[2]}.png\">$ARCH</a>$COMMA_VAR"
+	done
+	write_page ".</p>"
+
+	write_page "</table>"
+	# the end
+	write_page_footer
+	publish_page debian
+}
+
+
+#
 # create bugs page
 #
 create_bugs_page() {
@@ -713,13 +751,6 @@ create_performance_page() {
 		write_page "<a href=\"/debian/index_${ARCH}_oldies.html\">$ARCH</a>$COMMA_VAR"
 	done
 	write_page ".</p>"
-	write_page "<p>And finally there are also graphs about the oldest build in stretch for "
-	SUITE="stretch"
-	for ARCH in ${ARCHS} ; do
-		comma_comma_and ${ARCH}
-		write_page "<a href=\"/debian/$SUITE/$ARCH/${TABLE[2]}.png\">$ARCH</a>$COMMA_VAR"
-	done
-	write_page ".</p>"
 	write_page_footer
 	publish_page debian
 }
@@ -758,5 +789,6 @@ done
 create_performance_page
 create_variations_page
 create_bugs_page
+create_oldsuites_page
 create_dashboard_page
 rm -f $DUMMY_FILE >/dev/null
