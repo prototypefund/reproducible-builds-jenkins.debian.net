@@ -514,8 +514,10 @@ write_meta_pkg_graphs_links () {
 	write_page "<p style=\"clear:both;\"><center>"
 	for i in $(seq 1 ${#META_PKGSET[@]}) ; do
 		THUMB=${TABLE[6]}_${META_PKGSET[$i]}-thumbnail.png
-		LABEL="Reproducibility status for packages in $SUITE/$ARCH from '${META_PKGSET[$i]}'"
-		write_page "<a href=\"/debian/$SUITE/$ARCH/pkg_set_${META_PKGSET[$i]}.html\"  title=\"$LABEL\"><img src=\"/debian/$SUITE/$ARCH/$THUMB\" class=\"metaoverview\" alt=\"$LABEL\"></a>"
+		if [ ! -f $DEBIAN_BASE/$SUITE/$ARCH/$THUMB ] ; then
+			LABEL="Reproducibility status for packages in $SUITE/$ARCH from '${META_PKGSET[$i]}'"
+			write_page "<a href=\"/debian/$SUITE/$ARCH/pkg_set_${META_PKGSET[$i]}.html\"  title=\"$LABEL\"><img src=\"/debian/$SUITE/$ARCH/$THUMB\" class=\"metaoverview\" alt=\"$LABEL\"></a>"
+		fi
 	done
 	write_page "</center></p>"
 }
@@ -655,25 +657,16 @@ create_oldsuites_page() {
 	# write suite graphs
 	for ARCH in ${ARCHS} ; do
 		write_page " <a href=\"/debian/$SUITE/$ARCH\"><img src=\"/debian/$SUITE/$ARCH/${TABLE[0]}.png\" class=\"overview\" alt=\"$SUITE/$ARCH stats\"></a>"
-		if [ "$ARCH" = "amd64" ] ; then
-			write_meta_pkg_graphs_links
-		fi
 	done
+	write_page "</p><p style=\"clear:both;\">"
+	ARCH="amd64"
+	write_meta_pkg_graphs_links
 	write_page "</p><p style=\"clear:both;\">"
 	for ARCH in ${ARCHS} ; do
 		write_page " <a href=\"/debian/$SUITE/$ARCH/${TABLE[2]}.png\"><img src=\"/debian/$SUITE/$ARCH/${TABLE[2]}.png\" class=\"overview\" alt=\"age of oldest reproducible build result in $SUITE/$ARCH\"></a>"
 	done
-	ARCH="amd64"
-	write_page "</p><p style=\"clear:both;\">"
-	write_page "And finally there are also graphs about the oldest build in stretch for "
-	for ARCH in ${ARCHS} ; do
-		comma_comma_and ${ARCH}
-		write_page "<a href=\"/debian/$SUITE/$ARCH/${TABLE[2]}.png\">$ARCH</a>$COMMA_VAR"
-	done
-	write_page ".</p>"
-
+	write_page "</p>"
 	write_page "</table>"
-	# the end
 	write_page_footer
 	publish_page debian
 }
