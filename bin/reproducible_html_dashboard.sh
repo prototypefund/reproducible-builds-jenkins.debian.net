@@ -630,11 +630,13 @@ create_dashboard_page() {
 		write_page "<tr><td class=\"left\">&nbsp;&nbsp;- which need to be build on some archs</td><td>$(echo $RESULT)</td><td colspan=\"$AC\"></td></tr>"
 	fi
 	write_page "</table>"
-	write_page "<p style=\"clear:both;\">"
+	write_page "</p><p style=\"clear:both;\">"
 	# show issue graphs
 	for i in 4 5 ; do
 		write_global_graph
 	done
+	write_page "</p><p style=\"clear:both;\">"
+	write_page "An <a href=\"index_oldsuites.html\">overview about the oldsuite 'stretch'</a> is also available."
 	write_page "</p>"
 	# the end
 	write_page_footer
