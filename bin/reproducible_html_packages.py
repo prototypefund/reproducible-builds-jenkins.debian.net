@@ -234,7 +234,7 @@ def gen_suitearch_section(package, current_suite, current_arch):
     for a in ARCHS:
 
         suites = []
-        for s in SUITES:
+        for s in reversed(SUITES):
 
             status = package.builds[s][a].status
             if not status:  # The package is not available in that suite/arch
