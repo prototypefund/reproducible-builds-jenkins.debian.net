@@ -337,14 +337,13 @@ write_build_performance_stats() {
 	for ARCH in ${ARCHS} ; do
 		write_page " <th>$ARCH</th>"
 	done
-	write_page "</tr><tr><td class=\"left\">oldest build result in stretch / buster / bullseye / unstable / experimental</td>"
+	write_page "</tr><tr><td class=\"left\">oldest build result in buster / bullseye / unstable / experimental</td>"
 	for ARCH in ${ARCHS} ; do
 		AGE_UNSTABLE=$(query_db "SELECT CAST(greatest(max(oldest_reproducible), max(oldest_FTBR), max(oldest_FTBFS)) AS INTEGER) FROM ${TABLE[2]} WHERE suite='unstable' AND architecture='$ARCH' AND datum='$DATE'")
 		AGE_EXPERIMENTAL=$(query_db "SELECT CAST(greatest(max(oldest_reproducible), max(oldest_FTBR), max(oldest_FTBFS)) AS INTEGER) FROM ${TABLE[2]} WHERE suite='experimental' AND architecture='$ARCH' AND datum='$DATE'")
-		AGE_STRETCH=$(query_db "SELECT CAST(greatest(max(oldest_reproducible), max(oldest_FTBR), max(oldest_FTBFS)) AS INTEGER) FROM ${TABLE[2]} WHERE suite='stretch' AND architecture='$ARCH' AND datum='$DATE'")
 		AGE_BUSTER=$(query_db "SELECT CAST(greatest(max(oldest_reproducible), max(oldest_FTBR), max(oldest_FTBFS)) AS INTEGER) FROM ${TABLE[2]} WHERE suite='buster' AND architecture='$ARCH' AND datum='$DATE'")
 		AGE_BULLSEYE=$(query_db "SELECT CAST(greatest(max(oldest_reproducible), max(oldest_FTBR), max(oldest_FTBFS)) AS INTEGER) FROM ${TABLE[2]} WHERE suite='bullseye' AND architecture='$ARCH' AND datum='$DATE'")
-		write_page "<td>$AGE_STRETCH / $AGE_BUSTER / $AGE_BULLSEYE / $AGE_UNSTABLE / $AGE_EXPERIMENTAL days</td>"
+		write_page "<td>$AGE_BUSTER / $AGE_BULLSEYE / $AGE_UNSTABLE / $AGE_EXPERIMENTAL days</td>"
 	done
 	write_page "</tr><tr><td class=\"left\">Build jobs configured</td>"
 	for ARCH in ${ARCHS} ; do
@@ -662,6 +661,12 @@ create_oldsuites_page() {
 	ARCH="amd64"
 	write_meta_pkg_graphs_links
 	write_page "</p><p style=\"clear:both;\">"
+	write_page "</tr><tr><td class=\"left\">oldest build result in stretch</td>"
+	for ARCH in ${ARCHS} ; do
+		AGE_STRETCH=$(query_db "SELECT CAST(greatest(max(oldest_reproducible), max(oldest_FTBR), max(oldest_FTBFS)) AS INTEGER) FROM ${TABLE[2]} WHERE suite='stretch' AND architecture='$ARCH' AND datum='$DATE'")
+		write_page "<td>$AGE_STRETCH days</td>"
+	done
+	write_page "</tr></table>"
 	for ARCH in ${ARCHS} ; do
 		write_page " <a href=\"/debian/$SUITE/$ARCH/${TABLE[2]}.png\"><img src=\"/debian/$SUITE/$ARCH/${TABLE[2]}.png\" class=\"overview\" alt=\"age of oldest reproducible build result in $SUITE/$ARCH\"></a>"
 	done
