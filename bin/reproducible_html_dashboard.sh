@@ -661,17 +661,17 @@ create_oldsuites_page() {
 	ARCH="amd64"
 	write_meta_pkg_graphs_links
 	write_page "</p><p style=\"clear:both;\">"
-	write_page "</tr><tr><td class=\"left\">oldest build result in stretch</td>"
-	for ARCH in ${ARCHS} ; do
-		AGE_STRETCH=$(query_db "SELECT CAST(greatest(max(oldest_reproducible), max(oldest_FTBR), max(oldest_FTBFS)) AS INTEGER) FROM ${TABLE[2]} WHERE suite='stretch' AND architecture='$ARCH' AND datum='$DATE'")
-		write_page "<td>$AGE_STRETCH days</td>"
-	done
-	write_page "</tr></table>"
 	for ARCH in ${ARCHS} ; do
 		write_page " <a href=\"/debian/$SUITE/$ARCH/${TABLE[2]}.png\"><img src=\"/debian/$SUITE/$ARCH/${TABLE[2]}.png\" class=\"overview\" alt=\"age of oldest reproducible build result in $SUITE/$ARCH\"></a>"
 	done
-	write_page "</p>"
-	write_page "</table>"
+	write_page "</p><p style=\"clear:both;\">"
+	write_page "Oldest build result in stretch:"
+	for ARCH in ${ARCHS} ; do
+		AGE_STRETCH=$(query_db "SELECT CAST(greatest(max(oldest_reproducible), max(oldest_FTBR), max(oldest_FTBFS)) AS INTEGER) FROM ${TABLE[2]} WHERE suite='stretch' AND architecture='$ARCH' AND datum='$DATE'")
+		comma_comma_and ${ARCH}
+		write_page "$AGE_STRETCH days for ${ARCH}$COMMA_VAR"
+	done
+	write_page ".</p>"
 	write_page_footer
 	publish_page debian
 }
