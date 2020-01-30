@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-# Originally downloaded from https://anonscm.debian.org/cgit/debian-sso/debian-sso.git/tree/update-debsso-ca
+# Originally downloaded from https://salsa.debian.org/debsso-team/debsso/raw/master/update-debsso-ca
 
 # Download new versions of the CA certificate and Certificate Revocation List
 # from sso.debian.org and write them out atomically.

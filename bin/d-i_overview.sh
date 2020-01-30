@@ -27,7 +27,7 @@ CLEAN=true
 curl -s -S $URL -o $TMPFILE
 echo "Checking $URL for build issues on $ARCH."
 
-# http://anonscm.debian.org/viewvc/d-i/trunk/scripts/daily-build-overview?view=markup is used to generate the HTML
+# https://salsa.debian.org/installer-team/d-i/blob/master/scripts/daily-build-overview is used to generate the HTML
 awk '/ul id="missingarchs/,/<\/ul>/' $TMPFILE > $MISSING
 awk '/ul id="failedarchs/,/<\/ul>/' $TMPFILE > $FAILED
 if grep -q "<li><a href=\"#$ARCH\"" $MISSING ; then
