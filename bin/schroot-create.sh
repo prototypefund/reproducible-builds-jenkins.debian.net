@@ -97,14 +97,32 @@ robust_chroot_apt() {
 
 bootstrap() {
 	echo "Bootstraping $SUITE into $SCHROOT_TARGET now."
+
+	# this sets $NODE_RUN_IN_THE_FUTURE appropriatly
+	. /srv/jenkins/bin/jenkins_node_definitions.sh
+	get_node_information "$HOSTNAME"
+
+	# choosing bootstrapping method
 	if which mmdebstrap ; then
 		# not available on Ubuntu 16.04 LTS
 		DEBOOTSTRAP=mmdebstrap
+		if "$NODE_RUN_IN_THE_FUTURE" ; then
+			# configure apt to ignore expired release files
+			echo "This node is reported to run in the future, configuring APT to ignore the Release file expiration..."
+			DEBOOTSTRAP='mmdebstrap  --aptopt=\'Acquire::Check-Valid-Until "false"\'
+		fi
 	else
 		DEBOOTSTRAP=deboostrap
 		# configure dpkg to be faster (mmdebstrap expects an empty directory and is fast by design)
 		mkdir -p "$SCHROOT_TARGET/etc/dpkg/dpkg.cfg.d"
 		echo force-unsafe-io > "$SCHROOT_TARGET/etc/dpkg/dpkg.cfg.d/02dpkg-unsafe-io"
+		if "$NODE_RUN_IN_THE_FUTURE" ; then
+			# configure apt to ignore expired release files
+			echo "This node is reported to run in the future, configuring APT to ignore the Release file expiration..."
+			mkdir -p "$SCHROOT_TARGET/etc/apt/apt.conf.d/"
+			echo 'Acquire::Check-Valid-Until "false";' | sudo tee -a $SCHROOT_TARGET/etc/apt/apt.conf.d/398future >/dev/null
+		fi
+
 	fi
 	sudo $DEBOOTSTRAP $SUITE $SCHROOT_TARGET $MIRROR | tee $TMPLOG
 	local rt="${PIPESTATUS[0]}"
@@ -152,14 +170,6 @@ bootstrap() {
 	Value: false
 	Owners: man-db
 	__END__
-
-	. /srv/jenkins/bin/jenkins_node_definitions.sh
-	get_node_information "$HOSTNAME"
-	if "$NODE_RUN_IN_THE_FUTURE" ; then
-		echo "This node is reported to run in the future, configuring APT to ignore the Release file expiration..."
-		echo 'Acquire::Check-Valid-Until "false";' | sudo tee -a $SCHROOT_TARGET/etc/apt/apt.conf.d/398future >/dev/null
-	fi
-
 
 	robust_chroot_apt update
 	if [ -n "$1" ] ; then
