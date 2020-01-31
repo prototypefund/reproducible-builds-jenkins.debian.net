@@ -109,7 +109,7 @@ bootstrap() {
 		if "$NODE_RUN_IN_THE_FUTURE" ; then
 			# configure apt to ignore expired release files
 			echo "This node is reported to run in the future, configuring APT to ignore the Release file expiration..."
-			DEBOOTSTRAP='mmdebstrap  --aptopt=\'Acquire::Check-Valid-Until "false"\''
+			DEBOOTSTRAP='mmdebstrap  --aptopt="Acquire::Check-Valid-Until \'false\'"'
 		fi
 	else
 		DEBOOTSTRAP=deboostrap
