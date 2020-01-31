@@ -125,14 +125,14 @@ bootstrap() {
 
 	fi
 	echo "sudo -- $DEBOOTSTRAP $SUITE $SCHROOT_TARGET $MIRROR"
-	sudo -- $DEBOOTSTRAP $SUITE $SCHROOT_TARGET $MIRROR | tee $TMPLOG
+	sudo -- "$DEBOOTSTRAP $SUITE $SCHROOT_TARGET $MIRROR" | tee $TMPLOG
 	local rt="${PIPESTATUS[0]}"
 	local RESULT=$(egrep "E: (Couldn't download packages|Invalid Release signature)" $TMPLOG || true)
 	if [ ! -z "$RESULT" ] || [ "$rt" -ne 0 ]; then
 		echo "$(date -u) - initial bootstrap failed, sleeping 5min before retrying..."
 		sudo rm -rf --one-file-system $SCHROOT_TARGET
 		sleep 5m
-		sudo -- $DEBOOTSTRAP $SUITE $SCHROOT_TARGET $MIRROR || ( echo "$(date -u ) - 2nd bootstrap failed, giving up..." ; exit 1 )
+		sudo -- "$DEBOOTSTRAP $SUITE $SCHROOT_TARGET $MIRROR" || ( echo "$(date -u ) - 2nd bootstrap failed, giving up..." ; exit 1 )
 	fi
 	rm -f $TMPLOG
 
