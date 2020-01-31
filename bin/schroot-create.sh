@@ -109,10 +109,10 @@ bootstrap() {
 		if "$NODE_RUN_IN_THE_FUTURE" ; then
 			# configure apt to ignore expired release files
 			echo "This node is reported to run in the future, configuring APT to ignore the Release file expiration..."
-			DEBOOTSTRAP='mmdebstrap --aptopt="Acquire::Check-Valid-Until 'false'"'
+			DEBOOTSTRAP="mmdebstrap --aptopt='Acquire::Check-Valid-Until \"false\"'"
 		fi
 	else
-		DEBOOTSTRAP=deboostrap
+		DEBOOTSTRAP=debootstrap
 		# configure dpkg to be faster (mmdebstrap expects an empty directory and is fast by design)
 		mkdir -p "$SCHROOT_TARGET/etc/dpkg/dpkg.cfg.d"
 		echo force-unsafe-io > "$SCHROOT_TARGET/etc/dpkg/dpkg.cfg.d/02dpkg-unsafe-io"
@@ -124,6 +124,7 @@ bootstrap() {
 		fi
 
 	fi
+	echo "sudo -- $DEBOOTSTRAP $SUITE $SCHROOT_TARGET $MIRROR"
 	sudo -- $DEBOOTSTRAP $SUITE $SCHROOT_TARGET $MIRROR | tee $TMPLOG
 	local rt="${PIPESTATUS[0]}"
 	local RESULT=$(egrep "E: (Couldn't download packages|Invalid Release signature)" $TMPLOG || true)
