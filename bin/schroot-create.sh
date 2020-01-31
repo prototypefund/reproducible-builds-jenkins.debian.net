@@ -103,13 +103,14 @@ bootstrap() {
 	get_node_information "$HOSTNAME"
 
 	# choosing bootstrapping method
+	STRAPOPTS=""
 	if which mmdebstrap ; then
 		# not available on Ubuntu 16.04 LTS
 		DEBOOTSTRAP=mmdebstrap
 		if "$NODE_RUN_IN_THE_FUTURE" ; then
 			# configure apt to ignore expired release files
 			echo "This node is reported to run in the future, configuring APT to ignore the Release file expiration..."
-			DEBOOTSTRAP="mmdebstrap --aptopt='Acquire::Check-Valid-Until \"false\"'"
+			STRAPOPTS="--aptopt='Acquire::Check-Valid-Until \"false\"'"
 		fi
 	else
 		DEBOOTSTRAP=debootstrap
@@ -124,15 +125,15 @@ bootstrap() {
 		fi
 
 	fi
-	echo "sudo -- $DEBOOTSTRAP $SUITE $SCHROOT_TARGET $MIRROR"
-	sudo -- "$DEBOOTSTRAP $SUITE $SCHROOT_TARGET $MIRROR" | tee $TMPLOG
+	echo "sudo -- $DEBOOTSTRAP $STRAPOPTS $SUITE $SCHROOT_TARGET $MIRROR"
+	sudo -- $DEBOOTSTRAP "$STRAPOPTS $SUITE $SCHROOT_TARGET $MIRROR" | tee $TMPLOG
 	local rt="${PIPESTATUS[0]}"
 	local RESULT=$(egrep "E: (Couldn't download packages|Invalid Release signature)" $TMPLOG || true)
 	if [ ! -z "$RESULT" ] || [ "$rt" -ne 0 ]; then
 		echo "$(date -u) - initial bootstrap failed, sleeping 5min before retrying..."
 		sudo rm -rf --one-file-system $SCHROOT_TARGET
 		sleep 5m
-		sudo -- "$DEBOOTSTRAP $SUITE $SCHROOT_TARGET $MIRROR" || ( echo "$(date -u ) - 2nd bootstrap failed, giving up..." ; exit 1 )
+		sudo -- $DEBOOTSTRAP "$STRAPOPTS $SUITE $SCHROOT_TARGET $MIRROR" || ( echo "$(date -u ) - 2nd bootstrap failed, giving up..." ; exit 1 )
 	fi
 	rm -f $TMPLOG
 
