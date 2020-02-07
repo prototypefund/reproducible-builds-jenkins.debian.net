@@ -60,6 +60,8 @@ choose_nodes() {
 		#amd64_38)	NODE1=profitbricks-build5-amd64		NODE2=profitbricks-build11-amd64 ;;
 		#amd64_39)	NODE1=profitbricks-build11-amd64	NODE2=profitbricks-build15-amd64 ;;
 		#amd64_40)	NODE1=profitbricks-build15-amd64	NODE2=profitbricks-build11-amd64 ;;
+
+		# i386
 		i386_1)		NODE1=profitbricks-build2-i386	NODE2=profitbricks-build6-i386 ;;
 		i386_2)		NODE1=profitbricks-build6-i386	NODE2=profitbricks-build2-i386 ;;
 		i386_3)		NODE1=profitbricks-build2-i386	NODE2=profitbricks-build16-i386 ;;
@@ -84,31 +86,40 @@ choose_nodes() {
 		i386_22)	NODE1=profitbricks-build6-i386	NODE2=profitbricks-build12-i386 ;;
 		i386_23)	NODE1=profitbricks-build12-i386	NODE2=profitbricks-build16-i386 ;;
 		i386_24)	NODE1=profitbricks-build16-i386	NODE2=profitbricks-build12-i386 ;;
-		arm64_1)	NODE1=codethink-sled9-arm64		NODE2=codethink-sled12-arm64 ;;
-		arm64_2)	NODE1=codethink-sled9-arm64		NODE2=codethink-sled14-arm64 ;;
-		arm64_3)	NODE1=codethink-sled9-arm64		NODE2=codethink-sled16-arm64 ;;
-		arm64_4)	NODE1=codethink-sled11-arm64	NODE2=codethink-sled12-arm64 ;;
-		arm64_5)	NODE1=codethink-sled11-arm64	NODE2=codethink-sled14-arm64 ;;
-		arm64_6)	NODE1=codethink-sled11-arm64	NODE2=codethink-sled16-arm64 ;;
-		arm64_7)	NODE1=codethink-sled12-arm64	NODE2=codethink-sled9-arm64 ;;
-		arm64_8)	NODE1=codethink-sled12-arm64	NODE2=codethink-sled11-arm64 ;;
-		arm64_9)	NODE1=codethink-sled12-arm64	NODE2=codethink-sled15-arm64 ;;
-		arm64_10)	NODE1=codethink-sled14-arm64	NODE2=codethink-sled9-arm64 ;;
-		arm64_11)	NODE1=codethink-sled14-arm64	NODE2=codethink-sled11-arm64 ;;
-		arm64_12)	NODE1=codethink-sled14-arm64	NODE2=codethink-sled15-arm64 ;;
-		arm64_13)	NODE1=codethink-sled15-arm64	NODE2=codethink-sled12-arm64 ;;
-		arm64_14)	NODE1=codethink-sled15-arm64	NODE2=codethink-sled14-arm64 ;;
-		arm64_15)	NODE1=codethink-sled15-arm64	NODE2=codethink-sled16-arm64 ;;
-		arm64_16)	NODE1=codethink-sled16-arm64	NODE2=codethink-sled9-arm64 ;;
-		arm64_17)	NODE1=codethink-sled16-arm64	NODE2=codethink-sled11-arm64 ;;
-		arm64_18)	NODE1=codethink-sled16-arm64	NODE2=codethink-sled12-arm64 ;;
-		arm64_19)	NODE1=codethink-sled16-arm64	NODE2=codethink-sled15-arm64 ;;
-		arm64_20)	NODE1=codethink-sled9-arm64	NODE2=codethink-sled11-arm64 ;;
-		arm64_21)	NODE1=codethink-sled11-arm64	NODE2=codethink-sled16-arm64 ;;
-		arm64_22)	NODE1=codethink-sled12-arm64	NODE2=codethink-sled14-arm64 ;;
-		arm64_23)	NODE1=codethink-sled14-arm64	NODE2=codethink-sled15-arm64 ;;
-		arm64_24)	NODE1=codethink-sled15-arm64	NODE2=codethink-sled9-arm64 ;;
-		arm64_25)	NODE1=codethink-sled16-arm64	NODE2=codethink-sled12-arm64 ;;
+
+		# arm64
+		arm64_1)	NODE1=codethink-sled9-arm64		NODE2=codethink-sled10-arm64 ;;
+		arm64_2)	NODE1=codethink-sled9-arm64		NODE2=codethink-sled12-arm64 ;;
+		arm64_3)	NODE1=codethink-sled9-arm64		NODE2=codethink-sled14-arm64 ;;
+		arm64_4)	NODE1=codethink-sled9-arm64		NODE2=codethink-sled16-arm64 ;;
+		arm64_5)	NODE1=codethink-sled10-arm64	NODE2=codethink-sled9-arm64 ;;
+		arm64_6)	NODE1=codethink-sled10-arm64	NODE2=codethink-sled11-arm64 ;;
+		arm64_7)	NODE1=codethink-sled10-arm64	NODE2=codethink-sled13-arm64 ;;
+		arm64_8)	NODE1=codethink-sled10-arm64	NODE2=codethink-sled15-arm64 ;;
+		arm64_9)	NODE1=codethink-sled11-arm64	NODE2=codethink-sled10-arm64 ;;
+		arm64_10)	NODE1=codethink-sled11-arm64	NODE2=codethink-sled12-arm64 ;;
+		arm64_11)	NODE1=codethink-sled11-arm64	NODE2=codethink-sled14-arm64 ;;
+		arm64_12)	NODE1=codethink-sled11-arm64	NODE2=codethink-sled16-arm64 ;;
+		arm64_13)	NODE1=codethink-sled12-arm64	NODE2=codethink-sled9-arm64 ;;
+		arm64_14)	NODE1=codethink-sled12-arm64	NODE2=codethink-sled11-arm64 ;;
+		arm64_15)	NODE1=codethink-sled12-arm64	NODE2=codethink-sled13-arm64 ;;
+		arm64_16)	NODE1=codethink-sled12-arm64	NODE2=codethink-sled15-arm64 ;;
+		arm64_17)	NODE1=codethink-sled13-arm64	NODE2=codethink-sled10-arm64 ;;
+		arm64_18)	NODE1=codethink-sled13-arm64	NODE2=codethink-sled12-arm64 ;;
+		arm64_19)	NODE1=codethink-sled13-arm64	NODE2=codethink-sled14-arm64 ;;
+		arm64_20)	NODE1=codethink-sled13-arm64	NODE2=codethink-sled16-arm64 ;;
+		arm64_21)	NODE1=codethink-sled14-arm64	NODE2=codethink-sled9-arm64 ;;
+		arm64_22)	NODE1=codethink-sled14-arm64	NODE2=codethink-sled11-arm64 ;;
+		arm64_23)	NODE1=codethink-sled14-arm64	NODE2=codethink-sled13-arm64 ;;
+		arm64_24)	NODE1=codethink-sled14-arm64	NODE2=codethink-sled15-arm64 ;;
+		arm64_25)	NODE1=codethink-sled15-arm64	NODE2=codethink-sled10-arm64 ;;
+		arm64_26)	NODE1=codethink-sled15-arm64	NODE2=codethink-sled12-arm64 ;;
+		arm64_27)	NODE1=codethink-sled15-arm64	NODE2=codethink-sled14-arm64 ;;
+		arm64_28)	NODE1=codethink-sled15-arm64	NODE2=codethink-sled16-arm64 ;;
+		arm64_29)	NODE1=codethink-sled16-arm64	NODE2=codethink-sled9-arm64 ;;
+		arm64_30)	NODE1=codethink-sled16-arm64	NODE2=codethink-sled11-arm64 ;;
+		arm64_31)	NODE1=codethink-sled16-arm64	NODE2=codethink-sled13-arm64 ;;
+		arm64_32)	NODE1=codethink-sled16-arm64	NODE2=codethink-sled15-arm64 ;;
 		# to choose new armhf jobs:
             #   for i in cb3a bbx15 cbxi4pro0 ff2a ff2b ff64a jtk1a jtk1b odxu4a odxu4b odxu4c odu3a opi2a opi2b opi2c p64b p64c wbq0 cbxi4a cbxi4b ff4a jtx1a jtx1b jtx1c; do echo "$i: " ; grep NODE1 bin/reproducible_build_service.sh|grep armhf|grep $i-armhf ; done
 	        #       6 jobs for quad-cores with 4 gb ram
@@ -184,7 +195,7 @@ startup_workers() {
 		case $ARCH in
 			amd64)	MAX=32 ;;
 			i386)	MAX=16 ;;
-			arm64)	MAX=25 ;;
+			arm64)	MAX=32 ;;
 			armhf)	MAX=59 ;;
 			*)	;;
 		esac
