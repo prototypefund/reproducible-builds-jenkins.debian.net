@@ -1,6 +1,6 @@
 #!/bin/bash
 # vim: set noexpandtab:
-# Copyright 2012-2019 Holger Levsen <holger@layer-acht.org>
+# Copyright 2012-2020 Holger Levsen <holger@layer-acht.org>
 #         ©      2018 Mattia Rizzolo <mattia@debian.org>
 # released under the GPLv2
 
@@ -254,7 +254,7 @@ if [ -f /etc/debian_version ] ; then
 			debian-archive-keyring
 			cdebootstrap-
 			debootstrap
-			devscripts
+			devscripts/buster-backports
 			eatmydata
 			etckeeper
 			figlet
