@@ -4,9 +4,8 @@ deb http://gb.ports.ubuntu.com/ubuntu-ports/ xenial-backports main universe
 
 deb http://ports.ubuntu.com/ubuntu-ports xenial-security main universe
 
-# we're using some stretch- and buster-backports on these old 16.04 LTS systems
+# we're using some stretch-backports on these old 16.04 LTS systems
 deb http://deb.debian.org/debian/ stretch-backports main
-deb http://deb.debian.org/debian/ buster-backports main
 
 # for debian-archive-keyring
 deb http://gb.ports.ubuntu.com/ubuntu-ports/ eoan main universe

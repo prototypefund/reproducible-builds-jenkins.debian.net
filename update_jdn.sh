@@ -254,7 +254,7 @@ if [ -f /etc/debian_version ] ; then
 			debian-archive-keyring
 			cdebootstrap-
 			debootstrap
-			devscripts/buster-backports
+			devscripts
 			eatmydata
 			etckeeper
 			figlet
@@ -306,7 +306,11 @@ if [ -f /etc/debian_version ] ; then
 				pbuilder/stretch-backports
 				" ;;
 			*)	# not available in Ubuntu 16.04:
-				DEBS="$DEBS ripgrep mmdebstrap"
+				DEBS="$DEBS
+				ripgrep
+				mmdebstrap
+				devscripts/buster-backports
+				" ;;
 		esac
 		case $HOSTNAME in
 			# needed for rebuilding Debian (using .buildinfo files)
