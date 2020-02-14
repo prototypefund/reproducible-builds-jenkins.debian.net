@@ -254,7 +254,7 @@ if [ -f /etc/debian_version ] ; then
 			debian-archive-keyring
 			cdebootstrap-
 			debootstrap
-			devscripts
+			devscripts/buster-backports
 			eatmydata
 			etckeeper
 			figlet
