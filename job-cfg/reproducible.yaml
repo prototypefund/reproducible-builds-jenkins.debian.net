@@ -525,6 +525,9 @@
                     # dinstall runs 1|7|13|19:52 UTC - see https://salsa.debian.org/ftp-team/dak/blob/master/config/debian/crontab
                     my_timed: '23 H/2 * * *'
                     my_shellext: ".py"
+                - 'system_health':
+                    my_description: 'calculate overall tests.r-b.o system health for usage with https://github.com/jelly/reproduciblebuilds-display/'
+                    my_timed: 'H/15 * * * *'
                 - 'html_dashboard':
                     my_description: 'Generate HTML dashboard with graphs for reproducible builds.'
                     my_timed: '1 * * * *'
