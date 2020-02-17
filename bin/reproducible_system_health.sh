@@ -44,14 +44,22 @@ for JOB in reproducible_* ; do
 		let SCORE+=1
 	else
 		case $JOB in
-			reproducible_maintenance_amd64_jenkins)			MODIFIER=50 ;;
+			reproducible_maintenance_amd64_jenkins)			MODIFIER=50 ;;  # main node
+			reproducible_maintenance_amd64_profitbricks1)		MODIFIER=50 ;;	# proxy for other nodes
+			reproducible_maintenance_amd64_profitbricks10)		MODIFIER=50 ;;	# proxy for other nodes
+			reproducible_maintenance_amd64_osuosl167)		MODIFIER=50 ;;	# proxy for other nodes
 			reproducible_maintenance_amd64_*)			MODIFIER=20 ;;
 			reproducible_maintenance_i386_*)			MODIFIER=10 ;;
+			reproducible_maintenance_arm64_codethink16)		MODIFIER=50 ;;  # proxy for other nodes
 			reproducible_maintenance_arm64_*)			MODIFIER=10 ;;
 			reproducible_maintenance_armhf_*)			MODIFIER=3 ;;
 			reproducible_node_health_check_amd64_jenkins)		MODIFIER=50 ;;
+			reproducible_node_health_check_amd64_profitbricks1)	MODIFIER=50 ;;
+			reproducible_node_health_check_amd64_profitbricks10)	MODIFIER=50 ;;
+			reproducible_node_health_check_amd64_osuosl167)		MODIFIER=50 ;;
 			reproducible_node_health_check_amd64_*)			MODIFIER=20 ;;
 			reproducible_node_health_check_i386_*)			MODIFIER=10 ;;
+			reproducible_node_health_check_arm64_codethink16)	MODIFIER=50 ;;
 			reproducible_node_health_check_arm64_*)			MODIFIER=10 ;;
 			reproducible_node_health_check_armhf_*)			MODIFIER=3 ;;
 			*)							MODIFIER=1  ;;
