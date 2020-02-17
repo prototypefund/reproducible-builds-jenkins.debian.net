@@ -43,12 +43,26 @@ for JOB in reproducible_* ; do
 		echo "unstable job: $JOB"
 		let SCORE+=1
 	else
-		echo "  failed job: $JOB"
-		let SCORE-=1
+		case $JOB in
+			reproducible_maintenance_amd64_jenkins)			MODIFIER=50 ;;
+			reproducible_maintenance_amd64_*)			MODIFIER=25 ;;
+			reproducible_maintenance_i386_*)			MODIFIER=15 ;;
+			reproducible_maintenance_arm64_*)			MODIFIER=15 ;;
+			reproducible_maintenance_armhf_*)			MODIFIER=10 ;;
+			reproducible_node_health_check_amd64_jenkins)		MODIFIER=50 ;;
+			reproducible_node_health_check_amd64_*)			MODIFIER=25 ;;
+			reproducible_node_health_check_i386_*)			MODIFIER=15 ;;
+			reproducible_node_health_check_arm64_*)			MODIFIER=15 ;;
+			reproducible_node_health_check_armhf_*)			MODIFIER=10 ;;
+			*)							MODIFIER=1  ;;
+		esac
+		echo "  failed job: $JOB -$MODIFIER"
+		let SCORE-=$MODIFIER
 		:
 	fi
 done
 # represent data
+if [ $SCORE -lt 0 ] ; then SCORE=0 ; fi
 STATUS=$(echo "scale=3 ; $SCORE / ( $INPUTS * 3 ) * 255" | bc | cut -d '.' -f1)
 GREEN=$STATUS
 RED=$(echo 255-$STATUS|bc)
