@@ -76,7 +76,7 @@ cat > $HEALTH_FILE.html <<- EOF
 <h1>tests.reproducible-builds.org Status</h1>
 Status: $STATUS (between 0 and 255)
 <br/>
-Score: $SCORE (a stable jobs adds 3, an unstable job adds 1 and a failed job substracts 1)<br/>
+Score: $SCORE (a stable jobs adds 3, an unstable job adds 1 and a failed job substracts something between 1 and 50, depending on the importance of the job.)<br/>
 Inputs considered: $INPUTS
 </body></html>
 EOF
