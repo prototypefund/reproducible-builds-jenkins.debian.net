@@ -56,7 +56,11 @@ for JOB in reproducible_* ; do
 			reproducible_node_health_check_armhf_*)			MODIFIER=10 ;;
 			*)							MODIFIER=1  ;;
 		esac
-		echo "  failed job: $JOB -$MODIFIER"
+		if [ $MODIFIER -eq 1 ] ; then
+			echo "  failed job: $JOB"
+		else
+			echo "  failed job: $JOB -$MODIFIER"
+		fi
 		let SCORE-=$MODIFIER
 		:
 	fi
