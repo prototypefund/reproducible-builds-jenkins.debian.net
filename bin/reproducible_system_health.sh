@@ -27,6 +27,8 @@ HEALTH_FILE=$BASE/trbo.status
 STATUS=-1
 INPUTS=0
 SCORE=0
+FAILED_JOBS=$(mktemp --tmpdir=$TMPDIR trbo-status-XXXXXXX)
+UNSTABLE_JOBS=$(mktemp --tmpdir=$TMPDIR trbo-status-XXXXXXX)
 # gather data
 echo "$(date -u) - starting up."
 cd /var/lib/jenkins/jobs/
@@ -42,6 +44,7 @@ for JOB in reproducible_* ; do
 	elif [ "$LAST" = "$UNSTABLE" ] ; then
 		echo "unstable job: $JOB"
 		let SCORE+=1
+		echo "   <li><a href=\"https://jenkins.debian.net/job/$JOB/\">$JOB</a></li>" >> ${UNSTABLE_JOBS}
 	else
 		case $JOB in
 			reproducible_maintenance_amd64_jenkins)			MODIFIER=50 ;;  # main node
@@ -66,8 +69,10 @@ for JOB in reproducible_* ; do
 		esac
 		if [ $MODIFIER -eq 1 ] ; then
 			echo "  failed job: $JOB"
+			echo "$MODIFIER|   <li><a href=\"https://jenkins.debian.net/job/$JOB/\">$JOB</a></li>" >> $FAILED_JOBS
 		else
 			echo "  failed job: $JOB -$MODIFIER"
+			echo "$MODIFIER|   <li><a href=\"https://jenkins.debian.net/job/$JOB/\">$JOB</a> <em>($MODIFIER)</em></li>" >> $FAILED_JOBS
 		fi
 		let SCORE-=$MODIFIER
 		:
@@ -93,6 +98,16 @@ cat > $HEALTH_FILE.html <<- EOF
   Score: $SCORE (a stable jobs adds 3, an unstable job adds 1 and a failed job substracts something between 1 and 50, depending on the importance of the job.)
   <br/>
   Inputs considered: $INPUTS
+ </p>
+ <p>
+  Failed jobs:<ul>
+   $(cat $FAILED_JOBS | sort -t '|' -n -r | cut -d '|' -f2-)
+  </ul>
+ </p>
+ <p>
+  Unstable jobs:</ul>
+   $(cat ${UNSTABLE_JOBS})
+  </ul>
  </p>
  <p>
   <small>last updated: $(date -u).</small>
