@@ -96,10 +96,10 @@ cat > $HEALTH_FILE.html <<- EOF
 <html><head></head><body style="background-color: rgb($RED, $GREEN, 0);">
  <h1>tests.reproducible-builds.org Status</h1>
  <p>
-  Status: <a href="$REPRODUCIBLE_URL/$(basename $HEALTH_FILE)">$STATUS</a> (between 0 and 255)
+  Status: <a href="$REPRODUCIBLE_URL/$(basename $HEALTH_FILE)">$STATUS</a> (an integer value between 0 and 255)
  </p>
  <p>
-  Score: $SCORE (a stable jobs adds 3, an unstable job adds 1 and a failed job substracts something between 1 and 50, depending on the importance of the job.)
+  Score: $SCORE (a stable jobs adds 3, an unstable job adds 1 and a failed job substracts something between 1 and 50 (indicated in brackets after the job name below), depending on the importance of the job for the setup.)
   <br/>
   Inputs considered: $INPUTS
  </p>
