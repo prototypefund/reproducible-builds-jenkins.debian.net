@@ -65,9 +65,13 @@ for JOB in reproducible_* ; do
 			reproducible_node_health_check_arm64_codethink16)	MODIFIER=50 ;;
 			reproducible_node_health_check_arm64_*)			MODIFIER=10 ;;
 			reproducible_node_health_check_armhf_*)			MODIFIER=3 ;;
+			reproducible_builder_fedora_*)				MODIFIER=0 ;;
 			*)							MODIFIER=1  ;;
 		esac
-		if [ $MODIFIER -eq 1 ] ; then
+		if [ $MODIFIER -eq 0 ] ; then
+			# skip silently, ignore those jobs
+			continue
+		elif [ $MODIFIER -eq 1 ] ; then
 			echo "  failed job: $JOB"
 			echo "$MODIFIER|   <li><a href=\"https://jenkins.debian.net/job/$JOB/\">$JOB</a></li>" >> $FAILED_JOBS
 		else
