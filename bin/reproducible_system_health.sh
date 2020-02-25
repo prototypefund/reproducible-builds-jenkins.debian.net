@@ -65,7 +65,7 @@ for JOB in reproducible_* ; do
 			reproducible_node_health_check_arm64_codethink16)	MODIFIER=50 ;;
 			reproducible_node_health_check_arm64_*)			MODIFIER=10 ;;
 			reproducible_node_health_check_armhf_*)			MODIFIER=3 ;;
-			reproducible_builder_fedora_*)				MODIFIER=0 ;;
+			reproducible_builder_fedora*)				MODIFIER=0 ;;
 			*)							MODIFIER=1  ;;
 		esac
 		if [ $MODIFIER -eq 0 ] ; then
