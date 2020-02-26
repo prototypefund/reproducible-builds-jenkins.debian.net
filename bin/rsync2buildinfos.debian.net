@@ -42,6 +42,8 @@ rsync_year(){
 #
 cd $SOURCEDIR
 if [ -n "$1" ] ; then
+	# manual mode to rsync everything
+	LOG=/dev/stdout
 	for i in $(seq 2016 $YEAR) ; do
 		rsync_year $i
 	done
