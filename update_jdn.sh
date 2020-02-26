@@ -319,6 +319,17 @@ if [ -f /etc/debian_version ] ; then
 			osuosl-build174-amd64) DEBS="$DEBS osc obs-build qemu-kvm libjson-perl libxml-simple-perl bsdtar" ;;
 			*) ;;
 		esac
+		# install stuff for bremner's builtin-pho stuff
+		# and building html pages there too
+		case $HOSTNAME in
+			profitbricks-build7-a*) DEBS="$DEBS
+				postgresql
+				postgresql-11-debversion
+				pystache3
+				python3-apt
+				python3-psycopg2" ;;
+			*) ;;
+		esac
 		# install squid / apache2 on a few nodes only
 		case $HOSTNAME in
 			profitbricks-build1-a*|profitbricks-build10*|codethink-sled16*|osuosl-build167*) DEBS="$DEBS
