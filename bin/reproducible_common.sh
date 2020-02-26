@@ -1,7 +1,7 @@
 #!/bin/bash
 # vim: set noexpandtab:
 
-# Copyright 2014-2019 Holger Levsen <holger@layer-acht.org>
+# Copyright 2014-2020 Holger Levsen <holger@layer-acht.org>
 #         © 2015-2018 Mattia Rizzolo <mattia@mapreri.org>
 # released under the GPLv2
 #
@@ -584,6 +584,7 @@ publish_page() {
 		TARGET=$PAGE
 	else
 		TARGET=$1/$PAGE
+		mkdir -p $TARGET
 	fi
 	echo "$(date -u) - $(cp -v $PAGE $BASE/$TARGET)"
 	rm $PAGE
