@@ -2,7 +2,7 @@
 # vim: set noexpandtab:
 
 # Copyright (c) 2009, 2010, 2012, 2015 Peter Palfrader
-#               2015-2018 Holger Levsen
+#               2015-2020 Holger Levsen
 #               2017-2018 Mattia Rizzolo <mattia@debian.org>
 #
 # Permission is hereby granted, free of charge, to any person obtaining
@@ -81,6 +81,8 @@ elif [ "$*" = "reproducible_nodes_info" ] ; then
 	exec /srv/jenkins/bin/reproducible_info.sh ; croak "Exec failed";
 elif [ "$1" = "reproducible_pool_buildinfos" ] ; then
 	exec /srv/jenkins/bin/reproducible_pool_buildinfos.sh ; croak "Exec failed";
+elif [ "$1" = "reproducible_html_builtin-pho" ] ; then
+	exec /srv/jenkins/bin/reproducible_html_builtin-pho ; croak "Exec failed";
 elif [ "$1" = "haskell-package-plan" ] ; then
 	shift ; exec /srv/jenkins/bin/chroot-run.sh $@ ; croak "Exec failed";
 elif [ "$1" = "/srv/jenkins/bin/reproducible_build.sh" ] && ( [ "$2" = "1" ] || [ "$2" = "2" ] ) ; then

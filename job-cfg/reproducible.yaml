@@ -531,6 +531,11 @@
                 - 'html_dashboard':
                     my_description: 'Generate HTML dashboard with graphs for reproducible builds.'
                     my_timed: '1 * * * *'
+                - 'html_builtin-pho':
+                    my_description: 'Generate HTML pages for stats about .buildinfo files based on builtin-pho data.'
+                    my_timed: '10 * * * *'
+                    my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
+                    my_hname: 'profitbricks7'
                 - 'html_pkg_sets':
                     my_description: 'Generate HTML results (package sets with graphs) for reproducible builds.'
                     my_timed: '45 */2 * * *'
