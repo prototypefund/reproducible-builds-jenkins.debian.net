@@ -325,7 +325,7 @@ if [ -f /etc/debian_version ] ; then
 			profitbricks-build7-a*) DEBS="$DEBS
 				postgresql
 				postgresql-11-debversion
-				pystache3
+				python3-pystache
 				python3-apt
 				python3-psycopg2" ;;
 			*) ;;
