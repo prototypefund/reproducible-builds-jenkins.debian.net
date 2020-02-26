@@ -1,7 +1,7 @@
 #!/bin/bash
 # vim: set noexpandtab:
 
-# Copyright 2019 Holger Levsen <holger@layer-acht.org>
+# Copyright 2019-2020 Holger Levsen <holger@layer-acht.org>
 # released under the GPLv2
 
 ###################################################################
@@ -32,6 +32,7 @@ rsync_month(){
 }
 
 rsync_year(){
+	local YEAR=$1
 	echo "$(date -u) - rsyncing .buildinfo files for $YEAR..." >> $LOG
 	rsync -e ssh -av $YEAR jenkins@$TARGETHOST:$TARGETDIR/ >> $LOG 2>&1
 }
@@ -42,13 +43,14 @@ rsync_year(){
 cd $SOURCEDIR
 if [ -n "$1" ] ; then
 	for i in $(seq 2016 $YEAR) ; do
-		rsync_year
+		rsync_year $i
 	done
 else
 	if [ "$DAY" = "01" ] && [ "$MONTH" = "01" ] ; then
+		# this needs to be done first to create the year directory
 		# even though we do this several times a day
 		# it's ok, because the year is young :)
-		rsync_year
+		rsync_year $YEAR
 	elif [ "$DAY" = "01" ] ; then
 		# see comment above
 		rsync_month
