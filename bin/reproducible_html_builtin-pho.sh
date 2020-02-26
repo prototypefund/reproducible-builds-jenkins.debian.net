@@ -28,15 +28,15 @@ select distinct p.source,p.version
 from
       binary_packages p
 where
-      p.suite="$SUITE"
+      p.suite='$SUITE'
 except
         select p.source,p.version
 from binary_packages p, builds b
 where
       b.source=p.source
       and p.version=b.version
-      and ( (b.arch_all and p.arch="all") or
-            (b.arch_$SUITE and p.arch="$ARCH") )
+      and ( (b.arch_all and p.arch='all') or
+            (b.arch_$SUITE and p.arch='$ARCH') )
 EOF
 }
 
