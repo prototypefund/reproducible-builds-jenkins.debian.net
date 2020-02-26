@@ -1,0 +1,14 @@
+# m h dom mon dow (0|7=sun,1=mon)    command
+
+#
+# cron-job for bremner's builtin-pho stuff
+# (that's https://salsa.debian.org/bremner/builtin-pho.git
+# and has been installed manually on pb7 so far.)
+#
+
+MAILTO=root
+
+# this is run hourly even though the rsync from coccia.d.o to
+# pb7 only happens every two hours... but we don't know at which 
+# hour, so...
+7 * * * * buildinfo cd ~/builtin-pho && bash update-packages.sh && find buildinfo/Debian/ -mtime 0 -type f | python3 index-buildinfo.py -i -F
