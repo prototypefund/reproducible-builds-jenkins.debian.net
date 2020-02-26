@@ -82,7 +82,7 @@ elif [ "$*" = "reproducible_nodes_info" ] ; then
 elif [ "$1" = "reproducible_pool_buildinfos" ] ; then
 	exec /srv/jenkins/bin/reproducible_pool_buildinfos.sh ; croak "Exec failed";
 elif [ "$1" = "reproducible_html_builtin-pho" ] ; then
-	exec /srv/jenkins/bin/reproducible_html_builtin-pho ; croak "Exec failed";
+	exec /srv/jenkins/bin/reproducible_html_builtin-pho.sh ; croak "Exec failed";
 elif [ "$1" = "haskell-package-plan" ] ; then
 	shift ; exec /srv/jenkins/bin/chroot-run.sh $@ ; croak "Exec failed";
 elif [ "$1" = "/srv/jenkins/bin/reproducible_build.sh" ] && ( [ "$2" = "1" ] || [ "$2" = "2" ] ) ; then
