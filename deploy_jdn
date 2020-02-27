@@ -109,6 +109,7 @@ elif [ "$1" = "jenkins" ] ; then
 			2|pb2)	 HOSTS+=(profitbricks-build2-i386.debian.net) ;;
 			5|pb5)	 HOSTS+=(profitbricks-build5-amd64.debian.net) ;;
 			6|pb6)	 HOSTS+=(profitbricks-build6-i386.debian.net) ;;
+			7|pb7)	 HOSTS+=(profitbricks-build7-amd64.debian.net) ;;
 			9|pb9)	 HOSTS+=(profitbricks-build9-amd64.debian.net) ;;
 			10|pb10) HOSTS+=(profitbricks-build10-amd64.debian.net) ;;
 			11|pb11) HOSTS+=(profitbricks-build11-amd64.debian.net) ;;
