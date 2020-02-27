@@ -12,5 +12,5 @@ common_init "$@"
 . /srv/jenkins/bin/reproducible_common.sh
 
 # rsync builtin-pho results from pb7
-rsync -av profitbricks-build7-amd64.debian.net:/var/lib/jenkins/builtin-pho-html/ $BASE/debian/
+rsync -av profitbricks-build7-amd64.debian.net:/var/lib/jenkins/builtin-pho-html/debian/* $BASE/debian/
 
