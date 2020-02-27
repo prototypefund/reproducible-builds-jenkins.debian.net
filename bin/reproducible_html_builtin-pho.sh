@@ -58,7 +58,7 @@ create_buildinfo_page() {
 	write_page "</p>"
 	query_builtin_pho_db
 	write_page "<pre>"
-	cat $DUMMY_FILE | tr -d ' '  | sed -E "s/([^|]*)([|].*)/<a href=\"https:\/\/tracker.debian.org\/\1\">\1<\/a> <a href=\"https:\/\/packages.debian.org\/$SUITE\/\1\">binaries (\2)<\/a> <a href=\"https:\/\/buildinfos.debian.net\/\1\">.buildinfo<\/a>/g" | tr -d '|' >> $PAGE
+	cat $DUMMY_FILE | tr -d ' '  | sed -E "s/([^|]*)(.*)/<a href=\"https:\/\/tracker.debian.org\/\1\">\1<\/a> <a href=\"https:\/\/packages.debian.org\/$SUITE\/\1\">binaries (\2)<\/a> <a href=\"https:\/\/buildinfos.debian.net\/\1\">.buildinfo<\/a>/g" | tr -d '|' >> $PAGE
 	write_page "</pre>"
 	# the end
 	write_page_footer
