@@ -37,7 +37,7 @@ where
       and p.version=b.version
       and ( (b.arch_all and p.arch='all') or
             (b.arch_$ARCH and p.arch='$ARCH') )
-order by p.source
+order by source
 EOF
 }
 
