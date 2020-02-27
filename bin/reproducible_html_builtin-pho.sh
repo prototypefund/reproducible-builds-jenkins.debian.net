@@ -37,6 +37,7 @@ where
       and p.version=b.version
       and ( (b.arch_all and p.arch='all') or
             (b.arch_$ARCH and p.arch='$ARCH') )
+order by p.source
 EOF
 }
 
@@ -49,7 +50,7 @@ create_buildinfo_page() {
 	echo "$(date -u) - starting to write $PAGE page for $SUITE/$ARCH."
 	write_page_header $VIEW "Overview of various statistics about .buildinfo files for $SUITE/$ARCH"
 	write_page "<p>Packages without .buildinfo files in $SUITE/$ARCH:"
-	write_page "<small>ToDo: turn package names/versions into useful links</small>"
+	write_page "<br/><small>ToDo: turn package names/versions into useful links</small>"
 	write_page "</p>"
 	query_builtin_pho_db
 	write_page "<pre>"
