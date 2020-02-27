@@ -7,7 +7,7 @@ DEBUG=false
 . /srv/jenkins/bin/common-functions.sh
 common_init "$@"
 
-# common code defining db access
+# common code for tests.reproducible-builds.org
 . /srv/jenkins/bin/reproducible_common.sh
 
 # we only generate the meta pkg sets on amd64
