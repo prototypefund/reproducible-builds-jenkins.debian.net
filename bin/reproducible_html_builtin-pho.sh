@@ -49,14 +49,13 @@ create_buildinfo_page() {
 	echo "$(date -u) - querying builtin-pho database for $SUITE/$ARCH."
 	query_builtin_pho_db
 	echo "$(date -u) - starting to write $PAGE page for $SUITE/$ARCH."
-	write_page_header $VIEW "Overview of various statistics about .buildinfo files for $SUITE/$ARCH"
+	write_page_header $VIEW "Overview of missing .buildinfo files for $SUITE/$ARCH"
 	write_page "<p>"
 	cat $DUMMY_FILE | wc -l >> $PAGE
 	write_page "packages without .buildinfo files in $SUITE/$ARCH:"
 	write_page "<br/><small>ToDo: graph that count</small>"
 	write_page "<br/><small>ToDo: trigger rsync job on success</small>"
 	write_page "<br/><small>ToDo: link these pages from navigation</small>"
-	write_page "<br/><small>ToDo: make buildinfo-pool links work with server side redirects</small>"
 	write_page "</p>"
 	write_page "<pre>"
 	cat $DUMMY_FILE | tr -d ' '  | sed -E "s/([^|]*)(.*)/<a href=\"https:\/\/tracker.debian.org\/\1\">\1<\/a> <a href=\"https:\/\/packages.debian.org\/$SUITE\/\1\">binaries (\2)<\/a> <a href=\"https:\/\/buildinfos.debian.net\/\1\">.buildinfo<\/a>/g" | tr -d '|' >> $PAGE
