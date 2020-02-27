@@ -54,7 +54,7 @@ create_buildinfo_page() {
 	write_page "</pre>"
 	# the end
 	write_page_footer
-	publish_page debian/$ARCH
+	publish_page debian/$SUITE/$ARCH
 }
 
 #
