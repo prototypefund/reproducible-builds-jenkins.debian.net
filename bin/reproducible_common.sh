@@ -584,8 +584,8 @@ publish_page() {
 		TARGET=$PAGE
 	else
 		TARGET=$1/$PAGE
-		mkdir -p $TARGET
 	fi
+	mkdir -p $(dirname $BASE/$TARGET)
 	echo "$(date -u) - $(cp -v $PAGE $BASE/$TARGET)"
 	rm $PAGE
 	echo "$(date -u) - enjoy $REPRODUCIBLE_URL/$TARGET"
