@@ -13,6 +13,6 @@ common_init "$@"
 
 # rsync builtin-pho results from pb7
 for ARCH in ${ARCHS} ; do
-	sync -av profitbricks-build7-amd64.debian.net:/var/lib/jenkins/builtin-pho-html/debian/$ARCH $BASE/debian/$ARCH/
+	rsync -av profitbricks-build7-amd64.debian.net:/var/lib/jenkins/builtin-pho-html/debian/$ARCH $BASE/debian/$ARCH/
 done
 
