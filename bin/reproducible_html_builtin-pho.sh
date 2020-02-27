@@ -24,20 +24,20 @@ query_builtin_pho_db() {
 	fi
  
 	psql buildinfo <<EOF > $DUMMY_FILE
-select distinct p.source,p.version
-from
+SELECT DISTINCT p.source,p.version
+FROM
       binary_packages p
-where
+WHERE
       p.suite='$SUITE'
-except
-        select p.source,p.version
-from binary_packages p, builds b
-where
+EXCEPT
+      SELECT p.source,p.version
+FROM binary_packages p, builds b
+WHERE
       b.source=p.source
-      and p.version=b.version
-      and ( (b.arch_all and p.arch='all') or
-            (b.arch_$ARCH and p.arch='$ARCH') )
-order by source
+      AND p.version=b.version
+      AND ( (b.arch_all AND p.arch='all') OR
+            (b.arch_$ARCH AND p.arch='$ARCH') )
+ORDER BY source
 EOF
 }
 
