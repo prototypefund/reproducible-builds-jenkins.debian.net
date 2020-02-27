@@ -50,7 +50,7 @@ create_buildinfo_page() {
 	write_page_header $VIEW "Overview of various statistics about .buildinfo files for $SUITE/$ARCH"
 	query_builtin_pho_db
 	write_page "<pre>"
-	cat $DUMMY_FILE > $PAGE
+	cat $DUMMY_FILE >> $PAGE
 	write_page "</pre>"
 	# the end
 	write_page_footer
