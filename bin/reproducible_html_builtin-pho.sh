@@ -58,7 +58,7 @@ create_buildinfo_page() {
 	mkdir -p ~jenkins/builtin-pho-html/debian/$SUITE/$ARCH
 	echo "$(date -u) - $(cp -v $PAGE ~jenkins/builtin-pho-html/debian/$SUITE/$ARCH/)"
 	rm $PAGE
-	echo "$(date -u) - enjoy $REPRODUCIBLE_URL/debian/$SUITE/$ARCH/$PAGE"
+	echo "$(date -u) - $REPRODUCIBLE_URL/debian/$SUITE/$ARCH/$PAGE will be updated (via rsync) in 10min roughly..."
 }
 
 #
