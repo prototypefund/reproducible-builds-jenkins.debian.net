@@ -12,7 +12,7 @@ common_init "$@"
 . /srv/jenkins/bin/reproducible_common.sh
 
 # rsync builtin-pho results from pb7
-for ARCH in ${ARCHS} ; do
-	rsync -av profitbricks-build7-amd64.debian.net:/var/lib/jenkins/builtin-pho-html/debian/$ARCH/ $BASE/debian/$ARCH/
+for SUITE in ${SUITES} ; do
+	rsync -av profitbricks-build7-amd64.debian.net:/var/lib/jenkins/builtin-pho-html/debian/$SUITE/ $BASE/debian/$SUITE/
 done
 
