@@ -54,7 +54,11 @@ create_buildinfo_page() {
 	write_page "</pre>"
 	# the end
 	write_page_footer
-	publish_page debian/$SUITE/$ARCH
+	# copy to ~jenkins/builtin-pho-html/ for rsyncing to jenkins with another job
+	mkdir -p ~jenkins/builtin-pho-html/debian/$SUITE/$ARCH
+	echo "$(date -u) - $(cp -v $PAGE ~jenkins/builtin-pho-html/debian/$SUITE/$ARCH/)"
+	rm $PAGE
+	echo "$(date -u) - enjoy $REPRODUCIBLE_URL/debian/$SUITE/$ARCH/$PAGE"
 }
 
 #

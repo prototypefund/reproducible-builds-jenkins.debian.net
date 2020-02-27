@@ -536,6 +536,9 @@
                     my_timed: '10 * * * *'
                     my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
                     my_hname: 'profitbricks7'
+                - 'html_rsync_builtin-pho':
+                    my_description: 'rsync HTML pages for stats about .buildinfo from pb7 to jenkins.'
+                    my_timed: '15 * * * *'
                 - 'html_pkg_sets':
                     my_description: 'Generate HTML results (package sets with graphs) for reproducible builds.'
                     my_timed: '45 */2 * * *'
