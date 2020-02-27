@@ -108,7 +108,7 @@ elif [[ "$*" =~ ^rsync\ --server\ .*\ \.\ /var/lib/jenkins/userContent/reproduci
 	# FIXME: limit this to pb7
 	exec rsync --server "$3" . "$5" ; croak "Exec failed";
 elif [[ "$*" =~ ^rsync\ --server\ --sender\ .*\ \.\ /var/lib/jenkins/builtin-pho-html/debian/.* ]] ; then
-	exec rsync --server "$4" . "$6" ; croak "Exec failed";
+	exec rsync --server --sender "$4" . "$6" ; croak "Exec failed";
 elif [[ "$*" =~ ^mkdir\ -p\ /srv/d-i/isos.* ]] ; then
 	exec mkdir -p "$3"  ; croak "Exec failed";
 elif [[ "$*" =~ ^rm\ -r\ /srv/reproducible-results/tmp.* ]] ; then
