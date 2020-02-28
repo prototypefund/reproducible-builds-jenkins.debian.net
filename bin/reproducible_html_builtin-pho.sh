@@ -56,6 +56,8 @@ create_buildinfo_page() {
 	write_page "<br/><small>ToDo: graph that count</small>"
 	write_page "<br/><small>ToDo: trigger rsync job on success</small>"
 	write_page "<br/><small>ToDo: link these pages from navigation</small>"
+	write_page "<br/><small>ToDo: add information about number of existing .buildinfo files</small>"
+	write_page "<br/><small>ToDo: create page(s) with links to existing .buildinfo files</small>"
 	write_page "</p>"
 	write_page "<pre>"
 	cat $DUMMY_FILE | tr -d ' '  | sed -E "s/([^|]*)(.*)/<a href=\"https:\/\/tracker.debian.org\/\1\">\1<\/a> <a href=\"https:\/\/packages.debian.org\/$SUITE\/\1\">binaries (\2)<\/a> <a href=\"https:\/\/buildinfos.debian.net\/\1\">.buildinfo<\/a>/g" | tr -d '|' >> $PAGE
