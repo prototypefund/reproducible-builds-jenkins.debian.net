@@ -126,6 +126,18 @@
           all tested packages
         </a>
       </li>
+      <li {{#buildinfos}}class='active'{{/buildinfos}}>
+        <a href="/debian/{{suite}}/{{arch}}/index_buildinfos.html"
+           title="Show all packages with .buildinfo files">
+          packages with .buildinfo files
+        </a>
+      </li>
+      <li {{#no_buildinfos}}class='active'{{/no_buildinfos}}>
+        <a href="/debian/{{suite}}/{{arch}}/index_no_buildinfos.html"
+           title="Show all packages without .buildinfo files">
+          packages without .buildinfo files
+        </a>
+      </li>
     </ul>
   </li>
   <li {{#scheduled}}class='active'{{/scheduled}}>

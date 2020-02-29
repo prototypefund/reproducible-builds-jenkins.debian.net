@@ -18,7 +18,7 @@ common_init "$@"
 
 # ToDo:
 # - create graphs
-# - link these pages from navigation
+# - import the data from the database on pb7 into the one on jenkins
 
 get_localsuite() {
 	if [ "$SUITE" = "unstable" ] ; then
