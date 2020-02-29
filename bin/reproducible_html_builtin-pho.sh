@@ -16,18 +16,22 @@ common_init "$@"
 # on which this relies.
 #
 
-query_builtin_pho_db() {
+get_localsuite() {
 	if [ "$SUITE" = "unstable" ] ; then
-		local SUITE="sid"
+		LOCALSUITE="sid"
 	else
-		local SUITE=$SUITE
+		LOCALSUITE=$SUITE
 	fi
+}
+
+query_builtin_pho_db() {
+	get_localsuite
 	psql --tuples-only buildinfo <<EOF > $DUMMY_FILE
 SELECT DISTINCT p.source,p.version
 FROM
       binary_packages p
 WHERE
-      p.suite='$SUITE'
+      p.suite='$LOCALSUITE'
 EXCEPT
       SELECT p.source,p.version
 FROM binary_packages p, builds b
@@ -75,6 +79,7 @@ create_buildinfo_page() {
 # main
 #
 DUMMY_FILE=$(mktemp -t reproducible-builtin-pho-XXXXXXXX)
+LOCALSUITE=""
 for ARCH in ${ARCHS} ; do
 	for SUITE in $SUITES ; do
 		create_buildinfo_page
