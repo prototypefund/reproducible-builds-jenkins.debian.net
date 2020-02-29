@@ -166,17 +166,17 @@ set_icon() {
 	case "$1" in
 		reproducible)		ICON=weather-clear.png
 					;;
-		FTBR)		ICON=weather-showers-scattered.png
+		FTBR)			ICON=weather-showers-scattered.png
 					STATE_TARGET_NAME="FTBR"
 					;;
 		FTBFS)			ICON=weather-storm.png
 					;;
-		timeout)	ICON=Current_event_clock.png ;;
+		timeout)		ICON=Current_event_clock.png ;;
 		depwait)		ICON=weather-snow.png
 					;;
 		E404)			ICON=weather-severe-alert.png
 					;;
-		NFU)		ICON=weather-few-clouds-night.png
+		NFU)			ICON=weather-few-clouds-night.png
 					STATE_TARGET_NAME="NFU"
 					;;
 		blacklisted)		ICON=error.png
