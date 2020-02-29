@@ -29,7 +29,7 @@ get_localsuite() {
 }
 
 query_builtin_pho_db_hits() {
-	psql --tuples-only buildinfo <<EOF > $HITS
+	psql --tuples-only buildinfo <<EOF > $RAW_HITS
 SELECT DISTINCT p.source,p.version
 FROM
       binary_packages p, builds b
@@ -41,10 +41,12 @@ WHERE
             (b.arch_$ARCH AND p.arch='$ARCH') )
 ORDER BY source
 EOF
+	cat $RAW_HITS | tr -d ' '  | sed -E "s/([^|]*)(.*)/<a href=\"https:\/\/tracker.debian.org\/\1\">\1<\/a> <a href=\"https:\/\/packages.debian.org\/$SUITE\/\1\">binaries (\2)<\/a> <a href=\"https:\/\/buildinfos.debian.net\/\1\">.buildinfo<\/a>/g" | tr -d '|' > $HTML_HITS
+	HITS=$(cat $RAW_HITS | wc -l)
 }
 
 query_builtin_pho_db_misses() {
-	psql --tuples-only buildinfo <<EOF > $MISSES
+	psql --tuples-only buildinfo <<EOF > $RAW_MISSES
 SELECT DISTINCT p.source,p.version
 FROM
       binary_packages p
@@ -60,6 +62,8 @@ WHERE
             (b.arch_$ARCH AND p.arch='$ARCH') )
 ORDER BY source
 EOF
+	cat $RAW_MISSES | tr -d ' '  | sed -E "s/([^|]*)(.*)/<a href=\"https:\/\/tracker.debian.org\/\1\">\1<\/a> <a href=\"https:\/\/packages.debian.org\/$SUITE\/\1\">binaries (\2)<\/a> <a href=\"https:\/\/buildinfos.debian.net\/\1\">.buildinfo<\/a>/g" | tr -d '|' > $HTML_MISSES
+	MISSES=$(cat $RAW_MISSES | wc -l)
 }
 
 #
@@ -71,11 +75,10 @@ create_buildinfos_page() {
 	echo "$(date -u) - starting to write $PAGE page for $SUITE/$ARCH."
 	write_page_header $VIEW "Overview of .buildinfo files for $SUITE/$ARCH"
 	write_page "<p>"
-	cat $HITS | wc -l >> $PAGE
-	write_page "sources with .buildinfo files found:"
-	write_page "<br/><small>(While we also know about $(cat $MISSES | wc -l >> $PAGE) sources without .buildinfo files in $SUITE/$ARCH.)</small></p>"
+	write_page "$HITS sources with .buildinfo files found:"
+	write_page "<br/><small>(While we also know about $MISSES sources without .buildinfo files in $SUITE/$ARCH.)</small></p>"
 	write_page "<pre>"
-	cat $HITS | tr -d ' '  | sed -E "s/([^|]*)(.*)/<a href=\"https:\/\/tracker.debian.org\/\1\">\1<\/a> <a href=\"https:\/\/packages.debian.org\/$SUITE\/\1\">binaries (\2)<\/a> <a href=\"https:\/\/buildinfos.debian.net\/\1\">.buildinfo<\/a>/g" | tr -d '|' >> $PAGE
+	cat $HTML_HITS >> $PAGE
 	write_page "</pre>"
 	# the end
 	write_page_footer
@@ -95,11 +98,10 @@ create_no_buildinfos_page() {
 	echo "$(date -u) - starting to write $PAGE page for $SUITE/$ARCH."
 	write_page_header $VIEW "Overview of missing .buildinfo files for $SUITE/$ARCH"
 	write_page "<p>"
-	cat $MISSES | wc -l >> $PAGE
-	write_page "sources without .buildinfo files found:"
-	write_page "<br/><small>(While we also know about $(cat $HITS | wc -l >> $PAGE) sources with .buildinfo files in $SUITE/$ARCH.)</small></p>"
+	write_page "$MISSES sources without .buildinfo files found:"
+	write_page "<br/><small>(While we also know about $HITS sources with .buildinfo files in $SUITE/$ARCH.)</small></p>"
 	write_page "<pre>"
-	cat $MISSES | tr -d ' '  | sed -E "s/([^|]*)(.*)/<a href=\"https:\/\/tracker.debian.org\/\1\">\1<\/a> <a href=\"https:\/\/packages.debian.org\/$SUITE\/\1\">binaries (\2)<\/a> <a href=\"https:\/\/buildinfos.debian.net\/\1\">.buildinfo<\/a>/g" | tr -d '|' >> $PAGE
+	cat $HTML_MISSES >> $PAGE
 	write_page "</pre>"
 	# the end
 	write_page_footer
@@ -113,8 +115,12 @@ create_no_buildinfos_page() {
 #
 # main
 #
-HITS=$(mktemp -t reproducible-builtin-pho-XXXXXXXX)
-MISSES=$(mktemp -t reproducible-builtin-pho-XXXXXXXX)
+RAW_HITS=$(mktemp -t reproducible-builtin-pho-XXXXXXXX)
+RAW_MISSES=$(mktemp -t reproducible-builtin-pho-XXXXXXXX)
+HTML_HITS=$(mktemp -t reproducible-builtin-pho-XXXXXXXX)
+HTML_MISSES=$(mktemp -t reproducible-builtin-pho-XXXXXXXX)
+HITS=0
+MISSES=0
 LOCALSUITE=""
 for ARCH in ${ARCHS} ; do
 	for SUITE in $SUITES ; do
@@ -125,4 +131,4 @@ for ARCH in ${ARCHS} ; do
 		create_no_buildinfos_page
 	done
 done
-rm -f $HITS $MISSES
+rm -f $RAW_HITS $RAW_MISSES $HTML_HITS $HTML_MISSES
