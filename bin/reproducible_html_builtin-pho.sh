@@ -76,7 +76,6 @@ create_buildinfo_page() {
 	cat $DUMMY_FILE | wc -l >> $PAGE
 	write_page "packages without .buildinfo files in $SUITE/$ARCH:"
 	write_page "<br/><small>ToDo: graph that count</small>"
-	write_page "<br/><small>ToDo: trigger rsync job on success</small>"
 	write_page "<br/><small>ToDo: link these pages from navigation</small>"
 	write_page "<br/><small>ToDo: create page(s) with links to existing .buildinfo files</small>"
 	write_page "</p>"

@@ -531,14 +531,6 @@
                 - 'html_dashboard':
                     my_description: 'Generate HTML dashboard with graphs for reproducible builds.'
                     my_timed: '1 * * * *'
-                - 'html_builtin-pho':
-                    my_description: 'Generate HTML pages for stats about .buildinfo files based on builtin-pho data.'
-                    my_timed: '10 * * * *'
-                    my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
-                    my_hname: 'profitbricks7'
-                - 'html_rsync_builtin-pho':
-                    my_description: 'rsync HTML pages for stats about .buildinfo from pb7 to jenkins.'
-                    my_timed: '15 * * * *'
                 - 'html_pkg_sets':
                     my_description: 'Generate HTML results (package sets with graphs) for reproducible builds.'
                     my_timed: '45 */2 * * *'
@@ -564,6 +556,9 @@
                     my_shellext: ".py"
                 - 'html_rsync_remote_results':
                     my_description: 'rsync the results from some remote jobs to the main node.'
+                    my_timed: ''
+                - 'html_rsync_builtin-pho':
+                    my_description: 'rsync HTML pages for stats about .buildinfo from pb7 to jenkins.'
                     my_timed: ''
                 - 'html_live_status':
                     my_description: 'Generate an HTML page showing the live status of all builds happening or scheduled by humans.'
@@ -753,6 +748,11 @@
                 - 'netbsd':
                     my_description: 'Rebuild NetBSD (for some archs) twice (with variations) and investigate regarding reproducibility.'
                     my_timed: '42 16 * * 1,3,5'
+                - 'html_builtin-pho':
+                    my_description: 'Generate HTML pages for stats about .buildinfo files based on builtin-pho data.'
+                    my_timed: '10 * * * *'
+                    my_hname: 'profitbricks7'
+                    my_trigger: 'reproducible_html_rsync_builtin-pho'
             my_trigger: 'reproducible_html_rsync_remote_results'
             my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
             my_hname: 'osuosl171'
