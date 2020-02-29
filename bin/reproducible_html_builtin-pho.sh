@@ -19,6 +19,8 @@ common_init "$@"
 # ToDo:
 # - create graphs
 # - import the data from the database on pb7 into the one on jenkins
+# - fix off by one error
+# - include data for stretch and experimental
 
 get_localsuite() {
 	if [ "$SUITE" = "unstable" ] ; then

@@ -222,6 +222,8 @@ write_page_header() {
 		|| [ "$1" = "repositories" ] \
 		|| [ "$1" = "variations" ] \
 		|| [ "$1" = "suite_arch_stats" ] \
+		|| [ "$1" = "no_buildinfos" ] \
+		|| [ "$1" = "buildinfos" ] \
 		|| [ "$1" = "bugs" ] \
 		|| [ "$1" = "nodes_health" ] \
 		|| [ "$1" = "job_health" ] \
@@ -232,6 +234,13 @@ write_page_header() {
 		displayed_page="\"$1\": \"true\""
 	else
 		displayed_page=''
+	fi
+
+	if [ "$1" = "no_buildinfos" ] \
+		|| [ "$1" = "buildinfos" ] ; then
+		suite_arch_nav_template="\"suite_arch_nav_template\": \"/debian/{{suite}}/{{arch}}/index_$1.html\""
+	else
+		suite_arch_nav_template=''
 	fi
 
 	# Create json for suite links (a list of objects)
@@ -286,6 +295,9 @@ write_page_header() {
 	fi
 	if [[ ! -z $include_pkgset_link ]] ; then
 		context+=", $include_pkgset_link"
+	fi
+	if [[ ! -z $suite_arch_nav_template ]] ; then
+		context+=", $suite_arch_nav_template"
 	fi
 	context+="}"
 
