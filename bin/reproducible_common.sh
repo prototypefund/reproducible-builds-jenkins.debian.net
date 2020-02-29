@@ -225,8 +225,10 @@ write_page_header() {
 		|| [ "$1" = "bugs" ] \
 		|| [ "$1" = "nodes_health" ] \
 		|| [ "$1" = "job_health" ] \
+		|| [ "$1" = "nodes_daily_graphs" ] \
 		|| [ "$1" = "nodes_weekly_graphs" ] \
-		|| [ "$1" = "nodes_daily_graphs" ] ; then
+		|| [ "$1" = "nodes_monthly_graphs" ] \
+		|| [ "$1" = "nodes_yeary_graphs" ] ; then
 		displayed_page="\"$1\": \"true\""
 	else
 		displayed_page=''
