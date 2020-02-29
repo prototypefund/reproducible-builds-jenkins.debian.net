@@ -16,6 +16,10 @@ common_init "$@"
 # on which this relies.
 #
 
+# ToDo:
+# - create graphs
+# - link these pages from navigation
+
 get_localsuite() {
 	if [ "$SUITE" = "unstable" ] ; then
 		LOCALSUITE="sid"
@@ -25,8 +29,7 @@ get_localsuite() {
 }
 
 query_builtin_pho_db_hits() {
-	get_localsuite
-	psql --tuples-only buildinfo <<EOF > $DUMMY_FILE
+	psql --tuples-only buildinfo <<EOF > $HITS
 SELECT DISTINCT p.source,p.version
 FROM
       binary_packages p, builds b
@@ -41,8 +44,7 @@ EOF
 }
 
 query_builtin_pho_db_misses() {
-	get_localsuite
-	psql --tuples-only buildinfo <<EOF > $DUMMY_FILE
+	psql --tuples-only buildinfo <<EOF > $MISSES
 SELECT DISTINCT p.source,p.version
 FROM
       binary_packages p
@@ -63,24 +65,43 @@ EOF
 #
 # create buildinfo stats page
 #
-create_buildinfo_page() {
-	VIEW=buildinfo
+create_buildinfos_page() {
+	VIEW=buildinfos
+	PAGE=index_${VIEW}.html
+	echo "$(date -u) - starting to write $PAGE page for $SUITE/$ARCH."
+	write_page_header $VIEW "Overview of .buildinfo files for $SUITE/$ARCH"
+	write_page "<p>"
+	cat $HITS | wc -l >> $PAGE
+	write_page "packages with .buildinfo files found. "
+	cat $MISSES | wc -l >> $PAGE
+	write_page "packages without .buildinfo files in $SUITE/$ARCH:</p>"
+	write_page "<pre>"
+	cat $HITS | tr -d ' '  | sed -E "s/([^|]*)(.*)/<a href=\"https:\/\/tracker.debian.org\/\1\">\1<\/a> <a href=\"https:\/\/packages.debian.org\/$SUITE\/\1\">binaries (\2)<\/a> <a href=\"https:\/\/buildinfos.debian.net\/\1\">.buildinfo<\/a>/g" | tr -d '|' >> $PAGE
+	write_page "</pre>"
+	# the end
+	write_page_footer
+	# copy to ~jenkins/builtin-pho-html/ for rsyncing to jenkins with another job
+	mkdir -p ~jenkins/builtin-pho-html/debian/$SUITE/$ARCH
+	echo "$(date -u) - $(cp -v $PAGE ~jenkins/builtin-pho-html/debian/$SUITE/$ARCH/)"
+	rm $PAGE
+	echo "$(date -u) - $REPRODUCIBLE_URL/debian/$SUITE/$ARCH/$PAGE will be updated (via rsync) after this job succeeded..."
+}
+
+#
+# create no buildinfo stats page
+#
+create_no_buildinfos_page() {
+	VIEW=no_buildinfos
 	PAGE=index_${VIEW}.html
 	echo "$(date -u) - starting to write $PAGE page for $SUITE/$ARCH."
 	write_page_header $VIEW "Overview of missing .buildinfo files for $SUITE/$ARCH"
 	write_page "<p>"
-	query_builtin_pho_db_hits
-	cat $DUMMY_FILE | wc -l >> $PAGE
+	cat $HITS | wc -l >> $PAGE
 	write_page "packages with .buildinfo files found. "
-	query_builtin_pho_db_misses
-	cat $DUMMY_FILE | wc -l >> $PAGE
-	write_page "packages without .buildinfo files in $SUITE/$ARCH:"
-	write_page "<br/><small>ToDo: graph that count</small>"
-	write_page "<br/><small>ToDo: link these pages from navigation</small>"
-	write_page "<br/><small>ToDo: create page(s) with links to existing .buildinfo files</small>"
-	write_page "</p>"
+	cat $MISSES | wc -l >> $PAGE
+	write_page "packages without .buildinfo files in $SUITE/$ARCH:</p>"
 	write_page "<pre>"
-	cat $DUMMY_FILE | tr -d ' '  | sed -E "s/([^|]*)(.*)/<a href=\"https:\/\/tracker.debian.org\/\1\">\1<\/a> <a href=\"https:\/\/packages.debian.org\/$SUITE\/\1\">binaries (\2)<\/a> <a href=\"https:\/\/buildinfos.debian.net\/\1\">.buildinfo<\/a>/g" | tr -d '|' >> $PAGE
+	cat $MISSES | tr -d ' '  | sed -E "s/([^|]*)(.*)/<a href=\"https:\/\/tracker.debian.org\/\1\">\1<\/a> <a href=\"https:\/\/packages.debian.org\/$SUITE\/\1\">binaries (\2)<\/a> <a href=\"https:\/\/buildinfos.debian.net\/\1\">.buildinfo<\/a>/g" | tr -d '|' >> $PAGE
 	write_page "</pre>"
 	# the end
 	write_page_footer
@@ -94,11 +115,16 @@ create_buildinfo_page() {
 #
 # main
 #
-DUMMY_FILE=$(mktemp -t reproducible-builtin-pho-XXXXXXXX)
+HITS=$(mktemp -t reproducible-builtin-pho-XXXXXXXX)
+MISSES=$(mktemp -t reproducible-builtin-pho-XXXXXXXX)
 LOCALSUITE=""
 for ARCH in ${ARCHS} ; do
 	for SUITE in $SUITES ; do
-		create_buildinfo_page
+		get_localsuite
+		query_builtin_pho_db_hits
+		query_builtin_pho_db_misses
+		create_buildinfos_page
+		create_no_buildinfos_page
 	done
 done
-rm -f $DUMMY_FILE
+rm -f $HITS $MISSES
