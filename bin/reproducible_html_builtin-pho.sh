@@ -24,7 +24,23 @@ get_localsuite() {
 	fi
 }
 
-query_builtin_pho_db() {
+query_builtin_pho_db_hits() {
+	get_localsuite
+	psql --tuples-only buildinfo <<EOF > $DUMMY_FILE
+SELECT DISTINCT p.source,p.version
+FROM
+      binary_packages p, builds b
+WHERE
+      p.suite='$LOCALSUITE'
+      AND b.source=p.source
+      AND p.version=b.version
+      AND ( (b.arch_all AND p.arch='all') OR
+            (b.arch_$ARCH AND p.arch='$ARCH') )
+ORDER BY source
+EOF
+}
+
+query_builtin_pho_db_misses() {
 	get_localsuite
 	psql --tuples-only buildinfo <<EOF > $DUMMY_FILE
 SELECT DISTINCT p.source,p.version
@@ -50,17 +66,18 @@ EOF
 create_buildinfo_page() {
 	VIEW=buildinfo
 	PAGE=index_${VIEW}.html
-	echo "$(date -u) - querying builtin-pho database for $SUITE/$ARCH."
-	query_builtin_pho_db
 	echo "$(date -u) - starting to write $PAGE page for $SUITE/$ARCH."
 	write_page_header $VIEW "Overview of missing .buildinfo files for $SUITE/$ARCH"
 	write_page "<p>"
+	query_builtin_pho_db_hits
+	cat $DUMMY_FILE | wc -l >> $PAGE
+	write_page "packages with .buildinfo files found. "
+	query_builtin_pho_db_misses
 	cat $DUMMY_FILE | wc -l >> $PAGE
 	write_page "packages without .buildinfo files in $SUITE/$ARCH:"
 	write_page "<br/><small>ToDo: graph that count</small>"
 	write_page "<br/><small>ToDo: trigger rsync job on success</small>"
 	write_page "<br/><small>ToDo: link these pages from navigation</small>"
-	write_page "<br/><small>ToDo: add information about number of existing .buildinfo files</small>"
 	write_page "<br/><small>ToDo: create page(s) with links to existing .buildinfo files</small>"
 	write_page "</p>"
 	write_page "<pre>"
