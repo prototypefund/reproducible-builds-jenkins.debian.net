@@ -72,9 +72,8 @@ create_buildinfos_page() {
 	write_page_header $VIEW "Overview of .buildinfo files for $SUITE/$ARCH"
 	write_page "<p>"
 	cat $HITS | wc -l >> $PAGE
-	write_page "packages with .buildinfo files found. "
-	cat $MISSES | wc -l >> $PAGE
-	write_page "packages without .buildinfo files in $SUITE/$ARCH:</p>"
+	write_page "sources with .buildinfo files found:"
+	write_page "<br/><small>(While we also know about $(cat $MISSES | wc -l >> $PAGE) sources without .buildinfo files in $SUITE/$ARCH.)</small></p>"
 	write_page "<pre>"
 	cat $HITS | tr -d ' '  | sed -E "s/([^|]*)(.*)/<a href=\"https:\/\/tracker.debian.org\/\1\">\1<\/a> <a href=\"https:\/\/packages.debian.org\/$SUITE\/\1\">binaries (\2)<\/a> <a href=\"https:\/\/buildinfos.debian.net\/\1\">.buildinfo<\/a>/g" | tr -d '|' >> $PAGE
 	write_page "</pre>"
@@ -96,10 +95,9 @@ create_no_buildinfos_page() {
 	echo "$(date -u) - starting to write $PAGE page for $SUITE/$ARCH."
 	write_page_header $VIEW "Overview of missing .buildinfo files for $SUITE/$ARCH"
 	write_page "<p>"
-	cat $HITS | wc -l >> $PAGE
-	write_page "packages with .buildinfo files found. "
 	cat $MISSES | wc -l >> $PAGE
-	write_page "packages without .buildinfo files in $SUITE/$ARCH:</p>"
+	write_page "sources without .buildinfo files found:"
+	write_page "<br/><small>(While we also know about $(cat $HITS | wc -l >> $PAGE) sources with .buildinfo files in $SUITE/$ARCH.)</small></p>"
 	write_page "<pre>"
 	cat $MISSES | tr -d ' '  | sed -E "s/([^|]*)(.*)/<a href=\"https:\/\/tracker.debian.org\/\1\">\1<\/a> <a href=\"https:\/\/packages.debian.org\/$SUITE\/\1\">binaries (\2)<\/a> <a href=\"https:\/\/buildinfos.debian.net\/\1\">.buildinfo<\/a>/g" | tr -d '|' >> $PAGE
 	write_page "</pre>"
