@@ -28,6 +28,11 @@ get_localsuite() {
 	fi
 }
 
+sed_db_output_to_html() {
+	cat $1 | tr -d ' '  | sed -E "s/([^|]*)(.*)/<a href=\"https:\/\/tracker.debian.org\/\1\">\1<\/a> <a href=\"https:\/\/packages.debian.org\/$SUITE\/\1\">binaries (\2)<\/a> <a href=\"https:\/\/buildinfos.debian.net\/\1\">.buildinfo<\/a>/g" | tr -d '|' > $2
+
+}
+
 query_builtin_pho_db_hits() {
 	psql --tuples-only buildinfo <<EOF > $RAW_HITS
 SELECT DISTINCT p.source,p.version
@@ -41,7 +46,7 @@ WHERE
             (b.arch_$ARCH AND p.arch='$ARCH') )
 ORDER BY source
 EOF
-	cat $RAW_HITS | tr -d ' '  | sed -E "s/([^|]*)(.*)/<a href=\"https:\/\/tracker.debian.org\/\1\">\1<\/a> <a href=\"https:\/\/packages.debian.org\/$SUITE\/\1\">binaries (\2)<\/a> <a href=\"https:\/\/buildinfos.debian.net\/\1\">.buildinfo<\/a>/g" | tr -d '|' > $HTML_HITS
+	sed_db_output_to_html $RAW_HITS $HTML_HITS
 	HITS=$(cat $RAW_HITS | wc -l)
 }
 
@@ -62,7 +67,7 @@ WHERE
             (b.arch_$ARCH AND p.arch='$ARCH') )
 ORDER BY source
 EOF
-	cat $RAW_MISSES | tr -d ' '  | sed -E "s/([^|]*)(.*)/<a href=\"https:\/\/tracker.debian.org\/\1\">\1<\/a> <a href=\"https:\/\/packages.debian.org\/$SUITE\/\1\">binaries (\2)<\/a> <a href=\"https:\/\/buildinfos.debian.net\/\1\">.buildinfo<\/a>/g" | tr -d '|' > $HTML_MISSES
+	sed_db_output_to_html $RAW_MISSES $HTML_MISSES
 	MISSES=$(cat $RAW_MISSES | wc -l)
 }
 
@@ -84,7 +89,7 @@ create_buildinfos_page() {
 	write_page_footer
 	# copy to ~jenkins/builtin-pho-html/ for rsyncing to jenkins with another job
 	mkdir -p ~jenkins/builtin-pho-html/debian/$SUITE/$ARCH
-	echo "$(date -u) - $(cp -v $PAGE ~jenkins/builtin-pho-html/debian/$SUITE/$ARCH/)"
+	cp $PAGE ~jenkins/builtin-pho-html/debian/$SUITE/$ARCH/
 	rm $PAGE
 	echo "$(date -u) - $REPRODUCIBLE_URL/debian/$SUITE/$ARCH/$PAGE will be updated (via rsync) after this job succeeded..."
 }
@@ -107,7 +112,7 @@ create_no_buildinfos_page() {
 	write_page_footer
 	# copy to ~jenkins/builtin-pho-html/ for rsyncing to jenkins with another job
 	mkdir -p ~jenkins/builtin-pho-html/debian/$SUITE/$ARCH
-	echo "$(date -u) - $(cp -v $PAGE ~jenkins/builtin-pho-html/debian/$SUITE/$ARCH/)"
+	cp -v $PAGE ~jenkins/builtin-pho-html/debian/$SUITE/$ARCH/
 	rm $PAGE
 	echo "$(date -u) - $REPRODUCIBLE_URL/debian/$SUITE/$ARCH/$PAGE will be updated (via rsync) after this job succeeded..."
 }
