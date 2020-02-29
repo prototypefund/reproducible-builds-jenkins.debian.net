@@ -19,7 +19,6 @@ common_init "$@"
 # ToDo:
 # - create graphs
 # - import the data from the database on pb7 into the one on jenkins
-# - fix off by one error
 # - include data for stretch and experimental
 
 get_localsuite() {
@@ -30,7 +29,10 @@ get_localsuite() {
 	fi
 }
 
-sed_db_output_to_html() {
+convert_db_output_to_html() {
+	# remove empty lines
+	sed -i '/^$/d' $1
+	# use sed to turn psql output into html
 	cat $1 | tr -d ' '  | sed -E "s/([^|]*)(.*)/<a href=\"https:\/\/tracker.debian.org\/\1\">\1<\/a> <a href=\"https:\/\/packages.debian.org\/$SUITE\/\1\">binaries (\2)<\/a> <a href=\"https:\/\/buildinfos.debian.net\/\1\">.buildinfo<\/a>/g" | tr -d '|' > $2
 
 }
@@ -48,7 +50,7 @@ WHERE
             (b.arch_$ARCH AND p.arch='$ARCH') )
 ORDER BY source
 EOF
-	sed_db_output_to_html $RAW_HITS $HTML_HITS
+	convert_db_output_to_html $RAW_HITS $HTML_HITS
 	HITS=$(cat $RAW_HITS | wc -l)
 }
 
@@ -69,7 +71,7 @@ WHERE
             (b.arch_$ARCH AND p.arch='$ARCH') )
 ORDER BY source
 EOF
-	sed_db_output_to_html $RAW_MISSES $HTML_MISSES
+	convert_db_output_to_html $RAW_MISSES $HTML_MISSES
 	MISSES=$(cat $RAW_MISSES | wc -l)
 }
 
