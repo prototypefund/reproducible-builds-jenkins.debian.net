@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 
 # Copyright © 2018 Mattia Rizzolo <mattia@debian.org>
+# Copyright © 2020 Chris Lamb <lamby@debian.org>
 # Licensed under GPL-2
 
 import os
@@ -75,6 +76,22 @@ def validate(form):
 
 
 def main(args):
+    # Require POST HTTP method; GET requests should be idempotent
+    if os.environ.get('REQUEST_METHOD', 'GET') != 'POST':
+        print('Status: 200 OK')
+        print('Content-Type: text/html; charset="utf-8"')
+        print()
+        print('<html><form method="POST"><button type="submit">')
+        print('Reschedule build(s) of {} on {}/{}'.format(
+            ', '.join(form.getlist('pkg')),
+            ', '.join(form.getlist('suite')),
+            ', '.join(form.getlist('architecture')),
+        ))
+        print('</button</form><pre>')
+        debug_info()
+        print('</pre></html>')
+        sys.exit()
+
     processes = []
     failure = False
     for s in form.getlist('suite'):
