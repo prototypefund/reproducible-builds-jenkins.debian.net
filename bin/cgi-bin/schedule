@@ -87,7 +87,7 @@ def main(args):
             ', '.join(form.getlist('suite')),
             ', '.join(form.getlist('architecture')),
         ))
-        print('</button</form><p>')
+        print('</button></form><p>')
         debug_info()
         print('</p></html>')
         sys.exit()
