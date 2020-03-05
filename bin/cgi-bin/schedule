@@ -87,9 +87,9 @@ def main(args):
             ', '.join(form.getlist('suite')),
             ', '.join(form.getlist('architecture')),
         ))
-        print('</button</form><pre>')
+        print('</button</form><p>')
         debug_info()
-        print('</pre></html>')
+        print('</p></html>')
         sys.exit()
 
     processes = []
