@@ -82,7 +82,7 @@ def main(args):
         print('Content-Type: text/html; charset="utf-8"')
         print()
         print('<html><form method="POST"><button type="submit">')
-        print('Reschedule build(s) of {} on {}/{}'.format(
+        print('<em>Click here</em> to reschedule build(s) of {} on {}/{}'.format(
             ', '.join(form.getlist('pkg')),
             ', '.join(form.getlist('suite')),
             ', '.join(form.getlist('architecture')),
