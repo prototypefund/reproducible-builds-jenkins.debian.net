@@ -87,10 +87,6 @@
 
 - job-template:
     defaults: piuparts-tests
-    name: '{name}_testsuite_stretch'
-
-- job-template:
-    defaults: piuparts-tests
     name: '{name}_testsuite_buster'
 
 - job-template:
@@ -100,10 +96,6 @@
 - job-template:
     defaults: piuparts-tests
     name: '{name}_testsuite_sid'
-
-- job-template:
-    defaults: piuparts-builds
-    name: '{name}_build_stretch'
 
 - job-template:
     defaults: piuparts-builds
@@ -134,14 +126,9 @@
             my_description: 'run testsuite from piuparts develop branch on buster.'
             my_trigger: 'piuparts_testsuite_buster'
         - '{name}_testsuite_buster':
-            my_distro: 'buster'
+            my_distro: 'buster backports'
             my_shell: 'make check'
-            my_description: 'run testsuite from piuparts develop branch on buster.'
-            my_trigger: 'piuparts_testsuite_stretch'
-        - '{name}_testsuite_stretch':
-            my_distro: 'stretch backports'
-            my_shell: 'make check'
-            my_description: 'run testsuite from piuparts develop branch on stretch with backports enabled.'
+            my_description: 'run testsuite from piuparts develop branch on buster with backports enabled.'
             my_trigger: ''
         - '{name}_build_sid':
             my_distro: 'sid'
@@ -154,12 +141,8 @@
             my_description: 'build the piuparts develop branch on buster.'
             my_trigger: 'piuparts_build_buster'
         - '{name}_build_buster':
-            my_distro: 'buster'
+            my_distro: 'buster backports'
             my_shell: 'debuild -uc -us'
-            my_description: 'build the piuparts develop branch on buster.'
-            my_trigger: 'piuparts_build_stretch'
-        - '{name}_build_stretch':
-            my_distro: 'stretch backports'
-            my_shell: 'debuild -uc -us'
-            my_description: 'build the piuparts develop branch on stretch with backports enabled.'
+            my_description: 'build the piuparts develop branch on buster with backports enabled.'
+            my_trigger: ''
 
