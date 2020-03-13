@@ -1,7 +1,7 @@
 #!/bin/bash
 # vim: set noexpandtab:
 
-# Copyright 2014-2019 Holger Levsen <holger@layer-acht.org>
+# Copyright 2014-2020 Holger Levsen <holger@layer-acht.org>
 #         © 2015-2018 Mattia Rizzolo <mattia@mapreri.org>
 # released under the GPLv2
 
@@ -37,7 +37,7 @@ show_fstab_and_mounts() {
 }
 
 #
-# we fail hard
+# fail hard
 #
 set -e
 
@@ -99,7 +99,7 @@ real_year=2020
 year=$(date +%Y)
 if "$NODE_RUN_IN_THE_FUTURE"; then
 	if [ "$year" -eq "$real_year" ]; then
-		echo "Warning, today we came back to the present: $(date -u)."
+		echo "Warning, today $HOSTNAME came back to the present: $(date -u)."
 		DIRTY=true
 	elif [ "$year" -eq "$((real_year + 1))" ] || \
 		 [ "$year" -eq "$((real_year + 2))" -a "$(date +%m)" -eq 1 ]; then
@@ -110,7 +110,7 @@ if "$NODE_RUN_IN_THE_FUTURE"; then
 	fi
 else
 	if [ "$year" -eq "$real_year" ]; then
-		echo "This host is running in the present as it should: $(date -u)."
+		echo "Host is running in the present as it should: $(date -u)."
 	else
 		echo "Warning, today is the wrong present: $(date -u)."
 		DIRTY=true
@@ -133,9 +133,9 @@ if [ "$(lsb_release -si)" = "Ubuntu" ] ; then
 fi
 
 #
-# check if we are running the latest kernel
+# check if the latest kernel is running
 #
-echo "$(date -u) - testing whether we are running the latest kernel..."
+echo "$(date -u) - testing whether the latest kernel is running..."
 if ! dsa-check-running-kernel ; then
 	echo "Warning: running kernel needs attention!"  # string checked with logparse
 	DIRTY=true
