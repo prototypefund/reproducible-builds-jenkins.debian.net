@@ -183,41 +183,41 @@ index 00000000..46778406
 ++++ b/abuild.in
 +@@ -1579,7 +1579,11 @@ create_apks() {
 + 		# normalize timestamps
-+ 		find . -exec touch -h -d "@\$SOURCE_DATE_EPOCH" {} +
++ 		find . -exec touch -h -d "@$SOURCE_DATE_EPOCH" {} +
 + 
-+-		tar --xattrs -f - -c "\$@" | abuild-tar --hash | \$gzip -9 >"\$dir"/data.tar.gz
++-		tar --xattrs -f - -c "$@" | abuild-tar --hash | $gzip -9 >"$dir"/data.tar.gz
 ++		tar --xattrs \
 ++			--format=posix \
 ++			--pax-option=exthdr.name=%d/PaxHeaders/%f,atime:=0,ctime:=0 \
-++			--mtime="@\${SOURCE_DATE_EPOCH}" \
-++			-f - -c "\$@" | abuild-tar --hash | \$gzip -n -9 >"\$dir"/data.tar.gz
+++			--mtime="@${SOURCE_DATE_EPOCH}" \
+++			-f - -c "$@" | abuild-tar --hash | $gzip -n -9 >"$dir"/data.tar.gz
 + 
 + 		msg "Create checksum..."
 + 		# append the hash for data.tar.gz
 +@@ -1589,8 +1593,12 @@ create_apks() {
 + 
 + 		# control.tar.gz
-+ 		cd "\$dir"
-+-		tar -f - -c \$(cat "\$dir"/.metafiles) | abuild-tar --cut \
-+-			| \$gzip -9 > control.tar.gz
++ 		cd "$dir"
++-		tar -f - -c $(cat "$dir"/.metafiles) | abuild-tar --cut \
++-			| $gzip -9 > control.tar.gz
 ++		tar \
 ++			--format=posix \
 ++			--pax-option=exthdr.name=%d/PaxHeaders/%f,atime:=0,ctime:=0 \
-++			--mtime="@\${SOURCE_DATE_EPOCH}" \
-++			-f - -c \$(cat "\$dir"/.metafiles) | abuild-tar --cut \
-++			| \$gzip -n -9 > control.tar.gz
+++			--mtime="@${SOURCE_DATE_EPOCH}" \
+++			-f - -c $(cat "$dir"/.metafiles) | abuild-tar --cut \
+++			| $gzip -n -9 > control.tar.gz
 + 		abuild-sign -q control.tar.gz || exit 1
 + 
-+ 		msg "Create \$apk"
++ 		msg "Create $apk"
 +@@ -1724,7 +1732,7 @@ default_doc() {
 + 			fi
 + 		done
 + 
-+-		[ \$islink -eq 0 ] && \$gzip -9 "\$name"
-++		[ \$islink -eq 0 ] && \$gzip -n -9 "\$name"
++-		[ $islink -eq 0 ] && $gzip -9 "$name"
+++		[ $islink -eq 0 ] && $gzip -n -9 "$name"
 + 	done
 + 
-+ 	rm -f "\$subpkgdir/usr/share/info/dir"
++ 	rm -f "$subpkgdir/usr/share/info/dir"
 +
 +commit 80ca5bbd896146c885403835061aaccad13cbebb
 +Author: kpcyrd <git@rxv.cc>
@@ -233,18 +233,18 @@ index 00000000..46778406
 + 		fi
 + 
 + 		# normalize timestamps
-+-		find . -exec touch -h -d "@\$SOURCE_DATE_EPOCH" {} +
-++		find "\$@" -exec touch -h -d "@\$SOURCE_DATE_EPOCH" {} +
++-		find . -exec touch -h -d "@$SOURCE_DATE_EPOCH" {} +
+++		find "$@" -exec touch -h -d "@$SOURCE_DATE_EPOCH" {} +
 + 
 +-		tar --xattrs \
 ++		# explicitly sort package content
-++		find "\$@" -print0 | LC_ALL=C sort -z | tar --xattrs \
+++		find "$@" -print0 | LC_ALL=C sort -z | tar --xattrs \
 + 			--format=posix \
 + 			--pax-option=exthdr.name=%d/PaxHeaders/%f,atime:=0,ctime:=0 \
-+ 			--mtime="@\${SOURCE_DATE_EPOCH}" \
-+-			-f - -c "\$@" | abuild-tar --hash | \$gzip -n -9 >"\$dir"/data.tar.gz
++ 			--mtime="@${SOURCE_DATE_EPOCH}" \
++-			-f - -c "$@" | abuild-tar --hash | $gzip -n -9 >"$dir"/data.tar.gz
 ++			--no-recursion --null -T - \
-++			-f - -c | abuild-tar --hash | \$gzip -n -9 >"\$dir"/data.tar.gz
+++			-f - -c | abuild-tar --hash | $gzip -n -9 >"$dir"/data.tar.gz
 + 
 + 		msg "Create checksum..."
 + 		# append the hash for data.tar.gz
@@ -254,12 +254,12 @@ index c8b9a30a..d311e609 100644
 +++ b/main/abuild/APKBUILD
 @@ -22,6 +22,7 @@ options="suid !check"
  pkggroups="abuild"
- source="https://dev.alpinelinux.org/archive/abuild/abuild-\$_ver.tar.xz
+ source="https://dev.alpinelinux.org/archive/abuild/abuild-$_ver.tar.xz
  	0001-abuild-fix-applying-patches-from-https.patch
 +	0002-repro.patch
  	"
  
- builddir="\$srcdir/\$pkgname-\$_ver"
+ builddir="$srcdir/$pkgname-$_ver"
 @@ -70,4 +71,5 @@ _rootbld() {
  }
  
