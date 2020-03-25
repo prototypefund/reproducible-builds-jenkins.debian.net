@@ -146,7 +146,7 @@ except KeyError:
     print('Status: 496 SSL Certificate Required')
     print('Content-Type: text/plain; charset="utf-8"')
     print()
-    print('You need to authenticate with a Debian SSO certificate to use this service')
+    print('You need to authenticate with a Debian SSO certificate to use this service.')
 else:
     try:
         form = cgi.FieldStorage()
