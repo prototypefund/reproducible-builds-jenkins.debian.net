@@ -14,8 +14,10 @@
 # Also see https://pad.sfconservancy.org/p/rb-build-nodes-keep
 
 ## temporary problems
+# filesystem corruption on rootfs
 odxu4c-armhf-rb.debian.net
-jtk1a-armhf-rb.debian.net
+# boot media not detected from u-boot
+cbxi4a-armhf-rb.debian.net
 
 # Down here nodes are automatically added by the maintenance job when they have
 # been failing their health check for too long.
