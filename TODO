@@ -25,7 +25,6 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 * run all bash scripts with set -u and set -o pipefail: http://redsymbol.net/articles/unofficial-bash-strict-mode/
 * teach bin/chroot-*.sh and bin/d-i_build.sh how to nicely deal with network problems… (as both reproducible_build.sh and schroot-create.sh do)
 * use static IP for the nodes (h01ger)
-* use mmdebstrap (or vmdebootstrap) where applicable
 * this is outdated with salsa: add to all git post-receive hooks: `curl -s "https://jenkins.debian.net/git/notifyCommit?url=https://salsa.debian.org/installer-team/$(basename $PWD .git)"` which will trigger jenkins to pull (check) that git repo…
 * salsa stuff:
 ** triggers for d-i repos are missing
@@ -82,8 +81,7 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 
 ==== proper backup
 
-* postponed til we run on .debian.org
-* this needs to be backed up:
+* FIXME: this needs to be backed up:
 * '/var/lib/jenkins/jobs' (the results - the configs are in .git)
 * '/var/lib/munin'
 * '/var/log'
@@ -102,7 +100,7 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 === jenkins-job-builder related
 
 * investigate whether its possible nowadays to let it delete jobs which were removed.. nope. But there is a Makefile now which will find zombies…
-* yaml should be refactored, lots of duplication in there. this seems to be helpful: http://en.wikipedia.org/wiki/YAML#References (pyyaml which jenkins-job-builder uses supports them)
+* yaml could be refactored, lots of duplication in there. this seems to be helpful: http://en.wikipedia.org/wiki/YAML#References (pyyaml which jenkins-job-builder uses supports them)
 
 === debugging job runs should be made easy
 
@@ -121,6 +119,7 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 
 * install cbfstool in diffoscope schroots: (useful for openwrt+coreboot)
 ** 'git clone --recursive http://review.coreboot.org/p/coreboot.git ; cd coreboot/util/cbfstool ; make ; cp cbfstool $TARGET/usr/local/bin/'
+** there's also an ITP (and sponsor request) for src:coreboot which has cbfstool in a coreboot-utils package
 
 * See https://wiki.debian.org/ReproducibleBuilds/TestsToDo for the tests.reproducible-builds.org related ToDo list.
 
