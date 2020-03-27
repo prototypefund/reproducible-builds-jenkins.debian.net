@@ -121,8 +121,6 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 ** 'git clone --recursive http://review.coreboot.org/p/coreboot.git ; cd coreboot/util/cbfstool ; make ; cp cbfstool $TARGET/usr/local/bin/'
 ** there's also an ITP (and sponsor request) for src:coreboot which has cbfstool in a coreboot-utils package
 
-* See https://wiki.debian.org/ReproducibleBuilds/TestsToDo for the tests.reproducible-builds.org related ToDo list.
-
 === Debian reproducible builds
 
 * get rid off "set -x # # to debug diffoscoppe/schroot problems"
