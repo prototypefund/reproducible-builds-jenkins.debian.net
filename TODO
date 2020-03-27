@@ -185,7 +185,6 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 ** variation of $TERM and $COLUMN (and maybe $LINES), unset in the first run, set to "linux" and "77" (and maybe "42") in the 2nd run.
 *** actually TERM is set to "linux" by default already, COLUMN is unset
 ** vary order of $PATH entries, see #844500
-** have redundant $PATH entries (`/bin:/bin:…`)
 ** vary the length of the build paths (/build/first vs /build/second), only once the unreproducibilities caused by different build paths are solved
 ** vary the init system: sysv and systemd
 ** vary SSD/HDD on i386?
@@ -194,10 +193,10 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 
 ==== reproducible Debian armhf
 
+* make systems send mail, use port 465
 * rename all the nodes from $HOSTNAME to $HOSTNAME-armhf-rb ?
 ** we could get rid of the links in jenkins.d.n.git/hosts/
 ** we could simplefy .../hosts/*/etc/munin/munin-node.conf
-* make systems send mail, use port 465
 
 ==== reproducible Debian arm64
 
@@ -234,7 +233,6 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 * libreboot ships images, verify those?
 * explain status in plain english
 * use disorderfs for 2nd build
-
 
 ==== reproducible OpenWrt
 
@@ -303,7 +301,6 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
  and ask the web design team for help via filing a ticket as described there
 * '/var/cache/mock/fedora-23-x86_64/' has three subdirs we need to handle (put on tmpfs, monitor size, clean sometimes): ccache, root_cache and  yum_cache
 * '/var/lib/mock' should be put on /srv/workspace aka tmpfs
-* dont hardcode 23 in reproducible_setup_mock.sh and …build_rpm.sh
 * setup script:
 ** mock --clean just uninstalls the chroot but it'll still be rebuilt next time using cache.  you can delete the caches from /var/cache/mock/ or touch the mock config
 ** is /etc/yum/repos.d/fedora.repo really needed?
@@ -451,10 +448,6 @@ Now just run `guix package -i vim` as a non-root user. If it runs
 correctly, Guix is ready for work.
 ----
 
-==== reproducible...
-
-* openembedded.org!
-* Gentoo?
 
 === qa.debian.org*
 
@@ -486,21 +479,9 @@ correctly, Guix is ready for work.
 * install all the tasks "instead", thats rather easy nowadays as all task packages are called "task*".
 ** make sure this includes blends
 
-=== g-i-installation_*
-
-Development of these tests has stopped. In future we will use https://openqa.debian.net instead.
-
 
 == Further ideas...
 
-
-=== rebuild sid completly on demand
-
-* nthykier wants to be able to rebuild all of sid to test how changes to eg lintian, debhelper, cdbs, gcc affect the archive:
-* h01ger> | nthykier: so a.) rebuild everything from sid plus custom repo. b.) option to only rebuild a subset, like all rdepends or all packages build-depending on something
-* h01ger> | and c.) only build once, not continously and d.) enable more cores+ram on demand to build faster
-
-* have a job to trigger such a rebuild on AWS?
 
 == Debian Packaging related
 
