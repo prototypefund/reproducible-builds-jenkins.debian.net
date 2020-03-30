@@ -61,22 +61,25 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 <Ramereth> we currently have it running all the time on all physical nodes
 ----
 
-=== Debian rebuilder
+=== Debian rebuilder 'thing'
 
 * prototype only dealing with bullseye and amd64 (and arch all packages)
-** this is true for the rebuilder part, but .buildinfo files for all Debian architectures should be tracked in the db
+** we'll leave out the problem of 'trust' here quite entirely. that's why it's called a Debian rebuilder 'thing', to explore technical feasibility, ductaping our way ahead, keeping our motto 'to allow anyone to independently verify...' in mind.
+** patch debrebuild? or rather, ship local copy, rb-debrebuild
+* run jenkins job on pb7 (=buildinfos.d.n), which triggers builds on osuosl173 and stores the results on pb7
+** keep data in postgresql|sqlite on pb7
+** export data as .json via https
+** table with these fields:
+*** src-pkg, binary-pkg, sha1 of .deb on ftp.d.o, sha1 of .buildinfo file (signed), sha1 of .buildinfo file (unsigned or signature stripped), signature type, name of .buildinfo file (from ftp.d.o)
+*** and either architecture of .deb or filename of .deb (as that includes the architecture)
+* another job to import data on jenkins (into postgresql)
+* schedule/trigger rebuilds on osuosl173, using data in postgresql|sqlite on pb7
+** scheduler unclear, we'll first try to rebuild everthing in current sid (and bullseye and buster eventually) once, and then, once we've done this, we want to do this X times again. (and there will be ftbfs etc, not causing rebuilds immediatly.)
+** rebuild amd64 only at first (but arm soon after), but .buildinfo files for all Debian architectures should be tracked in the db
 ** also treat the base suite archive and its security, update and backports archives seperatly
 *** store hash of processed Packages file and only process a Packages file if it has an unknown hash -> good for suites which are not updated often
 *** ignore security archive as those .buildinfo files are not published yet (#862538)
 ** good examples: piuparts (arch and any), d-e-i (udeb), d-e-c (all only), emacs (epoch)
-* run jenkins job on pb7 (=buildinfos.d.n)
-* keep data in sqlite on pb7
-** table shoud have these fields:
-** src-pkg, binary-pkg, sha1 of .deb on ftp.d.o, sha1 of .buildinfo file (signed), sha1 of .buildinfo file (unsigned or signature stripped), signature type, name of .buildinfo file (from ftp.d.o)
-*** and either architecture of .deb or filename of .deb (as that includes the architecture)
-* export data as .json via https
-* import data on jenkins
-* schedule/trigger rebuilds on osuosl173, put data in sqlite on pb7
 
 
 ==== proper backup
