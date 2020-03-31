@@ -161,6 +161,7 @@ fi
 cd $POOLPATH
 LIST=$(mktemp -t poollist.XXXXXXXX)
 find . -type l |sort > $LIST
+sed -i 's#^\./#https://buildinfos.debian.net/buildinfo-pool/#g' $LIST
 chmod 644 $LIST
 mv $LIST ../buildinfo-pool.list
 
