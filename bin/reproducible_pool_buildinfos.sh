@@ -1,7 +1,7 @@
 #!/bin/bash
 # vim: set noexpandtab:
 
-# Copyright 2019 Holger Levsen <holger@layer-acht.org>
+# Copyright 2019-2020 Holger Levsen <holger@layer-acht.org>
 # released under the GPLv2
 
 ###################################################################
@@ -146,6 +146,13 @@ else
 	DAY="$(date -u -d '1 day ago' +%d)"
 	do_day
 fi
+
+# update https://buildinfos.debian.net/buildinfo-pool.list
+cd $POOLPATH
+LIST=$(mktemp -t poollist.XXXXXXXX)
+find . -type l |sort > $LIST
+chmod 644 $LIST
+mv $LIST ../buildinfo-pool.list
 
 if [ -s $PROBLEMS ] ; then
 	echo "Problems found, please investigate:"
