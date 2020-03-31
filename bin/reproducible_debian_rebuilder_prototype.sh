@@ -22,9 +22,16 @@ URLPATH='https://buildinfos.debian.net/buildinfo-pool/b/bash'
 
 # use gpg here to workaround #955050 in devscripts: debrebuild: please accepted signed .buildinfo files
 curl $URLPATH/$FILE | gpg > $FILE
+echo
+echo this is $URLPATH/$FILE with gpg signature stripped:
+cat $FILE
+
+# prepare rebuild command
+DEBREBUILD=$(mktemp -t debrebuild.XXXXXXXX)
+echo now trying to rebuild bash...
+rb-debrebuild $FILE | tee $DEBREBUILD
 
 # to be continued...
 
-
 # the end
-rm $FILE	
+rm -f $FILE $DEBREBUILD
