@@ -15,18 +15,22 @@
 ###								###
 ###################################################################
 
+# basic assumptions
 set -e
 BASEPATH=~jenkins/userContent/reproducible/debian
 FTPPATH=$BASEPATH/ftp-master.debian.org/buildinfo
 POOLPATH=$BASEPATH/buildinfo-pool
-
-PROBLEMS=$(mktemp -t poolize.XXXXXXXX)
 mkdir -p $POOLPATH
 
+# just in case
+PROBLEMS=$(mktemp -t poolize.XXXXXXXX)
+
+# defined for today (in UTC), might be overridden later
 YEAR="$(date -u +%Y)"
 MONTH="$(date -u +%m)"
 DAY="$(date -u +%d)"
 
+# process all .buildinfo files for a given day
 do_day(){
 	COUNTER=0
 	MONTHPATH=$FTPPATH/$YEAR/$MONTH
@@ -123,6 +127,7 @@ do_day(){
 	cd ..
 }
 
+# this takes a long time and is not run by the jenkins job but manually
 loop_through_all(){
 	for YEAR in $(seq 2016 2019) ; do
 		for MONTH in $(seq -w 01 12) ; do
@@ -133,14 +138,18 @@ loop_through_all(){
 	done
 }
 
+# main
 if [ -n "$1" ] && [ -z "$2" ] ; then
+	# only run manually: do all days
 	loop_through_all
 elif [ -n "$1" ] && [ -n "$2" ] && [ -n "$3" ] ; then
+	# only run manually: do a specific day only
 	YEAR=$1
 	MONTH=$2
 	DAY=$3
 	do_day
 else
+	# normal operation: do today and do yesterday
 	do_day
 	YEAR="$(date -u -d '1 day ago' +%Y)"
 	MONTH="$(date -u -d '1 day ago' +%m)"
@@ -155,6 +164,7 @@ find . -type l |sort > $LIST
 chmod 644 $LIST
 mv $LIST ../buildinfo-pool.list
 
+# output problems from main structure above
 if [ -s $PROBLEMS ] ; then
 	echo "Problems found, please investigate:"
 	echo
