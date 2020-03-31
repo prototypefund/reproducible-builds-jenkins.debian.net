@@ -822,6 +822,10 @@
                     my_description: 'Link files for buildinfos.debian.net from date to pool structure'
                     my_hname: 'profitbricks7'
                     my_timed: '10 */2 * * *'
+                - 'debian_rebuilder_prototype':
+                    my_description: 'Prototype rebuilder for Debian'
+                    my_hname: 'profitbricks7'
+                    my_timed: '42 23 1 1 *'
             my_shell: '/srv/jenkins/bin/jenkins_master_wrapper.sh'
             my_hname: ''
             my_timeout: '1440'
