@@ -74,6 +74,7 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 ** we'll leave out the problem of 'trust' here quite entirely. that's why it's called a Debian rebuilder 'thing', to explore technical feasibility, ductaping our way ahead, keeping our motto 'to allow anyone to independently verify...' in mind.
 * run jenkins job on pb7 (=buildinfos.d.n), which triggers builds on osuosl173 and stores the results on pb7
 ** keep data in postgresql|sqlite on pb7
+*** pb7 also has the builtin-pho db so it seems natural to join them...
 ** export data as .json via https
 ** table with these fields:
 *** src-pkg, binary-pkg, sha1 of .deb on ftp.d.o, sha1 of .buildinfo file (signed), sha1 of .buildinfo file (unsigned or signature stripped), signature type, name of .buildinfo file (from ftp.d.o)
