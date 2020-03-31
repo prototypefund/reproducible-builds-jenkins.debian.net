@@ -64,6 +64,8 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 === Debian rebuilder 'thing'
 
 * prototype only dealing with bullseye and amd64 (and arch all packages)
+** the goal is to create json export to integrate in tracker.d.o and/or packages.d.o
+** another goal (implied in the one above) is create Debian's POV on the 'practical' reproducibility status of the packages distributed via ftp.d.o. - so far tests.r-b.o/debian/ only shows the 'theoretical' reproducibility of Debian packages.
 ** we'll leave out the problem of 'trust' here quite entirely. that's why it's called a Debian rebuilder 'thing', to explore technical feasibility, ductaping our way ahead, keeping our motto 'to allow anyone to independently verify...' in mind.
 ** patch debrebuild? or rather, ship local copy, rb-debrebuild
 * run jenkins job on pb7 (=buildinfos.d.n), which triggers builds on osuosl173 and stores the results on pb7
