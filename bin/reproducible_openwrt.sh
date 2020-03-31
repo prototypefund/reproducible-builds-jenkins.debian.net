@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Copyright 2014-2019 Holger Levsen <holger@layer-acht.org>
+# Copyright 2014-2020 Holger Levsen <holger@layer-acht.org>
 #         © 2015 Reiner Herrmann <reiner@reiner-h.de>
 #           2016-2018 Alexander Couzens <lynxis@fe80.eu>
 # released under the GPLv2
@@ -705,7 +705,7 @@ write_openwrt_page_header
 write_page_intro OpenWrt
 write_page "     <p>"
 write_page "     <ul>"
-for i in ar71xx brcm47xx kirkwood lantiq mediatek omap ramips sunxi tegra x86 ; do
+for i in ath97 ar71xx brcm47xx kirkwood lantiq mediatek omap ramips sunxi tegra x86 ; do
 	write_page "            <li><a href="openwrt_$i.html">$i</a></li>"
 done
 write_page "     </ul>"
