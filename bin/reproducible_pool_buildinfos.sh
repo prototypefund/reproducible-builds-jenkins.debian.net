@@ -7,10 +7,11 @@
 ###################################################################
 ###								###
 ### /srv/ftp-master.debian.org/buildinfo/ on coccia.debian.org	###
-### is not a pool structure, but rather by year/month/day	###
-### this scripts creates links turning this into an alternate	###
-### pool structure.						###
-### Both are accessable via https://buildinfos.debian.net	###
+### provides .buildinfo files in a year/month/day structure,	###
+### but there is no pool structure - and it's not public.       ###
+### this scripts uses links to provide an alternative pool	###
+### structure and makes them both accessible on			###
+### https://buildinfos.debian.net				###
 ###								###
 ###################################################################
 
