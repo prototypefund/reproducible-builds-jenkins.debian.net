@@ -30,14 +30,24 @@ output_echo(){
 	echo "$(date -u) - $1"
 	echo
 }
+
+set_poolpath() {
+	# FIXME: dedummy this
+	POOLPATH="b"
+}
+
 # main
 # basically describe the steps to use debrebuild today...
 PKG='bash'
-FILE='bash_5.0-6_amd64.buildinfo'
-URLPATH='https://buildinfos.debian.net/buildinfo-pool/b/bash'
+VERSION='5.0-6'
+FILE="${PKG}_${VERSION}_amd64.buildinfo"
+POOLPATH="" 	# declared as a global variable
+set_poolpath	# set it properly
+URLPATH="https://buildinfos.debian.net/buildinfo-pool/$POOLPATH/$PKG"
 
 # use gpg here to workaround #955050 in devscripts: debrebuild: please accepted signed .buildinfo files
 output_echo "downloading $URLPATH/$FILE"
+# FIXME: this will fail with unsigned .buildinfo files
 curl $URLPATH/$FILE | gpg > $FILE || true # we cannot validate the signature and we don't care
 echo
 output_echo  "$URLPATH/$FILE with gpg signature stripped:"
