@@ -51,7 +51,7 @@ echo now trying to rebuild $PKG...
 SBUILD=$(tail -1 $DEBREBUILD | sed 's# sbuild # sbuild --no-run-lintian #')
 
 # actually run sbuild
-$SBUILD
+eval $SBUILD
 
 # to be continued...
 
