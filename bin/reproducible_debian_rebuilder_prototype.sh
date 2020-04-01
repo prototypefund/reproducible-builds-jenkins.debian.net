@@ -15,6 +15,7 @@
 ### we'll leave out the problem of 'trust' here quite entirely. that's why it's called	###
 ### a Debian rebuilder 'thing', to explore technical feasibility, ductaping our way	###
 ### ahead, keeping our motto 'to allow anyone to independently verify...' in mind.	###
+###											###
 ###########################################################################################
 
 DEBUG=false
@@ -23,13 +24,11 @@ common_init "$@"
 
 # common code for tests.reproducible-builds.org
 . /srv/jenkins/bin/reproducible_common.sh
-
 set -e
 
 # main
-
 # basically describe the steps to use debrebuild today...
-
+PKG='bash'
 FILE='bash_5.0-6_amd64.buildinfo'
 URLPATH='https://buildinfos.debian.net/buildinfo-pool/b/bash'
 
@@ -41,8 +40,9 @@ cat $FILE
 
 # prepare rebuild command
 DEBREBUILD=$(mktemp -t debrebuild.XXXXXXXX)
-echo now trying to rebuild bash...
-rb-debrebuild $FILE | tee $DEBREBUILD
+echo now trying to rebuild $PKG...
+# workaround until devscripts 2.20.3 is released
+/srv/jenkins/bin/rb-debrebuild $FILE | tee $DEBREBUILD
 
 # to be continued...
 
