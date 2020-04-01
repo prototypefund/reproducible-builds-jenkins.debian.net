@@ -44,6 +44,9 @@ echo now trying to rebuild $PKG...
 # workaround until devscripts 2.20.3 is released
 /srv/jenkins/bin/rb-debrebuild $FILE | tee $DEBREBUILD
 
+# workaround #955123 in devscripts: debrebuild: please provide --sbuild-output-only option
+SBUILD=$(tail -1 $DEBREBUILD)
+
 # to be continued...
 
 # the end
