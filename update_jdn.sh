@@ -321,13 +321,15 @@ if [ -f /etc/debian_version ] ; then
 		esac
 		# install stuff for bremner's builtin-pho stuff
 		# and building html pages there too
+		# and for the rebuilder 'thing' too
 		case $HOSTNAME in
 			profitbricks-build7-a*) DEBS="$DEBS
 				postgresql
 				postgresql-11-debversion
 				python3-pystache
 				python3-apt
-				python3-psycopg2" ;;
+				python3-psycopg2
+				sbuild" ;;
 			*) ;;
 		esac
 		# install squid / apache2 on a few nodes only
