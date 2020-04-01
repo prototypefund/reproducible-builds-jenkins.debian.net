@@ -71,11 +71,11 @@ output_echo "trying to debrebuild $PKG..."
 # (parsing the debrebuild output to gather this information is way to fragile)
 DISTRO=bullseye
 output_echo "preparing chroot for $DISTRO"
-sudo sbuild-createchroot $DISTRO /srv/schroots/debrebuild-$DISTRO-amd64 http://deb.debian.org/debian
+sudo sbuild-createchroot $DISTRO /schroots/debrebuild-$DISTRO-amd64 http://deb.debian.org/debian
 
 # I'm a bit surprised this was needed, as debrebuild has code for this...
 # FIXME: a bug should probably be file for this as well
-echo 'Acquire::Check-Valid-Until "false";' | sudo tee /srv/schroots/debrebuild-$DISTRO-amd64/etc/apt/apt.conf.d/23-rebuild
+echo 'Acquire::Check-Valid-Until "false";' | sudo tee /schroots/debrebuild-$DISTRO-amd64/etc/apt/apt.conf.d/23-rebuild
 
 # actually run sbuild
 # - workaround #955123 in devscripts: debrebuild: please provide --sbuild-output-only option
