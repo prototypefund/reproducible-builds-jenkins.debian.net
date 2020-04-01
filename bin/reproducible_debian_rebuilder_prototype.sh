@@ -71,7 +71,8 @@ output_echo "trying to debrebuild $PKG"
 # (parsing the debrebuild output to gather this information is way to fragile)
 DISTRO=bullseye
 output_echo "preparing chroot for $DISTRO"
-sudo sbuild-createchroot $DISTRO /schroots/debrebuild-$DISTRO-amd64 http://deb.debian.org/debian
+# "|| true" is dummy code for regenerating this chroot every other week or so
+sudo sbuild-createchroot $DISTRO /schroots/debrebuild-$DISTRO-amd64 http://deb.debian.org/debian || true
 
 # I'm a bit surprised this was needed, as debrebuild has code for this...
 # FIXME: a bug should probably be file for this as well
