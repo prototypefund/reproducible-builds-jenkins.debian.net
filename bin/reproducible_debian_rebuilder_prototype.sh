@@ -18,7 +18,7 @@
 ###											###
 ###########################################################################################
 
-DEBUG=false
+DEBUG=true
 . /srv/jenkins/bin/common-functions.sh
 common_init "$@"
 
@@ -27,6 +27,7 @@ common_init "$@"
 set -e
 
 output_echo(){
+	echo
 	echo "$(date -u) - $1"
 	echo
 }
@@ -64,8 +65,11 @@ output_echo "trying to debrebuild $PKG..."
 #   - using tail
 # - workaround #955304 in devscripts: debrebuild: suggested sbuild command should use --no-run-lintian
 #   - using sed
-output_echo "trying to debrebuild $PKG..."
+output_echo "trying to re-sbuild $PKG..."
 SBUILD=$(tail -1 $DEBREBUILD | sed 's# sbuild # sbuild --no-run-lintian #')
+output_echo "sbuild is now called as:"
+echo $SBUILD
+echo
 eval $SBUILD
 
 # to be continued...
