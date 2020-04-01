@@ -63,7 +63,7 @@ cat $FILE
 DEBREBUILD=$(mktemp -t debrebuild.XXXXXXXX)
 output_echo "trying to debrebuild $PKG..."
 # workaround until devscripts 2.20.3 is released
-/srv/jenkins/bin/rb-debrebuild $FILE | tee $DEBREBUILD
+/srv/jenkins/bin/rb-debrebuild $FILE 2>&1 | tee $DEBREBUILD
 
 # actually run sbuild
 # - workaround #955123 in devscripts: debrebuild: please provide --sbuild-output-only option
@@ -72,7 +72,7 @@ output_echo "trying to debrebuild $PKG..."
 #   - using sed
 output_echo "trying to re-sbuild $PKG..."
 SBUILD=$(tail -1 $DEBREBUILD | sed 's# sbuild # sbuild --no-run-lintian #')
-output_echo "sbuild is now called as:"
+output_echo "using this sbuild call:"
 echo $SBUILD
 echo
 eval $SBUILD
