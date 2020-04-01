@@ -63,7 +63,7 @@ cp $FILE $FILE.orig
 
 # prepare rebuild command
 DEBREBUILD=$(mktemp -t debrebuild.XXXXXXXX)
-output_echo "trying to debrebuild $PKG..."
+output_echo "trying to debrebuild $PKG"
 # workaround until devscripts 2.20.3 is released
 /srv/jenkins/bin/rb-debrebuild $FILE 2>&1 | tee $DEBREBUILD
 
@@ -76,6 +76,11 @@ sudo sbuild-createchroot $DISTRO /schroots/debrebuild-$DISTRO-amd64 http://deb.d
 # I'm a bit surprised this was needed, as debrebuild has code for this...
 # FIXME: a bug should probably be file for this as well
 echo 'Acquire::Check-Valid-Until "false";' | sudo tee /schroots/debrebuild-$DISTRO-amd64/etc/apt/apt.conf.d/23-rebuild
+
+# I guess I think it would be nice if debrebuild would also do this:
+# FIXME: file another wishlist bug?
+output_echo "fetching source package $PKG"
+dget https://deb.debian.org/debian/pool/main/$POOLPATH/$PKG/${PKG}_5.0-6.dsc
 
 # actually run sbuild
 # - workaround #955123 in devscripts: debrebuild: please provide --sbuild-output-only option
