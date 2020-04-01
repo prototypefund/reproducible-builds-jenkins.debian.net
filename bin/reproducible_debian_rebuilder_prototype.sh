@@ -23,7 +23,7 @@ cat << EOF
 EOF
 
 
-DEBUG=true
+DEBUG=false
 . /srv/jenkins/bin/common-functions.sh
 common_init "$@"
 
