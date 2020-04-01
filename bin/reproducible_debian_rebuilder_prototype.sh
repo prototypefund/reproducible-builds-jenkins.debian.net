@@ -33,14 +33,17 @@ FILE='bash_5.0-6_amd64.buildinfo'
 URLPATH='https://buildinfos.debian.net/buildinfo-pool/b/bash'
 
 # use gpg here to workaround #955050 in devscripts: debrebuild: please accepted signed .buildinfo files
+echo "$(date -u) - downloading $URLPATH/$FILE"
 curl $URLPATH/$FILE | gpg > $FILE || true # we cannot validate the signature and we don't care
 echo
-echo this is $URLPATH/$FILE with gpg signature stripped:
+echo "$(date -u) - $URLPATH/$FILE with gpg signature stripped:"
+echo
 cat $FILE
 
 # prepare rebuild command
 DEBREBUILD=$(mktemp -t debrebuild.XXXXXXXX)
-echo now trying to rebuild $PKG...
+echo "$(date -u) - trying to debrebuild $PKG..."
+echo
 # workaround until devscripts 2.20.3 is released
 /srv/jenkins/bin/rb-debrebuild $FILE | tee $DEBREBUILD
 
@@ -51,6 +54,8 @@ echo now trying to rebuild $PKG...
 SBUILD=$(tail -1 $DEBREBUILD | sed 's# sbuild # sbuild --no-run-lintian #')
 
 # actually run sbuild
+echo "$(date -u) - trying to debrebuild $PKG..."
+echo
 eval $SBUILD
 
 # to be continued...
