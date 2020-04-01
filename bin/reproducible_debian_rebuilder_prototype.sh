@@ -4,6 +4,8 @@
 # Copyright 2020 Holger Levsen <holger@layer-acht.org>
 # released under the GPLv2
 
+cat << EOF
+
 ###########################################################################################
 ###											###
 ### the goal is to create json export to integrate in tracker.d.o and/or packages.d.o	###
@@ -17,6 +19,9 @@
 ### ahead, keeping our motto 'to allow anyone to independently verify...' in mind.	###
 ###											###
 ###########################################################################################
+
+EOF
+
 
 DEBUG=true
 . /srv/jenkins/bin/common-functions.sh
