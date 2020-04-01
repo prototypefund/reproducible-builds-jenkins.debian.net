@@ -26,6 +26,10 @@ common_init "$@"
 . /srv/jenkins/bin/reproducible_common.sh
 set -e
 
+output_echo(){
+	echo "$(date -u) - $1"
+	echo
+}
 # main
 # basically describe the steps to use debrebuild today...
 PKG='bash'
@@ -33,32 +37,29 @@ FILE='bash_5.0-6_amd64.buildinfo'
 URLPATH='https://buildinfos.debian.net/buildinfo-pool/b/bash'
 
 # use gpg here to workaround #955050 in devscripts: debrebuild: please accepted signed .buildinfo files
-echo "$(date -u) - downloading $URLPATH/$FILE"
+output_echo "downloading $URLPATH/$FILE"
 curl $URLPATH/$FILE | gpg > $FILE || true # we cannot validate the signature and we don't care
 echo
-echo "$(date -u) - $URLPATH/$FILE with gpg signature stripped:"
-echo
+output_echo  "$URLPATH/$FILE with gpg signature stripped:"
 cat $FILE
 
 # prepare rebuild command
 DEBREBUILD=$(mktemp -t debrebuild.XXXXXXXX)
-echo "$(date -u) - trying to debrebuild $PKG..."
-echo
+output_echo "trying to debrebuild $PKG..."
 # workaround until devscripts 2.20.3 is released
 /srv/jenkins/bin/rb-debrebuild $FILE | tee $DEBREBUILD
 
-# workaround #955123 in devscripts: debrebuild: please provide --sbuild-output-only option
-# - using tail
-# workaround #955304 in devscripts: debrebuild: suggested sbuild command should use --no-run-lintian
-# - using sed
-SBUILD=$(tail -1 $DEBREBUILD | sed 's# sbuild # sbuild --no-run-lintian #')
-
 # actually run sbuild
-echo "$(date -u) - trying to debrebuild $PKG..."
-echo
+# - workaround #955123 in devscripts: debrebuild: please provide --sbuild-output-only option
+#   - using tail
+# - workaround #955304 in devscripts: debrebuild: suggested sbuild command should use --no-run-lintian
+#   - using sed
+output_echo "trying to debrebuild $PKG..."
+SBUILD=$(tail -1 $DEBREBUILD | sed 's# sbuild # sbuild --no-run-lintian #')
 eval $SBUILD
 
 # to be continued...
 
 # the end
 rm -f $FILE $DEBREBUILD
+output_echo "the end."
