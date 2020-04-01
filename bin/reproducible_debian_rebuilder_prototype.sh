@@ -103,7 +103,14 @@ eval $SBUILD
 output_echo "File artifacts:"
 ls -lart
 output_echo "Diff between .buildinfo files:"
-diff $FILE.orig $FILE
+diff $FILE.orig $FILE || true
+output_echo "Comparing sha256sums of the rebuild .deb files with the ones in the two .buildinfo files:"
+for DEB in $(dcmd ls *.changes) ; do
+	SHASUM=$(sha256sum $DEB | awk '{ print $1 }')
+	echo $SHASUM $DEB
+	grep $SHASUM $FILE.orig || echo $SHASUM not found in $FILE.orig
+	grep $SHASUM $FILE      || echo $SHASUM not found in $FILE
+done
 
 # the end
 rm -f $FILE $DEBREBUILD
