@@ -58,6 +58,8 @@ curl $URLPATH/$FILE | gpg > $FILE || true # we cannot validate the signature and
 echo
 output_echo  "$URLPATH/$FILE with gpg signature stripped:"
 cat $FILE
+# a successful build might overwrite the original .buildinfo file...
+cp $FILE $FILE.orig
 
 # prepare rebuild command
 DEBREBUILD=$(mktemp -t debrebuild.XXXXXXXX)
@@ -87,7 +89,9 @@ echo $SBUILD
 echo
 eval $SBUILD
 
-# to be continued...
+# show what we did/created
+output_echo "File artifacts:"
+ls -lart
 
 # the end
 rm -f $FILE $DEBREBUILD
