@@ -51,6 +51,10 @@ POOLPATH="" 	# declared as a global variable
 set_poolpath	# set it properly
 URLPATH="https://buildinfos.debian.net/buildinfo-pool/$POOLPATH/$PKG"
 
+# hack, should be done better, also with cleanup *after* the job run...
+mkdir $PKG || (rm $PKG -r ; mkdir $PKG)
+cd $PKG
+
 # use gpg here to workaround #955050 in devscripts: debrebuild: please accepted signed .buildinfo files
 output_echo "downloading $URLPATH/$FILE"
 # FIXME: this will fail with unsigned .buildinfo files
@@ -98,6 +102,8 @@ eval $SBUILD
 # show what we did/created
 output_echo "File artifacts:"
 ls -lart
+output_echo "Diff between .buildinfo files:"
+diff $FILE.orig $FILE
 
 # the end
 rm -f $FILE $DEBREBUILD
