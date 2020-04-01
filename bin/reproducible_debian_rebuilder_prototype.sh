@@ -65,6 +65,16 @@ output_echo "trying to debrebuild $PKG..."
 # workaround until devscripts 2.20.3 is released
 /srv/jenkins/bin/rb-debrebuild $FILE 2>&1 | tee $DEBREBUILD
 
+# FIXME: file a bug like '#955123 debrebuild: please provide --sbuild-output-only option' but with --output-only-base-release
+# (parsing the debrebuild output to gather this information is way to fragile)
+DISTRO=bullseye
+output_echo "preparing chroot for $DISTRO"
+sudo sbuild-createchroot $DISTRO /srv/schroots/debrebuild-$DISTRO-amd64 http://deb.debian.org/debian
+
+# I'm a bit surprised this was needed, as debrebuild has code for this...
+# FIXME: a bug should probably be file for this as well
+echo 'Acquire::Check-Valid-Until "false";' | sudo tee /srv/schroots/debrebuild-$DISTRO-amd64/etc/apt/apt.conf.d/23-rebuild
+
 # actually run sbuild
 # - workaround #955123 in devscripts: debrebuild: please provide --sbuild-output-only option
 #   - using tail
