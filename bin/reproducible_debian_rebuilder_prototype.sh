@@ -45,7 +45,13 @@ echo now trying to rebuild $PKG...
 /srv/jenkins/bin/rb-debrebuild $FILE | tee $DEBREBUILD
 
 # workaround #955123 in devscripts: debrebuild: please provide --sbuild-output-only option
-SBUILD=$(tail -1 $DEBREBUILD)
+# - using tail
+# workaround #955304 in devscripts: debrebuild: suggested sbuild command should use --no-run-lintian
+# - using sed
+SBUILD=$(tail -1 $DEBREBUILD | sed 's# sbuild # sbuild --no-run-lintian #')
+
+# actually run sbuild
+$SBUILD
 
 # to be continued...
 
