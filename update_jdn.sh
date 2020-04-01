@@ -163,6 +163,12 @@ users=$(for i in ${!user_host_groups[@]}; do echo ${i%,*} ; done | sort -u)
 	fi
 done
 
+# configure sbuild:
+case $HOSTNAME in
+	profitbricks-build7-a*) sudo sbuild-adduser jenkins ;;
+	*) ;;
+esac
+
 sudo mkdir -p /srv/workspace
 [ -d /srv/schroots ] || sudo mkdir -p /srv/schroots
 [ -h /chroots ] || sudo ln -s /srv/workspace/chroots /chroots
