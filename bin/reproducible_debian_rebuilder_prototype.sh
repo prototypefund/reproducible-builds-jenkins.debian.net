@@ -106,7 +106,7 @@ output_echo "Diff between .buildinfo files:"
 diff $FILE.orig $FILE || true
 output_echo "The following binary packages could be rebuilt bit-by-bit identical to the ones distributed from ftp.debian.org:"
 BADDEBS=""
-for DEB in $(dcmd ls *.changes) ; do
+for DEB in $(dcmd ls *.changes|egrep 'deb$' ) ; do
 	SHASUM=$(sha256sum $DEB | awk '{ print $1 }')
 	if grep $SHASUM $FILE.orig ; then
 		# reproducible, yay!
@@ -118,7 +118,7 @@ done
 if [ -n "$BADDEBS" ] ; then
 	output_echo "Unreproducible binary packages found:"
 	for DEB in $BADDEBS ; do
-		echo "$(egrep '^[a-z0-9]{63} ' $FILE.orig|grep $DEB) from ftp.debian.org"
+		echo "$(egrep '^[a-z0-9]{64} ' $FILE.orig|grep $DEB) from ftp.debian.org"
 		echo "$(sha256sum $DEB) from the current rebuild"
 	done
 fi
