@@ -115,7 +115,7 @@ for DEB in $(dcmd ls *.changes) ; do
 		BADDEBS="$BADDEBS $DEB"
 	fi
 done
-if [-n "$BADDEBS" ] ; then
+if [ -n "$BADDEBS" ] ; then
 	output_echo "Unreproducible binary packages found:"
 	for DEB in $BADDEBS ; do
 		echo "$(egrep '^[a-z0-9]{63} ' $FILE.orig|grep $DEB) from ftp.debian.org"
