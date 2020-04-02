@@ -104,13 +104,24 @@ output_echo "File artifacts:"
 ls -lart
 output_echo "Diff between .buildinfo files:"
 diff $FILE.orig $FILE || true
-output_echo "Comparing sha256sums of the rebuild .deb files with the ones in the two .buildinfo files:"
+output_echo "The following binary packages could be rebuilt bit-by-bit identical to the ones distributed from ftp.debian.org:"
+BADDEBS=""
 for DEB in $(dcmd ls *.changes) ; do
 	SHASUM=$(sha256sum $DEB | awk '{ print $1 }')
-	echo $SHASUM $DEB
-	grep $SHASUM $FILE.orig || echo $SHASUM not found in $FILE.orig
-	grep $SHASUM $FILE      || echo $SHASUM not found in $FILE
+	if $(grep $SHASUM $FILE.orig) ; then
+		# reproducible, yay!
+		:
+	else
+		BADDEBS="$BADDEBS $DEB"
+	fi
 done
+if [-n "$BADDEBS" ] ; then
+	output_echo "Unreproducible binary packages found:"
+	for DEB in $BADDEBS ; do
+		echo "$(egrep '^[a-z0-9]{63} ' $FILE.orig|grep $DEB) from ftp.debian.org"
+		echo "$(sha256sum $DEB) from the current rebuild"
+	done
+fi
 
 # the end
 rm -f $FILE $DEBREBUILD
