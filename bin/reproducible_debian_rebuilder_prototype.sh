@@ -108,7 +108,7 @@ output_echo "The following binary packages could be rebuilt bit-by-bit identical
 BADDEBS=""
 for DEB in $(dcmd ls *.changes) ; do
 	SHASUM=$(sha256sum $DEB | awk '{ print $1 }')
-	if $(grep $SHASUM $FILE.orig) ; then
+	if grep $SHASUM $FILE.orig ; then
 		# reproducible, yay!
 		:
 	else
