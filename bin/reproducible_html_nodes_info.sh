@@ -268,7 +268,7 @@ build_job_health_page() {
 	write_page_header $VIEW "Job health overview"
 	write_page "<p style=\"clear:both;\">"
 	write_page "<table>"
-	for CATEGORY in $(seq 1 ${#FILTER[@]}) ; do
+	for CATEGORY in $(seq 0 $(( ${#FILTER[@]} -1 )) ) ; do
 		write_page "<tr>"
 		for JOB in $(cd ~/jobs ; ls -1d reproducible_* | egrep "${FILTER[$CATEGORY]}" | cut -d '_' -f2- | sort ) ; do
 			SHORTNAME="$(echo $JOB \
