@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Copyright 2012-2019 Holger Levsen <holger@layer-acht.org>
+# Copyright 2012-2020 Holger Levsen <holger@layer-acht.org>
 # released under the GPLv2
 
 DEBUG=false
@@ -159,35 +159,34 @@ build_jenkins_job_health_page() {
 	echo "$(date -u) - starting to write jenkins_job_health page."
 	# these are simple egrep filters. however, if they contain a colon,
 	# the filter is split in two, see $category and $avoid below
-	FILTER[0]="maintenance"
-	FILTER[1]="udd"
-	FILTER[2]="lintian"
-	FILTER[3]="piuparts"
-	FILTER[4]="policy_"
-	FILTER[5]="debsums"
-	FILTER[6]="dpkg"
-	FILTER[7]="transitional"
-	FILTER[8]="edu-packages"
-	FILTER[9]="haskell"
-	FILTER[10]="chroot-installation_sid"
-	FILTER[11]="chroot-installation_bullseye"
-	FILTER[12]="chroot-installation_buster"
-	FILTER[13]="chroot-installation_stretch"
-	FILTER[14]="d-i_overview"
-	FILTER[15]="d-i_manual"
-	FILTER[16]="d-i_build"
-	FILTER[17]="d-i_schroot"
-	FILTER[18]="d-i_:(overview|manual|build|schroot)"
-	FILTER[19]="rebootstrap"
-	FILTER[20]="g-i-installation_debian_jessie:(presentation|rescue)"
-	FILTER[21]="g-i-installation_debian_sid:(presentation|rescue)"
-	FILTER[22]="g-i-installation_.*presentation"
-	FILTER[23]="g-i-installation_.*rescue"
-	FILTER[24]="g-i-installation_debian-edu_stretch"
-	FILTER[25]="g-i-installation_.*hurd"
-	FILTER[26]="debian-archive-keyring"
-	numfilters=${#FILTER[@]}
-	let numfilters-=1	# that's what you get when you start counting from 0
+	FILTER=("maintenance"
+		"udd"
+		"lintian"
+		"piuparts"
+		"policy_"
+		"debsums"
+		"dpkg"
+		"transitional"
+		"edu-packages"
+		"haskell"
+		"chroot-installation_sid"
+		"chroot-installation_bullseye"
+		"chroot-installation_buster"
+		"chroot-installation_stretch"
+		"d-i_overview"
+		"d-i_manual"
+		"d-i_build"
+		"d-i_schroot"
+		"d-i_:(overview|manual|build|schroot)"
+		"rebootstrap"
+		"g-i-installation_debian_jessie:(presentation|rescue)"
+		"g-i-installation_debian_sid:(presentation|rescue)"
+		"g-i-installation_.*presentation"
+		"g-i-installation_.*rescue"
+		"g-i-installation_debian-edu_stretch"
+		"g-i-installation_.*hurd"
+		"debian-archive-keyring")
+	numfilters=$(( ${#FILTER[@]} -1 ))
 	write_page "<!DOCTYPE html><html lang=\"en\"><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">"
 	write_page "<title>Jenkins job health</title/></head><body>"
 	for CATEGORY in $(seq 0 $numfilters) ; do
