@@ -1,7 +1,7 @@
 #!/bin/bash
 # vim: set noexpandtab:
 
-# Copyright © 2015-2019 Holger Levsen <holger@layer-acht.org>
+# Copyright © 2015-2020 Holger Levsen <holger@layer-acht.org>
 #           ©      2018 Mattia Rizzolo <mattia@debian.org>
 # released under the GPLv2
 
@@ -263,7 +263,7 @@ build_job_health_page() {
 	FILTER[9]="(le_netbsd|le_freebsd)"
 	FILTER[10]="fdroid"
 	FILTER[11]="fedora"
-	FILTER[11]="alpine"
+	FILTER[12]="alpine"
 	echo "$(date -u) - starting to write $PAGE page."
 	write_page_header $VIEW "Job health overview"
 	write_page "<p style=\"clear:both;\">"
