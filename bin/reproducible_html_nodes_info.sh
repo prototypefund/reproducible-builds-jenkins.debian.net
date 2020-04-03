@@ -251,24 +251,24 @@ build_job_health_page() {
 	ARCH=amd64
 	SUITE=unstable
 	# these are or-filters used with egrep
-	FILTER[0]="(builds|spec|lfs)"
-	FILTER[1]="html_(all|break|dash|dd|index|live|node|pkg|repo)"
-	FILTER[2]="(reproducible_compare|pool)"
-	FILTER[3]="reproducible_diffoscope"
-	FILTER[4]="(reprotest|strip-nonderminism|disorderfs)"
-	FILTER[5]="(json|le_scheduler|meta|le_nodes|rsync|notes)"
-	FILTER[6]="archlinux"
-	FILTER[7]="coreboot"
-	FILTER[8]="(openwrt)"
-	FILTER[9]="(le_netbsd|le_freebsd)"
-	FILTER[10]="fdroid"
-	FILTER[11]="fedora"
-	FILTER[12]="alpine"
+	FILTER=("(builds|spec|lfs)"
+		"html_(all|break|dash|dd|index|live|node|pkg|repo)"
+		"(reproducible_compare|pool)"
+		"reproducible_diffoscope"
+		"(reprotest|strip-nonderminism|disorderfs)"
+		"(json|le_scheduler|meta|le_nodes|rsync|notes)"
+		"archlinux"
+		"coreboot"
+		"(openwrt)"
+		"(le_netbsd|le_freebsd)"
+		"fdroid"
+		"fedora"
+		"alpine")
 	echo "$(date -u) - starting to write $PAGE page."
 	write_page_header $VIEW "Job health overview"
 	write_page "<p style=\"clear:both;\">"
 	write_page "<table>"
-	for CATEGORY in $(seq 0 10) ; do
+	for CATEGORY in $(seq 1 ${#FILTER[@]}) ; do
 		write_page "<tr>"
 		for JOB in $(cd ~/jobs ; ls -1d reproducible_* | egrep "${FILTER[$CATEGORY]}" | cut -d '_' -f2- | sort ) ; do
 			SHORTNAME="$(echo $JOB \
