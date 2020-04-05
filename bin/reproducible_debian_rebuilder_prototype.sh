@@ -118,8 +118,8 @@ done
 if [ -n "$BADDEBS" ] ; then
 	output_echo "Unreproducible binary packages found:"
 	for DEB in $BADDEBS ; do
-		echo "$(egrep ' [a-z0-9]{64} ' $FILE.orig|grep $DEB | awk ' { print $1 " " $3 }') from ftp.debian.org"
-		echo "$(sha256sum $DEB) from the current rebuild"
+		echo " $(egrep ' [a-z0-9]{64} ' $FILE.orig|grep $DEB | awk ' { print $1 " " $3 }') from ftp.debian.org"
+		echo " $(sha256sum $DEB| sed 's#  # #') from the current rebuild"
 	done
 fi
 
