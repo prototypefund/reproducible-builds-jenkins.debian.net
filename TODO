@@ -65,8 +65,10 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 
 * prototype only dealing with bullseye and amd64 (and arch all packages)
 ** first step: download a .buildinfo file and sbuild it - done
-** second step: put result in db
+** second step: put result in db in pb7
 ** third step: have some scheduler job and a rebuilder job picking up tasks
+*** scheduler on pb7
+*** rebuilds on osuosl173
 ** fourth step: have a smarter scheduler
 ** fifth step: export results as json and html
 * run jenkins job on pb7 (=buildinfos.d.n), which triggers builds on osuosl173 and stores the results on pb7
