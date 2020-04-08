@@ -53,6 +53,7 @@ all_targets = [
    'education-desktop-mate',
    'education-desktop-other',
    'education-desktop-xfce',
+   'education-desktop-cinnamon',
    'education-development',
    'education-electronics',
    'education-geography',
@@ -96,6 +97,9 @@ def is_target_in_distro(distro, target):
         return False
     # education-desktop-lxqt, education-primaryschool and education-video packages only exist since buster
     elif distro in ('stretch') and target in ('education-desktop-lxqt', 'education-primaryschool', 'education-video'):
+        return False
+    # education-desktop-cinnamon only exists since bullseye
+    elif distro in ('stretch', 'buster') and target in ('education-desktop-cinnamon'):
         return False
     return True
 
