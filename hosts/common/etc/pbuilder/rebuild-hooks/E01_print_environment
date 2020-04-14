@@ -1,0 +1,14 @@
+#!/bin/sh
+
+set -e
+
+BUILDDIR="${BUILDDIR:-/tmp/buildd}"
+
+Echo () {
+	echo "I: ${*}" >&2
+	eval "${@}" | sed 's@^@  @g'
+}
+
+Echo set
+Echo uname -a
+Echo ls -l /bin
