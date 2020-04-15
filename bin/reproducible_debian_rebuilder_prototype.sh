@@ -38,17 +38,22 @@ output_echo(){
 }
 
 set_poolpath() {
-	# FIXME: dedummy this
-	POOLPATH="b"
+	local PKG=$1
+	if [ "${PKG:0:3}" = "lib" ] ; then
+		POOLPATH="${PKG:0:4}"
+	else
+		POOLPATH="${PKG:0:1}"
+	fi
 }
 
-# main
-# basically describe the steps to use debrebuild today...
+#
+# main: this is basically a description of the steps to use debrebuild today...
+#
 PKG='bash'
 VERSION='5.0-6'
 FILE="${PKG}_${VERSION}_amd64.buildinfo"
-POOLPATH="" 	# declared as a global variable
-set_poolpath	# set it properly
+POOLPATH="" 		# declared as a global variable
+set_poolpath $PKG	# so we can set it here with a function
 URLPATH="https://buildinfos.debian.net/buildinfo-pool/$POOLPATH/$PKG"
 
 # hack, should be done better, also with cleanup *after* the job run...
