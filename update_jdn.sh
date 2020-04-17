@@ -556,6 +556,9 @@ if [ -f /etc/debian_version ] ; then
 	fi
 fi
 
+# harmless but has a service which can fail and thus can make maintenance jobs unstable
+sudo apt-get remove munin-async
+
 #
 # deploy package configuration in /etc and /usr
 #
