@@ -38,8 +38,8 @@ def load_notes():
     """
     with open(NOTES) as fd:
         original = yaml.load(fd)
-    log.info("notes loaded. There are " + str(len(original)) +
-             " packages listed")
+    log.info("Notes loaded. There are " + str(len(original)) +
+             " packages listed.")
     notes = {}
     for pkg in sorted(original):
         assert isinstance(pkg, str)
@@ -97,8 +97,8 @@ def load_notes():
                 log.debug('adding %s => %s', pkg, pkg_details)
                 notes[pkg].append(pkg_details)
 
-    log.info("notes checked. There are " + str(len(notes)) +
-             " packages listed")
+    log.info("Notes checked. There are " + str(len(notes)) +
+             " packages listed.")
     return notes
 
 
@@ -109,7 +109,7 @@ def load_issues():
     """
     with open(ISSUES) as fd:
         issues = yaml.load(fd)
-    log.info("Issues loaded. There are " + str(len(issues)) + " issues")
+    log.info("Issues loaded. There are " + str(len(issues)) + " issues listed.")
     return issues
 
 
@@ -153,7 +153,7 @@ def store_issues():
         delete_query = issues_table.delete().\
             where(issues_table.c.name == sql.bindparam('issuename'))
         conn_db.execute(delete_query, to_delete)
-        log.info("Removed the following issues: " + str(existing_issues))
+        log.info("Removed the following issues: " + str(existing_issues) + ".")
 
 
 def store_notes():
@@ -177,7 +177,7 @@ def store_notes():
 
     if (len(to_insert)):
         conn_db.execute(notes_table.insert(), to_insert)
-        log.info('Saved ' + str(len(to_insert)) + ' notes in the database')
+        log.info('Saved ' + str(len(to_insert)) + ' notes in the database.')
 
 
 if __name__ == '__main__':
