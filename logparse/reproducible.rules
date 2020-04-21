@@ -33,5 +33,3 @@ warning /Warning: SQL query .+ failed.$/
 warning /Warning: systemd is reporting errors/
 warning /Warning: .+ has wrong MTU, please tell the jenkins admins to fix this./
 warning /Warning: Problems analysing/
-warning /Warning: The home dir .+uuidd you specified can't be accessed: No such file or directory/
-warning /dh_bash-completion: warning: file-list parsing failed, installing as proper snippet/
