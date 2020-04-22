@@ -30,6 +30,8 @@ ok /perl: warning: Setting locale failed./
 ok /W: .+: debian-news-entry-has-strange-distribution UNRELEASED/
 ok /W: .+ changes: orig-tarball-missing-upstream-signature/
 ok /Warning: No server certificate defined; will use a selfsigned one.$/
+ok /^Warning: The home dir \/run\/uuidd you specified can't be accessed: No such file or directory/
+ok /^dh_bash-completion: warning: file-list parsing failed, installing as proper snippet$/
 
 # Suppress warnings from cryptsetup initramfs hook
 ok /cryptsetup: .+/

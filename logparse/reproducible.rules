@@ -1,9 +1,5 @@
 # see https://wiki.jenkins-ci.org/display/JENKINS/Log+Parser+Plugin
 
-# not relevant for us (eg issues in sid, noticable when installing build-deps)
-ok /Warning: The home dir .+uuidd you specified can.t be accessed: No such file or directory/
-ok /dh_bash-completion: warning: file-list parsing failed, installing as proper snippet/
-
 # list of warnings here...
 warning /Warning: .+ is not a source package, or was removed or renamed. Please investigate./
 warning /Warning: Download of .+ sources failed./
