@@ -64,13 +64,15 @@ See link:https://jenkins.debian.net/userContent/about.html["about jenkins.debian
 === Debian rebuilder 'thing'
 
 * prototype only dealing with bullseye and amd64 (and arch all packages)
-** first step: download a .buildinfo file and sbuild it - done
-** second step: put result in db in pb7
-** third step: have some scheduler job and a rebuilder job picking up tasks
+** 1st step: download a .buildinfo file and sbuild it - done
+** 2nd step: random builder for 20 selected packages, find .buildinfo files via builtin-pho?
+-> file builtin-pho bugs first
+** 3rd step: put result in db in pb7
+** 4th step: have some scheduler job and a rebuilder job picking up tasks
 *** scheduler on pb7
 *** rebuilds on osuosl173
-** fourth step: have a smarter scheduler
-** fifth step: export results as json and html
+** 5th step: have a smarter scheduler
+** 6th step: export results as json and html
 * run jenkins job on pb7 (=buildinfos.d.n), which triggers builds on osuosl173 and stores the results on pb7
 ** keep data in postgresql|sqlite on pb7
 *** pb7 also has the builtin-pho db so it seems natural to join them...
